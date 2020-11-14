@@ -64,10 +64,7 @@ async function russianRoulette(msg, args) {
 		}
 	}
 	else if (bulletCount === 0) {
-		msg.channel.send(`${randomWordZero}`)
-			.then(msg => {
-				msg.delete({ timeout: 5000 });
-			});
+		msg.channel.send(`${randomWordZero}`);
 	}
 	else if (bulletCount > 6) {
 		msg.channel.send(`${msg.author} по правилам русской рулетки, можно брать только до 6 патронов`);

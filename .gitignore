@@ -16,6 +16,8 @@
 .project
 .settings
 .tmproj
+.idea
+.vscode
 nbproject
 Thumbs.db
 

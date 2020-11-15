@@ -2,10 +2,6 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const { token } = require('./config.json');
-/*const express = require('express');
-const wakeUpDyno = require('./wakeDyno');
-const PORT = 3000;
-const DYNO_URL = 'https://fuckin-slave.herokuapp.com';*/
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
@@ -14,11 +10,6 @@ for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.name, command);
 }
-
-/*const app = express();
-app.listen(PORT, () => {
-	wakeUpDyno(DYNO_URL);
-});*/
 
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);

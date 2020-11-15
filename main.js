@@ -48,12 +48,15 @@ client.on('message', msg => {
 			const isCustom = false;
 			client.commands.get('randomShipping').execute(msg, args, isCustom);
 		}
-		else if (args[0] === 'сброс' && msg.author.id !== '663283391365644309') {
+		else if (args[0] === 'скип' && msg.author.id !== '663283391365644309') {
 			client.commands.get('shippingReset').execute(msg);
 		}
-		else if (args[0] !== 'сброс') {
+		else if (args[0] !== 'скип' && args.length === 2) {
 			const isCustom = true;
 			client.commands.get('randomShipping').execute(msg, args, isCustom);
+		}
+		else if (args.length === 1) {
+			return;
 		}
 		break;
 	case 'add':
@@ -104,6 +107,50 @@ client.on('message', msg => {
 		break;
 	case 'хелп':
 		client.commands.get('help').execute(msg);
+		break;
+	case 'гей':
+		if (!args.length) {
+			return;
+		}
+		else if (args.length === 1 && args[0] === 'тест') {
+			const selftest = true;
+			client.commands.get('gayChecker').execute(msg, selftest);
+		}
+		else if (args.length === 2 && args[0] === 'тест' && typeof args[1] === 'string') {
+			client.commands.get('gayChecker').execute(msg, args);
+		}
+		else if (args.length === 1 && args[0] === 'дня') {
+			client.commands.get('randomGay').execute(msg);
+		}
+		else {
+			return;
+		}
+		break;
+	case 'аниме':
+		if (!args.length) {
+			return;
+		}
+		else if (args.length === 1 && args[0] === 'тест') {
+			const selftest = true;
+			client.commands.get('animeChecker').execute(msg, selftest);
+		}
+		else if (args.length === 2 && args[0] === 'тест' && typeof args[1] === 'string') {
+			client.commands.get('animeChecker').execute(msg, args);
+		}
+		else {
+			return;
+		}
+		break;
+	case 'анимешница':
+		if (!args.length) {
+			return;
+		}
+		else if (args.length === 1 && args[0] === 'дня') {
+			client.commands.get('randomAnime').execute(msg);
+		}
+		else {
+			return;
+		}
 		break;
 	case 'exit':
 		client.commands.get('exit').execute(msg);

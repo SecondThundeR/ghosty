@@ -21,6 +21,9 @@ async function randomShipping(msg) {
 
 		sharedVars.vars.shipInActive = false;
 	}
+	else if (sharedVars.vars.shipInActive === true) {
+		return;
+	}
 	else if (sharedVars.vars.shipActivated === true && currentDate < sharedVars.vars.shipDate) {
 		msg.channel.send('**Парочка дня на сегодня: **' + sharedVars.vars.shipTextFull + ' \:hearts:' + '\n\n*Следующий шиппинг будет доступен ' + getShippingNextDay() + ' в 00:00*');
 	}
@@ -123,10 +126,25 @@ function getShippingNextDay() {
 	}
 }
 
+function customShipping(msg, args) {
+	firstName = args[0];
+	secondName = args[1];
+	firstNamePart = firstName.slice(0, firstName.length / 2);
+	secondNamePart = secondName.slice(secondName.length / 2, secondName.length);
+	finalName = firstNamePart + secondNamePart;
+	msg.channel.send(`Данная парочка смело бы называлась - **${finalName}!**`)
+}
+
 module.exports = {
 	name: 'randomShipping',
 	description: 'Returns two random users',
-	execute(msg) {
-		randomShipping(msg).then(() => console.log);
+	execute(msg, args, isCustom) {
+		if (isCustom === true) {
+			customShipping(msg, args);
+		}
+		else {
+			randomShipping(msg).then(() => console.log);
+		}
+
 	},
 };

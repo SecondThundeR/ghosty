@@ -5,6 +5,12 @@ const { msgTime } = require('../data/arrays');
 let convertedDataWin;
 let convertedDataLose;
 let convertedDataZero;
+let convertedDataMinus;
+
+let randomWordWin;
+let randomWordLose;
+let randomWordZero;
+let randomWordMinus;
 
 function getJSONContents() {
 	const dataWin = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsWin.json');
@@ -13,18 +19,22 @@ function getJSONContents() {
 	convertedDataLose = JSON.parse(dataLose);
 	const dataZero = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsZero.json');
 	convertedDataZero = JSON.parse(dataZero);
+	const dataMinus = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsMinus.json');
+	convertedDataMinus = JSON.parse(dataMinus);
+
+	const randomWordNumWin = Math.floor(Math.random() * convertedDataWin.length);
+	randomWordWin = convertedDataWin[randomWordNumWin];
+	const randomWordNumLose = Math.floor(Math.random() * convertedDataLose.length);
+	randomWordLose = convertedDataLose[randomWordNumLose];
+	const randomWordNumZero = Math.floor(Math.random() * convertedDataZero.length);
+	randomWordZero = convertedDataZero[randomWordNumZero];
+	const randomWordNumMinus = Math.floor(Math.random() * convertedDataMinus.length);
+	randomWordMinus = convertedDataMinus[randomWordNumMinus];
 }
 
 async function russianRoulette(msg, args) {
 	getJSONContents();
-	const randomWordNumWin = Math.floor(Math.random() * convertedDataWin.length);
-	const randomWordWin = convertedDataWin[randomWordNumWin];
 
-	const randomWordNumLose = Math.floor(Math.random() * convertedDataLose.length);
-	const randomWordLose = convertedDataLose[randomWordNumLose];
-
-	const randomWordNumZero = Math.floor(Math.random() * convertedDataZero.length);
-	const randomWordZero = convertedDataZero[randomWordNumZero];
 
 	const randomTime = Math.floor(Math.random() * msgTime.length);
 	const currTime = msgTime[randomTime];
@@ -72,6 +82,11 @@ async function russianRoulette(msg, args) {
 	else if (bulletCount === 6) {
 		msg.channel.send(`поздравляем! теперь у нас на одного суицидника меньше. им был ${msg.author}`);
 	}
+	else if (bulletCount < 0) {
+		msg.channel.send(`${randomWordMinus}`, {
+			tts: true,
+		});
+	}
 	else {
 		const bulletNumberArray = [];
 
@@ -83,7 +98,6 @@ async function russianRoulette(msg, args) {
 			else {
 				bulletNumberArray.push(bulletNumber);
 			}
-
 		}
 		randomNumber = Math.floor(Math.random() * 6) + 1;
 

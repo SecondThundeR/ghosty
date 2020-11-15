@@ -25,6 +25,9 @@ async function randomGoroscope(msg) {
 		await goroscopeFirstRun(msg, sharedVars.vars.goroTextShort);
 		sharedVars.vars.goroInActive = false;
 	}
+	else if (sharedVars.vars.goroInActive === true) {
+		return;
+	}
 	else if (sharedVars.vars.goroActivated === true && currentDate < sharedVars.vars.goroDate) {
 		msg.channel.send('**Гороскоп дня на сегодня: **' + sharedVars.vars.goroTextFull + '\n\n*Следующее предсказание будет доступно ' + goroscopeNextDay() + ' в 00:00*');
 	}

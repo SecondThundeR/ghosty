@@ -8,15 +8,17 @@ function deleteWord(msg, textString) {
 	if (wordInArray !== -1) {
 		convertedData.splice(wordInArray, 1);
 		fs.writeFileSync('./jsonArrays/array.json', JSON.stringify(convertedData, null, 2));
+		msg.delete({timeout: 4000});
 		msg.channel.send('Я удалил это слово у себя. Неужели кто-то очищает меня от этого...')
 			.then(msg => {
-				msg.delete({ timeout: 5000 });
+				msg.delete({ timeout: 4000 });
 			});
 	}
 	else {
+		msg.delete({timeout: 4000});
 		msg.channel.send('Прости, я не нашёл это слово у себя и мне нечего удалять')
 			.then(msg => {
-				msg.delete({ timeout: 5000 });
+				msg.delete({ timeout: 4000 });
 			});
 	}
 }

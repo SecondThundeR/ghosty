@@ -14,15 +14,16 @@ function getJSONContents() {
 }
 
 async function randomAnime(msg) {
-	const currentDate = new Date();
+	const currentDate = Math.round(+new Date() / 1000 + (3 * 60 * 60));
 	getJSONContents();
 
 	if (sharedVars.vars.animeActivated === false && sharedVars.vars.animeInActive === false) {
 		sharedVars.vars.animeInActive = true;
 		sharedVars.vars.animeActivated = true;
 		sharedVars.vars.animeDate = new Date();
-		sharedVars.vars.animeDate.setDate(sharedVars.vars.animeDate.getDate() + 1);
+		sharedVars.vars.animeDate.setDate(sharedVars.vars.shipDate.getDate() + 1);
 		sharedVars.vars.animeDate.setHours(0, 0, 0, 0);
+		sharedVars.vars.animeDate = Math.round(sharedVars.vars.shipDate / 1000 + (3 * 60 * 60));
 		await animeGetUsers(msg);
 		const animePercent = Math.floor(Math.random() * 101);
 		if (animePercent === 100) {

@@ -14,7 +14,7 @@ function getJSONContents() {
 }
 
 async function randomShipping(msg) {
-	const currentDate = new Date();
+	const currentDate = Math.round(+new Date() / 1000 + (3 * 60 * 60));
 	getJSONContents();
 
 	if (sharedVars.vars.shipActivated === false && sharedVars.vars.shipInActive === false) {
@@ -23,6 +23,7 @@ async function randomShipping(msg) {
 		sharedVars.vars.shipDate = new Date();
 		sharedVars.vars.shipDate.setDate(sharedVars.vars.shipDate.getDate() + 1);
 		sharedVars.vars.shipDate.setHours(0, 0, 0, 0);
+		sharedVars.vars.shipDate = Math.round(sharedVars.vars.shipDate / 1000 + (3 * 60 * 60));
 		await shipGetUsers(msg);
 		sharedVars.vars.shipTextShort = `${sharedVars.vars.firstRandomUserInfo}` + ' + ' + `${sharedVars.vars.secondRandomUserInfo}`;
 		sharedVars.vars.shipTextFull = `${sharedVars.vars.firstUsername}` + ' + ' + `${sharedVars.vars.secondUsername}, #${sharedVars.vars.finalShipname}`;
@@ -47,13 +48,18 @@ async function shipGetUsers(msg) {
 	shipDeleteBots();
 	sharedVars.vars.firstRandomUser = Math.floor(Math.random() * sharedVars.vars.usersArray.length);
 	sharedVars.vars.secondRandomUser = Math.floor(Math.random() * sharedVars.vars.usersArray.length);
-	sharedVars.vars.firstRandomUserInfo = await msg.guild.members.fetch(sharedVars.vars.usersArray[sharedVars.vars.firstRandomUser]);
-	sharedVars.vars.secondRandomUserInfo = await msg.guild.members.fetch(sharedVars.vars.usersArray[sharedVars.vars.secondRandomUser]);
-	sharedVars.vars.firstUsername = sharedVars.vars.firstRandomUserInfo.displayName;
-	sharedVars.vars.secondUsername = sharedVars.vars.secondRandomUserInfo.displayName;
-	sharedVars.vars.firstShipnamePart = sharedVars.vars.firstUsername.slice(0, sharedVars.vars.firstUsername.length / 2);
-	sharedVars.vars.secondShipnamePart = sharedVars.vars.secondUsername.slice(sharedVars.vars.secondUsername.length / 2, sharedVars.vars.secondUsername.length);
-	sharedVars.vars.finalShipname = sharedVars.vars.firstShipnamePart + sharedVars.vars.secondShipnamePart;
+	if (sharedVars.vars.firstRandomUser === sharedVars.vars.secondRandomUser) {
+		sharedVars.vars.secondRandomUser = Math.floor(Math.random() * sharedVars.vars.usersArray.length);
+	}
+	else {
+		sharedVars.vars.firstRandomUserInfo = await msg.guild.members.fetch(sharedVars.vars.usersArray[sharedVars.vars.firstRandomUser]);
+		sharedVars.vars.secondRandomUserInfo = await msg.guild.members.fetch(sharedVars.vars.usersArray[sharedVars.vars.secondRandomUser]);
+		sharedVars.vars.firstUsername = sharedVars.vars.firstRandomUserInfo.displayName;
+		sharedVars.vars.secondUsername = sharedVars.vars.secondRandomUserInfo.displayName;
+		sharedVars.vars.firstShipnamePart = sharedVars.vars.firstUsername.slice(0, sharedVars.vars.firstUsername.length / 2);
+		sharedVars.vars.secondShipnamePart = sharedVars.vars.secondUsername.slice(sharedVars.vars.secondUsername.length / 2, sharedVars.vars.secondUsername.length);
+		sharedVars.vars.finalShipname = sharedVars.vars.firstShipnamePart + sharedVars.vars.secondShipnamePart;
+	}
 }
 
 function shipDeleteBots() {

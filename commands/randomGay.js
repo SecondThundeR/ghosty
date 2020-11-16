@@ -14,15 +14,16 @@ function getJSONContents() {
 }
 
 async function randomGay(msg) {
-	const currentDate = new Date();
+	const currentDate = Math.round(+new Date() / 1000 + (3 * 60 * 60));
 	getJSONContents();
 
 	if (sharedVars.vars.gayActivated === false && sharedVars.vars.gayInActive === false) {
 		sharedVars.vars.gayInActive = true;
 		sharedVars.vars.gayActivated = true;
 		sharedVars.vars.gayDate = new Date();
-		sharedVars.vars.gayDate.setDate(sharedVars.vars.gayDate.getDate() + 1);
+		sharedVars.vars.gayDate.setDate(sharedVars.vars.shipDate.getDate() + 1);
 		sharedVars.vars.gayDate.setHours(0, 0, 0, 0);
+		sharedVars.vars.gayDate = Math.round(sharedVars.vars.shipDate / 1000 + (3 * 60 * 60));
 		await gayGetUsers(msg);
 		const gayPercent = Math.floor(Math.random() * 101);
 		if (gayPercent === 100) {

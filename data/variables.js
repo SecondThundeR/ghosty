@@ -1,6 +1,7 @@
 exports.vars = {
 	spammerID: '',
 	spammerCount: 0,
+	isSpamWarningTriggered: false,
 
 	goroDate: '',
 	goroTextShort: '',

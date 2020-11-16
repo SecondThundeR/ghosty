@@ -32,7 +32,7 @@ client.on('message', msg => {
 			return;
 		}
 		else {
-			client.commands.get('randomCringe').execute(msg);
+			client.commands.get('getRandomWord').execute(msg);
 		}
 		break;
 	case 'whoiscope':

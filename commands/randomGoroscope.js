@@ -17,15 +17,16 @@ function getJSONContents() {
 }
 
 async function randomGoroscope(msg) {
-	const currentDate = new Date();
+	const currentDate = Math.round(+new Date() / 1000 + (3 * 60 * 60));
 	getJSONContents();
 
 	if (sharedVars.vars.goroActivated === false && sharedVars.vars.goroInActive === false) {
 		sharedVars.vars.goroInActive = true;
 		sharedVars.vars.goroActivated = true;
 		sharedVars.vars.goroDate = new Date();
-		sharedVars.vars.goroDate.setDate(sharedVars.vars.goroDate.getDate() + 1);
+		sharedVars.vars.goroDate.setDate(sharedVars.vars.shipDate.getDate() + 1);
 		sharedVars.vars.goroDate.setHours(0, 0, 0, 0);
+		sharedVars.vars.goroDate = Math.round(sharedVars.vars.shipDate / 1000 + (3 * 60 * 60));
 		await goroGetUsers(msg);
 		const randomWord = Math.floor(Math.random() * whoiscopeArray.length);
 		sharedVars.vars.goroTextShort = `${sharedVars.vars.randomUserInfoGoro}` + ' - ' + whoiscopeArray[randomWord];

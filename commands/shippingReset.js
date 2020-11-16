@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow */
 'use strict';
 const sharedVars = require('../data/variables');
 

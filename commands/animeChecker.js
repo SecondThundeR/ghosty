@@ -1,3 +1,4 @@
+'use strict';
 function animeChecker(msg, args) {
 	const animePercent = Math.floor(Math.random() * 101);
 

@@ -1,3 +1,4 @@
+'use strict';
 function gayChecker(msg, args) {
 	const gayPercent = Math.floor(Math.random() * 101);
 

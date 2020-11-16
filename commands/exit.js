@@ -1,4 +1,5 @@
 /* eslint-disable no-shadow */
+'use strict';
 async function exitMessage(msg) {
 	msg.delete({ timeout: 1500 });
 	msg.channel.send('Завершаю процесс')

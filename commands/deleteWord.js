@@ -1,4 +1,5 @@
 /* eslint-disable no-shadow */
+'use strict';
 const fs = require('fs');
 
 function deleteWord(msg, textString) {

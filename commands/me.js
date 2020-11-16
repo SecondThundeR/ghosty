@@ -1,3 +1,4 @@
+'use strict';
 function meUser(msg, args) {
 	msg.delete();
 	msg.channel.send(`${msg.author} ${args}`);

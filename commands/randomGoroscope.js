@@ -1,15 +1,23 @@
 const fs = require('fs');
-const { msgTime, botIDs } = require('../data/arrays');
 const sharedVars = require('../data/variables');
 
-async function getJSONContents() {
+let whoiscopeArray;
+let botIDs;
+let msgTime;
+
+function getJSONContents() {
 	const data = fs.readFileSync('./jsonArrays/array.json');
-	const convertedData = JSON.parse(data);
-	return convertedData;
+	const botIDsData = fs.readFileSync('./jsonArrays/botIDs.json');
+	const msgTimeData = fs.readFileSync('./jsonArrays/msgTime.json');
+	whoiscopeArray = JSON.parse(data);
+	botIDs = JSON.parse(botIDsData);
+	msgTime = JSON.parse(msgTimeData);
+	return;
 }
 
 async function randomGoroscope(msg) {
 	const currentDate = new Date();
+	getJSONContents();
 
 	if (sharedVars.vars.goroActivated === false && sharedVars.vars.goroInActive === false) {
 		sharedVars.vars.goroInActive = true;
@@ -18,7 +26,6 @@ async function randomGoroscope(msg) {
 		sharedVars.vars.goroDate.setDate(sharedVars.vars.goroDate.getDate() + 1);
 		sharedVars.vars.goroDate.setHours(0, 0, 0, 0);
 		await goroGetUsers(msg);
-		const whoiscopeArray = await getJSONContents();
 		const randomWord = Math.floor(Math.random() * whoiscopeArray.length);
 		sharedVars.vars.goroTextShort = `${sharedVars.vars.randomUserInfoGoro}` + ' - ' + whoiscopeArray[randomWord];
 		sharedVars.vars.goroTextFull = `${sharedVars.vars.randomUsernameGoro}` + ' - ' + whoiscopeArray[randomWord];
@@ -47,17 +54,14 @@ async function goroGetUsers(msg) {
 }
 
 function goroDeleteBots() {
-	const botInGoroArray1 = sharedVars.vars.usersArrayGoro.indexOf(botIDs[0]);
-	if (botInGoroArray1 !== -1) {
-		sharedVars.vars.usersArrayGoro.splice(botInGoroArray1, 1);
-	}
-	const botInGoroArray2 = sharedVars.vars.usersArrayGoro.indexOf(botIDs[1]);
-	if (botInGoroArray2 !== -1) {
-		sharedVars.vars.usersArrayGoro.splice(botInGoroArray2, 1);
-	}
-	const botInGoroArray3 = sharedVars.vars.usersArrayGoro.indexOf(botIDs[2]);
-	if (botInGoroArray3 !== -1) {
-		sharedVars.vars.usersArrayGoro.splice(botInGoroArray3, 1);
+	for (let i = 0; i < botIDs.length; i++) {
+		const botInGoroArray = sharedVars.vars.usersArrayGoro.indexOf(botIDs[i]);
+		if (botInGoroArray !== -1) {
+			sharedVars.vars.usersArrayGoro.splice(botInGoroArray, 1);
+		}
+		else {
+			continue;
+		}
 	}
 }
 

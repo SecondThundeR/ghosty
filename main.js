@@ -105,9 +105,6 @@ client.on('message', msg => {
 			client.commands.get('me').execute(msg, textString);
 		}
 		break;
-	case 'хелп':
-		client.commands.get('help').execute(msg);
-		break;
 	case 'гей':
 		if (!args.length) {
 			return;
@@ -151,6 +148,9 @@ client.on('message', msg => {
 		else {
 			return;
 		}
+		break;
+	case 'хелп':
+		client.commands.get('help').execute(msg);
 		break;
 	case 'exit':
 		client.commands.get('exit').execute(msg);

@@ -1,6 +1,5 @@
 /* eslint-disable no-shadow */
 const fs = require('fs');
-const { msgTime } = require('../data/arrays');
 
 let convertedDataWin;
 let convertedDataLose;
@@ -12,6 +11,8 @@ let randomWordLose;
 let randomWordZero;
 let randomWordMinus;
 
+let msgTime;
+
 function getJSONContents() {
 	const dataWin = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsWin.json');
 	convertedDataWin = JSON.parse(dataWin);
@@ -21,6 +22,8 @@ function getJSONContents() {
 	convertedDataZero = JSON.parse(dataZero);
 	const dataMinus = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsMinus.json');
 	convertedDataMinus = JSON.parse(dataMinus);
+	const msgTimeData = fs.readFileSync('./jsonArrays/msgTime.json');
+	msgTime = JSON.parse(msgTimeData);
 
 	const randomWordNumWin = Math.floor(Math.random() * convertedDataWin.length);
 	randomWordWin = convertedDataWin[randomWordNumWin];
@@ -30,11 +33,11 @@ function getJSONContents() {
 	randomWordZero = convertedDataZero[randomWordNumZero];
 	const randomWordNumMinus = Math.floor(Math.random() * convertedDataMinus.length);
 	randomWordMinus = convertedDataMinus[randomWordNumMinus];
+	return;
 }
 
 async function russianRoulette(msg, args) {
 	getJSONContents();
-
 
 	const randomTime = Math.floor(Math.random() * msgTime.length);
 	const currTime = msgTime[randomTime];

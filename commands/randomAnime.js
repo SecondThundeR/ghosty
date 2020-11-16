@@ -1,8 +1,20 @@
-const { msgTime, botIDs } = require('../data/arrays');
+const fs = require('fs');
 const sharedVars = require('../data/variables');
+
+let botIDs;
+let msgTime;
+
+function getJSONContents() {
+	const botIDsData = fs.readFileSync('./jsonArrays/botIDs.json');
+	const msgTimeData = fs.readFileSync('./jsonArrays/msgTime.json');
+	botIDs = JSON.parse(botIDsData);
+	msgTime = JSON.parse(msgTimeData);
+	return;
+}
 
 async function randomAnime(msg) {
 	const currentDate = new Date();
+	getJSONContents();
 
 	if (sharedVars.vars.animeActivated === false && sharedVars.vars.animeInActive === false) {
 		sharedVars.vars.animeInActive = true;
@@ -46,17 +58,14 @@ async function animeGetUsers(msg) {
 }
 
 function animeDeleteBots() {
-	const botInAnimeArray1 = sharedVars.vars.usersArrayAnime.indexOf(botIDs[0]);
-	if (botInAnimeArray1 !== -1) {
-		sharedVars.vars.usersArrayAnime.splice(botInAnimeArray1, 1);
-	}
-	const botInAnimeArray2 = sharedVars.vars.usersArrayAnime.indexOf(botIDs[1]);
-	if (botInAnimeArray2 !== -1) {
-		sharedVars.vars.usersArrayAnime.splice(botInAnimeArray2, 1);
-	}
-	const botInAnimeArray3 = sharedVars.vars.usersArrayAnime.indexOf(botIDs[2]);
-	if (botInAnimeArray3 !== -1) {
-		sharedVars.vars.usersArrayAnime.splice(botInAnimeArray3, 1);
+	for (let i = 0; i < botIDs.length; i++) {
+		const botInAnimeArray = sharedVars.vars.usersArrayAnime.indexOf(botIDs[i]);
+		if (botInAnimeArray !== -1) {
+			sharedVars.vars.usersArrayAnime.splice(botInAnimeArray, 1);
+		}
+		else {
+			continue;
+		}
 	}
 }
 

@@ -1,8 +1,20 @@
-const { msgTime, botIDs } = require('../data/arrays');
+const fs = require('fs');
 const sharedVars = require('../data/variables');
+
+let botIDs;
+let msgTime;
+
+function getJSONContents() {
+	const botIDsData = fs.readFileSync('./jsonArrays/botIDs.json');
+	const msgTimeData = fs.readFileSync('./jsonArrays/msgTime.json');
+	botIDs = JSON.parse(botIDsData);
+	msgTime = JSON.parse(msgTimeData);
+	return;
+}
 
 async function randomGay(msg) {
 	const currentDate = new Date();
+	getJSONContents();
 
 	if (sharedVars.vars.gayActivated === false && sharedVars.vars.gayInActive === false) {
 		sharedVars.vars.gayInActive = true;
@@ -46,17 +58,14 @@ async function gayGetUsers(msg) {
 }
 
 function gayDeleteBots() {
-	const botInGayArray1 = sharedVars.vars.usersArrayGay.indexOf(botIDs[0]);
-	if (botInGayArray1 !== -1) {
-		sharedVars.vars.usersArrayGay.splice(botInGayArray1, 1);
-	}
-	const botInGayArray2 = sharedVars.vars.usersArrayGay.indexOf(botIDs[1]);
-	if (botInGayArray2 !== -1) {
-		sharedVars.vars.usersArrayGay.splice(botInGayArray2, 1);
-	}
-	const botInGayArray3 = sharedVars.vars.usersArrayGay.indexOf(botIDs[2]);
-	if (botInGayArray3 !== -1) {
-		sharedVars.vars.usersArrayGay.splice(botInGayArray3, 1);
+	for (let i = 0; i < botIDs.length; i++) {
+		const botInGayArray = sharedVars.vars.usersArrayGay.indexOf(botIDs[i]);
+		if (botInGayArray !== -1) {
+			sharedVars.vars.usersArrayGay.splice(botInGayArray, 1);
+		}
+		else {
+			continue;
+		}
 	}
 }
 

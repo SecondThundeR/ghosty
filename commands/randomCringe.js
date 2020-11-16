@@ -12,7 +12,12 @@ function randomCringe(msg) {
 	const warningText = noSpamWarning(msg);
 
 	if (warningText === sharedVars.vars.warningForSpam) {
-		return `${msg.author} ` + warningText;
+		msg.delete({ timeout: 3000 });
+		msg.channel.send(`${msg.author} ` + warningText)
+			.then(msg => {
+				msg.delete({ timeout: 3000 });
+			});
+		return;
 	}
 	else {
 		const cringeArray = getJSONContents();

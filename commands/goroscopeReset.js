@@ -7,7 +7,7 @@ function goroscopeSkip(msg) {
 		sharedVars.vars.goroTextShort = '';
 		sharedVars.vars.goroTextFull = '';
 		sharedVars.vars.goroActivated = false;
-		msg.delete({timeout: 3000});
+		msg.delete({ timeout: 3000 });
 		msg.channel.send('Результаты гороскопа сброшены!')
 			.then(msg => {
 				msg.delete({ timeout: 3000 });

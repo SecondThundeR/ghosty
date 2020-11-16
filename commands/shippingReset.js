@@ -7,7 +7,7 @@ function shippingSkip(msg) {
 		sharedVars.vars.shipTextShort = '';
 		sharedVars.vars.shipTextFull = '';
 		sharedVars.vars.shipActivated = false;
-		msg.delete({timeout: 3000});
+		msg.delete({ timeout: 3000 });
 		msg.channel.send('Результаты шиппинга сброшены!')
 			.then(msg => {
 				msg.delete({ timeout: 3000 });

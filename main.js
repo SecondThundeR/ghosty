@@ -66,9 +66,48 @@ client.on('message', msg => {
 		else if (!args.length) {
 			return msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
 		}
-		else if (args.length) {
+		else if (args.length === 1) {
 			const textString = args.join(' ');
 			client.commands.get('addWord').execute(msg, textString);
+			return;
+		}
+		else if (args.length >= 2 && args[0] === 'bot') {
+			args.shift();
+			client.commands.get('addBot').execute(msg, args);
+			return;
+		}
+		else if (args.length >= 2 && args[0] === 'roulette') {
+			if (args[1] === 'lose') {
+				const fileChooser = args[1];
+				args.splice(0, 2);
+				const textString = args.join(' ');
+				client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
+				return;
+			}
+			else if (args[1] === 'minus') {
+				const fileChooser = args[1];
+				args.splice(0, 2);
+				const textString = args.join(' ');
+				client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
+				return;
+			}
+			else if (args[1] === 'win') {
+				const fileChooser = args[1];
+				args.splice(0, 2);
+				const textString = args.join(' ');
+				client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
+				return;
+			}
+			else if (args[1] === 'zero') {
+				const fileChooser = args[1];
+				args.splice(0, 2);
+				const textString = args.join(' ');
+				client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
+				return;
+			}
+		}
+		else {
+			return;
 		}
 		break;
 	case 'delete':
@@ -78,9 +117,49 @@ client.on('message', msg => {
 		else if (!args.length) {
 			return msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
 		}
-		else if (args.length) {
+		else if (args.length === 1) {
 			const textString = args.join(' ');
 			client.commands.get('deleteWord').execute(msg, textString);
+			return;
+		}
+		else if (args.length >= 2 && args[0] === 'bot') {
+			args.shift();
+			const textString = args.join(' ');
+			client.commands.get('deleteBot').execute(msg, textString);
+			return;
+		}
+		else if (args.length >= 2 && args[0] === 'roulette') {
+			if (args[1] === 'lose') {
+				const fileChooser = args[1];
+				args.splice(0, 2);
+				const textString = args.join(' ');
+				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
+				return;
+			}
+			else if (args[1] === 'minus') {
+				const fileChooser = args[1];
+				args.splice(0, 2);
+				const textString = args.join(' ');
+				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
+				return;
+			}
+			else if (args[1] === 'win') {
+				const fileChooser = args[1];
+				args.splice(0, 2);
+				const textString = args.join(' ');
+				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
+				return;
+			}
+			else if (args[1] === 'zero') {
+				const fileChooser = args[1];
+				args.splice(0, 2);
+				const textString = args.join(' ');
+				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
+				return;
+			}
+		}
+		else {
+			return;
 		}
 		break;
 	case 'рулетка':

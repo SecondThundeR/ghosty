@@ -13,7 +13,7 @@ async function randomAnime(msg) {
 		await animeGetUsers(msg);
 		const animePercent = Math.floor(Math.random() * 101);
 		if (animePercent === 100) {
-			sharedVars.vars.animeText = `${sharedVars.vars.randomUserInfoAnime} анимешница на %!\nТы настоящая кошкодевочка!`;
+			sharedVars.vars.animeText = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!\nТы настоящая кошкодевочка!`;
 		}
 		else if (animePercent === 0) {
 			sharedVars.vars.animeText = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!\nПохоже ты не смотрел SAO и Токийский гуль...`;

@@ -49,7 +49,11 @@ async function shipGetUsers(msg) {
 	sharedVars.vars.firstRandomUser = Math.floor(Math.random() * sharedVars.vars.usersArray.length);
 	sharedVars.vars.secondRandomUser = Math.floor(Math.random() * sharedVars.vars.usersArray.length);
 	if (sharedVars.vars.firstRandomUser === sharedVars.vars.secondRandomUser) {
-		sharedVars.vars.secondRandomUser = Math.floor(Math.random() * sharedVars.vars.usersArray.length);
+		sharedVars.vars.users = '';
+		sharedVars.vars.usersArray = '';
+		sharedVars.vars.firstRandomUser = '';
+		sharedVars.vars.secondRandomUser = '';
+		await shipGetUsers(msg);
 	}
 	else {
 		sharedVars.vars.firstRandomUserInfo = await msg.guild.members.fetch(sharedVars.vars.usersArray[sharedVars.vars.firstRandomUser]);
@@ -59,6 +63,7 @@ async function shipGetUsers(msg) {
 		sharedVars.vars.firstShipnamePart = sharedVars.vars.firstUsername.slice(0, sharedVars.vars.firstUsername.length / 2);
 		sharedVars.vars.secondShipnamePart = sharedVars.vars.secondUsername.slice(sharedVars.vars.secondUsername.length / 2, sharedVars.vars.secondUsername.length);
 		sharedVars.vars.finalShipname = sharedVars.vars.firstShipnamePart + sharedVars.vars.secondShipnamePart;
+		return;
 	}
 }
 
@@ -92,34 +97,34 @@ async function shippingFirstRun(msg, text) {
 }
 
 function getShippingNextDay() {
-	const shipDayString = sharedVars.vars.shipDate.toString();
+	const shipDayString = new Date(sharedVars.vars.shipDate * 1000);
 	let shipDayText = '';
 
-	if (shipDayString.includes('Mon') === true) {
+	if (shipDayString.toUTCString().includes('Mon') === true) {
 		shipDayText = 'в Понедельник';
 		return shipDayText;
 	}
-	else if (shipDayString.includes('Tue') === true) {
+	else if (shipDayString.toUTCString().includes('Tue') === true) {
 		shipDayText = 'во Вторник';
 		return shipDayText;
 	}
-	else if (shipDayString.includes('Wed') === true) {
+	else if (shipDayString.toUTCString().includes('Wed') === true) {
 		shipDayText = 'в Среду';
 		return shipDayText;
 	}
-	else if (shipDayString.includes('Thu') === true) {
+	else if (shipDayString.toUTCString().includes('Thu') === true) {
 		shipDayText = 'в Четверг';
 		return shipDayText;
 	}
-	else if (shipDayString.includes('Fri') === true) {
+	else if (shipDayString.toUTCString().includes('Fri') === true) {
 		shipDayText = 'в Пятницу';
 		return shipDayText;
 	}
-	else if (shipDayString.includes('Sat') === true) {
+	else if (shipDayString.toUTCString().includes('Sat') === true) {
 		shipDayText = 'в Субботу';
 		return shipDayText;
 	}
-	else if (shipDayString.includes('Sun') === true) {
+	else if (shipDayString.toUTCString().includes('Sun') === true) {
 		shipDayText = 'в Воскресенье';
 		return shipDayText;
 	}

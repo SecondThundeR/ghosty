@@ -2,7 +2,6 @@
 const fs = require('fs');
 const sharedVars = require('../data/variables');
 const pathToJSON = './jsonArrays/array.json';
-const warningText = sharedVars.vars.warningForSpam;
 
 function getJSONArrayContent() {
 	const rawData = fs.readFileSync(pathToJSON);
@@ -11,37 +10,38 @@ function getJSONArrayContent() {
 }
 
 function getRandomWord(msg) {
-	checkForSpam(msg);
+	sharedVars.vars.isSpamWarningTriggered = checkForSpam(msg);
 	if (sharedVars.vars.isSpamWarningTriggered === true) {
 		sharedVars.vars.isSpamWarningTriggered === false;
 		sharedVars.vars.spammerCount = 0;
 		msg.delete({ timeout: 3000 });
-		msg.channel.send(`${msg.author} ` + warningText)
+		msg.channel.send(`${msg.author} ${sharedVars.vars.warningForSpam}`)
 			.then(msg => {
 				msg.delete({ timeout: 3000 });
 			});
 		return;
 	}
+
 	else {
 		const randomWordsArray = getJSONArrayContent();
-		const randomWordFromArray = Math.floor(Math.random() * randomWordFromArray.length);
-		return `${msg.author} ` + randomWordsArray[randomWordFromArray];
+		const randomWordFromArray = Math.floor(Math.random() * randomWordsArray.length);
+		msg.channel.send(`${msg.author} ${randomWordsArray[randomWordFromArray]}`);
+		return;
 	}
 }
 
 function checkForSpam(msg) {
 	if (sharedVars.vars.spammerCount >= 3 && sharedVars.vars.spammerID === msg.author.id) {
-		sharedVars.vars.isSpamWarningTriggered = true;
-		return;
+		return true;
 	}
 	else if (sharedVars.vars.spammerCount < 3 && sharedVars.vars.spammerID === msg.author.id) {
 		sharedVars.vars.spammerCount++;
-		return;
+		return false;
 	}
 	else {
 		sharedVars.vars.spammerID = msg.author.id;
 		sharedVars.vars.spammerCount = 1;
-		return;
+		return false;
 	}
 }
 
@@ -49,6 +49,6 @@ module.exports = {
 	name: 'getRandomWord',
 	description: 'Returns random word from JSON array + check for spam',
 	execute(msg) {
-		msg.channel.send(getRandomWord(msg));
+		getRandomWord(msg);
 	},
 };

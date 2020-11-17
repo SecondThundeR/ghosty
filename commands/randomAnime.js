@@ -21,9 +21,9 @@ async function randomAnime(msg) {
 		sharedVars.vars.animeInActive = true;
 		sharedVars.vars.animeActivated = true;
 		sharedVars.vars.animeDate = new Date();
-		sharedVars.vars.animeDate.setDate(sharedVars.vars.shipDate.getDate() + 1);
+		sharedVars.vars.animeDate.setDate(sharedVars.vars.animeDate.getDate() + 1);
 		sharedVars.vars.animeDate.setHours(0, 0, 0, 0);
-		sharedVars.vars.animeDate = Math.round(sharedVars.vars.shipDate / 1000 + (3 * 60 * 60));
+		sharedVars.vars.animeDate = Math.round(sharedVars.vars.animeDate / 1000 + (3 * 60 * 60));
 		await animeGetUsers(msg);
 		const animePercent = Math.floor(Math.random() * 101);
 		if (animePercent === 100) {
@@ -93,34 +93,34 @@ async function animeFirstRun(msg, text) {
 }
 
 function animeNextDay() {
-	const animeDayString = sharedVars.vars.animeDate.toString();
+	const animeDayString = new Date(sharedVars.vars.animeDate * 1000);
 	let animeDayText = '';
 
-	if (animeDayString.includes('Mon') === true) {
+	if (animeDayString.toUTCString().includes('Mon') === true) {
 		animeDayText = 'в Понедельник';
 		return animeDayText;
 	}
-	else if (animeDayString.includes('Tue') === true) {
+	else if (animeDayString.toUTCString().includes('Tue') === true) {
 		animeDayText = 'во Вторник';
 		return animeDayText;
 	}
-	else if (animeDayString.includes('Wed') === true) {
+	else if (animeDayString.toUTCString().includes('Wed') === true) {
 		animeDayText = 'в Среду';
 		return animeDayText;
 	}
-	else if (animeDayString.includes('Thu') === true) {
+	else if (animeDayString.toUTCString().includes('Thu') === true) {
 		animeDayText = 'в Четверг';
 		return animeDayText;
 	}
-	else if (animeDayString.includes('Fri') === true) {
+	else if (animeDayString.toUTCString().includes('Fri') === true) {
 		animeDayText = 'в Пятницу';
 		return animeDayText;
 	}
-	else if (animeDayString.includes('Sat') === true) {
+	else if (animeDayString.toUTCString().includes('Sat') === true) {
 		animeDayText = 'в Субботу';
 		return animeDayText;
 	}
-	else if (animeDayString.includes('Sun') === true) {
+	else if (animeDayString.toUTCString().includes('Sun') === true) {
 		animeDayText = 'в Воскресенье';
 		return animeDayText;
 	}

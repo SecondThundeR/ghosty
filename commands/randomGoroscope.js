@@ -24,9 +24,9 @@ async function randomGoroscope(msg) {
 		sharedVars.vars.goroInActive = true;
 		sharedVars.vars.goroActivated = true;
 		sharedVars.vars.goroDate = new Date();
-		sharedVars.vars.goroDate.setDate(sharedVars.vars.shipDate.getDate() + 1);
+		sharedVars.vars.goroDate.setDate(sharedVars.vars.goroDate.getDate() + 1);
 		sharedVars.vars.goroDate.setHours(0, 0, 0, 0);
-		sharedVars.vars.goroDate = Math.round(sharedVars.vars.shipDate / 1000 + (3 * 60 * 60));
+		sharedVars.vars.goroDate = Math.round(sharedVars.vars.goroDate / 1000 + (3 * 60 * 60));
 		await goroGetUsers(msg);
 		const randomWord = Math.floor(Math.random() * whoiscopeArray.length);
 		sharedVars.vars.goroTextShort = `${sharedVars.vars.randomUserInfoGoro}` + ' - ' + whoiscopeArray[randomWord];
@@ -89,34 +89,34 @@ async function goroscopeFirstRun(msg, text) {
 }
 
 function goroscopeNextDay() {
-	const goroDayString = sharedVars.vars.goroDate.toString();
+	const goroDayString = new Date(sharedVars.vars.goroDate * 1000);
 	let goroDayText = '';
 
-	if (goroDayString.includes('Mon') === true) {
+	if (goroDayString.toUTCString().includes('Mon') === true) {
 		goroDayText = 'в Понедельник';
 		return goroDayText;
 	}
-	else if (goroDayString.includes('Tue') === true) {
+	else if (goroDayString.toUTCString().includes('Tue') === true) {
 		goroDayText = 'во Вторник';
 		return goroDayText;
 	}
-	else if (goroDayString.includes('Wed') === true) {
+	else if (goroDayString.toUTCString().includes('Wed') === true) {
 		goroDayText = 'в Среду';
 		return goroDayText;
 	}
-	else if (goroDayString.includes('Thu') === true) {
+	else if (goroDayString.toUTCString().includes('Thu') === true) {
 		goroDayText = 'в Четверг';
 		return goroDayText;
 	}
-	else if (goroDayString.includes('Fri') === true) {
+	else if (goroDayString.toUTCString().includes('Fri') === true) {
 		goroDayText = 'в Пятницу';
 		return goroDayText;
 	}
-	else if (goroDayString.includes('Sat') === true) {
+	else if (goroDayString.toUTCString().includes('Sat') === true) {
 		goroDayText = 'в Субботу';
 		return goroDayText;
 	}
-	else if (goroDayString.includes('Sun') === true) {
+	else if (goroDayString.toUTCString().includes('Sun') === true) {
 		goroDayText = 'в Воскресенье';
 		return goroDayText;
 	}

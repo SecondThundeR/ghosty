@@ -21,9 +21,9 @@ async function randomGay(msg) {
 		sharedVars.vars.gayInActive = true;
 		sharedVars.vars.gayActivated = true;
 		sharedVars.vars.gayDate = new Date();
-		sharedVars.vars.gayDate.setDate(sharedVars.vars.shipDate.getDate() + 1);
+		sharedVars.vars.gayDate.setDate(sharedVars.vars.gayDate.getDate() + 1);
 		sharedVars.vars.gayDate.setHours(0, 0, 0, 0);
-		sharedVars.vars.gayDate = Math.round(sharedVars.vars.shipDate / 1000 + (3 * 60 * 60));
+		sharedVars.vars.gayDate = Math.round(sharedVars.vars.gayDate / 1000 + (3 * 60 * 60));
 		await gayGetUsers(msg);
 		const gayPercent = Math.floor(Math.random() * 101);
 		if (gayPercent === 100) {
@@ -93,34 +93,34 @@ async function gayFirstRun(msg, text) {
 }
 
 function gayNextDay() {
-	const gayDayString = sharedVars.vars.gayDate.toString();
+	const gayDayString = new Date(sharedVars.vars.gayDate * 1000);
 	let gayDayText = '';
 
-	if (gayDayString.includes('Mon') === true) {
+	if (gayDayString.toUTCString().includes('Mon') === true) {
 		gayDayText = 'в Понедельник';
 		return gayDayText;
 	}
-	else if (gayDayString.includes('Tue') === true) {
+	else if (gayDayString.toUTCString().includes('Tue') === true) {
 		gayDayText = 'во Вторник';
 		return gayDayText;
 	}
-	else if (gayDayString.includes('Wed') === true) {
+	else if (gayDayString.toUTCString().includes('Wed') === true) {
 		gayDayText = 'в Среду';
 		return gayDayText;
 	}
-	else if (gayDayString.includes('Thu') === true) {
+	else if (gayDayString.toUTCString().includes('Thu') === true) {
 		gayDayText = 'в Четверг';
 		return gayDayText;
 	}
-	else if (gayDayString.includes('Fri') === true) {
+	else if (gayDayString.toUTCString().includes('Fri') === true) {
 		gayDayText = 'в Пятницу';
 		return gayDayText;
 	}
-	else if (gayDayString.includes('Sat') === true) {
+	else if (gayDayString.toUTCString().includes('Sat') === true) {
 		gayDayText = 'в Субботу';
 		return gayDayText;
 	}
-	else if (gayDayString.includes('Sun') === true) {
+	else if (gayDayString.toUTCString().includes('Sun') === true) {
 		gayDayText = 'в Воскресенье';
 		return gayDayText;
 	}

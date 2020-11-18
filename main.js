@@ -1,3 +1,4 @@
+/* eslint-disable spaced-comment */
 'use strict';
 const fs = require('fs');
 const Discord = require('discord.js');
@@ -88,6 +89,20 @@ client.on('message', msg => {
 		else {
 			const textString = args.join(' ');
 			client.commands.get('me').execute(msg, textString);
+		}
+		break;
+	case 'рандом':
+		if (!args.length) {
+			return;
+		}
+		else if (args.length === 1) {
+			client.commands.get('randomNumber').execute(msg, args);
+		}
+		else if (args.length === 2) {
+			client.commands.get('randomNumberRange').execute(msg, args);
+		}
+		else {
+			return;
 		}
 		break;
 	case 'гей':

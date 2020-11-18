@@ -27,22 +27,25 @@ async function randomGay(msg) {
 		await gayGetUsers(msg);
 		const gayPercent = Math.floor(Math.random() * 101);
 		if (gayPercent === 100) {
-			sharedVars.vars.gayText = `${sharedVars.vars.randomUserInfoGay} гей на %!\nГотов ли он служить ♂Dungeon Master'у♂?`;
+			sharedVars.vars.gayTextShort = `${sharedVars.vars.randomUsernameGay} гей на ${gayPercent}%!`;
+			sharedVars.vars.gayTextFull = `${sharedVars.vars.randomUserInfoGay} гей на ${gayPercent}%!\nГотов ли он служить ♂Dungeon Master'у♂?`;
 		}
 		else if (gayPercent === 0) {
-			sharedVars.vars.gayText = `${sharedVars.vars.randomUserInfoGay} гей на ${gayPercent}%!\nНеужели он не настоящий ♂Fucking Slave♂?`;
+			sharedVars.vars.gayTextShort = `${sharedVars.vars.randomUsernameGay} гей на ${gayPercent}%!`;
+			sharedVars.vars.gayTextFull = `${sharedVars.vars.randomUserInfoGay} гей на ${gayPercent}%!\nНеужели он не настоящий ♂Fucking Slave♂?`;
 		}
 		else {
-			sharedVars.vars.gayText = `${sharedVars.vars.randomUserInfoGay} гей на ${gayPercent}%!`;
+			sharedVars.vars.gayTextShort = `${sharedVars.vars.randomUsernameGay} гей на ${gayPercent}%!`;
+			sharedVars.vars.gayTextFull = sharedVars.vars.gayTextShort;
 		}
-		await gayFirstRun(msg, sharedVars.vars.gayText);
+		await gayFirstRun(msg, sharedVars.vars.gayTextFull);
 		sharedVars.vars.gayInActive = false;
 	}
 	else if (sharedVars.vars.gayInActive === true) {
 		return;
 	}
 	else if (sharedVars.vars.gayActivated === true && currentDate < sharedVars.vars.gayDate) {
-		msg.channel.send('**Cегодня: **' + sharedVars.vars.gayText + '\n\n*Следующяя проверка будет доступна ' + gayNextDay() + ' в 00:00*');
+		msg.channel.send('**Cегодня: **' + sharedVars.vars.gayTextShort + '\n\n*Следующяя проверка будет доступна ' + gayNextDay() + ' в 00:00*');
 	}
 	else if (sharedVars.vars.gayActivated === true && currentDate > sharedVars.vars.gayDate) {
 		sharedVars.vars.gayActivated = false;

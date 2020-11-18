@@ -27,22 +27,25 @@ async function randomAnime(msg) {
 		await animeGetUsers(msg);
 		const animePercent = Math.floor(Math.random() * 101);
 		if (animePercent === 100) {
-			sharedVars.vars.animeText = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!\nТы настоящая кошкодевочка!`;
+			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!`;
+			sharedVars.vars.animeTextFull = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!\nТы настоящая кошкодевочка!`;
 		}
 		else if (animePercent === 0) {
-			sharedVars.vars.animeText = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!\nПохоже ты не смотрел SAO и Токийский гуль...`;
+			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!`;
+			sharedVars.vars.animeTextFull = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!\nПохоже ты не смотрел SAO и Токийский гуль...`;
 		}
 		else {
-			sharedVars.vars.animeText = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!`;
+			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!`;
+			sharedVars.vars.animeTextFull = sharedVars.vars.animeTextShort;
 		}
-		await animeFirstRun(msg, sharedVars.vars.animeText);
+		await animeFirstRun(msg, sharedVars.vars.animeTextFull);
 		sharedVars.vars.animeInActive = false;
 	}
 	else if (sharedVars.vars.animeInActive === true) {
 		return;
 	}
 	else if (sharedVars.vars.animeActivated === true && currentDate < sharedVars.vars.animeDate) {
-		msg.channel.send('**Cегодня: **' + sharedVars.vars.animeText + '\n\n*Следующяя проверка будет доступна ' + animeNextDay() + ' в 00:00*');
+		msg.channel.send('**Cегодня: **' + sharedVars.vars.animeTextShort + '\n\n*Следующяя проверка будет доступна ' + animeNextDay() + ' в 00:00*');
 	}
 	else if (sharedVars.vars.animeActivated === true && currentDate > sharedVars.vars.animeDate) {
 		sharedVars.vars.animeActivated = false;

@@ -79,9 +79,6 @@ client.on('message', msg => {
 			client.commands.get('russianRoulette').execute(msg, bulletCount);
 		}
 		break;
-	case 'uptime':
-		client.commands.get('uptime').execute(msg);
-		break;
 	case 'йа':
 		if (!args.length) {
 			return;
@@ -178,6 +175,9 @@ client.on('message', msg => {
 		break;
 	case 'хелп':
 		client.commands.get('help').execute(msg);
+		break;
+	case 'uptime':
+		client.commands.get('uptime').execute(msg);
 		break;
 	case 'exit':
 		client.commands.get('exit').execute(msg);

@@ -36,7 +36,7 @@ async function randomGay(msg) {
 		}
 		else {
 			sharedVars.vars.gayTextShort = `${sharedVars.vars.randomUsernameGay} гей на ${gayPercent}%!`;
-			sharedVars.vars.gayTextFull = sharedVars.vars.gayTextShort;
+			sharedVars.vars.gayTextFull = `${sharedVars.vars.randomUserInfoGay} гей на ${gayPercent}%!`;
 		}
 		await gayFirstRun(msg, sharedVars.vars.gayTextFull);
 		sharedVars.vars.gayInActive = false;

@@ -27,16 +27,16 @@ async function randomAnime(msg) {
 		await animeGetUsers(msg);
 		const animePercent = Math.floor(Math.random() * 101);
 		if (animePercent === 100) {
-			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!`;
+			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUsernameAnime} анимешница на ${animePercent}%!`;
 			sharedVars.vars.animeTextFull = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!\nТы настоящая кошкодевочка!`;
 		}
 		else if (animePercent === 0) {
-			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!`;
+			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUsernameAnime} анимешница на ${animePercent}%!`;
 			sharedVars.vars.animeTextFull = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!\nПохоже ты не смотрел SAO и Токийский гуль...`;
 		}
 		else {
-			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!`;
-			sharedVars.vars.animeTextFull = sharedVars.vars.animeTextShort;
+			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUsernameAnime} анимешница на ${animePercent}%!`;
+			sharedVars.vars.animeTextFull = `${sharedVars.vars.randomUserInfoAnime} анимешница на ${animePercent}%!`;
 		}
 		await animeFirstRun(msg, sharedVars.vars.animeTextFull);
 		sharedVars.vars.animeInActive = false;

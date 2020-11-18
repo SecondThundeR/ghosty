@@ -27,16 +27,16 @@ async function randomAlina(msg) {
 		await alinaGetUsers(msg);
 		const alinaPercent = Math.floor(Math.random() * 101);
 		if (alinaPercent === 100) {
-			sharedVars.vars.alinaTextShort = `${sharedVars.vars.randomUserInfoAlina} Алина на ${alinaPercent}%!`;
+			sharedVars.vars.alinaTextShort = `${sharedVars.vars.randomUsernameAlina} Алина на ${alinaPercent}%!`;
 			sharedVars.vars.alinaTextFull = `${sharedVars.vars.randomUserInfoAlina} Алина на ${alinaPercent}%!\nНе пора ли разлогинится?`;
 		}
 		else if (alinaPercent === 0) {
-			sharedVars.vars.alinaTextShort = `${sharedVars.vars.randomUserInfoAlina} Алина на ${alinaPercent}%!`;
+			sharedVars.vars.alinaTextShort = `${sharedVars.vars.randomUsernameAlina} Алина на ${alinaPercent}%!`;
 			sharedVars.vars.alinaTextFull = `${sharedVars.vars.randomUserInfoAlina} Алина на ${alinaPercent}%!\nМог бы постараться немного...`;
 		}
 		else {
-			sharedVars.vars.alinaTextShort = `${sharedVars.vars.randomUserInfoAlina} Алина на ${alinaPercent}%!`;
-			sharedVars.vars.alinaTextFull = sharedVars.vars.alinaTextShort;
+			sharedVars.vars.alinaTextShort = `${sharedVars.vars.randomUsernameAlina} Алина на ${alinaPercent}%!`;
+			sharedVars.vars.alinaTextFull = `${sharedVars.vars.randomUserInfoAlina} Алина на ${alinaPercent}%!`;
 		}
 		await alinaFirstRun(msg, sharedVars.vars.alinaTextFull);
 		sharedVars.vars.alinaInActive = false;

@@ -119,7 +119,7 @@ client.on('message', msg => {
 		else if (args.length === 1 && args[0] === 'дня') {
 			client.commands.get('randomGay').execute(msg);
 		}
-		else if (args.length === 2 && args[0] === 'дня' && args[0] === 'сброс' && msg.author.id !== '663283391365644309') {
+		else if (args.length === 2 && args[0] === 'дня' && args[1] === 'скип' && msg.author.id !== '663283391365644309') {
 			client.commands.get('randomGayReset').execute(msg);
 		}
 		else {

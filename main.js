@@ -2,6 +2,10 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const { token } = require('./config.json');
+const express = require('express');
+const wakeUpDyno = require('./wakeDyno');
+const PORT = 3000;
+const DYNO_URL = 'https://slavebot-ds.herokuapp.com';
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
@@ -15,6 +19,11 @@ client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
 	client.user.setActivity('Dungeon Master Simulator')
 		.then(() => console.log('Activity has been set successfully'));
+});
+
+const app = express();
+app.listen(PORT, () => {
+	wakeUpDyno(DYNO_URL);
 });
 
 client.on('message', msg => {
@@ -56,109 +65,6 @@ client.on('message', msg => {
 			client.commands.get('randomShipping').execute(msg, args, isCustom);
 		}
 		else if (args.length === 1) {
-			return;
-		}
-		break;
-	case 'add':
-		if (msg.author.id === '663283391365644309') {
-			return;
-		}
-		else if (!args.length) {
-			return msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
-		}
-		else if (args.length === 1) {
-			const textString = args.join(' ');
-			client.commands.get('addWord').execute(msg, textString);
-			return;
-		}
-		else if (args.length >= 2 && args[0] === 'bot') {
-			args.shift();
-			client.commands.get('addBot').execute(msg, args);
-			return;
-		}
-		else if (args.length >= 2 && args[0] === 'roulette') {
-			if (args[1] === 'lose') {
-				const fileChooser = args[1];
-				args.splice(0, 2);
-				const textString = args.join(' ');
-				client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
-				return;
-			}
-			else if (args[1] === 'minus') {
-				const fileChooser = args[1];
-				args.splice(0, 2);
-				const textString = args.join(' ');
-				client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
-				return;
-			}
-			else if (args[1] === 'win') {
-				const fileChooser = args[1];
-				args.splice(0, 2);
-				const textString = args.join(' ');
-				client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
-				return;
-			}
-			else if (args[1] === 'zero') {
-				const fileChooser = args[1];
-				args.splice(0, 2);
-				const textString = args.join(' ');
-				client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
-				return;
-			}
-		}
-		else {
-			return;
-		}
-		break;
-	case 'delete':
-		if (msg.author.id === '663283391365644309') {
-			return;
-		}
-		else if (!args.length) {
-			return msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
-		}
-		else if (args.length === 1) {
-			const textString = args.join(' ');
-			client.commands.get('deleteWord').execute(msg, textString);
-			return;
-		}
-		else if (args.length >= 2 && args[0] === 'bot') {
-			args.shift();
-			const textString = args.join(' ');
-			client.commands.get('deleteBot').execute(msg, textString);
-			return;
-		}
-		else if (args.length >= 2 && args[0] === 'roulette') {
-			if (args[1] === 'lose') {
-				const fileChooser = args[1];
-				args.splice(0, 2);
-				const textString = args.join(' ');
-				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
-				return;
-			}
-			else if (args[1] === 'minus') {
-				const fileChooser = args[1];
-				args.splice(0, 2);
-				const textString = args.join(' ');
-				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
-				return;
-			}
-			else if (args[1] === 'win') {
-				const fileChooser = args[1];
-				args.splice(0, 2);
-				const textString = args.join(' ');
-				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
-				return;
-			}
-			else if (args[1] === 'zero') {
-				const fileChooser = args[1];
-				args.splice(0, 2);
-				const textString = args.join(' ');
-				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
-				return;
-			}
-		}
-		else {
 			return;
 		}
 		break;
@@ -240,3 +146,110 @@ client.on('message', msg => {
 });
 
 client.login(token).then(() => console.log);
+
+
+// Excluded commands of addition/deletion from JSON (Due to Heroku concerns)
+/*case 'add':
+	if (msg.author.id === '663283391365644309') {
+		return;
+	}
+	else if (!args.length) {
+		return msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
+	}
+	else if (args.length === 1) {
+		const textString = args.join(' ');
+		client.commands.get('addWord').execute(msg, textString);
+		return;
+	}
+	else if (args.length >= 2 && args[0] === 'bot') {
+		args.shift();
+		client.commands.get('addBot').execute(msg, args);
+		return;
+	}
+	else if (args.length >= 2 && args[0] === 'roulette') {
+		if (args[1] === 'lose') {
+			const fileChooser = args[1];
+			args.splice(0, 2);
+			const textString = args.join(' ');
+			client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
+			return;
+		}
+		else if (args[1] === 'minus') {
+			const fileChooser = args[1];
+			args.splice(0, 2);
+			const textString = args.join(' ');
+			client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
+			return;
+		}
+		else if (args[1] === 'win') {
+		const fileChooser = args[1];
+			args.splice(0, 2);
+			const textString = args.join(' ');
+			client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
+			return;
+		}
+		else if (args[1] === 'zero') {
+			const fileChooser = args[1];
+			args.splice(0, 2);
+			const textString = args.join(' ');
+			client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
+			return;
+		}
+	}
+	else {
+		return;
+	}
+	break;
+case 'delete':
+if (msg.author.id === '663283391365644309') {
+
+	return;
+		}
+		else if (!args.length) {
+			return msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
+		}
+		else if (args.length === 1) {
+			const textString = args.join(' ');
+			client.commands.get('deleteWord').execute(msg, textString);
+			return;
+		}
+		else if (args.length >= 2 && args[0] === 'bot') {
+			args.shift();
+			const textString = args.join(' ');
+			client.commands.get('deleteBot').execute(msg, textString);
+			return;
+		}
+		else if (args.length >= 2 && args[0] === 'roulette') {
+			if (args[1] === 'lose') {
+				const fileChooser = args[1];
+				args.splice(0, 2);
+				const textString = args.join(' ');
+				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
+				return;
+			}
+			else if (args[1] === 'minus') {
+				const fileChooser = args[1];
+				args.splice(0, 2);
+				const textString = args.join(' ');
+				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
+				return;
+			}
+			else if (args[1] === 'win') {
+				const fileChooser = args[1];
+				args.splice(0, 2);
+				const textString = args.join(' ');
+				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
+				return;
+			}
+			else if (args[1] === 'zero') {
+				const fileChooser = args[1];
+				args.splice(0, 2);
+				const textString = args.join(' ');
+				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
+				return;
+			}
+		}
+		else {
+			return;
+		}
+		break;*/

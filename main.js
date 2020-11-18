@@ -45,11 +45,11 @@ client.on('message', msg => {
 			client.commands.get('getRandomWord').execute(msg);
 		}
 		break;
-	case 'whoiscope':
+	case 'хуископ':
 		if (!args.length) {
 			client.commands.get('randomGoroscope').execute(msg);
 		}
-		else if (args[0] === 'reset' && msg.author.id !== '663283391365644309') {
+		else if (args[0] === 'скип' && msg.author.id !== '663283391365644309') {
 			client.commands.get('goroscopeReset').execute(msg);
 		}
 		break;
@@ -119,6 +119,9 @@ client.on('message', msg => {
 		else if (args.length === 1 && args[0] === 'дня') {
 			client.commands.get('randomGay').execute(msg);
 		}
+		else if (args.length === 2 && args[0] === 'дня' && args[0] === 'сброс' && msg.author.id !== '663283391365644309') {
+			client.commands.get('randomGayReset').execute(msg);
+		}
 		else {
 			return;
 		}
@@ -138,12 +141,36 @@ client.on('message', msg => {
 			return;
 		}
 		break;
+	case 'алина':
+		if (!args.length) {
+			return;
+		}
+		else if (args.length === 1 && args[0] === 'тест') {
+			const selftest = true;
+			client.commands.get('alinaChecker').execute(msg, selftest);
+		}
+		else if (args.length === 2 && args[0] === 'тест' && typeof args[1] === 'string') {
+			client.commands.get('alinaChecker').execute(msg, args);
+		}
+		else if (args.length === 1 && args[0] === 'дня') {
+			client.commands.get('randomAlina').execute(msg);
+		}
+		else if (args.length === 1 && args[0] === 'скип' && msg.author.id !== '663283391365644309') {
+			client.commands.get('randomAlinaReset').execute(msg);
+		}
+		else {
+			return;
+		}
+		break;
 	case 'анимешница':
 		if (!args.length) {
 			return;
 		}
 		else if (args.length === 1 && args[0] === 'дня') {
 			client.commands.get('randomAnime').execute(msg);
+		}
+		else if (args.length === 1 && args[0] === 'скип' && msg.author.id !== '663283391365644309') {
+			client.commands.get('randomAnimeReset').execute(msg);
 		}
 		else {
 			return;

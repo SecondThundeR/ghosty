@@ -25,6 +25,11 @@ exports.vars = {
 	animeActivated: false,
 	animeInActive: false,
 
+	alinaDate: '',
+	alinaText: '',
+	alinaActivated: false,
+	alinaInActive: false,
+
 	users: '',
 	usersArray: '',
 	firstRandomUser: '',

@@ -61,11 +61,14 @@ async function russianRoulette(msg, args) {
 	if (ttsTrigger === true) {
 		if (ttsEnabled === true) {
 			ttsEnabled = false;
+			msg.channel.send('Теперь сообщения будут работать с TTS не будут');
 		}
 		else {
 			ttsEnabled = true;
+			msg.channel.send('Теперь сообщения будут работать с TTS');
 		}
 		ttsTrigger = false;
+		return;
 	}
 	else {
 		ttsTrigger = false;

@@ -18,7 +18,7 @@ for (const file of commandFiles) {
 
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
-	client.user.setActivity('Dungeon Master Simulator')
+	client.user.setActivity('Helltaker')
 		.then(() => console.log('Activity has been set successfully'));
 });
 

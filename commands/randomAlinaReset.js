@@ -7,7 +7,7 @@ function randomAlinaReset(msg) {
 		sharedVars.vars.alinaText = '';
 		sharedVars.vars.alinaActivated = false;
 		msg.delete({ timeout: 3000 });
-		msg.channel.send('Результаты анимешницы дня сброшены! *(И наверное сама анимешница тоже сброшена..., только тсс!)*')
+		msg.channel.send('Результаты Алины дня сброшены!')
 			.then(msg => {
 				msg.delete({ timeout: 3000 });
 			});

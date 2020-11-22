@@ -13,6 +13,8 @@ let randomWordMinus;
 
 let msgTime;
 
+let ttsEnabled = true;
+
 function getJSONContents() {
 	const dataWin = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsWin.json');
 	convertedDataWin = JSON.parse(dataWin);
@@ -45,7 +47,6 @@ async function russianRoulette(msg, args) {
 	let bulletCount = 0;
 	let bulletNumber = 0;
 	let randomNumber = 0;
-	let ttsEnabled = true;
 	let ttsTrigger = false;
 
 	if (typeof args === 'string') {
@@ -61,7 +62,7 @@ async function russianRoulette(msg, args) {
 	if (ttsTrigger === true) {
 		if (ttsEnabled === true) {
 			ttsEnabled = false;
-			msg.channel.send('Теперь сообщения будут работать с TTS не будут');
+			msg.channel.send('Теперь сообщения не будут работать с TTS');
 		}
 		else {
 			ttsEnabled = true;

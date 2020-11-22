@@ -1,4 +1,3 @@
-
 'use strict';
 const fs = require('fs');
 
@@ -46,12 +45,30 @@ async function russianRoulette(msg, args) {
 	let bulletCount = 0;
 	let bulletNumber = 0;
 	let randomNumber = 0;
+	let ttsEnabled = true;
+	let ttsTrigger = false;
 
 	if (typeof args === 'string') {
 		bulletCount = Number(args);
 	}
+	else if (typeof args === 'boolean') {
+		ttsTrigger = true;
+	}
 	else {
 		bulletCount = args;
+	}
+
+	if (ttsTrigger === true) {
+		if (ttsEnabled === true) {
+			ttsEnabled = false;
+		}
+		else {
+			ttsEnabled = true;
+		}
+		ttsTrigger = false;
+	}
+	else {
+		ttsTrigger = false;
 	}
 
 	if (bulletCount === 1) {
@@ -60,7 +77,7 @@ async function russianRoulette(msg, args) {
 
 		if (bulletNumber === randomNumber) {
 			msg.channel.send('БАХ', {
-				tts: true,
+				tts: ttsEnabled,
 			}).then((msg) => setTimeout(function() {
 				msg.edit('*БАХ*');
 			}, 4000));
@@ -69,7 +86,7 @@ async function russianRoulette(msg, args) {
 		}
 		else {
 			msg.channel.send('мертвая тишина...', {
-				tts: true,
+				tts: ttsEnabled,
 			}).then((msg) => setTimeout(function() {
 				msg.edit('*мертвая тишина...*');
 			}, 4000));
@@ -88,7 +105,7 @@ async function russianRoulette(msg, args) {
 	}
 	else if (bulletCount < 0) {
 		msg.channel.send(`${randomWordMinus}`, {
-			tts: true,
+			tts: ttsEnabled,
 		});
 	}
 	else {
@@ -107,7 +124,7 @@ async function russianRoulette(msg, args) {
 
 		if (bulletNumberArray.includes(randomNumber) === true) {
 			msg.channel.send('БАХ', {
-				tts: true,
+				tts: ttsEnabled,
 			}).then((msg) => setTimeout(function() {
 				msg.edit('*БАХ*');
 			}, 4000));
@@ -116,7 +133,7 @@ async function russianRoulette(msg, args) {
 		}
 		else {
 			msg.channel.send('мертвая тишина...', {
-				tts: true,
+				tts: ttsEnabled,
 			}).then((msg) => setTimeout(function() {
 				msg.edit('*мертвая тишина...*');
 			}, 4000));

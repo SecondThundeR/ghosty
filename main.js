@@ -74,9 +74,13 @@ client.on('message', msg => {
 			const bulletCount = 1;
 			client.commands.get('russianRoulette').execute(msg, bulletCount);
 		}
-		else if (args.length) {
+		else if (args.length === 1 && args[0] !== 'ттс') {
 			const bulletCount = args[0];
 			client.commands.get('russianRoulette').execute(msg, bulletCount);
+		}
+		else if (args.length === 1 && args[0] === 'ттс') {
+			const ttsTrigger = true;
+			client.commands.get('russianRoulette').execute(msg, ttsTrigger);
 		}
 		break;
 	case 'йа':

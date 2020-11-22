@@ -4,7 +4,6 @@ const alinaID = '312671116810518528';
 
 function realAlinaChecker(msg, args) {
 	const collector = new Discord.MessageCollector(msg.channel, msg => msg.author.id === alinaID, { time: 10000 });
-	console.log(collector);
 	if (msg.author.id === alinaID) {
 		msg.channel.send(`${msg.author} - ты же Алина...\nТы уверена что хочешь проверить саму себя? (Да / Нет)`);
 		collector.on('collect', msg => {

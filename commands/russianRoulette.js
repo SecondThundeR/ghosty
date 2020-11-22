@@ -62,11 +62,19 @@ async function russianRoulette(msg, args) {
 	if (ttsTrigger === true) {
 		if (ttsEnabled === true) {
 			ttsEnabled = false;
-			msg.channel.send('Теперь сообщения не будут работать с TTS');
+			msg.delete({ timeout: 3000 });
+			msg.channel.send('Теперь сообщения не будут работать с TTS')
+				.then(msg => {
+					msg.delete({ timeout: 3000 });
+				});
 		}
 		else {
 			ttsEnabled = true;
-			msg.channel.send('Теперь сообщения будут работать с TTS');
+			msg.delete({ timeout: 3000 });
+			msg.channel.send('Теперь сообщения будут работать с TTS')
+				.then(msg => {
+					msg.delete({ timeout: 3000 });
+				});
 		}
 		ttsTrigger = false;
 		return;

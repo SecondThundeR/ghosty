@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Ignore of package-lock
 - Personal library to invoke necessary operations on JSON files
-- Added blank blacklist section for further purposes
+- Blacklist section for further purposes
 
 ### Changed
 

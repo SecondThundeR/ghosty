@@ -1,12 +1,13 @@
-/* eslint-disable spaced-comment */
 'use strict';
 const fs = require('fs');
 const Discord = require('discord.js');
-const { token } = require('./config.json');
 const express = require('express');
 const wakeUpDyno = require('./wakeDyno');
 const PORT = 3000;
 const DYNO_URL = 'https://slavebot-ds.herokuapp.com';
+const sharedVars = require('./data/variables');
+const { token } = require('./config.json');
+
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
@@ -16,15 +17,14 @@ for (const file of commandFiles) {
 	client.commands.set(command.name, command);
 }
 
-client.on('ready', () => {
-	console.log(`Logged in as ${client.user.tag}!`);
-	client.user.setActivity('Helltaker')
-		.then(() => console.log('Activity has been set successfully'));
-});
-
 const app = express();
 app.listen(PORT, () => {
 	wakeUpDyno(DYNO_URL);
+});
+
+client.on('ready', () => {
+	client.user.setActivity(sharedVars.text.activityName);
+	console.log(`Logged in as '${client.user.tag}' and set '${sharedVars.text.activityName}' as an activity`);
 });
 
 client.on('message', msg => {
@@ -38,34 +38,41 @@ client.on('message', msg => {
 	switch (command) {
 	case 'ху':
 	case 'who':
-		if (msg.author.id === '663283391365644309') {
-			return;
+		if (!args.length) {
+			client.commands.get('getRandomWord').execute(msg, args);
+		}
+		else if (args[0] != '' && args.length === 1) {
+			client.commands.get('getRandomWord').execute(msg, args);
 		}
 		else {
-			client.commands.get('getRandomWord').execute(msg);
+			return;
 		}
 		break;
 	case 'хуископ':
-		if (!args.length) {
-			client.commands.get('randomGoroscope').execute(msg);
+		if (args[0] !== 'скип') {
+			client.commands.get('randomThing').execute(msg, args, command);
 		}
-		else if (args[0] === 'скип' && msg.author.id !== '663283391365644309') {
-			client.commands.get('goroscopeReset').execute(msg);
+		else if (args[0] === 'скип') {
+			client.commands.get('resultsReset').execute(msg, command);
+		}
+		else {
+			return;
 		}
 		break;
 	case 'шип':
 		if (!args.length) {
-			const isCustom = false;
-			client.commands.get('randomShipping').execute(msg, args, isCustom);
+			client.commands.get('randomThing').execute(msg, args, command);
 		}
-		else if (args[0] === 'скип' && msg.author.id !== '663283391365644309') {
-			client.commands.get('shippingReset').execute(msg);
+		else if (args[0] === 'скип') {
+			client.commands.get('resultsReset').execute(msg, command);
 		}
 		else if (args[0] !== 'скип' && args.length === 2) {
-			const isCustom = true;
-			client.commands.get('randomShipping').execute(msg, args, isCustom);
+			client.commands.get('randomThing').execute(msg, args, command);
 		}
 		else if (args.length === 1) {
+			return;
+		}
+		else {
 			return;
 		}
 		break;
@@ -79,12 +86,15 @@ client.on('message', msg => {
 			client.commands.get('russianRoulette').execute(msg, bulletCount);
 		}
 		else if (args.length === 1 && args[0] === 'ттс') {
-			const ttsTrigger = true;
-			client.commands.get('russianRoulette').execute(msg, ttsTrigger);
+			client.commands.get('russianRoulette').execute(msg, args);
+		}
+		else {
+			return;
 		}
 		break;
 	case 'йа':
 		if (!args.length) {
+			msg.delete({ timeout: 1000 });
 			return;
 		}
 		else {
@@ -97,10 +107,10 @@ client.on('message', msg => {
 			return;
 		}
 		else if (args.length === 1) {
-			client.commands.get('randomNumber').execute(msg, args);
+			client.commands.get('randomThing').execute(msg, args, command);
 		}
 		else if (args.length === 2) {
-			client.commands.get('randomNumberRange').execute(msg, args);
+			client.commands.get('randomThing').execute(msg, args, command);
 		}
 		else {
 			return;
@@ -111,17 +121,16 @@ client.on('message', msg => {
 			return;
 		}
 		else if (args.length === 1 && args[0] === 'тест') {
-			const selftest = true;
-			client.commands.get('gayChecker').execute(msg, selftest);
+			client.commands.get('userChecker').execute(msg, args, command);
 		}
-		else if (args.length === 2 && args[0] === 'тест' && typeof args[1] === 'string') {
-			client.commands.get('gayChecker').execute(msg, args);
+		else if (args.length === 2 && args[0] === 'тест') {
+			client.commands.get('userChecker').execute(msg, args, command);
 		}
 		else if (args.length === 1 && args[0] === 'дня') {
-			client.commands.get('randomGay').execute(msg);
+			client.commands.get('randomThing').execute(msg, args, command);
 		}
-		else if (args.length === 2 && args[0] === 'дня' && args[1] === 'скип' && msg.author.id !== '663283391365644309') {
-			client.commands.get('randomGayReset').execute(msg);
+		else if (args.length === 1 && args[0] === 'скип') {
+			client.commands.get('resultsReset').execute(msg, command);
 		}
 		else {
 			return;
@@ -132,11 +141,16 @@ client.on('message', msg => {
 			return;
 		}
 		else if (args.length === 1 && args[0] === 'тест') {
-			const selftest = true;
-			client.commands.get('animeChecker').execute(msg, selftest);
+			client.commands.get('userChecker').execute(msg, args, command);
 		}
-		else if (args.length === 2 && args[0] === 'тест' && typeof args[1] === 'string') {
-			client.commands.get('animeChecker').execute(msg, args);
+		else if (args.length === 2 && args[0] === 'тест') {
+			client.commands.get('userChecker').execute(msg, args, command);
+		}
+		else if (args.length === 1 && args[0] === 'дня') {
+			client.commands.get('randomThing').execute(msg, args, command);
+		}
+		else if (args.length === 1 && args[0] === 'скип') {
+			client.commands.get('resultsReset').execute(msg, command);
 		}
 		else {
 			return;
@@ -147,31 +161,16 @@ client.on('message', msg => {
 			return;
 		}
 		else if (args.length === 1 && args[0] === 'тест') {
-			const selftest = true;
-			client.commands.get('alinaChecker').execute(msg, selftest);
+			client.commands.get('userChecker').execute(msg, args, command);
 		}
-		else if (args.length === 2 && args[0] === 'тест' && typeof args[1] === 'string') {
-			client.commands.get('alinaChecker').execute(msg, args);
-		}
-		else if (args.length === 1 && args[0] === 'дня') {
-			client.commands.get('randomAlina').execute(msg);
-		}
-		else if (args.length === 2 && args[0] === 'дня' && args[1] === 'скип' && msg.author.id !== '663283391365644309') {
-			client.commands.get('randomAlinaReset').execute(msg);
-		}
-		else {
-			return;
-		}
-		break;
-	case 'анимешница':
-		if (!args.length) {
-			return;
+		else if (args.length === 2 && args[0] === 'тест') {
+			client.commands.get('userChecker').execute(msg, args, command);
 		}
 		else if (args.length === 1 && args[0] === 'дня') {
-			client.commands.get('randomAnime').execute(msg);
+			client.commands.get('randomThing').execute(msg, args, command);
 		}
-		else if (args.length === 1 && args[0] === 'скип' && msg.author.id !== '663283391365644309') {
-			client.commands.get('randomAnimeReset').execute(msg);
+		else if (args.length === 1 && args[0] === 'скип') {
+			client.commands.get('resultsReset').execute(msg, command);
 		}
 		else {
 			return;
@@ -183,119 +182,9 @@ client.on('message', msg => {
 	case 'uptime':
 		client.commands.get('uptime').execute(msg);
 		break;
-	case 'exit':
-		client.commands.get('exit').execute(msg);
-		break;
 	default:
 		break;
 	}
 });
 
-client.login(token).then(() => console.log);
-
-
-// Excluded commands of addition/deletion from JSON (Due to Heroku concerns)
-/*case 'add':
-	if (msg.author.id === '663283391365644309') {
-		return;
-	}
-	else if (!args.length) {
-		return msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
-	}
-	else if (args.length === 1) {
-		const textString = args.join(' ');
-		client.commands.get('addWord').execute(msg, textString);
-		return;
-	}
-	else if (args.length >= 2 && args[0] === 'bot') {
-		args.shift();
-		client.commands.get('addBot').execute(msg, args);
-		return;
-	}
-	else if (args.length >= 2 && args[0] === 'roulette') {
-		if (args[1] === 'lose') {
-			const fileChooser = args[1];
-			args.splice(0, 2);
-			const textString = args.join(' ');
-			client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
-			return;
-		}
-		else if (args[1] === 'minus') {
-			const fileChooser = args[1];
-			args.splice(0, 2);
-			const textString = args.join(' ');
-			client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
-			return;
-		}
-		else if (args[1] === 'win') {
-		const fileChooser = args[1];
-			args.splice(0, 2);
-			const textString = args.join(' ');
-			client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
-			return;
-		}
-		else if (args[1] === 'zero') {
-			const fileChooser = args[1];
-			args.splice(0, 2);
-			const textString = args.join(' ');
-			client.commands.get('addWordRoulette').execute(msg, fileChooser, textString);
-			return;
-		}
-	}
-	else {
-		return;
-	}
-	break;
-case 'delete':
-if (msg.author.id === '663283391365644309') {
-
-	return;
-		}
-		else if (!args.length) {
-			return msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
-		}
-		else if (args.length === 1) {
-			const textString = args.join(' ');
-			client.commands.get('deleteWord').execute(msg, textString);
-			return;
-		}
-		else if (args.length >= 2 && args[0] === 'bot') {
-			args.shift();
-			const textString = args.join(' ');
-			client.commands.get('deleteBot').execute(msg, textString);
-			return;
-		}
-		else if (args.length >= 2 && args[0] === 'roulette') {
-			if (args[1] === 'lose') {
-				const fileChooser = args[1];
-				args.splice(0, 2);
-				const textString = args.join(' ');
-				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
-				return;
-			}
-			else if (args[1] === 'minus') {
-				const fileChooser = args[1];
-				args.splice(0, 2);
-				const textString = args.join(' ');
-				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
-				return;
-			}
-			else if (args[1] === 'win') {
-				const fileChooser = args[1];
-				args.splice(0, 2);
-				const textString = args.join(' ');
-				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
-				return;
-			}
-			else if (args[1] === 'zero') {
-				const fileChooser = args[1];
-				args.splice(0, 2);
-				const textString = args.join(' ');
-				client.commands.get('deleteWordRoulette').execute(msg, fileChooser, textString);
-				return;
-			}
-		}
-		else {
-			return;
-		}
-		break;*/
+client.login(token);

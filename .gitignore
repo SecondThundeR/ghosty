@@ -9,6 +9,8 @@
 *.vi
 *~
 *.sass-cache
+.vscode
+package-lock.json
 
 # OS or Editor folders
 .DS_Store
@@ -16,16 +18,11 @@
 .project
 .settings
 .tmproj
-.idea
-.vscode
 nbproject
 Thumbs.db
 
 # Node modules
 /node_modules
-
-# package-lock file
-package-lock.json
 
 # Coveralls
 coverage

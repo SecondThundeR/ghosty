@@ -1,5 +1,5 @@
 {
-  "name": "fuckinslave",
+  "name": "secondthunder-js-bot",
   "version": "1.0.0",
   "description": "Discord Bot, written on JavaScript",
   "main": "main.js",
@@ -7,7 +7,7 @@
     "start": "node main.js"
   },
   "author": "SecondThundeR",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "discord.js": "^12.4.1",
     "eslint": "^7.13.0",

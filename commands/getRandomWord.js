@@ -1,30 +1,27 @@
 'use strict';
-const fs = require('fs');
+const JSONLib = require('../libs/JSONHandlerLib');
 const sharedVars = require('../data/variables');
-const pathToJSON = './jsonArrays/array.json';
+const randomWordsArray = JSONLib.getJSONWordArray();
 
-function getJSONArrayContent() {
-	const rawData = fs.readFileSync(pathToJSON);
-	const parsedData = JSON.parse(rawData);
-	return parsedData;
-}
-
-function getRandomWord(msg) {
+function getRandomWord(msg, args) {
 	sharedVars.vars.isSpamWarningTriggered = checkForSpam(msg);
+	const randomWordFromArray = Math.floor(Math.random() * JSONLib.getJSONWordArray().length);
+
 	if (sharedVars.vars.isSpamWarningTriggered === true) {
-		sharedVars.vars.isSpamWarningTriggered === false;
+		sharedVars.vars.isSpamWarningTriggered = false;
 		sharedVars.vars.spammerCount = 0;
-		msg.delete({ timeout: 3000 });
-		msg.channel.send(`${msg.author} ${sharedVars.vars.warningForSpam}`)
+		msg.delete({ timeout: 2000 });
+		msg.channel.send(`${msg.author} ${sharedVars.text.warningForSpam}`)
 			.then(msg => {
-				msg.delete({ timeout: 3000 });
+				msg.delete({ timeout: 2000 });
 			});
 		return;
 	}
-
+	else if (args.length === 1) {
+		msg.channel.send(`${args[0]} ${randomWordsArray[randomWordFromArray]}`);
+		return;
+	}
 	else {
-		const randomWordsArray = getJSONArrayContent();
-		const randomWordFromArray = Math.floor(Math.random() * randomWordsArray.length);
 		msg.channel.send(`${msg.author} ${randomWordsArray[randomWordFromArray]}`);
 		return;
 	}
@@ -47,8 +44,9 @@ function checkForSpam(msg) {
 
 module.exports = {
 	name: 'getRandomWord',
-	description: 'Returns random word from JSON array + check for spam',
-	execute(msg) {
-		getRandomWord(msg);
+	description: 'This module returns a random word from JSON array (Also, it checking for spam (3-4 messages in a row) and returns a warning)',
+	cooldown: 2,
+	execute(msg, args) {
+		getRandomWord(msg, args);
 	},
 };

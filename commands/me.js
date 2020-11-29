@@ -1,5 +1,5 @@
 'use strict';
-function meUser(msg, args) {
+function meAnalog(msg, args) {
 	msg.delete();
 	msg.channel.send(`${msg.author} ${args}`);
 }
@@ -9,6 +9,6 @@ module.exports = {
 	description: '/me ...',
 	cooldown: 2,
 	execute(msg, args) {
-		meUser(msg, args);
+		meAnalog(msg, args);
 	},
 };

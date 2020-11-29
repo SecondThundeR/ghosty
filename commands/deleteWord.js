@@ -62,7 +62,6 @@ function deleteBot(msg, args) {
 }
 
 function deleteWordRoulette(msg, args) {
-	const textString = args.splice(0, 2).join(' ');
 	let numberOfArray = 0;
 	if (fileChooser === 'win') {
 		numberOfArray = 2;
@@ -83,7 +82,7 @@ function deleteWordRoulette(msg, args) {
 				msg.delete({ timeout: 3000 });
 			});
 	}
-	const wordInArray = preloadedArrays[numberOfArray].indexOf(textString);
+	const wordInArray = preloadedArrays[numberOfArray].indexOf(args.splice(0, 2).join(' '));
 	if (wordInArray !== -1) {
 		preloadedArrays[numberOfArray].splice(wordInArray, 1);
 		fs.writeFileSync(arrayPaths[numberOfArray], JSON.stringify(preloadedArrays[numberOfArray], null, 2));

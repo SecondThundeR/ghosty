@@ -63,14 +63,11 @@ client.on('message', msg => {
 		if (!args.length) {
 			client.commands.get('randomThing').execute(msg, args, command);
 		}
-		else if (args[0] === 'скип') {
+		else if (args[0] === 'скип' && args.length === 1) {
 			client.commands.get('resultsReset').execute(msg, command);
 		}
 		else if (args[0] !== 'скип' && args.length === 2) {
 			client.commands.get('randomThing').execute(msg, args, command);
-		}
-		else if (args.length === 1) {
-			return;
 		}
 		else {
 			return;

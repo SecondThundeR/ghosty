@@ -61,7 +61,7 @@ function deleteBot(msg, args) {
 	}
 }
 
-function deleteWordRoulette(msg, fileChooser, textString) {
+function deleteWordRoulette(msg, args) {
 	const textString = args.splice(0, 2).join(' ');
 	let numberOfArray = 0;
 	if (fileChooser === 'win') {

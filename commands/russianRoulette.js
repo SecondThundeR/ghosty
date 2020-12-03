@@ -1,88 +1,68 @@
 'use strict';
 const JSONLib = require('../libs/JSONHandlerLib');
-const wordsArray = JSONLib.getJSONRouletteData();
-const utilityArray = JSONLib.getJSONUtilityData();
-let randomWordArray = [];
+const sharedVars = require('../data/variables');
+const wordsArray = JSONLib.getRouletteArrays();
+const delayTime = 3000;
 
-function getRandomGameWords() {
-	randomWordArray = [];
-	const randomWordNumWin = Math.floor(Math.random() * wordsArray[0].length);
-	randomWordArray.push(wordsArray[0][randomWordNumWin]);
-	const randomWordNumLose = Math.floor(Math.random() * wordsArray[1].length);
-	randomWordArray.push(wordsArray[1][randomWordNumLose]);
-	const randomWordNumZero = Math.floor(Math.random() * wordsArray[2].length);
-	randomWordArray.push(wordsArray[2][randomWordNumZero]);
-	const randomWordNumMinus = Math.floor(Math.random() * wordsArray[3].length);
-	randomWordArray.push(wordsArray[3][randomWordNumMinus]);
-	return;
+function getRandomWords() {
+	const randomWinWord = wordsArray[0][Math.floor(Math.random() * wordsArray[0].length)];
+	const randomLoseWord = wordsArray[1][Math.floor(Math.random() * wordsArray[1].length)];
+	const randomZeroWord = wordsArray[2][Math.floor(Math.random() * wordsArray[2].length)];
+	const randomMinusWord = wordsArray[3][Math.floor(Math.random() * wordsArray[3].length)];
+	return [ randomWinWord, randomLoseWord, randomZeroWord, randomMinusWord ];
 }
 
-async function russianRoulette(msg, args) {
-	const randomTimeFromArray = Math.floor(Math.random() * utilityArray[1].length);
-	const delayTime = utilityArray[1][randomTimeFromArray];
-	getRandomGameWords();
-
+function russianRoulette(msg, args) {
+	const randomWordArray = getRandomWords();
+	const bulletNumberArray = [];
+	const playerName = msg.author;
+	let bulletToShoot = 0;
 	let bulletCount = 0;
-	let bulletNumber = 0;
-	let randomNumber = 0;
 
-	bulletCount = Number(args);
+	if (!args.length) {
+		bulletCount = 1;
+	}
+	else {
+		bulletCount = Number(args);
+	}
 
-	if (bulletCount === 1) {
-		bulletNumber = Math.floor(Math.random() * 6) + 1;
-		randomNumber = Math.floor(Math.random() * 6) + 1;
-
-		if (bulletNumber === randomNumber) {
-			msg.channel.send('**БАХ**').then((msg) => setTimeout(function() {
-				msg.edit(`${msg.author} ${randomWordArray[1]}`);
-			}, delayTime));
-			return;
-		}
-		else {
-			msg.channel.send('*мертвая тишина...*').then((msg) => setTimeout(function() {
-				msg.edit(`${msg.author} ${randomWordArray[0]}`);
-			}, delayTime));
-			return;
-		}
-	}
-	else if (bulletCount === 0) {
-		msg.channel.send(`${msg.author} ${randomWordArray[2]}`);
-		return;
-	}
-	else if (bulletCount > 6) {
-		msg.channel.send(`${msg.author} по правилам русской рулетки, можно брать только до 6 патронов`);
-		return;
-	}
-	else if (bulletCount === 6) {
-		msg.channel.send(`поздравляем! теперь у нас на одного суицидника меньше. им был ${msg.author}`);
+	if (bulletCount === 0) {
+		msg.reply(randomWordArray[2]);
 		return;
 	}
 	else if (bulletCount < 0) {
-		msg.channel.send(`${msg.author} ${randomWordArray[3]}`);
+		msg.reply(randomWordArray[3]);
+		return;
+	}
+	else if (bulletCount === 6) {
+		msg.reply(sharedVars.text.rouletteSixBulletsWarning);
+		return;
+	}
+	else if (bulletCount > 6) {
+		msg.reply(sharedVars.text.rouletteSixAndMoreBulletsWarning);
 		return;
 	}
 	else {
-		const bulletNumberArray = [];
-
 		for (let i = 0; i < bulletCount; i++) {
-			const bulletNumber = Math.floor(Math.random() * 6) + 1;
-			if (bulletNumberArray.includes(bulletNumber) === true) {
+			const bulletToShootNumber = Math.floor(Math.random() * 6) + 1;
+			const isWordRepeat = bulletNumberArray.includes(bulletToShootNumber);
+			if (isWordRepeat === true) {
 				i--;
 			}
 			else {
-				bulletNumberArray.push(bulletNumber);
+				bulletNumberArray.push(bulletToShootNumber);
 			}
 		}
-		randomNumber = Math.floor(Math.random() * 6) + 1;
-		if (bulletNumberArray.includes(randomNumber) === true) {
-			msg.channel.send('**БАХ**').then((msg) => setTimeout(function() {
-				msg.edit(`${msg.author} ${randomWordArray[1]}`);
+		bulletToShoot = Math.floor(Math.random() * 6) + 1;
+		if (bulletNumberArray.includes(bulletToShoot) === true) {
+			msg.channel.send(sharedVars.text.rouletteLoseWarning).then((msg) => setTimeout(function() {
+				msg.edit(`${playerName}, ${randomWordArray[1]}`);
 			}, delayTime));
 			return;
 		}
 		else {
-			msg.channel.send('*мертвая тишина...*').then((msg) => setTimeout(function() {
-				msg.edit(`${msg.author} ${randomWordArray[0]}`);
+			msg.channel.send(sharedVars.text.rouletteWinWarning).then((msg) => setTimeout(function() {
+				msg.edit(`${playerName}, ${randomWordArray[0]}`);
 			}, delayTime));
 			return;
 		}
@@ -91,7 +71,7 @@ async function russianRoulette(msg, args) {
 
 module.exports = {
 	name: 'russianRoulette',
-	description: 'Russian roulette simulator',
+	description: 'Module handles Russian Roulette game',
 	cooldown: 2,
 	execute(msg, args) {
 		russianRoulette(msg, args);

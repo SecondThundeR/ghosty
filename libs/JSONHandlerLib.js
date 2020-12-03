@@ -1,32 +1,34 @@
-/* eslint-disable no-undef */
 'use strict';
 const fs = require('fs');
-const pathToMainJSON = fs.readFileSync('./jsonArrays/array.json');
-const pathToBotIDsJSON = fs.readFileSync('./jsonArrays/botIDs.json');
-const pathTomsgTimeJSON = fs.readFileSync('./jsonArrays/msgTime.json');
-const pathToWinWords = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsWin.json');
-const pathToLoseWords = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsLose.json');
-const pathToZeroWords = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsZero.json');
-const pathToMinusWords = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsMinus.json');
+const unparsedWordsArray = fs.readFileSync('./jsonArrays/array.json');
+const unparsedBotIDsArray = fs.readFileSync('./jsonArrays/botIDs.json');
+const unparsedWinWords = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsWin.json');
+const unparsedLoseWords = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsLose.json');
+const unparsedZeroWords = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsZero.json');
+const unparsedMinusWords = fs.readFileSync('./jsonArrays/russianRouletteWords/rouletteWordsMinus.json');
+const unparsedCommandsNames = fs.readFileSync('./jsonArrays/commandsNames.json');
 
-function getJSONWordArray() {
-	const wordsArray = JSON.parse(pathToMainJSON);
-	return wordsArray;
+function getWordsArray() {
+	const parsedWordsArray = JSON.parse(unparsedWordsArray);
+	return parsedWordsArray;
 }
 
-function getJSONUtilityData() {
-	const botIDs = JSON.parse(pathToBotIDsJSON);
-	const msgTime = JSON.parse(pathTomsgTimeJSON);
-	return [ botIDs, msgTime ];
+function getBotIDsArray() {
+	const parsedBotIDs = JSON.parse(unparsedBotIDsArray);
+	return parsedBotIDs;
 }
 
-function getJSONRouletteData() {
-	const winWords = JSON.parse(pathToWinWords);
-	const loseWords = JSON.parse(pathToLoseWords);
-	const zeroWords = JSON.parse(pathToZeroWords);
-	const minusWords = JSON.parse(pathToMinusWords);
-	const msgTime = JSON.parse(pathTomsgTimeJSON);
-	return [ winWords, loseWords, zeroWords, minusWords, msgTime ];
+function getRouletteArrays() {
+	const parsedWinWords = JSON.parse(unparsedWinWords);
+	const parsedLoseWords = JSON.parse(unparsedLoseWords);
+	const parsedZeroWords = JSON.parse(unparsedZeroWords);
+	const parsedMinusWords = JSON.parse(unparsedMinusWords);
+	return [ parsedWinWords, parsedLoseWords, parsedZeroWords, parsedMinusWords ];
 }
 
-module.exports = { getJSONWordArray, getJSONUtilityData, getJSONRouletteData };
+function getCommandsNames() {
+	const parsedCommandsNames = JSON.parse(unparsedCommandsNames);
+	return parsedCommandsNames;
+}
+
+module.exports = { getWordsArray, getBotIDsArray, getRouletteArrays, getCommandsNames };

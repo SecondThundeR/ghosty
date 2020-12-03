@@ -9,7 +9,7 @@ String.prototype.toHHMMSS = function() {
 	const hours = Math.floor(sec_num / 3600);
 	const minutes = Math.floor((sec_num - (hours * 3600)) / 60);
 	const seconds = sec_num - (hours * 3600) - (minutes * 60);
-	return checkForZeroTime(seconds, minutes, hours);
+	return getFormattedTime(seconds, minutes, hours);
 };
 
 function hoursText(hours) {
@@ -39,24 +39,19 @@ function secondsText(seconds) {
 	}
 }
 
-function checkForZeroTime(seconds, minutes, hours) {
-	let text = '';
-
+function getFormattedTime(seconds, minutes, hours) {
 	if (minutes < 1 && hours < 1) {
-		text = seconds + ' ' + secondsText(seconds);
-		return text;
+		return seconds + ' ' + secondsText(seconds);
 	}
 	else if (minutes >= 1 && hours < 1) {
-		text = minutes + ' ' + minutesText(minutes) + ' и ' + seconds + ' ' + secondsText(seconds);
-		return text;
+		return minutes + ' ' + minutesText(minutes) + ' и ' + seconds + ' ' + secondsText(seconds);
 	}
 	else {
-		text = hours + ' ' + hoursText(hours) + ' ' + minutes + ' ' + minutesText(minutes) + ' и ' + seconds + ' ' + secondsText(seconds);
-		return text;
+		return hours + ' ' + hoursText(hours) + ' ' + minutes + ' ' + minutesText(minutes) + ' и ' + seconds + ' ' + secondsText(seconds);
 	}
 }
 
-function uptimeBot(msg) {
+function getUptime(msg) {
 	const time = process.uptime();
 	const uptime = (time + '').toHHMMSS();
 	msg.delete({ timeout: 2000 });
@@ -66,9 +61,9 @@ function uptimeBot(msg) {
 }
 
 module.exports = {
-	name: 'uptime',
-	description: 'Get uptime of bot',
+	name: 'getUptime',
+	description: 'Module returns uptime of bot in user-friendly format',
 	execute(msg) {
-		uptimeBot(msg);
+		getUptime(msg);
 	},
 };

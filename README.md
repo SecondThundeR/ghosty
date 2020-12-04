@@ -6,7 +6,7 @@ This is repository of some random bot for Discord which was created just for fun
 
 ## Just a moment of attention
 
-This bot can add and remove words from a JSON array. This implementation is missing from the main branch due to problems with these operations on Heroku. These additional functionality can be found [on this branch](https://github.com/SecondThundeR/secondthunder-js-bot/tree/add-delete-from-json), so you can choose what you need more from bot
+This bot can add and remove words from a JSON array, however this implementation is missing from the main branch due to problems with these operations on Heroku. These additional functionality can be found [on this branch](https://github.com/SecondThundeR/secondthunder-js-bot/tree/add-delete-from-json), so you can choose what you need more from bot
 
 ## How to use this bot
 

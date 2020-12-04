@@ -1,8 +1,7 @@
 'use strict';
 const fs = require('fs');
 const JSONLib = require('../libs/JSONHandlerLib');
-const preloadedArrays = JSONLib.loadAllJSONArrays();
-const arrayPaths = JSONLib.loadAllJSONPaths();
+const arrayAndPaths = JSONLib.getAllArraysAndPaths();
 const delayTime = 3000;
 
 function chooseArrayToModify(msg, args) {
@@ -21,11 +20,11 @@ function chooseArrayToModify(msg, args) {
 
 function deleteWord(msg, args) {
 	const textString = args.join(' ');
-	const wordInArray = preloadedArrays[0].indexOf(textString);
+	const wordInArray = arrayAndPaths[1][0].indexOf(textString);
 	switch (wordInArray) {
 	case -1:
-		preloadedArrays[0].splice(wordInArray, 1);
-		fs.writeFileSync(arrayPaths[0], JSON.stringify(preloadedArrays[0], null, 2));
+		arrayAndPaths[1][0].splice(wordInArray, 1);
+		fs.writeFileSync(arrayAndPaths[0][0], JSON.stringify(arrayAndPaths[1][0], null, 2));
 		msg.delete({ timeout: delayTime });
 		msg.channel.send('Я удалил это слово у себя. Неужели кто-то очищает меня от этого...')
 			.then(msg => {
@@ -44,11 +43,11 @@ function deleteWord(msg, args) {
 
 function deleteBot(msg, args) {
 	const botID = args[1];
-	const botInArray = preloadedArrays[1].indexOf(botID);
+	const botInArray = arrayAndPaths[1][1].indexOf(botID);
 	switch (botInArray) {
 	case -1:
-		preloadedArrays[1].splice(botInArray, 1);
-		fs.writeFileSync(arrayPaths[1], JSON.stringify(preloadedArrays[1], null, 2));
+		arrayAndPaths[1][1].splice(botInArray, 1);
+		fs.writeFileSync(arrayAndPaths[0][1], JSON.stringify(arrayAndPaths[1][1], null, 2));
 		msg.delete({ timeout: delayTime });
 		msg.channel.send('Я удалил этого бота у себя. Теперь я не буду его игнорировать!')
 			.then(msg => {
@@ -89,11 +88,11 @@ function deleteWordRoulette(msg, args) {
 			});
 		return;
 	}
-	const wordInArray = preloadedArrays[numberOfArray].indexOf(textString);
+	const wordInArray = arrayAndPaths[1][numberOfArray].indexOf(textString);
 	switch (wordInArray) {
 	case -1:
-		preloadedArrays[numberOfArray].splice(wordInArray, 1);
-		fs.writeFileSync(arrayPaths[numberOfArray], JSON.stringify(preloadedArrays[numberOfArray], null, 2));
+		arrayAndPaths[1][numberOfArray].splice(wordInArray, 1);
+		fs.writeFileSync(arrayAndPaths[0][numberOfArray], JSON.stringify(arrayAndPaths[1][numberOfArray], null, 2));
 		msg.delete({ timeout: delayTime });
 		msg.channel.send('Я удалил это слово у себя. Неужели кто-то очищает меня от этого...')
 			.then(msg => {

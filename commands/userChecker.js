@@ -1,136 +1,130 @@
 'use strict';
+const sharedVars = require('../data/variables');
+
 function checkerSelector(msg, args, command) {
-	if (command === 'гей') {
-		gayChecker(msg, args);
-	}
-	else if (command === 'аниме') {
-		animeChecker(msg, args);
-	}
-	else if (command === 'алина') {
-		alinaChecker(msg, args);
-	}
-	else {
-		return;
+	switch(command) {
+	case 'гей':
+		msg.channel.send(gayChecker(msg, args));
+		break;
+	case 'аниме':
+		msg.channel.send(animeChecker(msg, args));
+		break;
+	case 'алина':
+		msg.channel.send(alinaChecker(msg, args));
+		break;
+	case 'влад':
+		msg.channel.send(vladChecker(msg, args));
+		break;
+	default:
+		break;
 	}
 }
 
 function gayChecker(msg, args) {
-	const gayPercent = Math.floor(Math.random() * 101);
-
-	if (args.length === 1) {
-		if (gayPercent === 0) {
-			const msgText = `${msg.author} сегодня не гей`;
-			msg.channel.send(msgText);
+	const randomPercent = Math.floor(Math.random() * 101);
+	switch (args.length) {
+	case 1:
+		switch (randomPercent) {
+		case 0:
+			return `${msg.author} ${sharedVars.text.noneGay}`;
+		case 100:
+			return `${msg.author} ${sharedVars.text.fullGay} ${randomPercent}${sharedVars.text.gayPercent}`;
+		default:
+			return `${msg.author} ${sharedVars.text.gayDefaultPart} ${randomPercent}${sharedVars.text.gayPercent}`;
 		}
-		else if (gayPercent === 100) {
-			const msgText = `${msg.author} тобой бы гордился ♂Dungeon Master♂!\nТы на ${gayPercent}% гей!`;
-			msg.channel.send(msgText);
+	case 2:
+		switch (randomPercent) {
+		case 0:
+			return `${args[1]} ${sharedVars.text.noneGay}`;
+		case 100:
+			return `${args[1]} ${sharedVars.text.fullGay} ${randomPercent}${sharedVars.text.gayTextPercent}`;
+		default:
+			return `${args[1]} ${sharedVars.text.gayDefaultPart} ${randomPercent}${sharedVars.text.gayPercent}`;
 		}
-		else {
-			const msgText = `${msg.author} на ${gayPercent}% гей!`;
-			msg.channel.send(msgText);
-		}
-	}
-	else if (args.length === 2) {
-		if (gayPercent === 0) {
-			const msgText = `${args[1]} сегодня не гей!`;
-			msg.channel.send(msgText);
-		}
-		else if (gayPercent === 100) {
-			const msgText = `${args[1]} тобой бы гордился ♂Dungeon Master♂!\nТы на ${gayPercent}% гей!`;
-			msg.channel.send(msgText);
-		}
-		else {
-			const msgText = `${args[1]} на ${gayPercent}% гей!`;
-			msg.channel.send(msgText);
-		}
-	}
-	else {
-		return;
+	default:
+		break;
 	}
 }
 
 function animeChecker(msg, args) {
-	const animePercent = Math.floor(Math.random() * 101);
-
-	if (args.length === 1) {
-		if (animePercent === 0) {
-			const msgText = `${msg.author} сегодня не анимешница :c`;
-			msg.channel.send(msgText);
+	const randomPercent = Math.floor(Math.random() * 101);
+	switch (args.length) {
+	case 1:
+		switch (randomPercent) {
+		case 0:
+			return `${msg.author} ${sharedVars.text.noneAnime}`;
+		case 100:
+			return `${msg.author} ${sharedVars.text.fullAnime} ${randomPercent}${sharedVars.text.animePercent}`;
+		default:
+			return `${msg.author} ${sharedVars.text.animeDefaultPart} ${randomPercent}${sharedVars.text.animePercent}`;
 		}
-		else if (animePercent === 100) {
-			const msgText = `${msg.author} может называть себя по праву кошкодевочкой и девочкой волшебницей!\nТы анимешница на ${animePercent}%!`;
-			msg.channel.send(msgText);
+	case 2:
+		switch (randomPercent) {
+		case 0:
+			return `${args[1]} ${sharedVars.text.noneAnime}`;
+		case 100:
+			return `${args[1]} ${sharedVars.text.fullAnime} ${randomPercent}${sharedVars.text.animePercent}`;
+		default:
+			return `${args[1]} ${sharedVars.text.animeDefaultPart} ${randomPercent}${sharedVars.text.animePercent}`;
 		}
-		else {
-			const msgText = `${msg.author} анимешница на ${animePercent}%!`;
-			msg.channel.send(msgText);
-		}
-	}
-	else if (args.length === 2) {
-		if (animePercent === 0) {
-			const msgText = `${args[1]} сегодня не анимешница :c`;
-			msg.channel.send(msgText);
-		}
-		else if (animePercent === 100) {
-			const msgText = `${args[1]} может называть себя по праву кошкодевочкой и девочкой волшебницей!\nТы анимешница на ${animePercent}%!`;
-			msg.channel.send(msgText);
-		}
-		else {
-			const msgText = `${args[1]} анимешница на ${animePercent}%!`;
-			msg.channel.send(msgText);
-		}
-	}
-	else {
-		return;
+	default:
+		break;
 	}
 }
 
 function alinaChecker(msg, args) {
-	const alinaPercent = Math.floor(Math.random() * 101);
+	const randomPercent = Math.floor(Math.random() * 101);
+	switch (args.length) {
+	case 1:
+		switch (randomPercent) {
+		case 0:
+			return `${msg.author} ${sharedVars.text.noneAlina}`;
+		case 100:
+			return `${msg.author} ${sharedVars.text.fullAlina} ${randomPercent}${sharedVars.text.alinaPercent}`;
+		default:
+			return `${msg.author} ${sharedVars.text.alinaDefaultPart} ${randomPercent}${sharedVars.text.alinaPercent}`;
+		}
+	case 2:
+		switch (randomPercent) {
+		case 0:
+			return `${args[1]} ${sharedVars.text.noneAlina}`;
+		case 100:
+			return `${args[1]} ${sharedVars.text.fullAlina} ${randomPercent}${sharedVars.text.alinaPercent}`;
+		default:
+			return `${args[1]} ${sharedVars.text.alinaDefaultPart} ${randomPercent}${sharedVars.text.alinaPercent}`;
+		}
+	default:
+		break;
+	}
+}
 
-	if (args.length === 1) {
-		if (alinaPercent === 0) {
-			const msgText = `${msg.author} сегодня не Алина :c`;
-			msg.channel.send(msgText);
-			return;
+function vladChecker(msg, args) {
+	const randomPercent = Math.floor(Math.random() * 101);
+	switch (args.length) {
+	case 1:
+		switch (randomPercent) {
+		case 0:
+			return `${msg.author}${sharedVars.text.noneVlad}`;
+		case 100:
+			return `${msg.author}${sharedVars.text.fullVlad}${randomPercent}${sharedVars.text.vladPercent}`;
+		default:
+			return `${msg.author}${sharedVars.text.vladDefaultPart}${randomPercent}${sharedVars.text.vladPercent}`;
 		}
-		else if (alinaPercent === 100) {
-			const msgText = `${msg.author} разлогинься!\nТы Алина на ${alinaPercent}%!`;
-			msg.channel.send(msgText);
-			return;
+	case 2:
+		switch (randomPercent) {
+		case 0:
+			return `${args[1]}${sharedVars.text.noneVlad}`;
+		case 100:
+			return `${args[1]}${sharedVars.text.fullVlad}${randomPercent}${sharedVars.text.vladPercent}`;
+		default:
+			return `${args[1]}${sharedVars.text.vladDefaultPart}${randomPercent}${sharedVars.text.vladPercent}`;
 		}
-		else {
-			const msgText = `${msg.author} Алина на ${alinaPercent}%!`;
-			msg.channel.send(msgText);
-			return;
-		}
-	}
-	else if (args.length === 2) {
-		if (alinaPercent === 0) {
-			const msgText = `${args[1]} сегодня не Алина :c`;
-			msg.channel.send(msgText);
-			return;
-		}
-		else if (alinaPercent === 100) {
-			const msgText = `${args[1]} разлогинься!\nТы Алина на ${alinaPercent}%!`;
-			msg.channel.send(msgText);
-			return;
-		}
-		else {
-			const msgText = `${args[1]} Алина на ${alinaPercent}%!`;
-			msg.channel.send(msgText);
-			return;
-		}
-	}
-	else {
-		return;
 	}
 }
 
 module.exports = {
 	name: 'userChecker',
-	description: 'Checking users for certain criteria',
+	description: 'Module returns a random percentage that shows how someone is',
 	cooldown: 3,
 	execute(msg, args, command) {
 		checkerSelector(msg, args, command);

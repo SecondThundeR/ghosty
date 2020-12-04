@@ -2,11 +2,14 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const express = require('express');
-const wakeUpDyno = require('./wakeDyno');
-const PORT = 3000;
-const DYNO_URL = 'https://slavebot-ds.herokuapp.com';
+const JSONLib = require('./libs/JSONHandlerLib');
 const sharedVars = require('./data/variables');
 const { token } = require('./config.json');
+const wakeUpDyno = require('./wakeDyno');
+
+const PORT = 3000;
+const DYNO_URL = 'https://appname.herokuapp.com';
+const commandsAliases = JSONLib.getCommandsNames();
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -36,182 +39,79 @@ client.on('message', msg => {
 	const command = args.shift().toLowerCase();
 
 	switch (command) {
-	case 'ху':
-	case 'who':
-		if (!args.length) {
-			client.commands.get('getRandomWord').execute(msg, args);
-		}
-		else if (args[0] != '' && args.length === 1) {
-			client.commands.get('getRandomWord').execute(msg, args);
-		}
-		else {
-			return;
-		}
+	case commandsAliases[0]:
+		client.commands.get('getRandomWordFromArray').execute(msg, args);
 		break;
-	case 'хуископ':
-		if (args[0] !== 'скип') {
-			client.commands.get('randomThing').execute(msg, args, command);
-		}
-		else if (args[0] === 'скип') {
+	case commandsAliases[1]:
+	case commandsAliases[2]:
+		switch (args[0]) {
+		case 'скип':
 			client.commands.get('resultsReset').execute(msg, command);
-		}
-		else {
-			return;
-		}
-		break;
-	case 'шип':
-		if (!args.length) {
-			client.commands.get('randomThing').execute(msg, args, command);
-		}
-		else if (args[0] === 'скип' && args.length === 1) {
-			client.commands.get('resultsReset').execute(msg, command);
-		}
-		else if (args[0] !== 'скип' && args.length === 2) {
-			client.commands.get('randomThing').execute(msg, args, command);
-		}
-		else {
-			return;
+			break;
+		default:
+			client.commands.get('getRandomThing').execute(msg, args, command);
+			break;
 		}
 		break;
-	case 'add':
+	case commandsAliases[3]:
 		if (!args.length) {
-			return msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
+			msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
 		}
-		else if (args.length === 1) {
+		else {
 			client.commands.get('addWord').execute(msg, args);
-			return;
-		}
-		else if (args.length >= 2 && args[0] === 'bot') {
-			client.commands.get('addWord').execute(msg, args);
-			return;
-		}
-		else if (args.length >= 3 && args[0] === 'roulette') {
-			client.commands.get('addWord').execute(msg, args);
-			return;
 		}
 		break;
-	case 'delete':
+	case commandsAliases[4]:
 		if (!args.length) {
-			return msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
+			msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
 		}
-		else if (args.length === 1) {
+		else {
 			client.commands.get('deleteWord').execute(msg, args);
-			return;
-		}
-		else if (args.length >= 2 && args[0] === 'bot') {
-			client.commands.get('deleteWord').execute(msg, args);
-			return;
-		}
-		else if (args.length >= 3 && args[0] === 'roulette') {
-			client.commands.get('deleteWord').execute(msg, args);
-			return;
 		}
 		break;
-	case 'рулетка':
-		if (!args.length) {
-			const bulletCount = 1;
-			client.commands.get('russianRoulette').execute(msg, bulletCount);
-		}
-		else if (args.length === 1 && args[0] !== 'ттс') {
-			const bulletCount = args[0];
-			client.commands.get('russianRoulette').execute(msg, bulletCount);
-		}
-		else if (args.length === 1 && args[0] === 'ттс') {
-			client.commands.get('russianRoulette').execute(msg, args);
-		}
-		else {
-			return;
-		}
+	case commandsAliases[5]:
+		client.commands.get('russianRoulette').execute(msg, args);
 		break;
-	case 'йа':
-		if (!args.length) {
-			msg.delete({ timeout: 1000 });
-			return;
-		}
-		else {
-			const textString = args.join(' ');
-			client.commands.get('me').execute(msg, textString);
-		}
+	case commandsAliases[6]:
+		client.commands.get('getRandomThing').execute(msg, args, command);
 		break;
-	case 'рандом':
+	case commandsAliases[7]:
+		client.commands.get('meMessage').execute(msg, args);
+		break;
+	case commandsAliases[8]:
+	case commandsAliases[9]:
+	case commandsAliases[10]:
+	case commandsAliases[11]:
 		if (!args.length) {
 			return;
 		}
-		else if (args.length === 1) {
-			client.commands.get('randomThing').execute(msg, args, command);
-		}
-		else if (args.length === 2) {
-			client.commands.get('randomThing').execute(msg, args, command);
-		}
 		else {
-			return;
+			switch(args[0]) {
+			case 'тест':
+				client.commands.get('userChecker').execute(msg, args, command);
+				break;
+			case 'дня':
+				client.commands.get('getRandomThing').execute(msg, args, command);
+				break;
+			case 'скип':
+				client.commands.get('resultsReset').execute(msg, command);
+				break;
+			}
 		}
 		break;
-	case 'гей':
+	case commandsAliases[12]:
 		if (!args.length) {
-			return;
-		}
-		else if (args.length === 1 && args[0] === 'тест') {
-			client.commands.get('userChecker').execute(msg, args, command);
-		}
-		else if (args.length === 2 && args[0] === 'тест') {
-			client.commands.get('userChecker').execute(msg, args, command);
-		}
-		else if (args.length === 1 && args[0] === 'дня') {
-			client.commands.get('randomThing').execute(msg, args, command);
-		}
-		else if (args.length === 1 && args[0] === 'скип') {
-			client.commands.get('resultsReset').execute(msg, command);
+			break;
 		}
 		else {
-			return;
+			client.commands.get('createPoll').execute(msg, args);
 		}
 		break;
-	case 'аниме':
-		if (!args.length) {
-			return;
-		}
-		else if (args.length === 1 && args[0] === 'тест') {
-			client.commands.get('userChecker').execute(msg, args, command);
-		}
-		else if (args.length === 2 && args[0] === 'тест') {
-			client.commands.get('userChecker').execute(msg, args, command);
-		}
-		else if (args.length === 1 && args[0] === 'дня') {
-			client.commands.get('randomThing').execute(msg, args, command);
-		}
-		else if (args.length === 1 && args[0] === 'скип') {
-			client.commands.get('resultsReset').execute(msg, command);
-		}
-		else {
-			return;
-		}
+	case commandsAliases[13]:
+		client.commands.get('getHelp').execute(msg);
 		break;
-	case 'алина':
-		if (!args.length) {
-			return;
-		}
-		else if (args.length === 1 && args[0] === 'тест') {
-			client.commands.get('userChecker').execute(msg, args, command);
-		}
-		else if (args.length === 2 && args[0] === 'тест') {
-			client.commands.get('userChecker').execute(msg, args, command);
-		}
-		else if (args.length === 1 && args[0] === 'дня') {
-			client.commands.get('randomThing').execute(msg, args, command);
-		}
-		else if (args.length === 1 && args[0] === 'скип') {
-			client.commands.get('resultsReset').execute(msg, command);
-		}
-		else {
-			return;
-		}
-		break;
-	case 'хелп':
-		client.commands.get('help').execute(msg);
-		break;
-	case 'uptime':
-		client.commands.get('uptime').execute(msg);
+	case commandsAliases[14]:
+		client.commands.get('getUptime').execute(msg);
 		break;
 	default:
 		break;

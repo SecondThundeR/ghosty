@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and starting with changes from 29.11.2020, this bot will have a correct [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 04.12.2020
+
+### Added
+
+- **[Beta]** Simple poll system
+- JSONHandlerLib import in main.js
+- 'влад' and 'полл' commands
+- 'anon' flag for meMessage.js
+
+### Changed
+
+- All similar subfunctions were merged
+- Random delay time replaced to fixed and has been moved to an external variable
+- All text moved to shared variables for localization purposes
+- Some if/else statements were changed to switch statement
+- Multiple functions and variables names were refactored
+- More variables resets after triggering 'скип' flag
+- Global code refactor
+
+### Removed
+
+- Async in russian roulette function
+
+### Fixed
+
+- Wrong mention in russian roulette
+
 ## [1.0.1] - 29.11.2020
 
 ### Removed
@@ -16,7 +43,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Ignore of package-lock
 - Personal library to invoke necessary operations on JSON files
-- Added blank blacklist section for further purposes
+- Blacklist section for further purposes
 
 ### Changed
 
@@ -41,6 +68,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Multiple commands and functions was deleted due to move to Heroku *(Some of commands will present in additional branches)*
 - Commented code was deleted from main branch
 
+[1.1.0]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.0.0...v1.0.1
-
 [1.0.0]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v0.9.9...v1.0.0

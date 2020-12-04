@@ -65,7 +65,6 @@ function addBot(msg, args) {
 }
 
 function addWordRoulette(msg, args) {
-	const textString = args.splice(0, 2).join(' ');
 	let numberOfArray = 0;
 	switch (args[1]) {
 	case 'win':
@@ -88,6 +87,8 @@ function addWordRoulette(msg, args) {
 			});
 		return;
 	}
+	args.splice(0, 2);
+	const textString = args.join(' ');
 	const wordInArray = arrayAndPaths[1][numberOfArray].indexOf(textString);
 	switch (wordInArray) {
 	case -1:

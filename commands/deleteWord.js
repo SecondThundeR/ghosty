@@ -23,17 +23,17 @@ function deleteWord(msg, args) {
 	const wordInArray = arrayAndPaths[1][0].indexOf(textString);
 	switch (wordInArray) {
 	case -1:
-		arrayAndPaths[1][0].splice(wordInArray, 1);
-		fs.writeFileSync(arrayAndPaths[0][0], JSON.stringify(arrayAndPaths[1][0], null, 2));
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Я удалил это слово у себя. Неужели кто-то очищает меня от этого...')
+		msg.channel.send('Прости, я не нашёл это слово у себя и мне нечего удалять')
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
 		return;
 	default:
+		arrayAndPaths[1][0].splice(wordInArray, 1);
+		fs.writeFileSync(arrayAndPaths[0][0], JSON.stringify(arrayAndPaths[1][0], null, 2));
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Прости, я не нашёл это слово у себя и мне нечего удалять')
+		msg.channel.send('Я удалил это слово у себя. Неужели кто-то очищает меня от этого...')
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
@@ -46,6 +46,13 @@ function deleteBot(msg, args) {
 	const botInArray = arrayAndPaths[1][1].indexOf(botID);
 	switch (botInArray) {
 	case -1:
+		msg.delete({ timeout: delayTime });
+		msg.channel.send('Прости, я не нашёл этого бота у себя и мне некого убирать')
+			.then(msg => {
+				msg.delete({ timeout: delayTime });
+			});
+		return;
+	default:
 		arrayAndPaths[1][1].splice(botInArray, 1);
 		fs.writeFileSync(arrayAndPaths[0][1], JSON.stringify(arrayAndPaths[1][1], null, 2));
 		msg.delete({ timeout: delayTime });
@@ -54,18 +61,10 @@ function deleteBot(msg, args) {
 				msg.delete({ timeout: delayTime });
 			});
 		return;
-	default:
-		msg.delete({ timeout: delayTime });
-		msg.channel.send('Прости, я не нашёл этого бота у себя и мне некого убирать')
-			.then(msg => {
-				msg.delete({ timeout: delayTime });
-			});
-		return;
 	}
 }
 
 function deleteWordRoulette(msg, args) {
-	const textString = args.splice(0, 2).join(' ');
 	let numberOfArray = 0;
 	switch (args[1]) {
 	case 'win':
@@ -88,20 +87,22 @@ function deleteWordRoulette(msg, args) {
 			});
 		return;
 	}
+	args.splice(0, 2);
+	const textString = args.join(' ');
 	const wordInArray = arrayAndPaths[1][numberOfArray].indexOf(textString);
 	switch (wordInArray) {
 	case -1:
-		arrayAndPaths[1][numberOfArray].splice(wordInArray, 1);
-		fs.writeFileSync(arrayAndPaths[0][numberOfArray], JSON.stringify(arrayAndPaths[1][numberOfArray], null, 2));
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Я удалил это слово у себя. Неужели кто-то очищает меня от этого...')
+		msg.channel.send('Прости, я не нашёл это слово у себя и мне нечего удалять')
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
 		return;
 	default:
+		arrayAndPaths[1][numberOfArray].splice(wordInArray, 1);
+		fs.writeFileSync(arrayAndPaths[0][numberOfArray], JSON.stringify(arrayAndPaths[1][numberOfArray], null, 2));
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Прости, я не нашёл это слово у себя и мне нечего удалять')
+		msg.channel.send('Я удалил это слово у себя. Неужели кто-то очищает меня от этого...')
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});

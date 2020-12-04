@@ -40,12 +40,12 @@ function loadAllJSONArrays() {
 }
 
 function loadAllJSONPaths() {
-	const pathToMainJSON = './jsonArrays/array.json'
-	const pathToBotIDsJSON = './jsonArrays/botIDs.json'
-	const pathToWinWords = './jsonArrays/russianRouletteWords/rouletteWordsWin.json'
-	const pathToLoseWords = './jsonArrays/russianRouletteWords/rouletteWordsLose.json'
-	const pathToZeroWords = './jsonArrays/russianRouletteWords/rouletteWordsZero.json'
-	const pathToMinusWords = './jsonArrays/russianRouletteWords/rouletteWordsMinus.json'
+	const pathToMainJSON = './jsonArrays/array.json';
+	const pathToBotIDsJSON = './jsonArrays/botIDs.json';
+	const pathToWinWords = './jsonArrays/russianRouletteWords/rouletteWordsWin.json';
+	const pathToLoseWords = './jsonArrays/russianRouletteWords/rouletteWordsLose.json';
+	const pathToZeroWords = './jsonArrays/russianRouletteWords/rouletteWordsZero.json';
+	const pathToMinusWords = './jsonArrays/russianRouletteWords/rouletteWordsMinus.json';
 	return [ pathToMainJSON, pathToBotIDsJSON, pathToWinWords, pathToLoseWords, pathToZeroWords, pathToMinusWords ];
 }
 

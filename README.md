@@ -1,4 +1,5 @@
 # Discord JavaScript Bot
+[![DeepScan grade](https://deepscan.io/api/teams/11565/projects/14865/branches/286263/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=11565&pid=14865&bid=286263)
 
 This is repository of some random bot for Discord which was created just for fun and for some educational purposes *(Made with Discord.js library)*
 

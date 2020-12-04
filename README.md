@@ -29,7 +29,7 @@ This is repository of some random bot for Discord which was created just for fun
 6. Pull bot to Heroku and wait for build
 7. After getting a log that bot was logged in, you are good to go
 
-> Please keep in mind, if you will you these implementation on Heroku, you can't pull edited JSON from it and after Dyno reset, all changed JSON will be reseted to last commit state
+> Please keep in mind, if you will use this implementation on Heroku, you can't pull edited JSON from there and after Dyno reset, all changed JSON will be reseted to last commit state
 
 ## Changelog
 

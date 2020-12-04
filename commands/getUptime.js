@@ -3,6 +3,7 @@ const sharedVars = require('../data/variables');
 const secondsArray = ['секунды', 'секунд'];
 const minutesArray = ['минуты', 'минут'];
 const hoursArray = ['часа', 'часов'];
+const delayTime = 10000;
 
 String.prototype.toHHMMSS = function() {
 	const sec_num = parseInt(this, 10);
@@ -54,9 +55,9 @@ function getFormattedTime(seconds, minutes, hours) {
 function getUptime(msg) {
 	const time = process.uptime();
 	const uptime = (time + '').toHHMMSS();
-	msg.delete({ timeout: 2000 });
+	msg.delete({ timeout: delayTime });
 	msg.channel.send(`${sharedVars.text.uptimeText} **${uptime}**`).then(msg => {
-		msg.delete({ timeout: 2000 });
+		msg.delete({ timeout: delayTime });
 	});
 }
 

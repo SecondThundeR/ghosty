@@ -3,7 +3,8 @@ const JSONLib = require('../libs/JSONHandlerLib');
 const sharedVars = require('../data/variables');
 const botIDs = JSONLib.getBotIDsArray();
 const goroscopeArray = JSONLib.getWordsArray();
-const delayTime = 3000;
+const delayTime1 = 3000;
+const delayTime2 = 10000;
 
 function randomThingChooser(msg, args, command) {
 	switch (command) {
@@ -52,9 +53,19 @@ function randomNumber(msg, args) {
 	switch (args.length) {
 	case 1:
 		rangeNumber = Number(args[0]);
-		randomNumberSingle = Math.floor(Math.random() * rangeNumber) + 1;
-		msg.channel.send(`${sharedVars.text.randomNumberText} ${rangeNumber}: **${randomNumberSingle}**`);
-		break;
+		if (rangeNumber < 1) {
+			msg.delete({ timeout: delayTime2 });
+			msg.reply(sharedVars.text.noRangeNumberWarning)
+				.then(msg => {
+					msg.delete({ timeout: delayTime2 });
+				});
+			break;
+		}
+		else {
+			randomNumberSingle = Math.floor(Math.random() * rangeNumber) + 1;
+			msg.channel.send(`${sharedVars.text.randomNumberText} ${rangeNumber}: **${randomNumberSingle}**`);
+			break;
+		}
 	case 2:
 		fromRangeNumber = Number(args[0]);
 		toRangeNumber = Number(args[1]);
@@ -62,10 +73,10 @@ function randomNumber(msg, args) {
 		msg.channel.send(`${sharedVars.text.randomNumberWithRangeTextPart1} ${fromRangeNumber} ${sharedVars.text.randomNumberWithRangeTextPart2} ${toRangeNumber}: **${randomNumberRange}**`);
 		break;
 	default:
-		msg.delete({ timeout: 10000 });
+		msg.delete({ timeout: delayTime2 });
 		msg.reply(sharedVars.text.noRangeNumberWarning)
 			.then(msg => {
-				msg.delete({ timeout: 10000 });
+				msg.delete({ timeout: delayTime2 });
 			});
 		break;
 	}
@@ -136,21 +147,23 @@ async function randomGay(msg) {
 	if (sharedVars.vars.gayActivated === false && sharedVars.vars.gayInActive === false) {
 		sharedVars.vars.gayInActive = sharedVars.vars.gayActivated = true;
 		sharedVars.vars.gayDate = getNextDayTime();
-		const userInfo = await getUser(msg);
+		const userInfo = await getUser(msg, 'typical');
 		sharedVars.vars.randomUserInfoGay = userInfo[0];
 		sharedVars.vars.randomUsernameGay = userInfo[1];
 		const randomPercent = Math.floor(Math.random() * 101);
-		if (randomPercent === 100) {
-			sharedVars.vars.gayTextShort = `${sharedVars.vars.randomUsernameGay} ${sharedVars.text.gayOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
-			sharedVars.vars.gayTextFull = `${sharedVars.vars.randomUserInfoGay} ${sharedVars.text.gayOnText}${randomPercent}${sharedVars.text.gayFullText}`;
-		}
-		else if (randomPercent === 0) {
+		switch (randomPercent) {
+		case 0:
 			sharedVars.vars.gayTextShort = `${sharedVars.vars.randomUsernameGay}${sharedVars.text.gayOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
-			sharedVars.vars.gayTextFull = `${sharedVars.vars.randomUserInfoGay} ${sharedVars.text.gayOnText}${randomPercent}${sharedVars.text.gayNoneText}`;
-		}
-		else {
-			sharedVars.vars.gayTextShort = `${sharedVars.vars.randomUsernameGay} ${sharedVars.text.gayOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
-			sharedVars.vars.gayTextFull = `${sharedVars.vars.randomUserInfoGay} ${sharedVars.text.gayOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
+			sharedVars.vars.gayTextFull = `${sharedVars.vars.randomUserInfoGay}${sharedVars.text.gayOnText}${randomPercent}${sharedVars.text.gayNoneText}`;
+			break;
+		case 100:
+			sharedVars.vars.gayTextShort = `${sharedVars.vars.randomUsernameGay}${sharedVars.text.gayOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
+			sharedVars.vars.gayTextFull = `${sharedVars.vars.randomUserInfoGay}${sharedVars.text.gayOnText}${randomPercent}${sharedVars.text.gayFullText}`;
+			break;
+		default:
+			sharedVars.vars.gayTextShort = `${sharedVars.vars.randomUsernameGay}${sharedVars.text.gayOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
+			sharedVars.vars.gayTextFull = `${sharedVars.vars.randomUserInfoGay}${sharedVars.text.gayOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
+			break;
 		}
 		await firstRunMessages(msg, sharedVars.vars.gayTextFull, sharedVars.text.gayFirstRunArray);
 		sharedVars.vars.gayInActive = false;
@@ -175,22 +188,22 @@ async function randomAnime(msg) {
 	if (sharedVars.vars.animeActivated === false && sharedVars.vars.animeInActive === false) {
 		sharedVars.vars.animeInActive = sharedVars.vars.animeActivated = true;
 		sharedVars.vars.animeDate = getNextDayTime();
-		const userInfo = await getUser(msg);
+		const userInfo = await getUser(msg, 'typical');
 		sharedVars.vars.randomUserInfoAnime = userInfo[0];
 		sharedVars.vars.randomUsernameAnime = userInfo[1];
 		const randomPercent = Math.floor(Math.random() * 101);
 		switch (randomPercent) {
 		case 0:
-			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUsernameAnime}${sharedVars.vars.animeOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
-			sharedVars.vars.animeTextFull = `${sharedVars.vars.randomUserInfoAnime}${sharedVars.vars.animeOnText}${randomPercent}${sharedVars.text.animeNoneText}`;
+			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUsernameAnime}${sharedVars.text.animeOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
+			sharedVars.vars.animeTextFull = `${sharedVars.vars.randomUserInfoAnime}${sharedVars.text.animeOnText}${randomPercent}${sharedVars.text.animeNoneText}`;
 			break;
 		case 100:
-			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUsernameAnime}${sharedVars.vars.animeOnText}${randomPercent}`;
-			sharedVars.vars.animeTextFull = `${sharedVars.vars.randomUserInfoAnime}${sharedVars.vars.animeOnText}${randomPercent}${sharedVars.text.animeFullText}`;
+			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUsernameAnime}${sharedVars.text.animeOnText}${randomPercent}`;
+			sharedVars.vars.animeTextFull = `${sharedVars.vars.randomUserInfoAnime}${sharedVars.text.animeOnText}${randomPercent}${sharedVars.text.animeFullText}`;
 			break;
 		default:
-			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUsernameAnime}${sharedVars.vars.animeOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
-			sharedVars.vars.animeTextFull = `${sharedVars.vars.randomUserInfoAnime}${sharedVars.vars.animeOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
+			sharedVars.vars.animeTextShort = `${sharedVars.vars.randomUsernameAnime}${sharedVars.text.animeOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
+			sharedVars.vars.animeTextFull = `${sharedVars.vars.randomUserInfoAnime}${sharedVars.text.animeOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
 			break;
 		}
 		await firstRunMessages(msg, sharedVars.vars.animeTextFull, sharedVars.text.animeFirstRunArray);
@@ -216,7 +229,7 @@ async function randomAlina(msg) {
 	if (sharedVars.vars.alinaActivated === false && sharedVars.vars.alinaInActive === false) {
 		sharedVars.vars.alinaInActive = sharedVars.vars.alinaActivated = true;
 		sharedVars.vars.alinaDate = getNextDayTime();
-		const userInfo = await getUser(msg);
+		const userInfo = await getUser(msg, 'typical');
 		sharedVars.vars.randomUserInfoAlina = userInfo[0];
 		sharedVars.vars.randomUsernameAlina = userInfo[1];
 		const randomPercent = Math.floor(Math.random() * 101);
@@ -345,13 +358,13 @@ function deleteBotsFromArray(usersID) {
 
 async function firstRunMessages(msg, text, firstRunArray) {
 	msg.channel.send(firstRunArray[0]);
-	await new Promise(r => setTimeout(r, delayTime));
+	await new Promise(r => setTimeout(r, delayTime1));
 	msg.channel.send(firstRunArray[1]);
-	await new Promise(r => setTimeout(r, delayTime));
+	await new Promise(r => setTimeout(r, delayTime1));
 	msg.channel.send(firstRunArray[2]);
-	await new Promise(r => setTimeout(r, delayTime));
+	await new Promise(r => setTimeout(r, delayTime1));
 	msg.channel.send(firstRunArray[3]);
-	await new Promise(r => setTimeout(r, delayTime));
+	await new Promise(r => setTimeout(r, delayTime1));
 	msg.channel.send(firstRunArray[4] + text);
 	return;
 }

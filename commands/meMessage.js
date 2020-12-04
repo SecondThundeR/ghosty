@@ -1,15 +1,15 @@
 'use strict';
 function meMessage(msg, args) {
 	msg.delete();
-	if (args[0] === 'анон' && args.length > 0) {
+	if (args[0] === 'анон' && args.length > 1) {
 		args.shift();
 		const textString = args.join(' ');
 		msg.channel.send(textString);
 		return;
 	}
-	else if (args.length > 0) {
+	else if (args[0] !== 'анон' && args.length > 0) {
 		const textString = args.join(' ');
-		msg.channel.send(textString);
+		msg.channel.send(`${msg.author} ${textString}`);
 		return;
 	}
 }

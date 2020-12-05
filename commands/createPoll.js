@@ -7,7 +7,7 @@ function getVoteResult(collectedArr, voteMsg) {
 	let rArray, pArray, nArray, pObj, nObj, pValue, nValue;
 	const collectedArray = Array.from(collectedArr.entries());
 	if (collectedArray.length === 0) {
-		return sharedVars.text.noVotesText;
+		return `${sharedVars.text.endPollText1}${voteMsg}${sharedVars.text.endPollText2}${voter}${sharedVars.text.noVotesText}`;
 	}
 	else if (collectedArray.length === 1) {
 		rArray = collectedArray[0];
@@ -32,13 +32,13 @@ function getVoteResult(collectedArr, voteMsg) {
 	}
 
 	if (pValue > nValue) {
-		return `${sharedVars.text.hasResultText1}${voteMsg}${sharedVars.text.hasResultText2}${voter}${sharedVars.text.positiveResultText}`;
+		return `${sharedVars.text.endPollText1}${voteMsg}${sharedVars.text.endPollText2}${voter}${sharedVars.text.positiveResultText}`;
 	}
 	else if (pValue < nValue) {
-		return `${sharedVars.text.hasResultText1}${voteMsg}${sharedVars.text.hasResultText2}${voter}${sharedVars.text.negativeResultText}`;
+		return `${sharedVars.text.endPollText1}${voteMsg}${sharedVars.text.endPollText2}${voter}${sharedVars.text.negativeResultText}`;
 	}
 	else if (pValue === nValue) {
-		return sharedVars.text.noWinnerText;
+		return `${sharedVars.text.endPollText1}${voteMsg}${sharedVars.text.endPollText2}${voter}${sharedVars.text.noWinnerText}`;
 	}
 }
 

@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and starting with changes from 29.11.2020, this bot will have a correct [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 05.12.2020
+
+### Added
+
+- 'анонттс' flag for me command
+
+### Changed
+
+- Double escapes to single in poll message
+
+### Removed
+
+- Comma in russian roulette answer
+
+### Fixed
+
+- Checks for poll votes result
+
 ## [1.1.0] - 04.12.2020
 
 ### Added
@@ -68,6 +86,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Multiple commands and functions was deleted due to move to Heroku *(Some of commands will present in additional branches)*
 - Commented code was deleted from main branch
 
+[1.1.1]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v0.9.9...v1.0.0

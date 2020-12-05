@@ -35,6 +35,8 @@ This bot can add and remove words from a JSON array, however this implementation
 
 This project has a changelog, which you can find [here](https://github.com/SecondThundeR/secondthunder-js-bot/blob/master/Changelog.md)
 
+Also you can track changes of new versions [here](https://github.com/SecondThundeR/secondthunder-js-bot/projects)
+
 ## License
 
 This project is licensed under **MIT License**.

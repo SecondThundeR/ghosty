@@ -69,6 +69,21 @@ exports.text = {
 	// (main.js) client.on('ready)
 	activityName: 'Helltaker',
 
+	// addWord.js + deleteWord.js
+	notFoundFileRoulette: 'Я не нашёл такого файла у меня. Пожалуйста, проверьте правильность написания аргумента!',
+
+	// addWord.js addWord()
+	successAddWord: 'Я добавил это в мой словарь! Спасибо, что делаешь меня тупее :(',
+	failAddWord: 'Я бы ответил что-нибудь остроумное, но это слово у меня уже есть, мне добавлять нечего',
+
+	// addWord.js addBot()
+	successAddBot: 'Я добавил этого бота в исключения! Теперь я буду его игнорировать',
+	failAddBot: 'Данный бот уже есть у меня в исключениях!',
+
+	// addWord.js addWordRoulette()
+	successAddRouletteWord: 'Я добавил это в мой словарь! Спасибо, что делаешь меня тупее :(',
+	failAddRouletteWord: 'Я бы ответил что-нибудь остроумное, но это слово у меня уже есть, мне добавлять нечего',
+
 	// (createPoll.js) getVoteResult()
 	noVotesText: '**ГОЛОСОВАНИЕ ОКОНЧЕНО!**\n\nК сожалению, я не получил никаких голосов, поэтому ничего сказать не могу(',
 	hasResultText1: '**ГОЛОСОВАНИЕ ОКОНЧЕНО!**\n\nВопрос **',
@@ -82,6 +97,18 @@ exports.text = {
 	pollText2: '**\n\nВопрос: ',
 	pollText3: '\n*На подумать - ',
 	pollText4: ' секунд*',
+
+	// deleteWord.js deleteWord()
+	successDeleteWord: 'Я удалил это слово у себя. Неужели кто-то очищает меня от этого...',
+	failDeleteWord: 'Прости, я не нашёл это слово у себя и мне нечего удалять',
+
+	// deleteWord.js deleteBot()
+	successDeleteBot: 'Я удалил этого бота у себя. Теперь я не буду его игнорировать!',
+	failDeleteBot: 'Прости, я не нашёл этого бота у себя и мне некого убирать',
+
+	// deleteWord.js deleteWordRoulette()
+	successDeleteRouletteWord: 'Я удалил это слово у себя. Неужели кто-то очищает меня от этого...',
+	failDeleteRouletteWord: 'Прости, я не нашёл это слово у себя и мне нечего удалять',
 
 	/*
 		Next variable is encoded in Base64 due to the inconvenience of typing a large text. For decryption, you need to use online base64 decoders

@@ -1,5 +1,6 @@
 'use strict';
 const fs = require('fs');
+const sharedVars = require('../data/variables');
 const JSONLib = require('../libs/JSONHandlerLib');
 const arrayAndPaths = JSONLib.getAllArraysAndPaths();
 const delayTime = 3000;
@@ -26,14 +27,14 @@ function addWord(msg, args) {
 		arrayAndPaths[1][0].push(textString);
 		fs.writeFileSync(arrayAndPaths[0][0], JSON.stringify(arrayAndPaths[1][0], null, 2));
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Я добавил это в мой словарь! Спасибо, что делаешь меня тупее :(')
+		msg.channel.send(sharedVars.text.successAddWord)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
 		return;
 	default:
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Я бы ответил что-нибудь остроумное, но это слово у меня уже есть, мне добавлять нечего')
+		msg.channel.send(sharedVars.text.failAddWord)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
@@ -49,14 +50,14 @@ function addBot(msg, args) {
 		arrayAndPaths[1][1].push(botID);
 		fs.writeFileSync(arrayAndPaths[0][1], JSON.stringify(arrayAndPaths[1][1], null, 2));
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Я добавил этого бота в исключения! Теперь я буду его игнорировать')
+		msg.channel.send(sharedVars.text.successAddBot)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
 		return;
 	default:
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Данный бот уже есть у меня в исключениях!')
+		msg.channel.send(sharedVars.text.failAddBot)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
@@ -81,7 +82,7 @@ function addWordRoulette(msg, args) {
 		break;
 	default:
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Я не нашёл такого файла у меня. Пожалуйста, проверьте правильность написания аргумента!')
+		msg.channel.send(sharedVars.text.notFoundFileRoulette)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
@@ -95,14 +96,14 @@ function addWordRoulette(msg, args) {
 		arrayAndPaths[1][numberOfArray].push(textString);
 		fs.writeFileSync(arrayAndPaths[0][numberOfArray], JSON.stringify(arrayAndPaths[1][numberOfArray], null, 2));
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Я добавил это в мой словарь! Спасибо, что делаешь меня тупее :(')
+		msg.channel.send(sharedVars.text.successAddRouletteWord)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
 		return;
 	default:
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Я бы ответил что-нибудь остроумное, но это слово у меня уже есть, мне добавлять нечего')
+		msg.channel.send(sharedVars.text.failAddRouletteWord)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
@@ -112,7 +113,7 @@ function addWordRoulette(msg, args) {
 
 module.exports = {
 	name: 'addWord',
-	description: 'Adding new word to JSON Array',
+	description: 'Module add new word to JSON Arrays',
 	execute(msg, args) {
 		chooseArrayToModify(msg, args);
 	},

@@ -1,5 +1,6 @@
 'use strict';
 const fs = require('fs');
+const sharedVars = require('../data/variables');
 const JSONLib = require('../libs/JSONHandlerLib');
 const arrayAndPaths = JSONLib.getAllArraysAndPaths();
 const delayTime = 3000;
@@ -24,7 +25,7 @@ function deleteWord(msg, args) {
 	switch (wordInArray) {
 	case -1:
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Прости, я не нашёл это слово у себя и мне нечего удалять')
+		msg.channel.send(sharedVars.text.failDeleteWord)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
@@ -33,7 +34,7 @@ function deleteWord(msg, args) {
 		arrayAndPaths[1][0].splice(wordInArray, 1);
 		fs.writeFileSync(arrayAndPaths[0][0], JSON.stringify(arrayAndPaths[1][0], null, 2));
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Я удалил это слово у себя. Неужели кто-то очищает меня от этого...')
+		msg.channel.send(sharedVars.text.successDeleteWord)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
@@ -47,7 +48,7 @@ function deleteBot(msg, args) {
 	switch (botInArray) {
 	case -1:
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Прости, я не нашёл этого бота у себя и мне некого убирать')
+		msg.channel.send(sharedVars.text.failDeleteBot)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
@@ -56,7 +57,7 @@ function deleteBot(msg, args) {
 		arrayAndPaths[1][1].splice(botInArray, 1);
 		fs.writeFileSync(arrayAndPaths[0][1], JSON.stringify(arrayAndPaths[1][1], null, 2));
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Я удалил этого бота у себя. Теперь я не буду его игнорировать!')
+		msg.channel.send(sharedVars.text.successDeleteBot)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
@@ -81,7 +82,7 @@ function deleteWordRoulette(msg, args) {
 		break;
 	default:
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Я не нашёл такого файла у меня. Пожалуйста, проверьте правильность написания аргумента!')
+		msg.channel.send(sharedVars.text.notFoundFileRoulette)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
@@ -93,7 +94,7 @@ function deleteWordRoulette(msg, args) {
 	switch (wordInArray) {
 	case -1:
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Прости, я не нашёл это слово у себя и мне нечего удалять')
+		msg.channel.send(sharedVars.text.failDeleteRouletteWord)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
@@ -102,7 +103,7 @@ function deleteWordRoulette(msg, args) {
 		arrayAndPaths[1][numberOfArray].splice(wordInArray, 1);
 		fs.writeFileSync(arrayAndPaths[0][numberOfArray], JSON.stringify(arrayAndPaths[1][numberOfArray], null, 2));
 		msg.delete({ timeout: delayTime });
-		msg.channel.send('Я удалил это слово у себя. Неужели кто-то очищает меня от этого...')
+		msg.channel.send(sharedVars.text.successDeleteRouletteWord)
 			.then(msg => {
 				msg.delete({ timeout: delayTime });
 			});
@@ -112,7 +113,7 @@ function deleteWordRoulette(msg, args) {
 
 module.exports = {
 	name: 'deleteWord',
-	description: 'Deleting old word from JSON Array',
+	description: 'Module delete word from JSON Arrays',
 	execute(msg, args) {
 		chooseArrayToModify(msg, args);
 	},

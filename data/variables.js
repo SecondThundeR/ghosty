@@ -1,4 +1,7 @@
 exports.vars = {
+	// (createPoll.js) initPoll()
+	pollLocked: false,
+
 	// (getRandomWordFromArray.js) spamCheck()
 	spammerID: '',
 	spammerCount: 0,

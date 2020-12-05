@@ -3,10 +3,20 @@ const sharedVars = require('../data/variables');
 let voteTime = 0;
 let voter = '';
 
+function pollInit(msg, args) {
+	if (sharedVars.vars.pollLocked === true) {
+		return;
+	}
+	else {
+		createPoll(msg, args);
+	}
+}
+
 function getVoteResult(collectedArr, voteMsg) {
 	let rArray, pArray, nArray, pObj, nObj, pValue, nValue;
 	const collectedArray = Array.from(collectedArr.entries());
 	if (collectedArray.length === 0) {
+		sharedVars.vars.pollLocked = false;
 		return `${sharedVars.text.endPollText1}${voteMsg}${sharedVars.text.endPollText2}${voter}${sharedVars.text.noVotesText}`;
 	}
 	else if (collectedArray.length === 1) {
@@ -32,17 +42,21 @@ function getVoteResult(collectedArr, voteMsg) {
 	}
 
 	if (pValue > nValue) {
+		sharedVars.vars.pollLocked = false;
 		return `${sharedVars.text.endPollText1}${voteMsg}${sharedVars.text.endPollText2}${voter}${sharedVars.text.positiveResultText}`;
 	}
 	else if (pValue < nValue) {
+		sharedVars.vars.pollLocked = false;
 		return `${sharedVars.text.endPollText1}${voteMsg}${sharedVars.text.endPollText2}${voter}${sharedVars.text.negativeResultText}`;
 	}
 	else if (pValue === nValue) {
+		sharedVars.vars.pollLocked = false;
 		return `${sharedVars.text.endPollText1}${voteMsg}${sharedVars.text.endPollText2}${voter}${sharedVars.text.noWinnerText}`;
 	}
 }
 
 function createPoll(msg, args) {
+	sharedVars.vars.pollLocked = true;
 	if (isNaN(args[0])) {
 		voteTime = 60000;
 	}
@@ -75,6 +89,6 @@ module.exports = {
 	description: 'Module creates simple poll with two reaction buttons',
 	cooldown: 5,
 	execute(msg, args) {
-		createPoll(msg, args);
+		pollInit(msg, args);
 	},
 };

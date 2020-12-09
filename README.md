@@ -31,6 +31,10 @@ This bot can add and remove words from a JSON array, however this implementation
 6. Pull bot to Heroku and wait for build
 7. After getting a log that bot was logged in, you are good to go
 
+## Discussions
+
+This project has a [Github Discussions](https://github.com/SecondThundeR/secondthunder-js-bot/discussions) turned on. Feel free to ask about this project or give new ideas and etc.
+
 ## Changelog
 
 This project has a changelog, which you can find [here](https://github.com/SecondThundeR/secondthunder-js-bot/blob/master/Changelog.md)

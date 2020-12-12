@@ -106,8 +106,14 @@ exports.text = {
 	randomNumberText: 'Рандомное число от 1 до',
 	randomNumberWithRangeTextPart1: 'Рандомное число от',
 	randomNumberWithRangeTextPart2: 'до',
-	noRangeNumberWarning: 'чтобы я мог выдать тебе число, напиши, пожалуйста, после этой команды диапазон с какого по какое число я должен начать рандомить *(либо от 0 до любого другого)*',
-	wrongRangeNumberWarning: '',
+	wrongSingleRangeNumberWarning: 'я не могу выдать рандомное число от 1 до ',
+	equalSingleRangeNumberWarning: 'в каком месте рандом от 1 до 1 является рандомом?',
+	wrongRangeNumberWarning1: 'я не могу выдать рандомное число от ',
+	wrongRangeNumberWarning2: ' до ',
+	equalRangeNumberWarning1: 'в каком месте рандом от ',
+	equalRangeNumberWarning2: ' до ',
+	equalRangeNumberWarning3: ' является рандомом?',
+	wrongArgumentWarning: 'один или более аргументов введены неправильно *(Пример вызова команды: рандом 6 или рандом 43 88)*',
 
 	// (getRandomThing.js) randomGoroscope()
 	goroSendPart1: '**Гороскоп дня на сегодня: **',

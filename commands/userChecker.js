@@ -15,6 +15,9 @@ function checkerSelector(msg, args, command) {
 	case 'влад':
 		msg.channel.send(vladChecker(msg, args));
 		break;
+	case 'дед':
+		msg.channel.send(dedChecker(msg, args));
+		break;
 	default:
 		break;
 	}
@@ -118,6 +121,30 @@ function vladChecker(msg, args) {
 			return `${args[1]}${sharedVars.text.fullVlad}${randomPercent}${sharedVars.text.vladPercent}`;
 		default:
 			return `${args[1]}${sharedVars.text.vladDefaultPart}${randomPercent}${sharedVars.text.vladPercent}`;
+		}
+	}
+}
+
+function dedChecker(msg, args) {
+	const randomPercent = Math.floor(Math.random() * 101);
+	switch (args.length) {
+	case 1:
+		switch (randomPercent) {
+		case 0:
+			return `${msg.author}${sharedVars.text.noneDed}`;
+		case 100:
+			return `${msg.author}${sharedVars.text.fullDed}${randomPercent}${sharedVars.text.dedPercent}`;
+		default:
+			return `${msg.author}${sharedVars.text.dedDefaultPart}${randomPercent}${sharedVars.text.dedPercent}`;
+		}
+	case 2:
+		switch (randomPercent) {
+		case 0:
+			return `${args[1]}${sharedVars.text.noneDed}`;
+		case 100:
+			return `${args[1]}${sharedVars.text.fullDed}${randomPercent}${sharedVars.text.dedPercent}`;
+		default:
+			return `${args[1]}${sharedVars.text.dedDefaultPart}${randomPercent}${sharedVars.text.dedPercent}`;
 		}
 	}
 }

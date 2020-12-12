@@ -71,16 +71,27 @@ function resultsReset(msg, command) {
 			sendWarningMessage(msg, 5);
 		}
 	}
+	else if (command === 'дед') {
+		if (sharedVars.vars.dedInActive === false) {
+			sharedVars.vars.dedDate = '';
+			sharedVars.vars.dedTextShort = '';
+			sharedVars.vars.dedTextFull = '';
+			sharedVars.randomUserInfoDed = '',
+			sharedVars.randomUsernameDed = '',
+			sharedVars.vars.dedActivated = false;
+			sendWarningMessage(msg, 6);
+		}
+	}
 	else {
 		return;
 	}
 }
 
 function sendWarningMessage(msg, i) {
-	msg.delete({ timeout: 3000 });
+	msg.delete({ timeout: 5000 });
 	msg.channel.send(sharedVars.text.infoMessages[i])
 		.then(msg => {
-			msg.delete({ timeout: 3000 });
+			msg.delete({ timeout: 5000 });
 		});
 }
 

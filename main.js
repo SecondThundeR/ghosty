@@ -66,6 +66,7 @@ client.on('message', msg => {
 	case commandsAliases[7]:
 	case commandsAliases[8]:
 	case commandsAliases[9]:
+	case commandsAliases[10]:
 		if (!args.length) {
 			return;
 		}
@@ -83,7 +84,7 @@ client.on('message', msg => {
 			}
 		}
 		break;
-	case commandsAliases[10]:
+	case commandsAliases[11]:
 		if (!args.length) {
 			break;
 		}
@@ -91,10 +92,10 @@ client.on('message', msg => {
 			client.commands.get('createPoll').execute(msg, args);
 		}
 		break;
-	case commandsAliases[11]:
+	case commandsAliases[12]:
 		client.commands.get('getHelp').execute(msg);
 		break;
-	case commandsAliases[12]:
+	case commandsAliases[13]:
 		client.commands.get('getUptime').execute(msg);
 		break;
 	default:

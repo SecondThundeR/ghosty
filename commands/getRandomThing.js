@@ -43,6 +43,9 @@ function randomThingChooser(msg, args, command) {
 	case 'влад':
 		randomVlad(msg);
 		return;
+	case 'дед':
+		randomDed(msg);
+		return;
 	default:
 		return;
 	}
@@ -302,6 +305,47 @@ async function randomVlad(msg) {
 		await randomVlad(msg);
 	}
 	else if (sharedVars.vars.vladInActive === true) {
+		return;
+	}
+}
+
+async function randomDed(msg) {
+	const currentDate = Math.round(new Date() / 1000 + (3 * 60 * 60));
+	if (sharedVars.vars.dedActivated === false && sharedVars.vars.dedInActive === false) {
+		sharedVars.vars.dedInActive = sharedVars.vars.dedActivated = true;
+		sharedVars.vars.dedDate = getNextDayTime();
+		const userInfo = await getUser(msg, 'typical');
+		sharedVars.vars.randomUserInfoDed = userInfo[0];
+		sharedVars.vars.randomUsernameDed = userInfo[1];
+		const randomPercent = Math.floor(Math.random() * 101);
+		switch (randomPercent) {
+		case 0:
+			sharedVars.vars.dedTextShort = `${sharedVars.vars.randomUsernameDed}${sharedVars.text.dedOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
+			sharedVars.vars.dedTextFull = `${sharedVars.vars.randomUserInfoDed}${sharedVars.text.dedOnText}${randomPercent}${sharedVars.text.dedNoneText}`;
+			break;
+		case 100:
+			sharedVars.vars.dedTextShort = `${sharedVars.vars.randomUsernameDed}${sharedVars.text.dedOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
+			sharedVars.vars.dedTextFull = `${sharedVars.vars.randomUserInfoDed}${sharedVars.text.dedOnText}${randomPercent}${sharedVars.text.dedFullText}`;
+			break;
+		default:
+			sharedVars.vars.dedTextShort = `${sharedVars.vars.randomUsernameDed}${sharedVars.text.dedOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
+			sharedVars.vars.dedTextFull = `${sharedVars.vars.randomUserInfoDed}${sharedVars.text.dedOnText}${randomPercent}${sharedVars.text.otherDefaultText}`;
+			break;
+		}
+		await firstRunMessages(msg, sharedVars.vars.dedTextFull, sharedVars.text.dedFirstRunArray);
+		sharedVars.vars.dedInActive = false;
+		return;
+	}
+	else if (sharedVars.vars.dedActivated === true && currentDate < sharedVars.vars.dedDate) {
+		const nextDayStr = getNextDayString(sharedVars.vars.dedDate);
+		msg.channel.send(`${sharedVars.text.otherSendPart1}${sharedVars.vars.dedTextShort}${sharedVars.text.otherSendPart2}${nextDayStr}`);
+		return;
+	}
+	else if (sharedVars.vars.dedActivated === true && currentDate > sharedVars.vars.dedDate) {
+		sharedVars.vars.dedActivated = false;
+		await randomDed(msg);
+	}
+	else if (sharedVars.vars.dedInActive === true) {
 		return;
 	}
 }

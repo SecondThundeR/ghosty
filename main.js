@@ -25,16 +25,7 @@ app.listen(PORT, () => {
 	wakeUpDyno(DYNO_URL);
 });
 
-client.on('ready', () => {
-	client.user.setActivity(sharedVars.text.activityName);
-	console.log(`Logged in as '${client.user.tag}' and set '${sharedVars.text.activityName}' as an activity`);
-});
-
-client.on('message', msg => {
-	if (msg.author.bot) {
-		return;
-	}
-
+function executeCommand(msg) {
 	const args = msg.content.trim().split(/ +/);
 	const command = args.shift().toLowerCase();
 
@@ -101,6 +92,18 @@ client.on('message', msg => {
 	default:
 		break;
 	}
+}
+
+client.on('ready', () => {
+	client.user.setActivity(sharedVars.text.activityName);
+	console.log(`Logged in as '${client.user.tag}' and set '${sharedVars.text.activityName}' as an activity`);
+});
+
+client.on('message', msg => {
+	if (msg.author.bot) {
+		return;
+	}
+	executeCommand(msg);
 });
 
 client.login(token);

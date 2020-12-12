@@ -106,6 +106,7 @@ exports.text = {
 	randomNumberText: 'Рандомное число от 1 до',
 	randomNumberWithRangeTextPart1: 'Рандомное число от',
 	randomNumberWithRangeTextPart2: 'до',
+	noRangeWarning: 'к сожалению, я не получил аргументов для вывода рандома. повторите, ещё раз',
 	wrongSingleRangeNumberWarning: 'я не могу выдать рандомное число от 1 до ',
 	equalSingleRangeNumberWarning: 'в каком месте рандом от 1 до 1 является рандомом?',
 	wrongRangeNumberWarning1: 'я не могу выдать рандомное число от ',

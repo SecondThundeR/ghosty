@@ -53,10 +53,56 @@ function randomThingChooser(msg, args, command) {
 
 function randomNumber(msg, args) {
 	let rangeNumber, randomNumberSingle, fromRangeNumber, toRangeNumber, randomNumberRange;
-	switch (args.length) {
-	case 1:
-		rangeNumber = Number(args[0]);
-		if (rangeNumber < 1) {
+	if (isNaN(Number(args[0])) === true) {
+		msg.delete({ timeout: delayTime2 });
+		msg.reply(sharedVars.text.wrongArgumentWarning)
+			.then(msg => {
+				msg.delete({ timeout: delayTime2 });
+			});
+		return;
+	}
+	else {
+		switch (args.length) {
+		case 1:
+			rangeNumber = Number(args[0]);
+			if (rangeNumber < 1) {
+				msg.delete({ timeout: delayTime2 });
+				msg.reply(`${sharedVars.text.wrongSingleRangeNumberWarning}${rangeNumber}`)
+					.then(msg => {
+						msg.delete({ timeout: delayTime2 });
+					});
+				break;
+			}
+			else if (rangeNumber === 1) {
+				msg.reply(sharedVars.text.equalSingleRangeNumberWarning);
+				break;
+			}
+			else {
+				randomNumberSingle = Math.floor(Math.random() * rangeNumber) + 1;
+				msg.channel.send(`${sharedVars.text.randomNumberText} ${rangeNumber}: **${randomNumberSingle}**`);
+				break;
+			}
+		case 2:
+			fromRangeNumber = Number(args[0]);
+			toRangeNumber = Number(args[1]);
+			if (fromRangeNumber > toRangeNumber) {
+				msg.delete({ timeout: delayTime2 });
+				msg.reply(`${sharedVars.text.wrongRangeNumberWarning1}${fromRangeNumber}${sharedVars.text.wrongRangeNumberWarning2}${toRangeNumber}`)
+					.then(msg => {
+						msg.delete({ timeout: delayTime2 });
+					});
+				break;
+			}
+			else if (fromRangeNumber === toRangeNumber) {
+				msg.reply(`${sharedVars.text.equalRangeNumberWarning1}${fromRangeNumber}${sharedVars.text.equalRangeNumberWarning2}${toRangeNumber}${sharedVars.text.equalRangeNumberWarning3}`);
+				break;
+			}
+			else {
+				randomNumberRange = Math.round(Math.random() * (toRangeNumber - fromRangeNumber) + fromRangeNumber);
+				msg.channel.send(`${sharedVars.text.randomNumberWithRangeTextPart1} ${fromRangeNumber} ${sharedVars.text.randomNumberWithRangeTextPart2} ${toRangeNumber}: **${randomNumberRange}**`);
+				break;
+			}
+		default:
 			msg.delete({ timeout: delayTime2 });
 			msg.reply(sharedVars.text.noRangeNumberWarning)
 				.then(msg => {
@@ -64,24 +110,6 @@ function randomNumber(msg, args) {
 				});
 			break;
 		}
-		else {
-			randomNumberSingle = Math.floor(Math.random() * rangeNumber) + 1;
-			msg.channel.send(`${sharedVars.text.randomNumberText} ${rangeNumber}: **${randomNumberSingle}**`);
-			break;
-		}
-	case 2:
-		fromRangeNumber = Number(args[0]);
-		toRangeNumber = Number(args[1]);
-		randomNumberRange = Math.round(Math.random() * (toRangeNumber - fromRangeNumber) + fromRangeNumber);
-		msg.channel.send(`${sharedVars.text.randomNumberWithRangeTextPart1} ${fromRangeNumber} ${sharedVars.text.randomNumberWithRangeTextPart2} ${toRangeNumber}: **${randomNumberRange}**`);
-		break;
-	default:
-		msg.delete({ timeout: delayTime2 });
-		msg.reply(sharedVars.text.noRangeNumberWarning)
-			.then(msg => {
-				msg.delete({ timeout: delayTime2 });
-			});
-		break;
 	}
 }
 

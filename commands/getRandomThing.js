@@ -4,7 +4,7 @@ const sharedVars = require('../data/variables');
 const botIDs = JSONLib.getBotIDsArray();
 const goroscopeArray = JSONLib.getWordsArray();
 const delayTime1 = 3000;
-const delayTime2 = 10000;
+const delayTime2 = 15000;
 
 function randomThingChooser(msg, args, command) {
 	switch (command) {
@@ -53,7 +53,7 @@ function randomThingChooser(msg, args, command) {
 
 function randomNumber(msg, args) {
 	let rangeNumber, randomNumberSingle, fromRangeNumber, toRangeNumber, randomNumberRange;
-	if (isNaN(Number(args[0])) === true) {
+	if (args.length > 0 && isNaN(Number(args[0])) === true) {
 		msg.delete({ timeout: delayTime2 });
 		msg.reply(sharedVars.text.wrongArgumentWarning)
 			.then(msg => {
@@ -63,14 +63,17 @@ function randomNumber(msg, args) {
 	}
 	else {
 		switch (args.length) {
+		case 0:
+			msg.delete({ timeout: delayTime2 });
+			msg.reply(sharedVars.text.noRangeWarning)
+				.then(msg => {
+					msg.delete({ timeout: delayTime2 });
+				});
+			break;
 		case 1:
 			rangeNumber = Number(args[0]);
 			if (rangeNumber < 1) {
-				msg.delete({ timeout: delayTime2 });
-				msg.reply(`${sharedVars.text.wrongSingleRangeNumberWarning}${rangeNumber}`)
-					.then(msg => {
-						msg.delete({ timeout: delayTime2 });
-					});
+				msg.reply(`${sharedVars.text.wrongSingleRangeNumberWarning}${rangeNumber}`);
 				break;
 			}
 			else if (rangeNumber === 1) {
@@ -86,11 +89,7 @@ function randomNumber(msg, args) {
 			fromRangeNumber = Number(args[0]);
 			toRangeNumber = Number(args[1]);
 			if (fromRangeNumber > toRangeNumber) {
-				msg.delete({ timeout: delayTime2 });
-				msg.reply(`${sharedVars.text.wrongRangeNumberWarning1}${fromRangeNumber}${sharedVars.text.wrongRangeNumberWarning2}${toRangeNumber}`)
-					.then(msg => {
-						msg.delete({ timeout: delayTime2 });
-					});
+				msg.reply(`${sharedVars.text.wrongRangeNumberWarning1}${fromRangeNumber}${sharedVars.text.wrongRangeNumberWarning2}${toRangeNumber}`);
 				break;
 			}
 			else if (fromRangeNumber === toRangeNumber) {
@@ -103,11 +102,6 @@ function randomNumber(msg, args) {
 				break;
 			}
 		default:
-			msg.delete({ timeout: delayTime2 });
-			msg.reply(sharedVars.text.noRangeNumberWarning)
-				.then(msg => {
-					msg.delete({ timeout: delayTime2 });
-				});
 			break;
 		}
 	}

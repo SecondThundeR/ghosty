@@ -95,12 +95,23 @@ exports.text = {
 	pollText3: '\n*На подумать - ',
 	pollText4: ' секунд*',
 
-	/*
-		Next variable is encoded in Base64 due to the inconvenience of typing a large text. For decryption, you need to use online base64 decoders
-
-		(getHelp.js) sendHelpMessage()
-	*/
-	helpMessageBase64: '0JTQvtGB0YLRg9C/0L3Ri9C1INC60L7QvNCw0L3QtNGLINCx0L7RgtCwOgoKKirRhdGDKiogLSDQstGL0LHQuNGA0LDQtdGCINGA0LDQvdC00L7QvNC90L7Qs9C+INC/0L7Qu9GM0LfQvtCy0LDRgtC10LvRjyDQuCDQv9C+0LrQsNC30YvQstCw0LXRgiDQtdC80YMg0YDQsNC90LTQvtC80L3QvtC1INC/0YDQtdC00LvQvtC20LXQvdC40LUg0LjQtyDQvNCw0YHRgdC40LLQsCDRgdC70L7QsgoqKtGF0YPQuNGB0LrQvtC/KiogLSDQstGL0LTQsNGR0YIg0LXQttC10LTQvdC10LLQvdGL0Lkg0LPQvtGA0L7RgdC60L7Qvywg0LrQvtGC0L7RgNGL0Lkg0LLRi9Cy0L7QtNC40YIg0L/QvtC70YzQt9C+0LLQsNGC0LXQu9GPINC4INC00LDRkdGCINC/0YDQtdC00YHQutCw0LfQsNC90LjQtSDQtdC80YMgCioq0YjQuNC/KiogLSDRiNC40L/Qv9C10YDQuNGCINC00LLRg9GFINGA0LDQvdC00L7QvNC90YvRhSDQv9C+0LvRjNC30L7QstCw0YLQtdC70LXQuSDQuCDRgdC60YDQtdC/0LvRj9C10YIg0LjRhSDRgSDQv9C+0LzQvtGJ0YzRjiDRgdC/0LDRgNC10L3QvdC+0LPQviDQuNC80LXQvdC4Cioq0YDRg9C70LXRgtC60LAqKiAtINC30LDQv9GD0YHQutCw0LXRgiDQuNCz0YDRgyDQsiDRgNGD0YHRgdC60YPRjiDRgNGD0LvQtdGC0LrRgwoqKtGA0LDQvdC00L7QvCoqIC0g0L/QvtC70YPRh9C10L3QuNC1INGA0LDQvdC00L7QvNC90L7Qs9C+INGH0LjRgdC70LAKKirQudCwKiogLSDQsNC90LDQu9C+0LMg0LrQvtC80LDQvdC00YsgYC9tZWAKKirQs9C10LkgKNGC0LXRgdGCIHwg0LTQvdGPKSoqIC0g0LLRi9Cy0L7QtNC40YIg0YDQsNC90LTQvtC80L3QvtCz0L4g0LPQtdGPINGBINC/0YDQvtGG0LXQvdGC0LDQvNC4LCDRgtCw0LrQttC1INCy0YvQstC+0LTQuNGCINCz0LXRjyDQtNC90Y8KKirQsNC90LjQvNC1ICjRgtC10YHRgiB8INC00L3RjykqKiAtINCy0YvQstC+0LTQuNGCINGA0LDQvdC00L7QvNC90YPRjiDQsNC90LjQvNC10YjQvdC40YbRgyDRgSDQv9GA0L7RhtC10L3RgtCw0LzQuCwg0YLQsNC60LbQtSDQstGL0LLQvtC00LjRgiDQsNC90LjQvNC10YjQvdC40YbRgyDQtNC90Y8KKirQsNC70LjQvdCwICjRgtC10YHRgiB8INC00L3RjykqKiAtINCy0YvQstC+0LTQuNGCINGA0LDQvdC00L7QvNC90L7Qs9C+INC/0L7Qu9GM0LfQvtCy0LDRgtC10LvRjyDRgSDQv9GA0L7RhtC10L3RgtCw0LzQuCwg0L3QsNGB0LrQvtC70YzQutC+INC/0L7Qu9GM0LfQvtCy0LDRgtC10LvRjCDQkNC70LjQvdCwLCDRgtCw0LrQttC1INCy0YvQstC+0LTQuNGCINCQ0LvQuNC90YMg0LTQvdGPCioq0LLQu9Cw0LQgKNGC0LXRgdGCIHwg0LTQvdGPKSoqIC0g0LLRi9Cy0L7QtNC40YIg0YDQsNC90LTQvtC80L3QvtCz0L4g0L/QvtC70YzQt9C+0LLQsNGC0LXQu9GPINGBINC/0YDQvtGG0LXQvdGC0LDQvNC4LCDQvdCw0YHQutC+0LvRjNC60L4g0L/QvtC70YzQt9C+0LLQsNGC0LXQu9GMINCS0LvQsNC0LCDRgtCw0LrQttC1INCy0YvQstC+0LTQuNGCINCS0LvQsNC00LAg0LTQvdGPCioq0L/QvtC70LsgKNCy0YDQtdC80Y8gfCDRgtC10LrRgdGCICrQuNC70LgqINGC0LXQutGB0YIpKiogLSDRgdC+0LfQtNCw0ZHRgiDQv9GA0L7RgdGC0LXQudGI0LXQtSDQs9C+0LvQvtGB0L7QstCw0L3QuNC1INGBINCy0YvQsdC+0YDQsNC80Lgg0LPQvtC70L7RgdC+0LIgItCX0LAiINC4ICLQn9GA0L7RgtC40LIiCioq0YXQtdC70L8qKiAtINCy0YvQstC+0LTQuNGCINC40L3RhNC+0YDQvNCw0YbQuNGOINGBINC60L7QvNCw0L3QtNCw0LzQuCAqKNGC0L4sINGH0YLQviDQstGLINCy0LjQtNC40YLQtSDRgdC10LnRh9Cw0YEpKgoqKnVwdGltZSoqIC0g0LLRi9Cy0L7QtNC40YIg0YHQutC+0LvRjNC60L4g0LHQvtGCINC/0YDQvtGA0LDQsdC+0YLQsNC7INGBINC/0L7RgdC70LXQtNC90LXQs9C+INC30LDQv9GD0YHQutCwINC90LAg0YHQtdGA0LLQtdGA0LUKCirQodC+0L7QsdGJ0LXQvdC40LUg0YPQtNCw0LvQuNGC0YHRjyDQsNCy0YLQvtC80LDRgtC40YfQtdGB0LrQuCDRh9C10YDQtdC3IDIwINGB0LXQutGD0L3QtCo=',
+	// (getHelp.js) sendHelpMessage()
+	helpMessage: 'Доступные команды бота:' +
+	'\n\n**ху** - выбирает рандомного пользователя и показывает ему рандомное предложение из массива слов' +
+	'\n**хуископ** - выдаёт ежедневный гороскоп, который выводит пользователя и даёт предсказание ему' +
+	'\n **шип** - шипперит двух рандомных пользователей и скрепляет их с помощью спаренного имени' +
+	'\n **рулетка** - запускает игру в русскую рулетку' +
+	'\n**рандом** - получение рандомного числа' +
+	'\n**йа** - аналог команды `/me`' +
+	'\n**гей (тест | дня)** - выводит рандомного гея с процентами, также выводит гея дня' +
+	'\n**аниме (тест | дня)** - выводит рандомную анимешницу с процентами, также выводит анимешницу дня' +
+	'\n**алина (тест | дня)** - выводит рандомного пользователя с процентами, насколько пользователь Алина, также выводит Алину дня' +
+	'\n**влад (тест | дня)** - выводит рандомного пользователя с процентами, насколько пользователь Влад, также выводит Влада дня' +
+	'\n**дед (тест | дня)** - выводит рандомного пользователя с процентами, насколько пользователь дед, также выводит деда дня' +
+	'\n**полл (время | текст *или* текст)** - создаёт простейшее голосование с выборами голосов "За" и "Против"' +
+	'\n**хелп** - выводит информацию с командами *(то, что вы видите сейчас)*' +
+	'\n**uptime** - выводит сколько бот проработал с последнего запуска на сервере' +
+	'\n\n*Сообщение удалится автоматически через 20 секунд*',
 
 	// (getRandomThing.js) randomNumber()
 	randomNumberText: 'Рандомное число от 1 до',

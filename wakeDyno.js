@@ -1,4 +1,3 @@
-/* eslint-disable no-unsafe-finally */
 const fetch = require('node-fetch');
 
 const wakeUpDyno = (url, interval = 25, callback) => {
@@ -20,7 +19,7 @@ const wakeUpDyno = (url, interval = 25, callback) => {
 				callback ? console.log('Callback failed: ', e.message) : null;
 			}
 			finally {
-				return wakeUpDyno(url, interval, callback);
+				wakeUpDyno(url, interval, callback);
 			}
 		}
 	}, milliseconds);

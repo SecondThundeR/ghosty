@@ -122,6 +122,9 @@ async function randomGoroscope(msg) {
 		sharedVars.vars.goroInActive = false;
 		return;
 	}
+	else if (sharedVars.vars.goroInActive === true) {
+		return;
+	}
 	else if (sharedVars.vars.goroActivated === true && currentDate < sharedVars.vars.goroDate) {
 		const nextDateStr = getNextDayString(sharedVars.vars.goroDate);
 		msg.channel.send(`${sharedVars.text.goroSendPart1}${sharedVars.vars.goroTextFull}${sharedVars.text.goroSendPart2}${nextDateStr}`);
@@ -131,7 +134,7 @@ async function randomGoroscope(msg) {
 		sharedVars.vars.goroActivated = false;
 		await randomGoroscope(msg);
 	}
-	else if (sharedVars.vars.goroInActive === true) {
+	else {
 		return;
 	}
 }
@@ -153,6 +156,9 @@ async function randomShipping(msg) {
 		sharedVars.vars.shipInActive = false;
 		return;
 	}
+	else if (sharedVars.vars.shipInActive === true) {
+		return;
+	}
 	else if (sharedVars.vars.shipActivated === true && currentDate < sharedVars.vars.shipDate) {
 		const nextDateStr = getNextDayString(sharedVars.vars.shipDate);
 		msg.channel.send(`${sharedVars.text.shipSendPart1}${sharedVars.vars.shipTextFull}${sharedVars.text.shipSendPart2}${nextDateStr}`);
@@ -162,7 +168,7 @@ async function randomShipping(msg) {
 		sharedVars.vars.shipActivated = false;
 		await randomShipping(msg);
 	}
-	else if (sharedVars.vars.shipInActive === true) {
+	else {
 		return;
 	}
 }
@@ -194,6 +200,9 @@ async function randomGay(msg) {
 		sharedVars.vars.gayInActive = false;
 		return;
 	}
+	else if (sharedVars.vars.gayInActive === true) {
+		return;
+	}
 	else if (sharedVars.vars.gayActivated === true && currentDate < sharedVars.vars.gayDate) {
 		const nextDayStr = getNextDayString(sharedVars.vars.gayDate);
 		msg.channel.send(`${sharedVars.text.otherSendPart1}${sharedVars.vars.gayTextShort}${sharedVars.text.otherSendPart2}${nextDayStr}`);
@@ -203,7 +212,7 @@ async function randomGay(msg) {
 		sharedVars.vars.gayActivated = false;
 		await randomGay(msg);
 	}
-	else if (sharedVars.vars.gayInActive === true) {
+	else {
 		return;
 	}
 }
@@ -235,6 +244,9 @@ async function randomAnime(msg) {
 		sharedVars.vars.animeInActive = false;
 		return;
 	}
+	else if (sharedVars.vars.animeInActive === true) {
+		return;
+	}
 	else if (sharedVars.vars.animeActivated === true && currentDate < sharedVars.vars.animeDate) {
 		const nextDayStr = getNextDayString(sharedVars.vars.animeDate);
 		msg.channel.send(`${sharedVars.text.otherSendPart1}${sharedVars.vars.animeTextShort}${sharedVars.text.otherSendPart2}${nextDayStr}`);
@@ -244,7 +256,7 @@ async function randomAnime(msg) {
 		sharedVars.vars.animeActivated = false;
 		await randomAnime(msg);
 	}
-	else if (sharedVars.vars.animeInActive === true) {
+	else {
 		return;
 	}
 }
@@ -276,6 +288,9 @@ async function randomAlina(msg) {
 		sharedVars.vars.alinaInActive = false;
 		return;
 	}
+	else if (sharedVars.vars.alinaInActive === true) {
+		return;
+	}
 	else if (sharedVars.vars.alinaActivated === true && currentDate < sharedVars.vars.alinaDate) {
 		const nextDayStr = getNextDayString(sharedVars.vars.alinaDate);
 		msg.channel.send(`${sharedVars.text.otherSendPart1}${sharedVars.vars.alinaTextShort}${sharedVars.text.otherSendPart2}${nextDayStr}`);
@@ -285,7 +300,7 @@ async function randomAlina(msg) {
 		sharedVars.vars.alinaActivated = false;
 		await randomAlina(msg);
 	}
-	else if (sharedVars.vars.alinaInActive === true) {
+	else {
 		return;
 	}
 }
@@ -317,6 +332,9 @@ async function randomVlad(msg) {
 		sharedVars.vars.vladInActive = false;
 		return;
 	}
+	else if (sharedVars.vars.vladInActive === true) {
+		return;
+	}
 	else if (sharedVars.vars.vladActivated === true && currentDate < sharedVars.vars.vladDate) {
 		const nextDayStr = getNextDayString(sharedVars.vars.vladDate);
 		msg.channel.send(`${sharedVars.text.otherSendPart1}${sharedVars.vars.vladTextShort}${sharedVars.text.otherSendPart2}${nextDayStr}`);
@@ -326,7 +344,7 @@ async function randomVlad(msg) {
 		sharedVars.vars.vladActivated = false;
 		await randomVlad(msg);
 	}
-	else if (sharedVars.vars.vladInActive === true) {
+	else {
 		return;
 	}
 }
@@ -358,6 +376,9 @@ async function randomDed(msg) {
 		sharedVars.vars.dedInActive = false;
 		return;
 	}
+	else if (sharedVars.vars.dedInActive === true) {
+		return;
+	}
 	else if (sharedVars.vars.dedActivated === true && currentDate < sharedVars.vars.dedDate) {
 		const nextDayStr = getNextDayString(sharedVars.vars.dedDate);
 		msg.channel.send(`${sharedVars.text.otherSendPart1}${sharedVars.vars.dedTextShort}${sharedVars.text.otherSendPart2}${nextDayStr}`);
@@ -367,7 +388,7 @@ async function randomDed(msg) {
 		sharedVars.vars.dedActivated = false;
 		await randomDed(msg);
 	}
-	else if (sharedVars.vars.dedInActive === true) {
+	else {
 		return;
 	}
 }

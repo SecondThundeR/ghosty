@@ -131,9 +131,9 @@ exports.text = {
 	goroSendPart1: '**Гороскоп дня на сегодня: **',
 	goroSendPart2: '\n\n*Следующее предсказание будет доступно ',
 
-	// (getRandomThing.js) randomGoroscope()
+	// (getRandomThing.js) randomShipping()
 	shipSendPart1: '**Парочка дня на сегодня: **',
-	shipSendPart2: ' \:hearts:\n\n*Следующий шиппинг будет доступен ',
+	shipSendPart2: ' \:two_hearts:\n\n*Следующий шиппинг будет доступен ',
 
 	// (getRandomThing.js) randomGay()
 	gayOnText: ' гей на ',

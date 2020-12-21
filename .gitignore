@@ -9,8 +9,6 @@
 *.vi
 *~
 *.sass-cache
-.vscode
-package-lock.json
 
 # OS or Editor folders
 .DS_Store
@@ -77,3 +75,7 @@ jspm_packages
 
 # Heroku Env
 .env
+
+# Other
+.vscode
+package-lock.json

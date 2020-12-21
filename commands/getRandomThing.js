@@ -485,9 +485,32 @@ function getNextDayString(currentDate) {
 	}
 }
 
-function customShipping(msg, args) {
-	const firstUser = args[0];
-	const secondUser = args[1];
+async function customShipping(msg, args) {
+	let firstUser, secondUser;
+	if (args[0].startsWith('<@&') || args[1].startsWith('<@&')) {
+		msg.delete({ timeout: delayTime1 });
+		msg.channel.send(sharedVars.text.warnBotShipping)
+			.then(msg => {
+				msg.delete({ timeout: delayTime1 });
+			});
+		return;
+	}
+	else {
+		if (args[0].startsWith('<@!')) {
+			const firstRandomUserInfo = await msg.guild.members.fetch(args[0].slice(3).slice(0, -1));
+			firstUser = firstRandomUserInfo.displayName;
+		}
+		else {
+			firstUser = args[0];
+		}
+		if (args[1].startsWith('<@!')) {
+			const secondRandomUserInfo = await msg.guild.members.fetch(args[1].slice(3).slice(0, -1));
+			secondUser = secondRandomUserInfo.displayName;
+		}
+		else {
+			secondUser = args[1];
+		}
+	}
 	const firstUsernamePart = firstUser.slice(0, firstUser.length / 2);
 	const secondUsernamePart = secondUser.slice(secondUser.length / 2, secondUser.length);
 	const finalName = firstUsernamePart + secondUsernamePart;
@@ -495,21 +518,26 @@ function customShipping(msg, args) {
 	return;
 }
 
-function customGoroscope(msg, args) {
-	const goroUser = args[0];
-	if (!goroUser.startsWith('<@!')) {
-		msg.delete({ timeout: 2500 });
-		msg.channel.send(sharedVars.text.warnMessageGoro)
+async function customGoroscope(msg, args) {
+	let goroUser;
+	if (args[0].startsWith('<@&')) {
+		msg.delete({ timeout: delayTime1 });
+		msg.channel.send(sharedVars.text.warnBotGoro)
 			.then(msg => {
-				msg.delete({ timeout: 2500 });
+				msg.delete({ timeout: delayTime1 });
 			});
 		return;
 	}
-	else {
-		const randomWord = Math.floor(Math.random() * goroscopeArray.length);
-		msg.channel.send(`${sharedVars.text.customGoroscopeMessage} ${goroUser} - **${goroscopeArray[randomWord]}**!`);
-		return;
+	else if (args[0].startsWith('<@!')) {
+		const goroUserUserInfo = await msg.guild.members.fetch(args[0].slice(3).slice(0, -1));
+		goroUser = goroUserUserInfo.displayName;
 	}
+	else {
+		goroUser = args[0];
+	}
+	const randomWord = Math.floor(Math.random() * goroscopeArray.length);
+	msg.channel.send(`${sharedVars.text.customGoroscopeMessage} ${goroUser} - **${goroscopeArray[randomWord]}**!`);
+	return;
 }
 
 module.exports = {

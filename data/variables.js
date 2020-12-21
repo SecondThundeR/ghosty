@@ -186,10 +186,13 @@ exports.text = {
 
 	// (getRandomThing.js) customShipping()
 	customShippingMessage: 'Данная парочка смело бы называлась -',
-	customGoroscopeMessage: 'Гороскоп для',
+	warnBotShipping: 'Я бы не стал использовать ботов в шиппинге *(И вам не стоит)*',
 
 	// (getRandomThing.js) customGoroscope()
 	warnMessageGoro: 'Я конечно мог бы сделать гороскоп с таким именем или словом, но это выглядело бы не кошерно. Напиши тоже самое, но с упоминанием юзера',
+	warnBotGoro: 'Я бы не стал использовать ботов в гороскопе *(И вам не стоит)*',
+	customGoroscopeMessage: 'Гороскоп для',
+
 
 	// (getRandomWordFromArray.js) spamChecker()
 	warningForSpam: 'куда спамиш?',

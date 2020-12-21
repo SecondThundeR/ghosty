@@ -536,7 +536,12 @@ async function customGoroscope(msg, args) {
 		goroUser = args[0];
 	}
 	const randomWord = Math.floor(Math.random() * goroscopeArray.length);
-	msg.channel.send(`${sharedVars.text.customGoroscopeMessage} ${goroUser} - ${goroscopeArray[randomWord]}!`);
+	if (goroscopeArray[randomWord].includes('*')) {
+		msg.channel.send(`${sharedVars.text.customGoroscopeMessage} ${goroUser} - ${goroscopeArray[randomWord]}`);
+	}
+	else {
+		msg.channel.send(`${sharedVars.text.customGoroscopeMessage} ${goroUser} - **${goroscopeArray[randomWord]}**`);
+	}
 	return;
 }
 

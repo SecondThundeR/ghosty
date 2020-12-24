@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and starting with changes from 29.11.2020, this bot will have a correct [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.4] - 24.12.2020
+
+## Added
+
+- Ability to pass someone's nickname with `@...` in `хуископ` command
+- Messages for some exceptions in mention parsing
+- Check for formatted word in array before sending
+
+## Changed
+
+- Message formatting for custom goroscope
+
+## Fixed
+
+- Now passing someone's nickname with `@...` in `шип` command returns normal name
+- Start of russian roulette when bullet number is NaN
+
 ## [1.1.3] - 15.12.2020
 
 ### Added
@@ -116,6 +133,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Multiple commands and functions was deleted due to move to Heroku *(Some of commands will present in additional branches)*
 - Commented code was deleted from main branch
 
+[1.1.4]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.1.0...v1.1.1

@@ -54,10 +54,13 @@ function executeCommand(msg) {
 		client.commands.get('meMessage').execute(msg, args);
 		break;
 	case commandsAliases[6]:
+		client.commands.get('meMessage').execute(msg, args);
+		break;
 	case commandsAliases[7]:
 	case commandsAliases[8]:
 	case commandsAliases[9]:
 	case commandsAliases[10]:
+	case commandsAliases[11]:
 		if (!args.length) {
 			return;
 		}
@@ -75,7 +78,7 @@ function executeCommand(msg) {
 			}
 		}
 		break;
-	case commandsAliases[11]:
+	case commandsAliases[12]:
 		if (!args.length) {
 			break;
 		}
@@ -83,10 +86,10 @@ function executeCommand(msg) {
 			client.commands.get('createPoll').execute(msg, args);
 		}
 		break;
-	case commandsAliases[12]:
+	case commandsAliases[13]:
 		client.commands.get('getHelp').execute(msg);
 		break;
-	case commandsAliases[13]:
+	case commandsAliases[14]:
 		client.commands.get('getUptime').execute(msg);
 		break;
 	default:

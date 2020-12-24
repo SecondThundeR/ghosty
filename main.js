@@ -54,7 +54,7 @@ function executeCommand(msg) {
 		client.commands.get('meMessage').execute(msg, args);
 		break;
 	case commandsAliases[6]:
-		client.commands.get('meMessage').execute(msg, args);
+		client.commands.get('rspGame').execute(msg, args);
 		break;
 	case commandsAliases[7]:
 	case commandsAliases[8]:

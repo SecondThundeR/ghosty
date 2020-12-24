@@ -26,6 +26,10 @@ function russianRoulette(msg, args) {
 		bulletCount = Number(args);
 	}
 
+	if (isNaN(bulletCount)) {
+		return;
+	}
+
 	if (bulletCount === 0) {
 		msg.reply(randomWordArray[2]);
 		return;

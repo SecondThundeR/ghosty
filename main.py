@@ -35,10 +35,9 @@ async def on_member_join(member):
 async def on_message(message):
     if message.author == client.user:
         return
-    else:
-        args = message.content.split(' ')
-        command = args.pop(0).lower()
-        if command == '$who':
-            await message.channel.send(await randomWord(message, args))
+    args = message.content.split(' ')
+    command = args.pop(0).lower()
+    if command == '$who':
+        await message.channel.send(await randomWord(message, args))
 
 client.run(TOKEN[0])

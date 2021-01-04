@@ -1,17 +1,8 @@
-# secondthunder-js-bot
+# secondthunder-py-bot
 
-[![CodeFactor](https://www.codefactor.io/repository/github/secondthunder/secondthunder-js-bot/badge)](https://www.codefactor.io/repository/github/secondthunder/secondthunder-js-bot) [![DeepScan grade](https://deepscan.io/api/teams/11565/projects/14865/branches/286263/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=11565&pid=14865&bid=286263)
+This is repository of some random bot for Discord which was created just for fun and for some educational purposes *(Made with Discord.py library)*
 
-This is repository of some random bot for Discord which was created just for fun and for some educational purposes *(Made with Discord.js library)*
-
-## Big announcement!
-News about the future of the bot and more - [here](https://github.com/SecondThundeR/secondthunder-js-bot/discussions/30)
-
-## Just a moment of attention
-
-This bot can add and remove words from a JSON array, however this implementation is missing from the main branch due to problems with these operations on Heroku. These additional functionality can be found [on this branch](https://github.com/SecondThundeR/secondthunder-js-bot/tree/add-delete-from-json), so you can choose what you need more from bot
-
-## How to use this bot
+## How to use this bot *(TODO: Rewrite)*
 
 ### Local use
 

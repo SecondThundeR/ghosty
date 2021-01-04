@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and starting with changes from 29.11.2020, this bot will have a correct [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.0.0 - xx.xx.2021
+
+## Changed
+
+- Codebase rewritten in Python
+
 ## [1.1.4] - 24.12.2020
 
 ## Added

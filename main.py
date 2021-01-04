@@ -18,7 +18,7 @@ async def on_ready():
                 addDataToDatabase('bots', ['bots_id'], [str(member.id)])
             else:
                 addDataToDatabase('users', ['users_id'], [str(member.id)])
-    await client.change_presence(status=discord.Status.dnd, activity=discord.Game(name="ACTIVITY_NAME"))
+    await client.change_presence(status=discord.Status.dnd, activity=discord.Game(name=ACTIVITY_NAME))
     print(f'Successfully logged in as {client.user}!'
           f'\nSet {ACTIVITY_NAME} as an activity')
 

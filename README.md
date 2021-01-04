@@ -1,5 +1,7 @@
 # secondthunder-py-bot
 
+[![CodeFactor](https://www.codefactor.io/repository/github/secondthunder/secondthunder-js-bot/badge)](https://www.codefactor.io/repository/github/secondthunder/secondthunder-js-bot)
+
 This is repository of some random bot for Discord which was created just for fun and for some educational purposes *(Made with Discord.py library)*
 
 ## How to use this bot *(TODO: Rewrite)*

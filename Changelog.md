@@ -1,7 +1,5 @@
 # Changelog
 
-[![CodeFactor](https://www.codefactor.io/repository/github/secondthunder/secondthunder-js-bot/badge/dev-2.0.0)](https://www.codefactor.io/repository/github/secondthunder/secondthunder-js-bot/overview/dev-2.0.0)
-
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and starting with changes from 29.11.2020, this bot will have a correct [semantic versioning](https://semver.org/spec/v2.0.0.html).

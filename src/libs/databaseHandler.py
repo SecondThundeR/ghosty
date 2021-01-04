@@ -4,8 +4,8 @@ import sqlite3
 def clearDataOnExecution():
     conn = sqlite3.connect("src/data/vars.db")
     cur = conn.cursor()
-    cur.execute("""UPDATE variables 
-                      SET pollLocked = 0, 
+    cur.execute("""UPDATE variables
+                      SET pollLocked = 0,
                           shipDate = '',
                           shipTextFull = '',
                           shipTextShort = '',
@@ -22,7 +22,6 @@ def clearDataOnExecution():
     cur.execute("DELETE FROM users")
     cur.execute("DELETE FROM bots")
     conn.commit()
-    return
 
 
 def getDataFromDatabase(table, keysArray):
@@ -43,22 +42,19 @@ def getDataFromDatabase(table, keysArray):
     return dataArray
 
 
-# TODO: Ability to add integers
 def addDataToDatabase(table, keysArray, dataArray):
     conn = sqlite3.connect("src/data/vars.db")
     cur = conn.cursor()
     if len(keysArray) != len(dataArray):
         return 'You have specified wrong keys or data array length'
+    if len(keysArray) == 1 or len(dataArray) == 1:
+        selectedKeys = keysArray[0]
+        dataToAdd = dataArray[0]
     else:
-        if len(keysArray) == 1 or len(dataArray) == 1:
-            selectedKeys = keysArray[0]
-            dataToAdd = dataArray[0]
-        else:
-            selectedKeys = ", ".join(keysArray)
-            dataToAdd = "', '".join(dataArray)
-        cur.execute(f"INSERT INTO {table} ({selectedKeys}) VALUES ('{dataToAdd}');")
-        conn.commit()
-        return
+        selectedKeys = ", ".join(keysArray)
+        dataToAdd = "', '".join(dataArray)
+    cur.execute(f"INSERT INTO {table} ({selectedKeys}) VALUES ('{dataToAdd}');")
+    conn.commit()
 
 
 def editDataInDatabase(table, keysArray, dataArray):
@@ -66,11 +62,9 @@ def editDataInDatabase(table, keysArray, dataArray):
     cur = conn.cursor()
     if len(keysArray) != len(dataArray):
         return 'You have specified wrong keys or data array length'
-    else:
-        tempArray = []
-        for i in range(len(keysArray)):
-            tempArray.append(f'{keysArray[i]} = {dataArray[i]}')
-        dataToWrite = ",\n ".join(tempArray)
-        cur.execute(f'UPDATE {table} SET {dataToWrite}')
-        conn.commit()
-        return
+    tempArray = []
+    for i in range(len(keysArray)):
+        tempArray.append(f'{keysArray[i]} = {dataArray[i]}')
+    dataToWrite = ",\n ".join(tempArray)
+    cur.execute(f'UPDATE {table} SET {dataToWrite}')
+    conn.commit()

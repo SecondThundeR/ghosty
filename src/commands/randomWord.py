@@ -22,10 +22,10 @@ async def randomWord(msg, args):
 
 def spamChecker(msg):
     currentStatus = getDataFromDatabase('variables', ['spammerID', 'spammerCount'])
-    if currentStatus[0] == msg.author.id and currentStatus[1] >= 3:
-        editDataInDatabase('variables', ['spammerCount'], [0])
-        return True
-    elif currentStatus[0] == msg.author.id and currentStatus[1] < 3:
+    if currentStatus[0] == msg.author.id:
+        if currentStatus[1] >= 3:
+            editDataInDatabase('variables', ['spammerCount'], [0])
+            return True
         editDataInDatabase('variables', ['spammerCount'], [currentStatus[1] + 1])
         return False
     editDataInDatabase('variables', ['spammerID', 'spammerCount'], [msg.author.id, 1])

@@ -63,7 +63,7 @@ def editDataInDatabase(table, keysArray, dataArray):
     if len(keysArray) != len(dataArray):
         return 'You have specified wrong keys or data array length'
     tempArray = []
-    for i in range(len(keysArray)):
+    for i, _ in enumerate(keysArray):
         tempArray.append(f'{keysArray[i]} = {dataArray[i]}')
     dataToWrite = ",\n ".join(tempArray)
     cur.execute(f'UPDATE {table} SET {dataToWrite}')

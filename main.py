@@ -1,6 +1,7 @@
 import discord
 from src.commands.randomWord import randomWord
 from src.commands.meMessage import meMessage
+from src.commands.getHelp import getHelp
 from src.libs.dataImport import dataImport
 from src.libs.databaseHandler import clearDataOnExecution, addDataToDatabase
 
@@ -42,6 +43,8 @@ async def on_message(message):
         await randomWord(message, args)
     elif command == 'йа':
         await meMessage(message, args)
+    elif command == 'хелп':
+        await getHelp(message)
     else:
         return
 

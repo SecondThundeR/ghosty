@@ -1,26 +1,24 @@
 import discord
-from src.commands.randomWord import randomWord
-from src.commands.meMessage import meMessage
-from src.commands.getHelp import getHelp
-from src.libs.dataImport import dataImport
-from src.libs.database_handler import clear_data_on_execution, add_data_to_database
+from src.libs import database_handler
+from src.commands import random_word, me_message, get_help # , random_number
 
-TOKEN = dataImport('src/data/token.txt')
+token = database_handler.get_data_from_database('tokens', 'bot_token')
+selectedBot = database_handler.get_data_from_database('variables', 'currentSelectedBot')[0]
 ACTIVITY_NAME = 'Helltaker'
-
 client = discord.Client()
 
 
 @client.event
 async def on_ready():
-    clear_data_on_execution()
+    database_handler.clear_data_on_execution()
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
             if member.bot:
-                add_data_to_database('bots', ['bots_id'], [str(member.id)])
+                database_handler.add_data_to_database('bots', ['bots_id'], [str(member.id)])
             else:
-                add_data_to_database('users', ['users_id'], [str(member.id)])
-    await client.change_presence(status=discord.Status.dnd, activity=discord.Game(name=ACTIVITY_NAME))
+                database_handler.add_data_to_database('users', ['users_id'], [str(member.id)])
+    await client.change_presence(status=discord.Status.dnd,
+                                 activity=discord.Game(name=ACTIVITY_NAME))
     print(f'Successfully logged in as {client.user}!'
           f'\nSet {ACTIVITY_NAME} as an activity')
 
@@ -28,9 +26,9 @@ async def on_ready():
 @client.event
 async def on_member_join(member):
     if member.bot:
-        add_data_to_database('bots', ['bots_id'], [str(member.id)])
+        database_handler.add_data_to_database('bots', ['bots_id'], [str(member.id)])
     else:
-        add_data_to_database('users', ['users_id'], [str(member.id)])
+        database_handler.add_data_to_database('users', ['users_id'], [str(member.id)])
 
 
 @client.event
@@ -39,13 +37,15 @@ async def on_message(message):
         return
     args = message.content.split(' ')
     command = args.pop(0).lower()
-    if command == 'ху' or command == 'who':
-        await randomWord(message, args)
+    if command in ('ху', 'who'):
+        await random_word.get_random_word(message, args)
     elif command == 'йа':
-        await meMessage(message, args)
+        await me_message.send_me_message(message, args)
     elif command == 'хелп':
-        await getHelp(message)
+        await get_help.send_help_message(message)
+    # elif command == 'рандом':
+        # await random_number.get_random_number(message, args)
     else:
         return
 
-client.run(TOKEN[0])
+client.run(token[int(selectedBot)])

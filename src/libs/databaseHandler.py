@@ -31,7 +31,7 @@ def getDataFromDatabase(table, keys, data='none'):
     conn = sqlite3.connect(databasePath)
     cur = conn.cursor()
     receivedData = []
-    if type(keys) is str:
+    if isinstance(keys, str):
         if data != 'none':
             cur.execute(f"SELECT * FROM {table} WHERE {keys} = '{data}'")
         else:
@@ -61,7 +61,7 @@ def getDataFromDatabase(table, keys, data='none'):
 def isDataInDatabase(table, keys, data):
     conn = sqlite3.connect(databasePath)
     cur = conn.cursor()
-    if type(keys) is str and type(data) is str:
+    if isinstance(keys, str) and isinstance(data, str):
         cur.execute(f"SELECT * FROM {table} WHERE {keys} = '{data}'")
     receivedData = cur.fetchall()
     if len(receivedData) != 0:
@@ -73,7 +73,7 @@ def isDataInDatabase(table, keys, data):
 def addDataToDatabase(table, keys, data):
     conn = sqlite3.connect(databasePath)
     cur = conn.cursor()
-    if type(keys) is str and type(data) is str:
+    if isinstance(keys, str) and isinstance(data, str):
         cur.execute(f"INSERT INTO {table} ('{keys}') VALUES ('{data}');")
         conn.commit()
         return True
@@ -96,7 +96,7 @@ def addDataToDatabase(table, keys, data):
 def editDataInDatabase(table, keys, data, statement=False):
     conn = sqlite3.connect(databasePath)
     cur = conn.cursor()
-    if type(keys) is str or type(data) is str:
+    if isinstance(keys, str) and isinstance(data, str):
         cur.execute(f'UPDATE {table} SET {keys} = {data}')
         conn.commit()
         return True
@@ -125,11 +125,11 @@ def deleteDataInDatabase(table, keys='none', data='none'):
         conn.commit()
         return True
     else:
-        if type(keys) is str and type(data) is str:
+        if isinstance(keys, str) and isinstance(data, str):
             cur.execute(f"DELETE FROM {table} WHERE {keys} = '{data}'")
             conn.commit()
             return True
-        elif type(keys) is list and type(data) is list:
+        elif isinstance(keys, list) and isinstance(data, list):
             tempArray = []
             for i, _ in enumerate(keys):
                 tempArray.append(f"{keys[i]} = '{data[i]}'")

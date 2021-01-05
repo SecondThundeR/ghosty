@@ -1,5 +1,6 @@
 import discord
 from src.commands.randomWord import randomWord
+from src.commands.meMessage import meMessage
 from src.libs.dataImport import dataImport
 from src.libs.databaseHandler import clearDataOnExecution, addDataToDatabase
 
@@ -39,5 +40,9 @@ async def on_message(message):
     command = args.pop(0).lower()
     if command == 'ху' or command == 'who':
         await randomWord(message, args)
+    elif command == 'йа':
+        await meMessage(message, args)
+    else:
+        return
 
 client.run(TOKEN[0])

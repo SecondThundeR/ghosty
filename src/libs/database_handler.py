@@ -135,8 +135,8 @@ def delete_data_in_database(table, keys='none', data='none'):
             temp_array = []
             for i, _ in enumerate(keys):
                 temp_array.append(f"{keys[i]} = '{data[i]}'")
-            data_to_write = " AND ".join(temp_array)
-            cur.execute(f'DELETE FROM {table} WHERE {data_to_write}')
+            data_to_delete = " AND ".join(temp_array)
+            cur.execute(f'DELETE FROM {table} WHERE {data_to_delete}')
             conn.commit()
             commit_completed = True
         else:

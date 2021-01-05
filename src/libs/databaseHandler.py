@@ -36,7 +36,8 @@ def getDataFromDatabase(table, keysArray):
     receivedData = cur.fetchall()
     for element in receivedData:
         if len(element) > 1:
-            dataArray.append(element)
+            for item in element:
+                dataArray.append(item)
         else:
             dataArray.append(element[0])
     return dataArray

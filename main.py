@@ -37,7 +37,7 @@ async def on_message(message):
         return
     args = message.content.split(' ')
     command = args.pop(0).lower()
-    if command == '$who':
-        await message.channel.send(await randomWord(message, args))
+    if command == 'ху' or command == 'who':
+        await randomWord(message, args)
 
 client.run(TOKEN[0])

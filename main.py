@@ -1,6 +1,6 @@
 import discord
 from src.libs import database_handler
-from src.commands import random_word, me_message, get_help # , random_number
+from src.commands import random_word, me_message, get_help, random_number
 
 token = database_handler.get_data_from_database('tokens', 'bot_token')
 selectedBot = database_handler.get_data_from_database('variables', 'currentSelectedBot')[0]
@@ -43,8 +43,8 @@ async def on_message(message):
         await me_message.send_me_message(message, args)
     elif command == 'хелп':
         await get_help.send_help_message(message)
-    # elif command == 'рандом':
-        # await random_number.get_random_number(message, args)
+    elif command == 'рандом':
+        await random_number.get_random_number(message, args)
     else:
         return
 

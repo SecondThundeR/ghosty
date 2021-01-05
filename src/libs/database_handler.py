@@ -1,10 +1,10 @@
 import sqlite3
 
-databasePath = 'src/data/botDB.db'
+DATABASE_PATH = 'src/data/botDB.db'
 
 
-def clearDataOnExecution():
-    conn = sqlite3.connect(databasePath)
+def clear_data_on_execution():
+    conn = sqlite3.connect(DATABASE_PATH)
     cur = conn.cursor()
     cur.execute("""UPDATE variables
                       SET pollLocked = 0,
@@ -27,115 +27,118 @@ def clearDataOnExecution():
     return True
 
 
-def getDataFromDatabase(table, keys, data='none'):
-    conn = sqlite3.connect(databasePath)
+def get_data_from_database(table, keys, data='none'):
+    conn = sqlite3.connect(DATABASE_PATH)
     cur = conn.cursor()
-    receivedData = []
+    received_data = []
     if isinstance(keys, str):
         if data != 'none':
             cur.execute(f"SELECT * FROM {table} WHERE {keys} = '{data}'")
         else:
             cur.execute(f'SELECT {keys} FROM {table}')
-        receivedData = cur.fetchall()
+        received_data = cur.fetchall()
     else:
         if data != 'none':
-            tempArray = []
+            temp_array = []
             for i, _ in enumerate(keys):
-                tempArray.append(f'{keys[i]} = {data[i]}')
-            dataToWrite = ",\n ".join(tempArray)
-            cur.execute(f"SELECT * FROM {table} WHERE {keys} = '{dataToWrite}'")
+                temp_array.append(f'{keys[i]} = {data[i]}')
+            data_to_write = ",\n ".join(temp_array)
+            cur.execute(f"SELECT * FROM {table} WHERE {keys} = '{data_to_write}'")
         else:
-            selectedKeys = ", ".join(keys)
-            cur.execute(f'SELECT {selectedKeys} FROM {table}')
-            receivedData = cur.fetchall()
-    dataArray = []
-    for element in receivedData:
+            selected_keys = ", ".join(keys)
+            cur.execute(f'SELECT {selected_keys} FROM {table}')
+            received_data = cur.fetchall()
+    data_array = []
+    for element in received_data:
         if len(element) > 1:
             for item in element:
-                dataArray.append(item)
+                data_array.append(item)
         else:
-            dataArray.append(element[0])
-    return dataArray
+            data_array.append(element[0])
+    return data_array
 
 
-def isDataInDatabase(table, keys, data):
-    conn = sqlite3.connect(databasePath)
+def is_data_in_database(table, keys, data):
+    conn = sqlite3.connect(DATABASE_PATH)
     cur = conn.cursor()
     if isinstance(keys, str) and isinstance(data, str):
         cur.execute(f"SELECT * FROM {table} WHERE {keys} = '{data}'")
-    receivedData = cur.fetchall()
-    if len(receivedData) != 0:
-        return True
-    else:
-        return False
+    received_data = cur.fetchall()
+    return bool(len(received_data != 0))
 
 
-def addDataToDatabase(table, keys, data):
-    conn = sqlite3.connect(databasePath)
+def add_data_to_database(table, keys, data):
+    conn = sqlite3.connect(DATABASE_PATH)
     cur = conn.cursor()
+    commit_completed = False
     if isinstance(keys, str) and isinstance(data, str):
         cur.execute(f"INSERT INTO {table} ('{keys}') VALUES ('{data}');")
         conn.commit()
-        return True
+        commit_completed = True
     elif len(keys) < len(data):
         for key in keys:
             for item in data:
                 cur.execute(f"INSERT INTO {table} ('{key}') VALUES ('{item}');")
         conn.commit()
-        return True
+        commit_completed = True
     elif len(keys) > len(data):
-        return False
+        commit_completed = False
     else:
-        selectedKeys = "', '".join(keys)
-        dataToAdd = "', '".join(data)
-        cur.execute(f"INSERT INTO {table} ('{selectedKeys}') VALUES ('{dataToAdd}');")
+        selected_keys = "', '".join(keys)
+        data_to_add = "', '".join(data)
+        cur.execute(f"INSERT INTO {table} ('{selected_keys}') VALUES ('{data_to_add}');")
         conn.commit()
-        return True
+        commit_completed = True
+    return commit_completed
 
 
-def editDataInDatabase(table, keys, data, statement=False):
-    conn = sqlite3.connect(databasePath)
+def edit_data_in_database(table, keys, data, statement=False):
+    conn = sqlite3.connect(DATABASE_PATH)
     cur = conn.cursor()
+    commit_completed = False
     if isinstance(keys, str) and isinstance(data, str):
         cur.execute(f'UPDATE {table} SET {keys} = {data}')
         conn.commit()
-        return True
+        commit_completed = True
     elif len(keys) != len(data):
-        return False
+        commit_completed =  False
     else:
         if statement:
             cur.execute(f"UPDATE {table} SET {keys[0]} = '{data[0]}' WHERE {keys[1]} = '{data[1]}'")
             conn.commit()
-            return True
+            commit_completed = True
         else:
-            tempArray = []
+            temp_array = []
             for i, _ in enumerate(keys):
-                tempArray.append(f'{keys[i]} = {data[i]}')
-            dataToWrite = ",\n ".join(tempArray)
-            cur.execute(f'UPDATE {table} SET {dataToWrite}')
+                temp_array.append(f'{keys[i]} = {data[i]}')
+            data_to_write = ",\n ".join(temp_array)
+            cur.execute(f'UPDATE {table} SET {data_to_write}')
             conn.commit()
-            return True
+            commit_completed = True
+    return commit_completed
 
 
-def deleteDataInDatabase(table, keys='none', data='none'):
-    conn = sqlite3.connect(databasePath)
+def delete_data_in_database(table, keys='none', data='none'):
+    conn = sqlite3.connect(DATABASE_PATH)
     cur = conn.cursor()
+    commit_completed = False
     if keys == 'none' and data == 'none':
         cur.execute(f'DELETE FROM {table}')
         conn.commit()
-        return True
+        commit_completed = True
     else:
         if isinstance(keys, str) and isinstance(data, str):
             cur.execute(f"DELETE FROM {table} WHERE {keys} = '{data}'")
             conn.commit()
-            return True
+            commit_completed = True
         elif isinstance(keys, list) and isinstance(data, list):
-            tempArray = []
+            temp_array = []
             for i, _ in enumerate(keys):
-                tempArray.append(f"{keys[i]} = '{data[i]}'")
-            dataToWrite = " AND ".join(tempArray)
-            cur.execute(f'DELETE FROM {table} WHERE {dataToWrite}')
+                temp_array.append(f"{keys[i]} = '{data[i]}'")
+            data_to_write = " AND ".join(temp_array)
+            cur.execute(f'DELETE FROM {table} WHERE {data_to_write}')
             conn.commit()
-            return True
+            commit_completed = True
         else:
-            return False
+            commit_completed = False
+    return commit_completed

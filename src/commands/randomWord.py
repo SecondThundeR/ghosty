@@ -2,7 +2,7 @@ import random
 import asyncio
 from src.libs.dataImport import dataImport
 from src.libs.getRandomUser import getRandomUser
-from src.libs.databaseHandler import getDataFromDatabase, editDataInDatabase
+from src.libs.database_handler import get_data_from_database, edit_data_in_database
 wordsArray = dataImport('src/data/words.txt')
 delayTime = 3
 
@@ -25,12 +25,12 @@ async def randomWord(msg, args):
 
 
 def spamChecker(msg):
-    currentStatus = getDataFromDatabase('variables', ['spammerID', 'spammerCount'])
+    currentStatus = get_data_from_database('variables', ['spammerID', 'spammerCount'])
     if currentStatus[0] == msg.author.id:
         if currentStatus[1] >= 3:
-            editDataInDatabase('variables', ['spammerCount'], [0])
+            edit_data_in_database('variables', ['spammerCount'], [0])
             return True
-        editDataInDatabase('variables', ['spammerCount'], [currentStatus[1] + 1])
+        edit_data_in_database('variables', ['spammerCount'], [currentStatus[1] + 1])
         return False
-    editDataInDatabase('variables', ['spammerID', 'spammerCount'], [msg.author.id, 1])
+    edit_data_in_database('variables', ['spammerID', 'spammerCount'], [msg.author.id, 1])
     return False

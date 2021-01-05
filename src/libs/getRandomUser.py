@@ -1,5 +1,6 @@
 import random
 from src.libs.databaseHandler import getDataFromDatabase
+
 users = getDataFromDatabase('users', ['users_id'])
 
 

@@ -3,12 +3,11 @@ import asyncio
 from src.libs.dataImport import dataImport
 from src.libs.getRandomUser import getRandomUser
 from src.libs.databaseHandler import getDataFromDatabase, editDataInDatabase
-WORDS_ARRAY = dataImport('src/data/words.txt')
-DELAY_TIME = 3
+wordsArray = dataImport('src/data/words.txt')
+delayTime = 3
 
 
 async def randomWord(msg, args):
-    currentUser = ''
     if len(args) == 0:
         currentUser = msg.author.mention
     elif args[0] == 'рандом':
@@ -18,11 +17,11 @@ async def randomWord(msg, args):
         currentUser = args[0]
     isSpamTriggerEnabled = spamChecker(msg)
     if isSpamTriggerEnabled:
-        await msg.channel.send(f'{msg.author.mention} куда спамиш?', delete_after=DELAY_TIME)
-        await asyncio.sleep(DELAY_TIME)
+        await msg.channel.send(f'{msg.author.mention} куда спамиш?', delete_after=delayTime)
+        await asyncio.sleep(delayTime)
         await msg.delete()
     else:
-        await msg.channel.send(f'{currentUser} {random.choice(WORDS_ARRAY)}')
+        await msg.channel.send(f'{currentUser} {random.choice(wordsArray)}')
 
 
 def spamChecker(msg):

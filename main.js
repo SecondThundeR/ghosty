@@ -38,7 +38,7 @@ function executeCommand(msg) {
 		client.commands.get('randomShip').execute(msg, args);
 		break;
 	case commandsAliases[2]:
-			client.commands.get('addWord').execute(msg, args);
+		client.commands.get('addWord').execute(msg, args);
 		break;
 	case commandsAliases[3]:
 		client.commands.get('deleteWord').execute(msg, args);

@@ -41,7 +41,8 @@ async def on_ready():
             add_data_to_database(table, key, str(member.id))
     await client.change_presence(status=discord.Status.dnd,
                                  activity=discord.Game(name=ACTIVITY_NAME))
-    print(f'Successfully logged in as {client.user}!\nSet {ACTIVITY_NAME} as an activity')
+    print(f'Successfully logged in as {client.user}!')
+    print(f'Set {ACTIVITY_NAME} as an activity')
 
 
 @client.event

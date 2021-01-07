@@ -1,4 +1,4 @@
-"""Library for obtaining information about a randomly selected user
+"""Library for obtaining information about a randomly selected user.
 
 This script allows to select a random user from list of server users
 and get his information
@@ -15,7 +15,7 @@ users = get_data_from_database('users', ['users_id'])
 
 
 async def get_random_user(msg, mode='default'):
-    """Getting a random user from an list and returning user's info
+    """Getting a random user from an list and returning user's info.
 
     Parameters:
         msg: Info about guild from message

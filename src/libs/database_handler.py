@@ -1,4 +1,4 @@
-"""SQL Database Handler Library
+"""SQL Database Handler Library.
 
 This script allows the user to work with a SQL database with basic functions
 that only require the necessary data from the user
@@ -26,7 +26,7 @@ DATABASE_PATH = 'src/data/botDB.db'
 
 
 def _connect_database(path):
-    """Connect to local database
+    """Connect to local database.
 
     Parameters:
         path (str): Path to local database
@@ -40,7 +40,7 @@ def _connect_database(path):
 
 
 def _disconnect_database(connection):
-    """Close connection with local database
+    """Close connection with local database.
 
     Parameters:
         connection (list): List which includes currently opened connection
@@ -50,7 +50,7 @@ def _disconnect_database(connection):
 
 
 def clear_data_on_execution():
-    """Clear specific tables in the database
+    """Clear specific tables in the database.
 
     **Noteworthy:** This function is necessary for the internal work of the bot,
     when main script is executed
@@ -74,7 +74,7 @@ def clear_data_on_execution():
 
 
 def is_data_in_database(table, keys, data, where_statement='AND'):
-    """Execute SQL query request and return a response
+    """Execute SQL query request and return a response.
 
     Parameters:
         table (str): Name of the table
@@ -116,7 +116,7 @@ def is_data_in_database(table, keys, data, where_statement='AND'):
 
 
 def get_data_from_database(table, keys, data=None, where_statement='AND'):
-    """Retrieve data from a database and return it as an array
+    """Retrieve data from a database and return it as an array.
 
     Parameters:
         table (str): Name of the table
@@ -181,7 +181,7 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
 
 
 def add_data_to_database(table, keys, data):
-    """Add data from the database and return the result of executing an SQL query
+    """Add data from the database and return the result of executing an SQL query.
 
     Parameters:
         table (str): Name of the table
@@ -232,7 +232,7 @@ def add_data_to_database(table, keys, data):
 
 
 def edit_data_in_database(table, keys, data, statement=False):
-    """Edit data in the database and return the status of SQL query execution
+    """Edit data in the database and return the status of SQL query execution.
 
     Parameters:
         table (str): Name of the table
@@ -287,7 +287,7 @@ def edit_data_in_database(table, keys, data, statement=False):
 
 
 def delete_data_in_database(table, keys=None, data=None):
-    """Remove data from the database and return the status of SQL query execution
+    """Remove data from the database and return the status of SQL query execution.
 
     Parameters:
         table (str): Name of the table

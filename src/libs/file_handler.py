@@ -1,4 +1,4 @@
-"""File Handler Library
+"""File Handler Library.
 
 This is a basic self-written module to handle operations with files
 
@@ -16,7 +16,7 @@ import os
 
 
 def import_data_from_file(path):
-    """Importing data from local file and returning as variable
+    """Import data from local file and returning as variable.
 
     Parameters:
         path (str): Path to local file
@@ -31,7 +31,7 @@ def import_data_from_file(path):
 
 
 def check_if_file_exists(path):
-    """Checking for the presence of a file at the specified path
+    """Check for the presence of a file at the specified path.
 
     Parameters:
         path (str): Path to local file
@@ -45,7 +45,7 @@ def check_if_file_exists(path):
 
 
 def delete_file(path):
-    """Deleting a file at the specified path
+    """Delete file at the specified path.
 
     Parameters:
         path (str): Path to local file

@@ -1,4 +1,4 @@
-"""secondthunder-py-bot
+"""secondthunder-py-bot.
 
 This is a Discord bot script that runs on the Discord.py library and
 allows you to execute functions using specific text commands
@@ -27,9 +27,7 @@ client = discord.Client()
 
 @client.event
 async def on_ready():
-    """Execution of the necessary instructions during the bot launch and
-    displaying a message about successful launch
-    """
+    """Execution of the necessary functions during the bot launch."""
     clear_data_on_execution()
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
@@ -48,7 +46,7 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member):
-    """Adding new server users to the database while the bot is running
+    """Adding new server users to the database while the bot is running.
 
     Parameters:
         member: Information about the user who joined the server
@@ -61,7 +59,7 @@ async def on_member_join(member):
 
 @client.event
 async def on_message(message):
-    """Adding new server users to the database while the bot is running
+    """Adding new server users to the database while the bot is running.
 
     **Noteworthy:** If a bot receives a message from another bot or from itself, or does
     not receive the required command from the user, it does nothing

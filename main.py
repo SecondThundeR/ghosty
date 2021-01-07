@@ -1,6 +1,9 @@
 import discord
-from src.libs.database_handler import *
-from src.commands import get_help, me_message, random_number, random_word
+from src.libs.database_handler import clear_data_on_execution, get_data_from_database, add_data_to_database
+from src.commands.get_help import send_help_message
+from src.commands.me_message import send_me_message
+from src.commands.random_number import get_random_number
+from src.commands.random_word import get_random_word
 
 
 TOKEN = get_data_from_database('tokens', 'bot_token')
@@ -40,13 +43,13 @@ async def on_message(message):
 	args = message.content.split(' ')
 	command = args.pop(0).lower()
 	if command in ('ху', 'who'):
-		await random_word.get_random_word(message, args)
+		await get_random_word(message, args)
 	elif command == 'йа':
-		await me_message.send_me_message(message, args)
+		await send_me_message(message, args)
 	elif command == 'хелп':
-		await get_help.send_help_message(message)
+		await send_help_message(message)
 	elif command == 'рандом':
-		await random_number.get_random_number(message, args)
+		await get_random_number(message, args)
 	else:
 		return
 

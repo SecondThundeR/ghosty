@@ -31,6 +31,21 @@ exports.text = {
 	// (main.js) client.on('ready)
 	activityName: 'Helltaker',
 
+	// addWord.js + deleteWord.js
+	notFoundFileRoulette: 'Я не нашёл такого файла у меня. Пожалуйста, проверьте правильность написания аргумента!',
+
+	// (addWord.js) addWord()
+	successAddWord: 'Я добавил это в мой словарь! Спасибо, что делаешь меня тупее :(',
+	failAddWord: 'Я бы ответил что-нибудь остроумное, но это слово у меня уже есть, мне добавлять нечего',
+
+	// (addWord.js) addBot()
+	successAddBot: 'Я добавил этого бота в исключения! Теперь я буду его игнорировать',
+	failAddBot: 'Данный бот уже есть у меня в исключениях!',
+
+	// (addWord.js) addWordRoulette()
+	successAddRouletteWord: 'Я добавил это в мой словарь! Спасибо, что делаешь меня тупее :(',
+	failAddRouletteWord: 'Я бы ответил что-нибудь остроумное, но это слово у меня уже есть, мне добавлять нечего',
+
 	// (createPoll.js) pollInit()
 	pollIsActiveWarn: 'К сожалению, у вас сейчас имеется одно активное голование в чате.' +
 		'\nВы сможете запустить новое только по окончанию старого',
@@ -53,6 +68,18 @@ exports.text = {
 	makarErrorParsing: 'К сожалению, я не могу обработать это, так как могу выдасть ошибку. Попробуйте что-то другое',
 	makarErrorEmoji: 'Дядя, что ты мне дал? Какой блин переворот эмодзи...',
 	makarDefaultText: 'Улыбок тебе дед ',
+
+	// (deleteWord.js) deleteWord()
+	successDeleteWord: 'Я удалил это слово у себя. Неужели кто-то очищает меня от этого...',
+	failDeleteWord: 'Прости, я не нашёл это слово у себя и мне нечего удалять',
+
+	// (deleteWord.js) deleteBot()
+	successDeleteBot: 'Я удалил этого бота у себя. Теперь я не буду его игнорировать!',
+	failDeleteBot: 'Прости, я не нашёл этого бота у себя и мне некого убирать',
+
+	// (deleteWord.js) deleteWordRoulette()
+	successDeleteRouletteWord: 'Я удалил это слово у себя. Неужели кто-то очищает меня от этого...',
+	failDeleteRouletteWord: 'Прости, я не нашёл это слово у себя и мне нечего удалять',
 
 	// (getHelp.js) sendHelpMessage()
 	helpMessage: 'Доступные команды бота:' +

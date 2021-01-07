@@ -8,7 +8,7 @@ const { token } = require('./config.json');
 const wakeUpDyno = require('./wakeDyno');
 
 const PORT = 3000;
-const DYNO_URL = 'https://slavebot-ds.herokuapp.com';
+const DYNO_URL = 'https://appname.herokuapp.com';
 const commandsAliases = JSONLib.getCommandsNames();
 
 const client = new Discord.Client();
@@ -38,27 +38,33 @@ function executeCommand(msg) {
 		client.commands.get('randomShip').execute(msg, args);
 		break;
 	case commandsAliases[2]:
-		client.commands.get('dedMakar').execute(msg, args, command);
+		client.commands.get('addWord').execute(msg, args);
 		break;
 	case commandsAliases[3]:
-		client.commands.get('russianRoulette').execute(msg, args);
+		client.commands.get('deleteWord').execute(msg, args);
 		break;
 	case commandsAliases[4]:
-		client.commands.get('randomNumber').execute(msg, args);
+		client.commands.get('dedMakar').execute(msg, args, command);
 		break;
 	case commandsAliases[5]:
-		client.commands.get('meMessage').execute(msg, args);
+		client.commands.get('russianRoulette').execute(msg, args);
 		break;
 	case commandsAliases[6]:
-		client.commands.get('rspGame').execute(msg, args);
+		client.commands.get('randomNumber').execute(msg, args);
 		break;
 	case commandsAliases[7]:
-		client.commands.get('createPoll').execute(msg, args);
+		client.commands.get('meMessage').execute(msg, args);
 		break;
 	case commandsAliases[8]:
-		client.commands.get('getHelp').execute(msg);
+		client.commands.get('rspGame').execute(msg, args);
 		break;
 	case commandsAliases[9]:
+		client.commands.get('createPoll').execute(msg, args);
+		break;
+	case commandsAliases[10]:
+		client.commands.get('getHelp').execute(msg);
+		break;
+	case commandsAliases[11]:
 		client.commands.get('getUptime').execute(msg);
 		break;
 	default:

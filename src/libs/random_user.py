@@ -1,11 +1,12 @@
 """Library for obtaining information about a randomly selected user
 
-    This script allows to select a random user from list of server users
-    and get his information
+This script allows to select a random user from list of server users
+and get his information
 
-    This file can also be imported as a module and contains the following functions:
-        * get_random_user - return info of randomly chosen user
+This file can also be imported as a module and contains the following functions:
+    * get_random_user - return info of randomly chosen user
 """
+
 
 import random
 from src.libs.database_handler import get_data_from_database
@@ -23,7 +24,8 @@ async def get_random_user(msg, mode='default'):
         two random users. Defaults to 'default'
 
     Returns:
-        User object about member which was randomly chosen. None for empty array of users
+        User object about member which was randomly chosen.
+            None for empty array of users
     """
     if users is None:
         return users

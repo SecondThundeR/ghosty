@@ -1,12 +1,13 @@
 """secondthunder-py-bot
 
-    This is a Discord bot script that runs on the Discord.py library and
-    allows you to execute functions using specific text commands
+This is a Discord bot script that runs on the Discord.py library and
+allows you to execute functions using specific text commands
 
-    This is the starting point of the bot control, from where it starts its
-    work. Here you can change the entire logic of the bot and adjust it to
-    fit your needs
+This is the starting point of the bot control, from where it starts its
+work. Here you can change the entire logic of the bot and adjust it to
+fit your needs
 """
+
 
 import discord
 from src.libs.database_handler import clear_data_on_execution
@@ -27,7 +28,7 @@ client = discord.Client()
 @client.event
 async def on_ready():
     """Execution of the necessary instructions during the bot launch and
-        displaying a message about successful launch
+    displaying a message about successful launch
     """
     clear_data_on_execution()
     for guild in client.guilds:

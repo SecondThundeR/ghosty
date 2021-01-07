@@ -1,23 +1,24 @@
 """SQL Database Handler Library
 
-    This script allows the user to work with a SQL database with basic functions
-    that only require the necessary data from the user
+This script allows the user to work with a SQL database with basic functions
+that only require the necessary data from the user
 
-    The module can accept strings as single queries or records
-    of single data to the database, and lists of strings as multiple queries
-    or records of several data at once
+The module can accept strings as single queries or records
+of single data to the database, and lists of strings as multiple queries
+or records of several data at once
 
-    **Noteworthy:** Module returns custom exception on every SQL failure to
-    prevent the main script from making sudden errors
+**Noteworthy:** Module returns custom exception on every SQL failure to
+prevent the main script from making sudden errors
 
-    This file can also be imported as a module and contains the following functions:
-        * clear_data_on_execution - clears specific tables
-        * is_data_in_database - returns True or False depending on the availability
-        * get_data_from_database - returns list of data from table
-        * add_data_to_database - returns True or False on the commit of data
-        * edit_data_to_database - returns True or False on the edit of data
-        * delete_data_in_database - returns True or False on the deletion of data
+This file can also be imported as a module and contains the following functions:
+    * clear_data_on_execution - clears specific tables
+    * is_data_in_database - returns True or False depending on the availability
+    * get_data_from_database - returns list of data from table
+    * add_data_to_database - returns True or False on the commit of data
+    * edit_data_to_database - returns True or False on the edit of data
+    * delete_data_in_database - returns True or False on the deletion of data
 """
+
 
 import sqlite3
 

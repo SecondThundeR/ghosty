@@ -19,8 +19,9 @@ async def get_random_user(msg, mode='default'):
 
 	Parameters:
 		msg: Info about guild from message
-		mode (str): Mode of getting random user. When 'shipping' is selected, executing different statement
-		for getting two random users. Defaults to 'default'
+		mode (str): Mode of getting random user.
+		When 'shipping' is selected, executing different statement for getting
+		two random users. Defaults to 'default'
 
 	Returns:
 		User object about member which was randomly chosen. None for empty array of users

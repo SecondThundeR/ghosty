@@ -3,22 +3,20 @@
     This script allows the user to work with a SQL database with basic functions
     that only require the necessary data from the user
 
-    The module can accept strings as single queries or records of single data to the database,
-    and arrays of strings as multiple queries or records of several data at once
+    The module can accept strings as single queries or records
+    of single data to the database, and lists of strings as multiple queries
+    or records of several data at once
 
     **Noteworthy:** Module returns custom exception on every SQL failure to
     prevent the main script from making sudden errors
 
     This file can also be imported as a module and contains the following functions:
         * clear_data_on_execution - clears specific tables
-        * is_data_in_database - returns True or False depending on the availability of data
-        * get_data_from_database - returns data list from table
-        * add_data_to_database - returns True or False depending on the successful commit
-        of data into the database
-        * edit_data_to_database - returns True or False depending on the successful edit
-        of data in the database
-        * delete_data_in_database - returns True or False depending on the successful deletion
-        of data from the database
+        * is_data_in_database - returns True or False depending on the availability
+        * get_data_from_database - returns list of data from table
+        * add_data_to_database - returns True or False on the commit of data
+        * edit_data_to_database - returns True or False on the edit of data
+        * delete_data_in_database - returns True or False on the deletion of data
 """
 
 import sqlite3
@@ -27,7 +25,7 @@ DATABASE_PATH = 'src/data/botDB.db'
 
 
 def _connect_database(path):
-    """Connecting to local database
+    """Connect to local database
 
     Parameters:
         path (str): Path to local database
@@ -51,14 +49,13 @@ def _disconnect_database(connection):
 
 
 def clear_data_on_execution():
-    """Clearing specific tables in the database
+    """Clear specific tables in the database
 
-    Noteworthy: This function is necessary for the internal work of the bot,
+    **Noteworthy:** This function is necessary for the internal work of the bot,
     when main script is executed
 
     Raises:
-        Exception: If there is error with connection to database,
-        returns info about error
+        Exception: Returns info about error
     """
     database_connection = _connect_database(DATABASE_PATH)
     try:
@@ -76,19 +73,21 @@ def clear_data_on_execution():
 
 
 def is_data_in_database(table, keys, data, where_statement='AND'):
-    """Executing SQL query request and returning a response
+    """Execute SQL query request and return a response
 
     Parameters:
         table (str): Name of the table
         keys (str or list[str]): Keys of the table
-        data (str or int or list[str or int]): Data of the columns. Defaults to None
-        where_statement (str): Statement for WHERE in SQL request. Defaults to 'AND'
+        data (str or int or list[str or int]): Data of the columns.
+            Defaults to None
+        where_statement (str): Statement for WHERE in SQL request.
+            Defaults to 'AND'
 
     Returns:
         True if data is exists in database, False otherwise
 
     Raises:
-        Exception: If there is error with connection to database, returns info about error
+        Exception: Returns info about error
     """
     try:
         database_connection = _connect_database(DATABASE_PATH)
@@ -108,19 +107,22 @@ def is_data_in_database(table, keys, data, where_statement='AND'):
 
 
 def get_data_from_database(table, keys, data=None, where_statement='AND'):
-    """Retrieving data from a database and returning it as an array
+    """Retrieve data from a database and return it as an array
 
     Parameters:
         table (str): Name of the table
         keys (str or list[str]): Keys of the table
-        data (str or int or list[str or int]): Data of the columns. Defaults to None
-        where_statement (str): Statement for WHERE in SQL request. Defaults to 'AND'
+        data (str or int or list[str or int]): Data of the columns.
+            Defaults to None
+        where_statement (str): Statement for WHERE in SQL request.
+            Defaults to 'AND'
 
     Returns:
-        Array with data from database. None if SQL request returns empty result
+        Array with data from database.
+            None if SQL request returns empty result
 
     Raises:
-        Exception: If there is error with connection to database, returns info about error
+        Exception: Returns info about error
     """
     data_array = []
     try:
@@ -156,7 +158,7 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
 
 
 def add_data_to_database(table, keys, data):
-    """Adding data from the database and returning the result of executing an SQL query
+    """Add data from the database and return the result of executing an SQL query
 
     Parameters:
         table (str): Name of the table
@@ -167,7 +169,7 @@ def add_data_to_database(table, keys, data):
         True on successful commit to database, False otherwise
 
     Raises:
-        Exception: If there is error with connection to database, returns info about error
+        Exception: Returns info about error
     """
     try:
         database_connection = _connect_database(DATABASE_PATH)
@@ -207,7 +209,7 @@ def add_data_to_database(table, keys, data):
 
 
 def edit_data_in_database(table, keys, data, statement=False):
-    """Editing data in the database and returning the status of SQL query execution
+    """Edit data in the database and return the status of SQL query execution
 
     Parameters:
         table (str): Name of the table
@@ -219,7 +221,7 @@ def edit_data_in_database(table, keys, data, statement=False):
         True on successful commit to database, False otherwise
 
     Raises:
-        Exception: If there is error with connection to database, returns info about error
+        Exception: Returns info about error
     """
     try:
         database_connection = _connect_database(DATABASE_PATH)
@@ -262,18 +264,20 @@ def edit_data_in_database(table, keys, data, statement=False):
 
 
 def delete_data_in_database(table, keys=None, data=None):
-    """Removing data from the database and returning the status of SQL query execution
+    """Remove data from the database and return the status of SQL query execution
 
     Parameters:
         table (str): Name of the table
-        keys (str or list[str]): Keys of the table. Defaults to None
-        data (str or int or list[str or int]): Data to edit in the columns. Defaults to None
+        keys (str or list[str]): Keys of the table.
+            Defaults to None
+        data (str or int or list[str or int]): Data to edit in the columns.
+            Defaults to None
 
     Returns:
         True on successful commit to database, False otherwise
 
     Raises:
-        Exception: If there is error with connection to database, returns info about error
+        Exception: Returns info about error
     """
     try:
         database_connection = _connect_database(DATABASE_PATH)

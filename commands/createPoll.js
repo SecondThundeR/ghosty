@@ -1,44 +1,53 @@
 'use strict';
 const sharedVars = require('../data/variables');
-let voteTime = 0;
-let voter = '';
+const delayTime = 10000;
+let voteTime = 60000;
+let voter;
 
 function pollInit(msg, args) {
-	if (sharedVars.vars.pollLocked === true) {
+	if (!args.length) {
 		return;
 	}
-	else {
+	else if (args.length !== 0 && sharedVars.vars.pollLocked !== true) {
+		msg.delete();
 		createPoll(msg, args);
+	}
+	else {
+		msg.delete({ timeout: delayTime });
+		msg.channel.send(sharedVars.text.pollIsActiveWarn)
+			.then(msg => {
+				msg.delete({ timeout: delayTime });
+			});
 	}
 }
 
 function getVoteResult(collectedArr, voteMsg) {
-	let rArray, pArray, nArray, pObj, nObj, pValue, nValue;
 	const collectedArray = Array.from(collectedArr.entries());
+	let pValue, nValue = 0;
+
 	if (collectedArray.length === 0) {
 		sharedVars.vars.pollLocked = false;
 		return `${sharedVars.text.endPollText1}${voteMsg}${sharedVars.text.endPollText2}${voter}${sharedVars.text.noVotesText}`;
 	}
 	else if (collectedArray.length === 1) {
-		rArray = collectedArray[0];
+		const rArray = collectedArray[0];
+
 		if (rArray[0] === '👍') {
-			pObj = rArray[1];
+			const pObj = rArray[1];
 			pValue = pObj.count - 1;
-			nValue = 0;
 		}
 		else {
-			nObj = rArray[1];
-			pValue = 0;
+			const nObj = rArray[1];
 			nValue = nObj.count - 1;
 		}
 	}
 	else {
-		pArray = collectedArray[0];
-		nArray = collectedArray[1];
-		pObj = pArray[1];
-		nObj = nArray[1];
-		pValue = pObj.count;
-		nValue = nObj.count;
+		const pArray = collectedArray[0];
+		const nArray = collectedArray[1];
+		const pObj = pArray[1];
+		const nObj = nArray[1];
+		pValue = pObj.count - 1;
+		nValue = nObj.count - 1;
 	}
 
 	if (pValue > nValue) {
@@ -57,21 +66,22 @@ function getVoteResult(collectedArr, voteMsg) {
 
 function createPoll(msg, args) {
 	sharedVars.vars.pollLocked = true;
-	if (isNaN(args[0])) {
-		voteTime = 60000;
-	}
-	else {
+	let voteMessage = args.join(' ');
+	voter = msg.author;
+
+	if (!isNaN(args[0])) {
 		voteTime = Number(args[0]) * 1000;
 		args.shift();
 	}
-	voter = msg.author;
-	let voteMessage = args.join(' ');
+
 	while (voteMessage.includes('*')) {
 		voteMessage = voteMessage.replace(/\*/g, '');
 	}
+
 	const filter = (reaction, user) => {
 		return ['👍', '👎'].includes(reaction.emoji.name) && user.id === msg.author.id;
 	};
+
 	msg.channel.send(`${sharedVars.text.pollText1}${voter}${sharedVars.text.pollText2}${voteMessage}${sharedVars.text.pollText3}${voteTime / 1000}${sharedVars.text.pollText4}`)
 		.then(msg => {
 			msg.react('👍');
@@ -87,7 +97,6 @@ function createPoll(msg, args) {
 module.exports = {
 	name: 'createPoll',
 	description: 'Module creates simple poll with two reaction buttons',
-	cooldown: 5,
 	execute(msg, args) {
 		pollInit(msg, args);
 	},

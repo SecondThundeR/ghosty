@@ -22,7 +22,7 @@ function meMessage(msg, args) {
 
 module.exports = {
 	name: 'meMessage',
-	description: 'Module reproduce famous command /me',
+	description: 'Module reproduces famous command /me',
 	cooldown: 2,
 	execute(msg, args) {
 		meMessage(msg, args);

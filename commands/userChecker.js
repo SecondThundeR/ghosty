@@ -1,159 +1,39 @@
 'use strict';
+const getRandomUser = require('../libs/getRandomUser');
 const sharedVars = require('../data/variables');
 
-function checkerSelector(msg, args, command) {
-	switch(command) {
-	case 'гей':
-		msg.channel.send(gayChecker(msg, args));
+async function userChecker(msg, args, command) {
+	const randomPercent = Math.floor(Math.random() * 101);
+	let currentUser;
+	if (args[0] === 'рандом') {
+		const userInfo = await getRandomUser(msg);
+		currentUser = userInfo[0];
+	}
+	else if (args[0] === 'тест' && args.length === 1) {
+		currentUser = msg.author;
+	}
+	else {
+		args.shift();
+		currentUser = args.join(' ');
+	}
+	switch (randomPercent) {
+	case 0:
+		msg.channel.send(`${currentUser}${sharedVars.text.noneSomeone1}${command}${sharedVars.text.noneSomeone2}`);
 		break;
-	case 'аниме':
-		msg.channel.send(animeChecker(msg, args));
-		break;
-	case 'алина':
-		msg.channel.send(alinaChecker(msg, args));
-		break;
-	case 'влад':
-		msg.channel.send(vladChecker(msg, args));
-		break;
-	case 'дед':
-		msg.channel.send(dedChecker(msg, args));
+	case 100:
+		msg.channel.send(`${currentUser}${sharedVars.text.fullSomeone1}${command}${sharedVars.text.fullSomeone2}${randomPercent}${sharedVars.text.someonePercent}`);
 		break;
 	default:
+		msg.channel.send(`${currentUser} ${command}${sharedVars.text.someoneDefaultPart}${randomPercent}${sharedVars.text.someonePercent}`);
 		break;
-	}
-}
-
-function gayChecker(msg, args) {
-	const randomPercent = Math.floor(Math.random() * 101);
-	switch (args.length) {
-	case 1:
-		switch (randomPercent) {
-		case 0:
-			return `${msg.author} ${sharedVars.text.noneGay}`;
-		case 100:
-			return `${msg.author} ${sharedVars.text.fullGay} ${randomPercent}${sharedVars.text.gayPercent}`;
-		default:
-			return `${msg.author} ${sharedVars.text.gayDefaultPart} ${randomPercent}${sharedVars.text.gayPercent}`;
-		}
-	case 2:
-		switch (randomPercent) {
-		case 0:
-			return `${args[1]} ${sharedVars.text.noneGay}`;
-		case 100:
-			return `${args[1]} ${sharedVars.text.fullGay} ${randomPercent}${sharedVars.text.gayTextPercent}`;
-		default:
-			return `${args[1]} ${sharedVars.text.gayDefaultPart} ${randomPercent}${sharedVars.text.gayPercent}`;
-		}
-	default:
-		break;
-	}
-}
-
-function animeChecker(msg, args) {
-	const randomPercent = Math.floor(Math.random() * 101);
-	switch (args.length) {
-	case 1:
-		switch (randomPercent) {
-		case 0:
-			return `${msg.author} ${sharedVars.text.noneAnime}`;
-		case 100:
-			return `${msg.author} ${sharedVars.text.fullAnime} ${randomPercent}${sharedVars.text.animePercent}`;
-		default:
-			return `${msg.author} ${sharedVars.text.animeDefaultPart} ${randomPercent}${sharedVars.text.animePercent}`;
-		}
-	case 2:
-		switch (randomPercent) {
-		case 0:
-			return `${args[1]} ${sharedVars.text.noneAnime}`;
-		case 100:
-			return `${args[1]} ${sharedVars.text.fullAnime} ${randomPercent}${sharedVars.text.animePercent}`;
-		default:
-			return `${args[1]} ${sharedVars.text.animeDefaultPart} ${randomPercent}${sharedVars.text.animePercent}`;
-		}
-	default:
-		break;
-	}
-}
-
-function alinaChecker(msg, args) {
-	const randomPercent = Math.floor(Math.random() * 101);
-	switch (args.length) {
-	case 1:
-		switch (randomPercent) {
-		case 0:
-			return `${msg.author} ${sharedVars.text.noneAlina}`;
-		case 100:
-			return `${msg.author} ${sharedVars.text.fullAlina} ${randomPercent}${sharedVars.text.alinaPercent}`;
-		default:
-			return `${msg.author} ${sharedVars.text.alinaDefaultPart} ${randomPercent}${sharedVars.text.alinaPercent}`;
-		}
-	case 2:
-		switch (randomPercent) {
-		case 0:
-			return `${args[1]} ${sharedVars.text.noneAlina}`;
-		case 100:
-			return `${args[1]} ${sharedVars.text.fullAlina} ${randomPercent}${sharedVars.text.alinaPercent}`;
-		default:
-			return `${args[1]} ${sharedVars.text.alinaDefaultPart} ${randomPercent}${sharedVars.text.alinaPercent}`;
-		}
-	default:
-		break;
-	}
-}
-
-function vladChecker(msg, args) {
-	const randomPercent = Math.floor(Math.random() * 101);
-	switch (args.length) {
-	case 1:
-		switch (randomPercent) {
-		case 0:
-			return `${msg.author}${sharedVars.text.noneVlad}`;
-		case 100:
-			return `${msg.author}${sharedVars.text.fullVlad}${randomPercent}${sharedVars.text.vladPercent}`;
-		default:
-			return `${msg.author}${sharedVars.text.vladDefaultPart}${randomPercent}${sharedVars.text.vladPercent}`;
-		}
-	case 2:
-		switch (randomPercent) {
-		case 0:
-			return `${args[1]}${sharedVars.text.noneVlad}`;
-		case 100:
-			return `${args[1]}${sharedVars.text.fullVlad}${randomPercent}${sharedVars.text.vladPercent}`;
-		default:
-			return `${args[1]}${sharedVars.text.vladDefaultPart}${randomPercent}${sharedVars.text.vladPercent}`;
-		}
-	}
-}
-
-function dedChecker(msg, args) {
-	const randomPercent = Math.floor(Math.random() * 101);
-	switch (args.length) {
-	case 1:
-		switch (randomPercent) {
-		case 0:
-			return `${msg.author}${sharedVars.text.noneDed}`;
-		case 100:
-			return `${msg.author}${sharedVars.text.fullDed}${randomPercent}${sharedVars.text.dedPercent}`;
-		default:
-			return `${msg.author}${sharedVars.text.dedDefaultPart}${randomPercent}${sharedVars.text.dedPercent}`;
-		}
-	case 2:
-		switch (randomPercent) {
-		case 0:
-			return `${args[1]}${sharedVars.text.noneDed}`;
-		case 100:
-			return `${args[1]}${sharedVars.text.fullDed}${randomPercent}${sharedVars.text.dedPercent}`;
-		default:
-			return `${args[1]}${sharedVars.text.dedDefaultPart}${randomPercent}${sharedVars.text.dedPercent}`;
-		}
 	}
 }
 
 module.exports = {
 	name: 'userChecker',
 	description: 'Module returns a random percentage that shows how someone is',
-	cooldown: 3,
+	cooldown: 2,
 	execute(msg, args, command) {
-		checkerSelector(msg, args, command);
+		userChecker(msg, args, command);
 	},
 };

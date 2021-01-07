@@ -8,13 +8,12 @@ function sendHelpMessage(msg) {
 		.then(msg => {
 			msg.delete({ timeout: delayTime });
 		});
-	return;
 }
 
 module.exports = {
 	name: 'getHelp',
 	description: 'Module returns all commands of bot',
-	cooldown: 10,
+	cooldown: 5,
 	execute(msg) {
 		sendHelpMessage(msg);
 	},

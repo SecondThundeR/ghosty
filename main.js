@@ -8,7 +8,7 @@ const { token } = require('./config.json');
 const wakeUpDyno = require('./wakeDyno');
 
 const PORT = 3000;
-const DYNO_URL = 'https://appname.herokuapp.com';
+const DYNO_URL = 'https://slavebot-ds.herokuapp.com';
 const commandsAliases = JSONLib.getCommandsNames();
 
 const client = new Discord.Client();
@@ -27,28 +27,24 @@ app.listen(PORT, () => {
 
 function executeCommand(msg) {
 	const args = msg.content.trim().split(/ +/);
-	const command = args.shift().toLowerCase();
+	const customCommand = args.shift();
+	const command = customCommand.toLowerCase();
 
 	switch (command) {
 	case commandsAliases[0]:
-		client.commands.get('getRandomWordFromArray').execute(msg, args);
+		client.commands.get('getRandomWord').execute(msg, args);
 		break;
 	case commandsAliases[1]:
+		client.commands.get('randomShip').execute(msg, args);
+		break;
 	case commandsAliases[2]:
-		switch (args[0]) {
-		case 'скип':
-			client.commands.get('resultsReset').execute(msg, command);
-			break;
-		default:
-			client.commands.get('getRandomThing').execute(msg, args, command);
-			break;
-		}
+		client.commands.get('dedMakar').execute(msg, args, command);
 		break;
 	case commandsAliases[3]:
 		client.commands.get('russianRoulette').execute(msg, args);
 		break;
 	case commandsAliases[4]:
-		client.commands.get('getRandomThing').execute(msg, args, command);
+		client.commands.get('randomNumber').execute(msg, args);
 		break;
 	case commandsAliases[5]:
 		client.commands.get('meMessage').execute(msg, args);
@@ -57,49 +53,30 @@ function executeCommand(msg) {
 		client.commands.get('rspGame').execute(msg, args);
 		break;
 	case commandsAliases[7]:
+		client.commands.get('createPoll').execute(msg, args);
+		break;
 	case commandsAliases[8]:
-	case commandsAliases[9]:
-	case commandsAliases[10]:
-	case commandsAliases[11]:
-		if (!args.length) {
-			return;
-		}
-		else {
-			switch(args[0]) {
-			case 'тест':
-				client.commands.get('userChecker').execute(msg, args, command);
-				break;
-			case 'дня':
-				client.commands.get('getRandomThing').execute(msg, args, command);
-				break;
-			case 'скип':
-				client.commands.get('resultsReset').execute(msg, command);
-				break;
-			}
-		}
-		break;
-	case commandsAliases[12]:
-		if (!args.length) {
-			break;
-		}
-		else {
-			client.commands.get('createPoll').execute(msg, args);
-		}
-		break;
-	case commandsAliases[13]:
 		client.commands.get('getHelp').execute(msg);
 		break;
-	case commandsAliases[14]:
+	case commandsAliases[9]:
 		client.commands.get('getUptime').execute(msg);
 		break;
 	default:
+		switch (args[0]) {
+		case 'тест':
+		case 'рандом':
+			client.commands.get('userChecker').execute(msg, args, customCommand);
+			break;
+		default:
+			break;
+		}
 		break;
 	}
 }
 
 client.on('ready', () => {
 	client.user.setActivity(sharedVars.text.activityName);
-	console.log(`Logged in as '${client.user.tag}' and set '${sharedVars.text.activityName}' as an activity`);
+	console.log(`Successfully logged in as '${client.user.tag}'!\nSet '${sharedVars.text.activityName}' as an activity`);
 });
 
 client.on('message', msg => {

@@ -92,13 +92,21 @@ def is_data_in_database(table, keys, data, where_statement='AND'):
     try:
         database_connection = _connect_database(DATABASE_PATH)
         if isinstance(keys, str):
-            database_connection[1].execute(f"SELECT * FROM {table} WHERE {keys} = '{data}'")
+            database_connection[1].execute(
+                f"SELECT * "
+                f"FROM {table} "
+                f"WHERE {keys} = '{data}'"
+            )
         else:
             temp_array = []
             for i, _ in enumerate(keys):
                 temp_array.append(f"{keys[i]} = '{data[i]}'")
             data_to_find = f" {where_statement} ".join(temp_array)
-            database_connection[1].execute(f"SELECT * FROM {table} WHERE {data_to_find}")
+            database_connection[1].execute(
+                f"SELECT * "
+                f"FROM {table} "
+                f"WHERE {data_to_find}"
+            )
         received_data = database_connection[1].fetchall()
         _disconnect_database(database_connection)
         return bool(len(received_data))
@@ -129,19 +137,33 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
         database_connection = _connect_database(DATABASE_PATH)
         if isinstance(keys, str):
             if data is None:
-                database_connection[1].execute(f'SELECT {keys} FROM {table}')
+                database_connection[1].execute(
+                    f'SELECT {keys} '
+                    f'FROM {table}'
+                )
             else:
-                database_connection[1].execute(f"SELECT * FROM {table} WHERE {keys} = '{data}'")
+                database_connection[1].execute(
+                    f"SELECT * "
+                    f"FROM {table} "
+                    f"WHERE {keys} = '{data}'"
+                )
         else:
             if data is None:
                 selected_keys = ", ".join(keys)
-                database_connection[1].execute(f'SELECT {selected_keys} FROM {table}')
+                database_connection[1].execute(
+                    f'SELECT {selected_keys} '
+                    f'FROM {table}'
+                )
             else:
                 temp_array = []
                 for i, _ in enumerate(keys):
                     temp_array.append(f"{keys[i]} = '{data[i]}'")
                 data_to_get = f" {where_statement} ".join(temp_array)
-                database_connection[1].execute(f"SELECT * FROM {table} WHERE {data_to_get}")
+                database_connection[1].execute(
+                    f"SELECT * "
+                    f"FROM {table} "
+                    f"WHERE {data_to_get}"
+                )
         received_data = database_connection[1].fetchall()
         _disconnect_database(database_connection)
         for element in received_data:

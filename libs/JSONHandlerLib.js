@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 'use strict';
 const fs = require('fs');
 const unparsedWordsArray = fs.readFileSync('./jsonArrays/array.json');
@@ -32,20 +31,4 @@ function getCommandsNames() {
 	return parsedCommandsNames;
 }
 
-function getAllArraysAndPaths() {
-	const pathToMainWords = './jsonArrays/array.json';
-	const pathToBotIDs = './jsonArrays/botIDs.json';
-	const pathToWinWords = './jsonArrays/russianRouletteWords/rouletteWordsWin.json';
-	const pathToLoseWords = './jsonArrays/russianRouletteWords/rouletteWordsLose.json';
-	const pathToZeroWords = './jsonArrays/russianRouletteWords/rouletteWordsZero.json';
-	const pathToMinusWords = './jsonArrays/russianRouletteWords/rouletteWordsMinus.json';
-	const parsedWordsArray = JSON.parse(unparsedWordsArray);
-	const parsedBotIDs = JSON.parse(unparsedBotIDsArray);
-	const parsedWinWords = JSON.parse(unparsedWinWords);
-	const parsedLoseWords = JSON.parse(unparsedLoseWords);
-	const parsedZeroWords = JSON.parse(unparsedZeroWords);
-	const parsedMinusWords = JSON.parse(unparsedMinusWords);
-	return [ [ pathToMainWords, pathToBotIDs, pathToWinWords, pathToLoseWords, pathToZeroWords, pathToMinusWords ], [ parsedWordsArray, parsedBotIDs, parsedWinWords, parsedLoseWords, parsedZeroWords, parsedMinusWords ] ];
-}
-
-module.exports = { getWordsArray, getBotIDsArray, getRouletteArrays, getCommandsNames, getAllArraysAndPaths };
+module.exports = { getWordsArray, getBotIDsArray, getRouletteArrays, getCommandsNames };

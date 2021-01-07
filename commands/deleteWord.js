@@ -6,16 +6,21 @@ const arrayAndPaths = JSONLib.getAllArraysAndPaths();
 const delayTime = 3000;
 
 function chooseArrayToModify(msg, args) {
-	switch (args[0]) {
-	case 'bot':
-		deleteBot(msg, args);
-		break;
-	case 'roulette':
-		deleteWordRoulette(msg, args);
-		break;
-	default:
-		deleteWord(msg, args);
-		break;
+	if (!args.length) {
+		msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
+	}
+	else {
+		switch (args[0]) {
+		case 'bot':
+			deleteBot(msg, args);
+			break;
+		case 'roulette':
+			deleteWordRoulette(msg, args);
+			break;
+		default:
+			deleteWord(msg, args);
+			break;
+		}
 	}
 }
 

@@ -118,4 +118,71 @@ client.on('message', msg => {
 	}
 });
 
+function executeCommand(msg) {
+	const args = msg.content.trim().split(/ +/);
+	const customCommand = args.shift();
+	const command = customCommand.toLowerCase();
+
+	switch (command) {
+	case commandsAliases[0]:
+		client.commands.get('getRandomWord').execute(msg, args);
+		break;
+	case commandsAliases[1]:
+		client.commands.get('randomShip').execute(msg, args);
+		break;
+	case commandsAliases[2]:
+			client.commands.get('addWord').execute(msg, args);
+		break
+	case commandsAliases[3]:
+		client.commands.get('deleteWord').execute(msg, args);
+		break
+	case commandsAliases[2]:
+		client.commands.get('dedMakar').execute(msg, args, command);
+		break;
+	case commandsAliases[3]:
+		client.commands.get('russianRoulette').execute(msg, args);
+		break;
+	case commandsAliases[4]:
+		client.commands.get('randomNumber').execute(msg, args);
+		break;
+	case commandsAliases[5]:
+		client.commands.get('meMessage').execute(msg, args);
+		break;
+	case commandsAliases[6]:
+		client.commands.get('rspGame').execute(msg, args);
+		break;
+	case commandsAliases[7]:
+		client.commands.get('createPoll').execute(msg, args);
+		break;
+	case commandsAliases[8]:
+		client.commands.get('getHelp').execute(msg);
+		break;
+	case commandsAliases[9]:
+		client.commands.get('getUptime').execute(msg);
+		break;
+	default:
+		switch (args[0]) {
+		case 'тест':
+		case 'рандом':
+			client.commands.get('userChecker').execute(msg, args, customCommand);
+			break;
+		default:
+			break;
+		}
+		break;
+	}
+}
+
+client.on('ready', () => {
+	client.user.setActivity(sharedVars.text.activityName);
+	console.log(`Successfully logged in as '${client.user.tag}'!\nSet '${sharedVars.text.activityName}' as an activity`);
+});
+
+client.on('message', msg => {
+	if (msg.author.bot) {
+		return;
+	}
+	executeCommand(msg);
+});
+
 client.login(token);

@@ -26,6 +26,10 @@ function russianRoulette(msg, args) {
 		bulletCount = Number(args);
 	}
 
+	if (isNaN(bulletCount)) {
+		return;
+	}
+
 	if (bulletCount === 0) {
 		msg.reply(randomWordArray[2]);
 		return;
@@ -56,13 +60,13 @@ function russianRoulette(msg, args) {
 		bulletToShoot = Math.floor(Math.random() * 6) + 1;
 		if (bulletNumberArray.includes(bulletToShoot) === true) {
 			msg.channel.send(sharedVars.text.rouletteLoseWarning).then((msg) => setTimeout(function() {
-				msg.edit(`${playerName}, ${randomWordArray[1]}`);
+				msg.edit(`${playerName} ${randomWordArray[1]}`);
 			}, delayTime));
 			return;
 		}
 		else {
 			msg.channel.send(sharedVars.text.rouletteWinWarning).then((msg) => setTimeout(function() {
-				msg.edit(`${playerName}, ${randomWordArray[0]}`);
+				msg.edit(`${playerName} ${randomWordArray[0]}`);
 			}, delayTime));
 			return;
 		}

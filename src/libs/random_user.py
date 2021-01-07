@@ -15,7 +15,7 @@ users = get_data_from_database('users', ['users_id'])
 
 
 async def get_random_user(msg, mode='default'):
-    """Getting a random user from an list and returning user's info.
+    """Get a random user from an list and returning user's info.
 
     Parameters:
         msg: Info about guild from message

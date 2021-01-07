@@ -27,7 +27,7 @@ client = discord.Client()
 
 @client.event
 async def on_ready():
-    """Execution of the necessary functions during the bot launch."""
+    """Execute necessary functions during the bot launch."""
     clear_data_on_execution()
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
@@ -46,7 +46,7 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member):
-    """Adding new server users to the database while the bot is running.
+    """Add new server users to the database while the bot is running.
 
     Parameters:
         member: Information about the user who joined the server
@@ -59,7 +59,7 @@ async def on_member_join(member):
 
 @client.event
 async def on_message(message):
-    """Adding new server users to the database while the bot is running.
+    """Check the message and execute the function if the conditions are met.
 
     **Noteworthy:** If a bot receives a message from another bot or from itself, or does
     not receive the required command from the user, it does nothing

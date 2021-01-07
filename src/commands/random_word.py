@@ -11,6 +11,9 @@ async def get_random_word(msg, args):
 		current_user = msg.author.mention
 	elif args[0] == 'рандом':
 		r_user = await random_user.get_random_user(msg)
+		if r_user is None:
+			await msg.channel.send(f'{msg.author.mention}, похоже я не получил список пользователей и поэтому мне не кого упоминать. проверьте базу данных и попробуйте ещё раз')
+			return
 		current_user = r_user.mention
 	else:
 		current_user = args[0]

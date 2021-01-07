@@ -1,20 +1,24 @@
-"""File Handler Library
+"""
+    File Handler Library
 
     This is a basic self-written module to handle operations with files
 
-    **Noteworthy:** As the script and needs grow, this module can be expanded and improved
+    **Noteworthy:** As the script and needs grow,
+    this module can be expanded and improved
 
     This file can also be imported as a module and contains the following functions:
         * import_data_from_file - imports data from file to variable
-        * check_if_file_exists - returns a boolean when checking a local file for existence
-        * delete_file - returns a boolean when deleting a local file
+        * check_if_file_exists - returns a boolean
+        when checking a local file for existence
+        * delete_file - returns a boolean
+        when deleting a local file
 """
 
 import os
 
 
 def import_data_from_file(path):
-    """Importing data from local file and returning as variable
+    """Import data from local file and return as variable.
 
     Parameters:
         path (str): Path to local file
@@ -29,7 +33,7 @@ def import_data_from_file(path):
 
 
 def check_if_file_exists(path):
-    """Checking for the presence of a file at the specified path
+    """Check for the presence of a file at the specified path.
 
     Parameters:
         path (str): Path to local file
@@ -43,7 +47,7 @@ def check_if_file_exists(path):
 
 
 def delete_file(path):
-    """Deleting a file at the specified path
+    """Delete a file at the specified path.
 
     Parameters:
         path (str): Path to local file

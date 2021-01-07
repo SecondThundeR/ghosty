@@ -8,7 +8,7 @@ const { token } = require('./config.json');
 const wakeUpDyno = require('./wakeDyno');
 
 const PORT = 3000;
-const DYNO_URL = 'https://slavebot-ds.herokuapp.com';
+const DYNO_URL = 'https://appname.herokuapp.com';
 const commandsAliases = JSONLib.getCommandsNames();
 
 const client = new Discord.Client();

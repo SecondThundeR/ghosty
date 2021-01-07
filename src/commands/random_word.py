@@ -1,3 +1,13 @@
+"""Module for getting random word from list.
+
+This script sends randomly chosen word from list
+Also, especially for this command, checks for spam messages
+
+This file can also be imported as a module and contains the following functions:
+    * get_random_word - sends message with randomly chosen word
+"""
+
+
 import random
 import asyncio
 from src.libs import random_user, database_handler
@@ -7,6 +17,12 @@ DELAY_TIME = 3
 
 
 async def get_random_word(msg, args):
+    """Get random word from list and send it.
+
+    Parameters:
+        msg (discord.message.Message): Execute send to channel function
+        args (list): List of arguments *(Custom name or mode of function)*
+    """
     if len(args) == 0:
         current_user = msg.author.mention
     elif args[0] == 'рандом':
@@ -28,7 +44,7 @@ async def get_random_word(msg, args):
         )
         await asyncio.sleep(DELAY_TIME)
         await msg.delete()
-    elif check_for_spam(msg):
+    elif _check_for_spam(msg):
         await msg.channel.send(
             f'{msg.author.mention} куда спамиш?',
             delete_after=DELAY_TIME
@@ -39,7 +55,15 @@ async def get_random_word(msg, args):
         await msg.channel.send(f'{current_user} {random.choice(WORDS_ARRAY)}')
 
 
-def check_for_spam(msg):
+def _check_for_spam(msg):
+    """Get random word from list and send it.
+
+    Parameters:
+        msg (discord.message.Message): User ID to compare with database
+
+    Returns:
+        True if user hit message in a row limit, False otherwise
+    """
     current_status = database_handler.get_data_from_database(
         'variables',
         ['spammerID', 'spammerCount']

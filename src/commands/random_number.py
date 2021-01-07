@@ -1,3 +1,13 @@
+"""Module for getting random number.
+
+This script handles getting random number in different ranges
+(From 1 to {some number} or From {some number} to {some number})
+
+This file can also be imported as a module and contains the following functions:
+    * get_random_number - sends message with randomly generated number
+"""
+
+
 import random
 import asyncio
 
@@ -5,6 +15,12 @@ DELAY_TIME = 10
 
 
 async def get_random_number(msg, args):
+    """Get random number and return it.
+
+    Parameters:
+        msg (discord.message.Message): Execute send to channel function
+        args (list): List of arguments (Range numbers)
+    """
     if len(args) == 0:
         await msg.channel.send(
             f'{msg.author.mention}, к сожалению, '

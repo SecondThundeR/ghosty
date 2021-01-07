@@ -18,7 +18,7 @@ async def get_random_user(msg, mode='default'):
     """Get a random user from an list and returning user's info.
 
     Parameters:
-        msg: Info about guild from message
+        msg (discord.message.Message): Info about guild from message
         mode (str): Mode of getting random user.
         When 'shipping' is selected, executing different statement for getting
         two random users. Defaults to 'default'

@@ -8,7 +8,7 @@ function pollInit(msg, args) {
 	if (!args.length) {
 		return;
 	}
-	else if (args.length !== 0 && sharedVars.vars.pollLocked !== true) {
+	else if (sharedVars.vars.pollLocked !== true) {
 		msg.delete();
 		createPoll(msg, args);
 	}

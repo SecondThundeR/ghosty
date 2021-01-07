@@ -25,99 +25,6 @@ app.listen(PORT, () => {
 	wakeUpDyno(DYNO_URL);
 });
 
-client.on('ready', () => {
-	client.user.setActivity(sharedVars.text.activityName);
-	console.log(`Logged in as '${client.user.tag}' and set '${sharedVars.text.activityName}' as an activity`);
-});
-
-client.on('message', msg => {
-	if (msg.author.bot) {
-		return;
-	}
-
-	const args = msg.content.trim().split(/ +/);
-	const command = args.shift().toLowerCase();
-
-	switch (command) {
-	case commandsAliases[0]:
-		client.commands.get('getRandomWordFromArray').execute(msg, args);
-		break;
-	case commandsAliases[1]:
-	case commandsAliases[2]:
-		switch (args[0]) {
-		case 'скип':
-			client.commands.get('resultsReset').execute(msg, command);
-			break;
-		default:
-			client.commands.get('getRandomThing').execute(msg, args, command);
-			break;
-		}
-		break;
-	case commandsAliases[3]:
-		if (!args.length) {
-			msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
-		}
-		else {
-			client.commands.get('addWord').execute(msg, args);
-		}
-		break;
-	case commandsAliases[4]:
-		if (!args.length) {
-			msg.channel.send(`${msg.author} чел... введи может что-нибудь`);
-		}
-		else {
-			client.commands.get('deleteWord').execute(msg, args);
-		}
-		break;
-	case commandsAliases[5]:
-		client.commands.get('russianRoulette').execute(msg, args);
-		break;
-	case commandsAliases[6]:
-		client.commands.get('getRandomThing').execute(msg, args, command);
-		break;
-	case commandsAliases[7]:
-		client.commands.get('meMessage').execute(msg, args);
-		break;
-	case commandsAliases[8]:
-	case commandsAliases[9]:
-	case commandsAliases[10]:
-	case commandsAliases[11]:
-		if (!args.length) {
-			return;
-		}
-		else {
-			switch(args[0]) {
-			case 'тест':
-				client.commands.get('userChecker').execute(msg, args, command);
-				break;
-			case 'дня':
-				client.commands.get('getRandomThing').execute(msg, args, command);
-				break;
-			case 'скип':
-				client.commands.get('resultsReset').execute(msg, command);
-				break;
-			}
-		}
-		break;
-	case commandsAliases[12]:
-		if (!args.length) {
-			break;
-		}
-		else {
-			client.commands.get('createPoll').execute(msg, args);
-		}
-		break;
-	case commandsAliases[13]:
-		client.commands.get('getHelp').execute(msg);
-		break;
-	case commandsAliases[14]:
-		client.commands.get('getUptime').execute(msg);
-		break;
-	default:
-		break;
-	}
-});
-
 function executeCommand(msg) {
 	const args = msg.content.trim().split(/ +/);
 	const customCommand = args.shift();
@@ -132,32 +39,32 @@ function executeCommand(msg) {
 		break;
 	case commandsAliases[2]:
 			client.commands.get('addWord').execute(msg, args);
-		break
+		break;
 	case commandsAliases[3]:
 		client.commands.get('deleteWord').execute(msg, args);
-		break
-	case commandsAliases[2]:
-		client.commands.get('dedMakar').execute(msg, args, command);
-		break;
-	case commandsAliases[3]:
-		client.commands.get('russianRoulette').execute(msg, args);
 		break;
 	case commandsAliases[4]:
-		client.commands.get('randomNumber').execute(msg, args);
+		client.commands.get('dedMakar').execute(msg, args, command);
 		break;
 	case commandsAliases[5]:
-		client.commands.get('meMessage').execute(msg, args);
+		client.commands.get('russianRoulette').execute(msg, args);
 		break;
 	case commandsAliases[6]:
-		client.commands.get('rspGame').execute(msg, args);
+		client.commands.get('randomNumber').execute(msg, args);
 		break;
 	case commandsAliases[7]:
-		client.commands.get('createPoll').execute(msg, args);
+		client.commands.get('meMessage').execute(msg, args);
 		break;
 	case commandsAliases[8]:
-		client.commands.get('getHelp').execute(msg);
+		client.commands.get('rspGame').execute(msg, args);
 		break;
 	case commandsAliases[9]:
+		client.commands.get('createPoll').execute(msg, args);
+		break;
+	case commandsAliases[10]:
+		client.commands.get('getHelp').execute(msg);
+		break;
+	case commandsAliases[11]:
 		client.commands.get('getUptime').execute(msg);
 		break;
 	default:

@@ -133,7 +133,7 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
                     f'SELECT {selected_keys} '
                     f'FROM {table}'
                 )
-            elif isinstance(data, str) or isinstance(data, int):
+            elif isinstance(data, (str, int)):
                 for i, _ in enumerate(keys):
                     temp_array.append(f"{keys[i]} = '{data}'")
                 data_to_find = f" {where_statement} ".join(temp_array)

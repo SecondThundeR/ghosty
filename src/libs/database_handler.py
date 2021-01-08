@@ -32,7 +32,7 @@ def _connect_database(path):
         path (str): Path to local database
 
     Returns:
-        List which includes connection and cursor objects of database
+        list: Array which includes connection and cursor objects of database
     """
     connection = sqlite3.connect(path)
     cursor = connection.cursor()
@@ -75,7 +75,7 @@ def is_data_in_database(table, keys, data, where_statement='AND'):
             Defaults to 'AND'
 
     Returns:
-        True if data is exists in database, False otherwise
+        bool: True if data is exists in database, False otherwise
     """
     if get_data_from_database(table, keys, data, where_statement) is None:
         return False
@@ -94,7 +94,7 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
             Defaults to 'AND'
 
     Returns:
-        Array with data from database.
+        list: Array with data from database.
             None if SQL request returns empty result
 
     Raises:
@@ -174,7 +174,7 @@ def add_data_to_database(table, keys, data):
         data (str or int or list[str or int]): Data to add to the columns
 
     Returns:
-        True on successful commit to database, False otherwise
+        bool: True on successful commit to database, False otherwise
 
     Raises:
         Exception: Returns info about error
@@ -226,7 +226,7 @@ def edit_data_in_database(table, keys, data, statement=False):
         statement (bool): True adds WHERE statement in SQL query, False otherwise
 
     Returns:
-        True on successful commit to database, False otherwise
+        bool: True on successful commit to database, False otherwise
 
     Raises:
         Exception: Returns info about error
@@ -235,7 +235,7 @@ def edit_data_in_database(table, keys, data, statement=False):
     commit_completed = False
     try:
         database_connection = _connect_database(DATABASE_PATH)
-        if isinstance(keys, str) and isinstance(data, str):
+        if isinstance(keys, str) and isinstance(data, (str, int)):
             database_connection[1].execute(
                 f"UPDATE {table} "
                 f"SET {keys} = '{data}'"
@@ -294,7 +294,7 @@ def remove_data_from_database(table, keys=None, data=None):
             Defaults to None
 
     Returns:
-        True on successful commit to database, False otherwise
+        bool: True on successful commit to database, False otherwise
 
     Raises:
         Exception: Returns info about error

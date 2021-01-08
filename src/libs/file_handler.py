@@ -22,7 +22,7 @@ def import_data_from_local_file(path):
         path (str): Path to local file
 
     Returns:
-        Read data from local file
+        str: Read data from local file
     """
     with open(path, 'r', encoding='utf-8') as file:
         file_data = file.read().splitlines()
@@ -37,7 +37,7 @@ def check_if_local_file_exists(path):
         path (str): Path to local file
 
     Returns:
-        True if file exists, False otherwise
+        bool: True if file exists, False otherwise
     """
     if os.path.exists(path):
         return True
@@ -51,7 +51,7 @@ def delete_local_file(path):
         path (str): Path to local file
 
     Returns:
-        True if the file has been deleted, False otherwise
+        bool: True if the file has been deleted, False otherwise
     """
     if os.path.exists(path):
         os.remove(path)

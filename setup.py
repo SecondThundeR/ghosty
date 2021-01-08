@@ -71,27 +71,25 @@ def _delete_file():
 def _get_user_input():
     """Get user's input and return it.
 
-    **Noteworthy:** This script handles KeyboardInterrupt which
-    will redirect to main menu only if initial setup was completed
+    If the user wants to exit the input mode, he needs to enter "Cancel".
+    This was done due to the strange behavior of KeyboardInterrupt on Windows.
 
     Returns:
         str: User's input if all conditions were met
     """
     while True:
-        try:
-            user_input = str(input('> '))
-            if user_input != "":
-                if user_input.find("\'") != -1:
-                    formatted_input = user_input.replace("\'", "''")
-                    user_input = formatted_input
-                return user_input
-            print('It looks like you haven\'t entered anything, '
-                  'please try again')
-        except KeyboardInterrupt:
-            if SETUP_STATUS == 0:
-                pass
-            print('Exiting to main menu\n')
-            _bot_setup()
+        user_input = str(input('> '))
+        if user_input != "" and user_input.upper() != "CANCEL":
+            if user_input.find("\'") != -1:
+                formatted_input = user_input.replace("\'", "''")
+                user_input = formatted_input
+            return user_input
+        elif user_input.upper() == "CANCEL":
+            if SETUP_STATUS == 1:
+                print('Exiting to main menu\n')
+                _bot_setup()
+        print('It looks like you haven\'t entered anything, '
+              'please try again')
 
 
 def _manage_dev_base():
@@ -149,35 +147,28 @@ def _bot_in_database():
     **Noteworthy:** This script has failed attempts counter.
     If it hits 3, script will redirect to main menu.
 
-    Also this script handles KeyboardInterrupt which
-    will redirect to main menu as well
-
     Returns:
         str: Bot name if it was found in database
     """
     failed_attempts = 0
     print('Enter the name of the bot')
     while True:
-        try:
-            if failed_attempts == 3:
-                print(f'You have entered the bot name '
-                      f'incorrectly {failed_attempts} times')
-                _bot_setup()
-            else:
-                bot_name = _get_user_input()
-                if is_data_in_database(
-                        DB_TABLES[1],
-                        DB_COLUMNS[DB_TABLES[1]][0],
-                        bot_name
-                ):
-                    print('Bot found in the database!')
-                    return bot_name
-                print('I did not find this name in my database, '
-                      'please try to enter the correct name again')
-                failed_attempts += 1
-        except KeyboardInterrupt:
-            print('Exiting to main menu\n')
+        if failed_attempts == 3:
+            print(f'You have entered the bot name '
+                  f'incorrectly {failed_attempts} times')
             _bot_setup()
+        else:
+            bot_name = _get_user_input()
+            if is_data_in_database(
+                    DB_TABLES[1],
+                    DB_COLUMNS[DB_TABLES[1]][0],
+                    bot_name
+            ):
+                print('Bot found in the database!')
+                return bot_name
+            print('I did not find this name in my database, '
+                  'please try to enter the correct name again')
+            failed_attempts += 1
 
 
 def _add_bot_to_database():
@@ -340,14 +331,12 @@ def _current_bot_selector():
         index_of_bot = int(select_bot) - 1
         if index_of_bot in range(len(list_of_bots)):
             print(f'Great choice! '
-                  f'Selecting {list_of_bots[index_of_bot]} as default...')
+                  f'Selecting {list_of_bots[index_of_bot]} as default...\n')
             if edit_data_in_database(
                     DB_TABLES[4],
                     DB_COLUMNS[DB_TABLES[4]][1],
                     index_of_bot
             ):
-                print('Selected successfully! '
-                      'Returning to main menu...\n')
                 _bot_setup()
             else:
                 print('Something strange happened! '

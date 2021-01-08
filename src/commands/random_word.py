@@ -64,7 +64,7 @@ def _check_for_spam(msg):
         msg (discord.message.Message): User ID to compare with database
 
     Returns:
-        True if user hit message in a row limit, False otherwise
+        bool: True if user hit message in a row limit, False otherwise
     """
     current_status = get_data_from_database(
         'variables',

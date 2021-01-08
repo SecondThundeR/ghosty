@@ -354,7 +354,7 @@ def _current_bot_selector():
 
 
 def _initial_bot_setup():
-    """Setup of bot, initial phase.
+    """Bot setup, initial phase.
 
     This script launches 4 main functions: restoration of words base,
     addition of bot to database, managing locally stored words base and
@@ -367,7 +367,7 @@ def _initial_bot_setup():
 
 
 def _bot_setup():
-    """Setup of bot.
+    """Bot setup.
 
     This script allows you to select 6 functions
     for configuring the bot and the database

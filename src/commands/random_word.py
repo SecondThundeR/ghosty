@@ -10,9 +10,11 @@ This file can also be imported as a module and contains the following functions:
 
 import random
 import asyncio
-from src.libs import random_user, database_handler
+from src.libs.database_handler import get_data_from_database
+from src.libs.database_handler import edit_data_in_database
+from src.libs.random_user import get_random_user
 
-WORDS_ARRAY = database_handler.get_data_from_database('words', ['words_array'])
+WORDS_ARRAY = get_data_from_database('words', 'words_array')
 DELAY_TIME = 3
 
 
@@ -26,7 +28,7 @@ async def get_random_word(msg, args):
     if len(args) == 0:
         current_user = msg.author.mention
     elif args[0] == 'рандом':
-        r_user = await random_user.get_random_user(msg)
+        r_user = await get_random_user(msg)
         if r_user is None:
             await msg.channel.send(
                 f'{msg.author.mention}, похоже я не получил список пользователей и '
@@ -64,27 +66,27 @@ def _check_for_spam(msg):
     Returns:
         True if user hit message in a row limit, False otherwise
     """
-    current_status = database_handler.get_data_from_database(
+    current_status = get_data_from_database(
         'variables',
-        ['spammerID', 'spammerCount']
+        ['spammer_ID', 'spammer_count']
     )
     if current_status[0] == msg.author.id:
         if current_status[1] >= 3:
-            database_handler.edit_data_in_database(
+            edit_data_in_database(
                 'variables',
-                'spammerCount',
+                'spammer_count',
                 0
             )
             return True
-        database_handler.edit_data_in_database(
+        edit_data_in_database(
             'variables',
-            'spammerCount',
+            'spammer_count',
             current_status[1] + 1
         )
         return False
-    database_handler.edit_data_in_database(
+    edit_data_in_database(
         'variables',
-        ['spammerID', 'spammerCount'],
+        ['spammer_ID', 'spammer_count'],
         [msg.author.id, 1]
     )
     return False

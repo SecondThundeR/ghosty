@@ -11,7 +11,7 @@ This file can also be imported as a module and contains the following functions:
 import random
 from src.libs.database_handler import get_data_from_database
 
-users = get_data_from_database('users', ['users_id'])
+users = get_data_from_database('users', 'users_id')
 
 
 async def get_random_user(msg, mode='default'):

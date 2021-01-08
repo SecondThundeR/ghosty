@@ -15,7 +15,7 @@ This file can also be imported as a module and contains the following functions:
 import os
 
 
-def import_data_from_file(path):
+def import_data_from_local_file(path):
     """Import data from local file and returning as variable.
 
     Parameters:
@@ -30,7 +30,7 @@ def import_data_from_file(path):
     return file_data
 
 
-def check_if_file_exists(path):
+def check_if_local_file_exists(path):
     """Check for the presence of a file at the specified path.
 
     Parameters:
@@ -44,7 +44,7 @@ def check_if_file_exists(path):
     return False
 
 
-def delete_file(path):
+def delete_local_file(path):
     """Delete file at the specified path.
 
     Parameters:

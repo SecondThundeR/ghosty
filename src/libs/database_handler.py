@@ -64,8 +64,7 @@ def clear_data_on_execution():
 
 
 def is_data_in_database(table, keys, data, where_statement='AND'):
-    """Execute get_data_from_database function and
-    return boolean depending on existence of data
+    """Execute get_data_from_database to check data existence.
 
     Parameters:
         table (str): Name of the table
@@ -285,8 +284,7 @@ def edit_data_in_database(table, keys, data, statement=False):
 
 
 def remove_data_from_database(table, keys=None, data=None):
-    """Remove data from the database table and
-    return the status of SQL query execution.
+    """Remove data from the table and return the status of SQL query.
 
     Parameters:
         table (str): Name of the table

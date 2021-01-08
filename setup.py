@@ -42,7 +42,7 @@ ERROR_MESSAGE = 'Something went wrong. Try again or open an issue on Github'
 
 def _restore_words_file():
     """Restore dev's words base from Github.
-        
+
     Returns:
         bool: True if file was downloaded and saved, False otherwise
     """
@@ -56,7 +56,7 @@ def _restore_words_file():
 
 def _delete_file():
     """Delete local file from data folder.
-        
+
     Returns:
         bool: True if file was deleted, False otherwise
     """
@@ -70,10 +70,10 @@ def _delete_file():
 
 def _get_user_input():
     """Get user's input and return it.
-    
+
     **Noteworthy:** This script handles KeyboardInterrupt which
     will redirect to main menu only if initial setup was completed
-    
+
     Returns:
         str: User's input if all conditions were met
     """
@@ -82,9 +82,8 @@ def _get_user_input():
             user_input = str(input('> '))
             if user_input != '':
                 return user_input
-            else:
-                print('It looks like you haven\'t entered anything, '
-                      'please try again')
+            print('It looks like you haven\'t entered anything, '
+                  'please try again')
         except KeyboardInterrupt:
             if SETUP_STATUS == 0:
                 pass
@@ -142,13 +141,13 @@ def _manage_dev_base():
 
 def _bot_in_database():
     """Check for bot info existence in database.
-    
+
     **Noteworthy:** This script has failed attempts counter.
     If it hits 3, script will redirect to main menu.
-    
+
     Also this script handles KeyboardInterrupt which
     will redirect to main menu as well
-    
+
     Returns:
         str: Bot name if it was found in database
     """
@@ -169,10 +168,9 @@ def _bot_in_database():
                 ):
                     print('Bot found in the database!')
                     return bot_name
-                else:
-                    print('I did not find this name in my database, '
-                          'please try to enter the correct name again')
-                    failed_attempts += 1
+                print('I did not find this name in my database, '
+                      'please try to enter the correct name again')
+                failed_attempts += 1
         except KeyboardInterrupt:
             print('Exiting to main menu\n')
             _bot_setup()
@@ -209,7 +207,7 @@ def _add_bot_to_database():
 
 def _delete_bot_from_database():
     """Delete bot from database.
-    
+
     This script handles bot removal from database and that's it.
     (Did you expect to see rocket launch codes here?)
     """
@@ -226,7 +224,7 @@ def _delete_bot_from_database():
 
 def _manage_setup_status():
     """Edit current setup status.
-    
+
     This script changes setup status to 0, when it needs to be reseted
     or set to 1, when initial setup was completed
     """
@@ -247,7 +245,7 @@ def _manage_setup_status():
 
 def _bot_settings_manager():
     """Manage bot settings.
-    
+
     This script allows you to change the internal name
     of the bot in the database, as well as its token
     """
@@ -273,7 +271,7 @@ def _bot_settings_manager():
 
 def _bot_name_changer(old_bot_name):
     """Handle bot's name change.
-    
+
     Parameters:
         old_bot_name (str): Old name of bot to find in database
     """
@@ -314,7 +312,7 @@ def _bot_token_changer(bot_name):
 
 def _current_bot_selector():
     """Selects current bot to run.
-    
+
     This script allows you to select the desired bot to run
     """
     list_of_bots = get_data_from_database(
@@ -327,7 +325,7 @@ def _current_bot_selector():
     )[0]
     print(f'At the moment, the selected bot is '
           f'{list_of_bots[currently_selected_bot]}')
-    print(f'\nHere are all the bots available to choose from')
+    print('\nHere are all the bots available to choose from')
     for i, bot_name in enumerate(list_of_bots):
         i += 1
         print(f'{i}. {bot_name}')
@@ -353,10 +351,15 @@ def _current_bot_selector():
                 _bot_setup()
         else:
             print('Invalid name of bot. Please, try again')
-    pass
 
 
 def _initial_bot_setup():
+    """Initial setup of bot
+
+    This script launches 4 main functions: restoration of words base,
+    addition of bot to database, managing locally stored words base and
+    changing setup status to 1 after successful completion
+    """
     _restore_words_file()
     _add_bot_to_database()
     _manage_dev_base()
@@ -364,6 +367,11 @@ def _initial_bot_setup():
 
 
 def _bot_setup():
+    """Main setup of bot
+
+    This script allows you to select 6 functions
+    for configuring the bot and the database
+    """
     print(
         'What do you want to do?'
         '\n1. Change bot\'s settings'
@@ -396,6 +404,11 @@ def _bot_setup():
 
 
 def _bot_setup_init():
+    """Setup mode manager
+
+    This script checks the current setting status
+    and selects the required function to run
+    """
     if SETUP_STATUS == 0:
         _initial_bot_setup()
     else:

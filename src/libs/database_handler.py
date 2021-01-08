@@ -114,7 +114,7 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
             elif isinstance(data, list):
                 for i, _ in enumerate(data):
                     temp_array.append(f"{keys} = '{data[i]}'")
-                data_to_find = f" OR ".join(temp_array)
+                data_to_find = " OR ".join(temp_array)
                 database_connection[1].execute(
                     f"SELECT * "
                     f"FROM {table} "

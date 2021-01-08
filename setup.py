@@ -177,7 +177,7 @@ def _bot_in_database():
 
 
 def _add_bot_to_database():
-    """Add info about bot into the database
+    """Add info about bot into the database.
 
     Current function require user to input bot's name and token to
     add this to the database. If initial setup was completed,
@@ -311,7 +311,7 @@ def _bot_token_changer(bot_name):
 
 
 def _current_bot_selector():
-    """Selects current bot to run.
+    """Select current bot to run.
 
     This script allows you to select the desired bot to run
     """
@@ -354,7 +354,7 @@ def _current_bot_selector():
 
 
 def _initial_bot_setup():
-    """Initial setup of bot
+    """Setup of bot, initial phase.
 
     This script launches 4 main functions: restoration of words base,
     addition of bot to database, managing locally stored words base and
@@ -367,7 +367,7 @@ def _initial_bot_setup():
 
 
 def _bot_setup():
-    """Main setup of bot
+    """Setup of bot.
 
     This script allows you to select 6 functions
     for configuring the bot and the database
@@ -404,7 +404,7 @@ def _bot_setup():
 
 
 def _bot_setup_init():
-    """Setup mode manager
+    """Select correct bot setup.
 
     This script checks the current setting status
     and selects the required function to run

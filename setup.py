@@ -84,7 +84,7 @@ def _get_user_input():
                 formatted_input = user_input.replace("\'", "''")
                 user_input = formatted_input
             return user_input
-        elif user_input.upper() == "CANCEL":
+        if user_input.upper() == "CANCEL":
             if SETUP_STATUS == 1:
                 print('Exiting to main menu\n')
                 _bot_setup()

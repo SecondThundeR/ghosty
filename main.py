@@ -3,7 +3,7 @@
 This is a Discord bot script that runs on the Discord.py library and
 allows you to execute functions using specific text commands
 
-This is the starting point of the bot control, from where it starts its
+There is the starting point of the bot control, from where it begin its
 work. Here you can change the entire logic of the bot and adjust it to
 fit your needs
 """
@@ -20,7 +20,7 @@ from src.commands.random_word import get_random_word
 
 
 TOKEN = get_data_from_database('tokens', 'bot_token')
-SELECTED_BOT = get_data_from_database('variables', 'currentSelectedBot')[0]
+SELECTED_BOT = get_data_from_database('variables', 'current_selected_bot')[0]
 ACTIVITY_NAME = 'Helltaker'
 client = discord.Client()
 
@@ -52,9 +52,9 @@ async def on_member_join(member):
         member: Information about the user who joined the server
     """
     if member.bot:
-        add_data_to_database('bots', ['bots_id'], [member.id])
+        add_data_to_database('bots', 'bots_id', member.id)
     else:
-        add_data_to_database('users', ['users_id'], [member.id])
+        add_data_to_database('users', 'users_id', member.id)
 
 
 @client.event

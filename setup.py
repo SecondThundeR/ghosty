@@ -80,7 +80,10 @@ def _get_user_input():
     while True:
         try:
             user_input = str(input('> '))
-            if user_input != '':
+            if user_input != "":
+                if user_input.find("\'") != -1:
+                    formatted_input = user_input.replace("\'", "''")
+                    user_input = formatted_input
                 return user_input
             print('It looks like you haven\'t entered anything, '
                   'please try again')
@@ -118,7 +121,8 @@ def _manage_dev_base():
               'latest developer\'s word base...')
         remove_data_from_database(DB_TABLES[3])
         words_array = import_data_from_local_file(WORDS_ARRAY_PATH)
-        add_data_to_database(DB_TABLES[3], DB_COLUMNS[DB_TABLES[3]], words_array)
+        for i, element in enumerate(words_array):
+            add_data_to_database(DB_TABLES[3], DB_COLUMNS[DB_TABLES[3]], element)
         print('The word base was imported successfully')
         delete_local_file(WORDS_ARRAY_PATH)
         if SETUP_STATUS == 1:

@@ -1,4 +1,4 @@
-"""SQL Database Handler Library.
+"""SQL Database Handler Library (Beta).
 
 This script allows the user to work with a SQL database with basic functions
 that only require the necessary data from the user
@@ -12,7 +12,7 @@ prevent the main script from making sudden errors
 
 This file can also be imported as a module and contains the following functions:
     * clear_data_on_execution - clears specific tables
-    * is_data_in_database - returns True or False depending on the availability
+    * is_data_in_database - returns True or False depending on the data existence
     * get_data_from_database - returns list of data from table
     * add_data_to_database - returns True or False on the commit of data
     * edit_data_to_database - returns True or False on the edit of data
@@ -54,27 +54,18 @@ def clear_data_on_execution():
 
     **Noteworthy:** This function is necessary for the internal work of the bot,
     when main script is executed
-
-    Raises:
-        Exception: Returns info about error
     """
-    database_connection = _connect_database(DATABASE_PATH)
-    try:
-        database_connection[1].execute("""UPDATE variables
-                                         SET pollLocked = '0',
-                                         spammerID = '',
-                                         spammerCount = '0'"""
-                                       )
-        database_connection[1].execute('DELETE FROM users')
-        database_connection[1].execute('DELETE FROM bots')
-        database_connection[0].commit()
-        _disconnect_database(database_connection)
-    except sqlite3.Error as database_error:
-        raise Exception from database_error
+    edit_data_in_database('variables',
+                          ['poll_locked', 'spammer_ID', 'spammer_count'],
+                          [0, 0, 0]
+                          )
+    remove_data_from_database('users')
+    remove_data_from_database('bots')
 
 
 def is_data_in_database(table, keys, data, where_statement='AND'):
-    """Execute SQL query request and return a response.
+    """Execute get_data_from_database function and
+    return boolean depending on existence of data
 
     Parameters:
         table (str): Name of the table
@@ -86,33 +77,10 @@ def is_data_in_database(table, keys, data, where_statement='AND'):
 
     Returns:
         True if data is exists in database, False otherwise
-
-    Raises:
-        Exception: Returns info about error
     """
-    try:
-        database_connection = _connect_database(DATABASE_PATH)
-        if isinstance(keys, str):
-            database_connection[1].execute(
-                f"SELECT * "
-                f"FROM {table} "
-                f"WHERE {keys} = '{data}'"
-            )
-        else:
-            temp_array = []
-            for i, _ in enumerate(keys):
-                temp_array.append(f"{keys[i]} = '{data[i]}'")
-            data_to_find = f" {where_statement} ".join(temp_array)
-            database_connection[1].execute(
-                f"SELECT * "
-                f"FROM {table} "
-                f"WHERE {data_to_find}"
-            )
-        received_data = database_connection[1].fetchall()
-        _disconnect_database(database_connection)
-        return bool(len(received_data))
-    except sqlite3.Error as database_error:
-        raise Exception from database_error
+    if get_data_from_database(table, keys, data, where_statement) is None:
+        return False
+    return True
 
 
 def get_data_from_database(table, keys, data=None, where_statement='AND'):
@@ -134,6 +102,7 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
         Exception: Returns info about error
     """
     data_array = []
+    temp_array = []
     try:
         database_connection = _connect_database(DATABASE_PATH)
         if isinstance(keys, str):
@@ -141,6 +110,15 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
                 database_connection[1].execute(
                     f'SELECT {keys} '
                     f'FROM {table}'
+                )
+            elif isinstance(data, list):
+                for i, _ in enumerate(data):
+                    temp_array.append(f"{keys} = '{data[i]}'")
+                data_to_find = f" OR ".join(temp_array)
+                database_connection[1].execute(
+                    f"SELECT * "
+                    f"FROM {table} "
+                    f"WHERE {data_to_find}"
                 )
             else:
                 database_connection[1].execute(
@@ -155,8 +133,16 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
                     f'SELECT {selected_keys} '
                     f'FROM {table}'
                 )
+            elif isinstance(data, str) or isinstance(data, int):
+                for i, _ in enumerate(keys):
+                    temp_array.append(f"{keys[i]} = '{data}'")
+                data_to_find = f" {where_statement} ".join(temp_array)
+                database_connection[1].execute(
+                    f"SELECT * "
+                    f"FROM {table} "
+                    f"WHERE {data_to_find}"
+                )
             else:
-                temp_array = []
                 for i, _ in enumerate(keys):
                     temp_array.append(f"{keys[i]} = '{data[i]}'")
                 data_to_get = f" {where_statement} ".join(temp_array)
@@ -246,48 +232,61 @@ def edit_data_in_database(table, keys, data, statement=False):
     Raises:
         Exception: Returns info about error
     """
+    temp_array = []
+    commit_completed = False
     try:
         database_connection = _connect_database(DATABASE_PATH)
-        if isinstance(keys, str):
+        if isinstance(keys, str) and isinstance(data, str):
             database_connection[1].execute(
                 f"UPDATE {table} "
                 f"SET {keys} = '{data}'"
             )
             database_connection[0].commit()
             commit_completed = True
-        elif len(keys) != len(data):
-            commit_completed = False
-        else:
-            if statement:
+        elif isinstance(keys, list):
+            if len(keys) != len(data):
+                commit_completed = False
+            elif isinstance(data, str):
+                for i, _ in enumerate(keys):
+                    temp_array.append(f"{keys[i]} = '{data}'")
+                data_to_edit = ",\n ".join(temp_array)
                 database_connection[1].execute(
-                    f"UPDATE {table} "
-                    f"SET {keys[0]} = '{data[0]}' "
-                    f"WHERE {keys[1]} = '{data[1]}'"
+                    f'UPDATE {table} '
+                    f'SET {data_to_edit}'
                 )
                 database_connection[0].commit()
                 commit_completed = True
             else:
-                temp_array = []
-                for i, _ in enumerate(keys):
-                    if isinstance(data[i], int):
-                        temp_array.append(f'{keys[i]} = {data[i]}')
+                if statement:
+                    if len(keys) > 2 or len(data) > 2:
+                        commit_completed = False
                     else:
+                        database_connection[1].execute(
+                            f"UPDATE {table} "
+                            f"SET {keys[0]} = '{data[0]}' "
+                            f"WHERE {keys[1]} = '{data[1]}'"
+                        )
+                        database_connection[0].commit()
+                        commit_completed = True
+                else:
+                    for i, _ in enumerate(keys):
                         temp_array.append(f"{keys[i]} = '{data[i]}'")
-                data_to_write = ",\n ".join(temp_array)
-                database_connection[1].execute(
-                    f'UPDATE {table} '
-                    f'SET {data_to_write}'
-                )
-                database_connection[0].commit()
-                commit_completed = True
+                    data_to_edit = ",\n ".join(temp_array)
+                    database_connection[1].execute(
+                        f'UPDATE {table} '
+                        f'SET {data_to_edit}'
+                    )
+                    database_connection[0].commit()
+                    commit_completed = True
         _disconnect_database(database_connection)
         return commit_completed
     except sqlite3.Error as database_error:
         raise Exception from database_error
 
 
-def delete_data_in_database(table, keys=None, data=None):
-    """Remove data from the database and return the status of SQL query execution.
+def remove_data_from_database(table, keys=None, data=None):
+    """Remove data from the database table and
+    return the status of SQL query execution.
 
     Parameters:
         table (str): Name of the table
@@ -302,22 +301,33 @@ def delete_data_in_database(table, keys=None, data=None):
     Raises:
         Exception: Returns info about error
     """
+    temp_array = []
+    commit_completed = False
     try:
         database_connection = _connect_database(DATABASE_PATH)
         if keys is None and data is None:
             database_connection[1].execute(f'DELETE FROM {table}')
             database_connection[0].commit()
             commit_completed = True
-        else:
-            if isinstance(keys, str):
+        elif isinstance(keys, str) and isinstance(data, str):
+            database_connection[1].execute(
+                f"DELETE FROM {table} "
+                f"WHERE {keys} = '{data}'"
+            )
+            database_connection[0].commit()
+            commit_completed = True
+        elif isinstance(keys, list):
+            if isinstance(data, str):
+                for i, _ in enumerate(keys):
+                    temp_array.append(f"{keys[i]} = '{data}'")
+                data_to_delete = " AND ".join(temp_array)
                 database_connection[1].execute(
                     f"DELETE FROM {table} "
-                    f"WHERE {keys} = '{data}'"
+                    f"WHERE {data_to_delete}"
                 )
                 database_connection[0].commit()
                 commit_completed = True
             else:
-                temp_array = []
                 for i, _ in enumerate(keys):
                     temp_array.append(f"{keys[i]} = '{data[i]}'")
                 data_to_delete = " AND ".join(temp_array)

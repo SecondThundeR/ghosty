@@ -119,7 +119,7 @@ def _manage_dev_base():
               'latest developer\'s word base...')
         remove_data_from_database(DB_TABLES[3])
         words_array = import_data_from_local_file(WORDS_ARRAY_PATH)
-        for i, element in enumerate(words_array):
+        for element in words_array:
             add_data_to_database(DB_TABLES[3], DB_COLUMNS[DB_TABLES[3]], element)
         print('The word base was imported successfully')
         delete_local_file(WORDS_ARRAY_PATH)

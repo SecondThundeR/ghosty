@@ -4,7 +4,8 @@ This script allows to select a random user from list of server users
 and get his information
 
 This file can also be imported as a module and contains the following functions:
-    * get_random_user - return info of randomly chosen user
+    * get_random_user - returns info of randomly chosen user
+    * get_members_name - returns nickname or name of member as a string
 """
 
 
@@ -24,7 +25,8 @@ async def get_random_user(msg, mode='default'):
         two random users. Defaults to 'default'
 
     Returns:
-        User object about member which was randomly chosen.
+        discord.member.Member: User object about member
+            which was randomly chosen.
             None for empty array of users
     """
     if users is None:
@@ -33,3 +35,17 @@ async def get_random_user(msg, mode='default'):
         return 'Not implemented'
     member = await msg.guild.fetch_member(random.choice(users))
     return member
+
+
+def get_members_name(member):
+    """Check if member has a nickname on server.
+
+    Parameters:
+        member (discord.member.Member): Info about member of guild
+    
+    Returns:
+        str: User's name, if user doesn't have a nickname and otherwise
+    """
+    if member.nick is None:
+        return member.name
+    return member.nick

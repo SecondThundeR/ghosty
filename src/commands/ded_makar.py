@@ -55,7 +55,7 @@ async def send_ded_makar_message(msg, args):
                 f'{msg.author.mention}, какой блин переворот эмодзи...'
             )
             return
-        if args[0].startswith('@'):
+        if args[0] == '@everyone' or args[0] == '@here':
             await msg.channel.send(
                 f'{msg.author.mention}, похоже вы пытаетесь всунуть сюда '
                 f'`@here` или `@everyone`, зачем?'

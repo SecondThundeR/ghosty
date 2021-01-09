@@ -12,7 +12,7 @@ import random
 import asyncio
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import edit_data_in_database
-from src.libs.random_user import get_random_user
+from src.libs.user_handler import get_random_user
 
 WORDS_ARRAY = get_data_from_database('words', 'words_array')
 DELAY_TIME = 3
@@ -23,7 +23,7 @@ async def get_random_word(msg, args):
 
     Parameters:
         msg (discord.message.Message): Execute send to channel function
-        args (list): List of arguments *(Custom name or mode of function)*
+        args (list): List of arguments (Custom name or mode of function)
     """
     if len(args) == 0:
         current_user = msg.author.mention

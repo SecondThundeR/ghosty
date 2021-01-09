@@ -13,6 +13,7 @@ import discord
 from src.libs.database_handler import clear_data_on_execution
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import add_data_to_database
+from src.commands.ded_makar import send_ded_makar_message
 from src.commands.get_help import send_help_message
 from src.commands.me_message import send_me_message
 from src.commands.random_number import get_random_number
@@ -28,7 +29,9 @@ client = discord.Client()
 @client.event
 async def on_ready():
     """Execute necessary functions during the bot launch."""
+    print('Clearing database...')
     clear_data_on_execution()
+    print('Fetching all guild members...')
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
             if member.bot:
@@ -38,10 +41,10 @@ async def on_ready():
                 table = 'users'
                 key = 'users_id'
             add_data_to_database(table, key, str(member.id))
+    print(f'Setting \'{ACTIVITY_NAME}\' as an activity...')
     await client.change_presence(status=discord.Status.dnd,
                                  activity=discord.Game(name=ACTIVITY_NAME))
     print(f'Successfully logged in as {client.user}!')
-    print(f'Set {ACTIVITY_NAME} as an activity')
 
 
 @client.event
@@ -59,13 +62,13 @@ async def on_member_join(member):
 
 @client.event
 async def on_message(message):
-    """Check the message and execute the function if the conditions are met.
+    """Check for message and execute the function if the conditions are met.
 
     **Noteworthy:** If a bot receives a message from another bot or from itself, or does
     not receive the required command from the user, it does nothing
 
     Parameters:
-        message: User message to perform required functions
+        message (discord.message.Message): User message to perform required functions
     """
     if message.author == client.user:
         return
@@ -79,6 +82,8 @@ async def on_message(message):
         await send_help_message(message)
     elif command == 'рандом':
         await get_random_number(message, args)
+    elif command == 'макар':
+        await send_ded_makar_message(message, args)
     else:
         return
 

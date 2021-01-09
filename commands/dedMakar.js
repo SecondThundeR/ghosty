@@ -34,7 +34,7 @@ async function dedMakar(msg, args) {
 
 module.exports = {
 	name: 'dedMakar',
-	description: 'Module returns a random number (with/without custom range)',
+	description: 'Module returns a text sentence with reversed name of user',
 	execute(msg, args) {
 		dedMakar(msg, args);
 	},

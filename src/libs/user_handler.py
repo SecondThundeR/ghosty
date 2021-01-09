@@ -42,7 +42,7 @@ def get_members_name(member):
 
     Parameters:
         member (discord.member.Member): Info about member of guild
-    
+
     Returns:
         str: User's name, if user doesn't have a nickname and otherwise
     """

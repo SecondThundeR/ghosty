@@ -31,7 +31,8 @@ async def get_random_user(msg, mode='default'):
     """
     if len(users) == 0:
         return None
-    elif mode == 'shipping':
+
+    if mode == 'shipping':
         return 'Not implemented'
     member = await msg.guild.fetch_member(choice(users))
     return member

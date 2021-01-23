@@ -63,8 +63,10 @@ def _get_user_input():
                 user_input = formatted_input
             return user_input
         if user_input.upper() == "CANCEL" and SETUP_STATUS == 1:
-            print('Cancelling input. '
-            'Exiting to main menu\n')
+            print(
+                'Cancelling input. '
+                'Exiting to main menu\n'
+                )
             _bot_setup()
         print('It looks like you haven\'t entered anything, '
               'please try again')
@@ -200,9 +202,15 @@ def _manage_setup_status():
     This script changes setup status to 0, when it needs to be reseted
     or set to 1, when initial setup was completed
     """
-    if SETUP_STATUS == 0 and edit_data_in_database(DB_TABLES[4], DB_COLUMNS[DB_TABLES[4]][0], 1):
-        print('\nThe initial setup of the bot has been completed.'
-        ' To enable bot, run `main.py` script')
+    if SETUP_STATUS == 0 and edit_data_in_database(
+        DB_TABLES[4],
+        DB_COLUMNS[DB_TABLES[4]][0],
+        1
+        ):
+        print(
+            '\nThe initial setup of the bot has been completed.'
+            ' To enable bot, run `main.py` script'
+            )
     else:
         if edit_data_in_database(DB_TABLES[4], DB_COLUMNS[DB_TABLES[4]][0], 0):
             tables_to_reset = DB_TABLES

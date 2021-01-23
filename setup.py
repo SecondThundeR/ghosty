@@ -206,7 +206,7 @@ def _manage_setup_status():
         DB_TABLES[4],
         DB_COLUMNS[DB_TABLES[4]][0],
         1
-        ):
+    ):
         print(
             '\nThe initial setup of the bot has been completed.'
             ' To enable bot, run `main.py` script'

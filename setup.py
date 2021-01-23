@@ -9,23 +9,21 @@ Because of it, all functions here are private only
 """
 
 
-import sys
-import requests
+from sys import exit
 from src.libs.database_handler import is_data_in_database
 from src.libs.database_handler import add_data_to_database
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import edit_data_in_database
 from src.libs.database_handler import remove_data_from_database
-from src.libs.file_handler import import_data_from_local_file
-from src.libs.file_handler import check_if_local_file_exists
 from src.libs.file_handler import delete_local_file
+from src.libs.words_base_handler import restore_dev_word_base
 
-DB_TABLES = ['bots', 'tokens', 'users', 'words', 'variables']
+DB_TABLES = ['bots', 'tokens', 'users', 'word_base', 'variables']
 DB_COLUMNS = {
     'bots': 'bots_id',
     'tokens': ['bot_name', 'bot_token'],
     'users': 'users_id',
-    'words': 'words_array',
+    'word_base': 'words',
     'variables': ['is_setup_completed', 'current_selected_bot']
 }
 SETUP_STATUS = get_data_from_database(
@@ -40,32 +38,12 @@ WIKI_LINK = 'https://github.com/SecondThundeR/secondthunder-js-bot/' \
 ERROR_MESSAGE = 'Something went wrong. Try again or open an issue on Github'
 
 
-def _restore_words_file():
-    """Restore dev's words base from Github.
-
-    Returns:
-        bool: True if file was downloaded and saved, False otherwise
-    """
-    if not check_if_local_file_exists(WORDS_ARRAY_PATH):
-        r = requests.get(WORDS_ARRAY_LINK)
-        with open(WORDS_ARRAY_PATH, 'wb') as f:
-            f.write(r.content)
-        return True
-    return False
-
-
 def _delete_file():
-    """Delete local file from data folder.
-
-    Returns:
-        bool: True if file was deleted, False otherwise
-    """
-    delete_status = delete_local_file(WORDS_ARRAY_PATH)
-    if delete_status:
+    """Delete local file from data folder."""
+    if delete_local_file(WORDS_ARRAY_PATH):
         print(f'File in path \'{WORDS_ARRAY_PATH}\' was deleted successfully')
     else:
         print(f'File in path \'{WORDS_ARRAY_PATH}\' could not be deleted')
-    return delete_status
 
 
 def _get_user_input():
@@ -86,7 +64,8 @@ def _get_user_input():
             return user_input
         if user_input.upper() == "CANCEL":
             if SETUP_STATUS == 1:
-                print('Exiting to main menu\n')
+                print('Cancelling input. '
+                      'Exiting to main menu\n')
                 _bot_setup()
         print('It looks like you haven\'t entered anything, '
               'please try again')
@@ -107,22 +86,22 @@ def _manage_dev_base():
         setup_input = _get_user_input()
     else:
         print(
-            '\nWhat do you to do with your word base:'
+            '\nWhat do you want to do with your word base:'
             '\n1. Import developer\'s word base'
             '\n2. Clear existing word base'
             '\n0. Exit'
         )
         menu_input = _get_user_input()
     if menu_input == '1' or setup_input.lower() == 'y':
-        _restore_words_file()
         print('\nClearing database and importing '
               'latest developer\'s word base...')
-        remove_data_from_database(DB_TABLES[3])
-        words_array = import_data_from_local_file(WORDS_ARRAY_PATH)
-        for element in words_array:
-            add_data_to_database(DB_TABLES[3], DB_COLUMNS[DB_TABLES[3]], element)
+        restore_dev_word_base(
+            DB_TABLES[3],
+            DB_COLUMNS[DB_TABLES[3]],
+            WORDS_ARRAY_LINK,
+            WORDS_ARRAY_PATH
+        )
         print('The word base was imported successfully')
-        delete_local_file(WORDS_ARRAY_PATH)
         if SETUP_STATUS == 1:
             _manage_dev_base()
     elif menu_input == '2':
@@ -235,7 +214,7 @@ def _manage_setup_status():
                 remove_data_from_database(item)
             print('\nThe bot\'s settings have been reset. '
                   'Restart the script for initial setup')
-            sys.exit()
+            exit()
 
 
 def _bot_settings_manager():
@@ -324,26 +303,33 @@ def _current_bot_selector():
     for i, bot_name in enumerate(list_of_bots):
         i += 1
         print(f'{i}. {bot_name}')
-    print('Enter the number of the bot '
-          'you want to select to run')
+    print('0. Exit')
+    print('Enter the number of option '
+          'you would like to select')
     while True:
         select_bot = _get_user_input()
-        index_of_bot = int(select_bot) - 1
-        if index_of_bot in range(len(list_of_bots)):
-            print(f'Great choice! '
-                  f'Selecting {list_of_bots[index_of_bot]} as default...\n')
-            if edit_data_in_database(
-                    DB_TABLES[4],
-                    DB_COLUMNS[DB_TABLES[4]][1],
-                    index_of_bot
-            ):
-                _bot_setup()
-            else:
-                print('Something strange happened! '
-                      'Canceling bot selection...\n')
-                _bot_setup()
+        if select_bot == '0':
+            print('Exiting to main menu\n')
+            _bot_setup()
         else:
-            print('Invalid name of bot. Please, try again')
+            try:
+                index_of_bot = int(select_bot) - 1
+                if index_of_bot in range(len(list_of_bots)):
+                    print(f'Great choice! '
+                          f'Selecting {list_of_bots[index_of_bot]} as default...\n')
+                    if not edit_data_in_database(
+                            DB_TABLES[4],
+                            DB_COLUMNS[DB_TABLES[4]][1],
+                            index_of_bot
+                    ):
+                        print('Something strange happened! '
+                              'Canceling bot selection...\n')
+                    _bot_setup()
+                else:
+                    print('Invalid number of option. Please, try again')
+            except ValueError:
+                print('It looks like you entered not a number. '
+                      'Please, try again')
 
 
 def _initial_bot_setup():
@@ -353,7 +339,6 @@ def _initial_bot_setup():
     addition of bot to database, managing locally stored words base and
     changing setup status to 1 after successful completion
     """
-    _restore_words_file()
     _add_bot_to_database()
     _manage_dev_base()
     _manage_setup_status()
@@ -390,7 +375,7 @@ def _bot_setup():
         _manage_setup_status()
     elif menu_input == '0':
         print('Hope you come back soon! See you later')
-        sys.exit()
+        exit()
     else:
         print('You have chosen something wrong, please try again\n')
         _bot_setup()

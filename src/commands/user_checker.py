@@ -12,7 +12,7 @@ from src.libs.user_handler import get_random_user
 
 
 def _group_message_contents(message):
-    """Group message content array and return grouped list
+    """Group message content array and return grouped list.
 
     Parameters:
         message (list): List of message contents
@@ -31,7 +31,7 @@ def _group_message_contents(message):
 
 
 async def who_is_user(msg, full_message):
-    """Get random percent of who the user
+    """Get random percent of who the user.
 
     Parameters:
         msg (discord.message.Message): Execute send to channel function

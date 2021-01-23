@@ -35,7 +35,7 @@ async def who_is_user(msg, full_message):
 
     Parameters:
         msg (discord.message.Message): Execute send to channel function
-        fullMessage (list): List of message contents
+        full_message (list): List of message contents
     """
     random_percent = randint(0, 100)
     user_checker_data = _group_message_contents(full_message)
@@ -55,7 +55,11 @@ async def who_is_user(msg, full_message):
         await msg.channel.send(f'{current_user} сегодня не {user_checker_data[1]} :c')
     elif random_percent == 100:
         await msg.channel.send(
-        f'{current_user} кто бы мог подумать то! '
-        f'Ты {user_checker_data[1]} на {random_percent}%')
+            f'{current_user} кто бы мог подумать то! '
+            f'Ты {user_checker_data[1]} на {random_percent}%'
+            )
     else:
-        await msg.channel.send(f'{current_user} {user_checker_data[1]} на {random_percent}%')
+        await msg.channel.send(
+            f'{current_user} {user_checker_data[1]} '
+            f'на {random_percent}%'
+            )

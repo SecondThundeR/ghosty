@@ -9,7 +9,7 @@ Because of it, all functions here are private only
 """
 
 
-from sys import exit
+from sys import exit as exit_from_setup
 from src.libs.database_handler import is_data_in_database
 from src.libs.database_handler import add_data_to_database
 from src.libs.database_handler import get_data_from_database
@@ -214,7 +214,7 @@ def _manage_setup_status():
                 remove_data_from_database(item)
             print('\nThe bot\'s settings have been reset. '
                   'Restart the script for initial setup')
-            exit()
+            exit_from_setup()
 
 
 def _bot_settings_manager():
@@ -375,7 +375,7 @@ def _bot_setup():
         _manage_setup_status()
     elif menu_input == '0':
         print('Hope you come back soon! See you later')
-        exit()
+        exit_from_setup()
     else:
         print('You have chosen something wrong, please try again\n')
         _bot_setup()

@@ -20,7 +20,8 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-import sqlite3
+from sqlite3 import connect
+from sqlite3 import Error as db_error
 
 DATABASE_PATH = 'src/data/botDB.db'
 
@@ -34,7 +35,7 @@ def _connect_database(path):
     Returns:
         list: Array which includes connection and cursor objects of database
     """
-    connection = sqlite3.connect(path)
+    connection = connect(path)
     cursor = connection.cursor()
     return [connection, cursor]
 
@@ -59,8 +60,8 @@ def clear_data_on_execution():
                           ['poll_locked', 'spammer_ID', 'spammer_count'],
                           [0, 0, 0]
                           )
-    remove_data_from_database('users')
     remove_data_from_database('bots')
+    remove_data_from_database('users')
 
 
 def is_data_in_database(table, keys, data, where_statement='AND'):
@@ -95,7 +96,6 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
 
     Returns:
         list: Array with data from database.
-            None if SQL request returns empty result
 
     Raises:
         Exception: Returns info about error
@@ -158,10 +158,8 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
                     data_array.append(item)
             else:
                 data_array.append(element[0])
-        if len(data_array) == 0:
-            return None
         return data_array
-    except sqlite3.Error as database_error:
+    except db_error as database_error:
         raise Exception from database_error
 
 
@@ -212,7 +210,7 @@ def add_data_to_database(table, keys, data):
                 commit_completed = True
         _disconnect_database(database_connection)
         return commit_completed
-    except sqlite3.Error as database_error:
+    except db_error as database_error:
         raise Exception from database_error
 
 
@@ -279,7 +277,7 @@ def edit_data_in_database(table, keys, data, statement=False):
                     commit_completed = True
         _disconnect_database(database_connection)
         return commit_completed
-    except sqlite3.Error as database_error:
+    except db_error as database_error:
         raise Exception from database_error
 
 
@@ -337,5 +335,5 @@ def remove_data_from_database(table, keys=None, data=None):
                 commit_completed = True
         _disconnect_database(database_connection)
         return commit_completed
-    except sqlite3.Error as database_error:
+    except db_error as database_error:
         raise Exception from database_error

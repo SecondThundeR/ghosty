@@ -8,13 +8,13 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-import random
-import asyncio
+from random import choice
+from asyncio import sleep
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import edit_data_in_database
 from src.libs.user_handler import get_random_user
 
-WORDS_ARRAY = get_data_from_database('words', 'words_array')
+WORDS_ARRAY = get_data_from_database('word_base', 'words')
 DELAY_TIME = 3
 
 
@@ -31,7 +31,7 @@ async def get_random_word(msg, args):
         r_user = await get_random_user(msg)
         if r_user is None:
             await msg.channel.send(
-                f'{msg.author.mention}, похоже я не получил список пользователей и '
+                f'{msg.author.mention}, похоже cписок пользователей пуст и '
                 f'поэтому мне не кого упоминать'
             )
             return
@@ -44,17 +44,17 @@ async def get_random_word(msg, args):
             f'однако вы можете добавить новые слова в мой словарь',
             delete_after=DELAY_TIME
         )
-        await asyncio.sleep(DELAY_TIME)
+        await sleep(DELAY_TIME)
         await msg.delete()
     elif _check_for_spam(msg):
         await msg.channel.send(
             f'{msg.author.mention} куда спамиш?',
             delete_after=DELAY_TIME
         )
-        await asyncio.sleep(DELAY_TIME)
+        await sleep(DELAY_TIME)
         await msg.delete()
     else:
-        await msg.channel.send(f'{current_user} {random.choice(WORDS_ARRAY)}')
+        await msg.channel.send(f'{current_user} {choice(WORDS_ARRAY)}')
 
 
 def _check_for_spam(msg):

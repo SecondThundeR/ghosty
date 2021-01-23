@@ -7,7 +7,7 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-import asyncio
+from asyncio import sleep
 
 HELP_MESSAGE = 'Доступные команды бота: ' \
                '\n\n**ху** - выбирает рандомного пользователя и показывает ему ' \
@@ -36,5 +36,5 @@ async def send_help_message(msg):
         msg (discord.message.Message): Execute send to channel function
     """
     await msg.channel.send(HELP_MESSAGE, delete_after=DELAY_TIME)
-    await asyncio.sleep(DELAY_TIME)
+    await sleep(DELAY_TIME)
     await msg.delete()

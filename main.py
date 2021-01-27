@@ -9,10 +9,7 @@ fit your needs
 """
 
 
-from discord import Client
-from discord import Status
-from discord import Game
-from discord import Intents
+from discord import Client, Status, Game, Intents
 from src.libs.database_handler import clear_data_on_execution
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import add_data_to_database

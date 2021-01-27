@@ -20,8 +20,7 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-from sqlite3 import connect
-from sqlite3 import Error as db_error
+import sqlite3
 
 DATABASE_PATH = 'src/data/botDB.db'
 
@@ -35,7 +34,7 @@ def _connect_database(path):
     Returns:
         list: Array which includes connection and cursor objects of database
     """
-    connection = connect(path)
+    connection = sqlite3.connect(path)
     cursor = connection.cursor()
     return [connection, cursor]
 
@@ -159,7 +158,7 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
             else:
                 data_array.append(element[0])
         return data_array
-    except db_error as database_error:
+    except sqlite3.Error as database_error:
         raise Exception from database_error
 
 
@@ -210,7 +209,7 @@ def add_data_to_database(table, keys, data):
                 commit_completed = True
         _disconnect_database(database_connection)
         return commit_completed
-    except db_error as database_error:
+    except sqlite3.Error as database_error:
         raise Exception from database_error
 
 
@@ -277,7 +276,7 @@ def edit_data_in_database(table, keys, data, statement=False):
                     commit_completed = True
         _disconnect_database(database_connection)
         return commit_completed
-    except db_error as database_error:
+    except sqlite3.Error as database_error:
         raise Exception from database_error
 
 
@@ -335,5 +334,5 @@ def remove_data_from_database(table, keys=None, data=None):
                 commit_completed = True
         _disconnect_database(database_connection)
         return commit_completed
-    except db_error as database_error:
+    except sqlite3.Error as database_error:
         raise Exception from database_error

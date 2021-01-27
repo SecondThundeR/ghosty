@@ -9,7 +9,7 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-from random import choice
+import random
 from src.libs.database_handler import get_data_from_database
 
 users = get_data_from_database('users', 'users_id')
@@ -34,7 +34,7 @@ async def get_random_user(msg, mode='default'):
 
     if mode == 'shipping':
         return 'Not implemented'
-    member = await msg.guild.fetch_member(choice(users))
+    member = await msg.guild.fetch_member(random.choice(users))
     return member
 
 

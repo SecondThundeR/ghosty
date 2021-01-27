@@ -7,7 +7,7 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-from random import randint
+import random
 from src.libs.user_handler import get_random_user
 
 
@@ -37,7 +37,7 @@ async def who_is_user(msg, full_message):
         msg (discord.message.Message): Execute send to channel function
         full_message (list): List of message contents
     """
-    random_percent = randint(0, 100)
+    random_percent = random.randint(0, 100)
     user_checker_data = _group_message_contents(full_message)
     current_user = ''
     if user_checker_data[0] == 'рандом':

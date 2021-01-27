@@ -5,12 +5,8 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-from platform import system
-from platform import release
-from platform import version
-from platform import processor
-from platform import machine
-from asyncio import sleep
+from platform import system, release, version, processor, machine
+import asyncio
 
 DELAY_TIME = 5
 
@@ -27,5 +23,5 @@ async def get_system_info(msg):
         f'у которого процессор *({processor()})* '
         f'имеет архитектуру - **{machine()}**', delete_after=DELAY_TIME
     )
-    await sleep(DELAY_TIME)
+    await asyncio.sleep(DELAY_TIME)
     await msg.delete()

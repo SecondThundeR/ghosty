@@ -6,7 +6,7 @@ This is a basic self-written module to handle operations with files
 
 This file can also be imported as a module and contains the following functions:
     * import_data_from_file - imports data from file to variable
-    * check_for_file_existence - returns a boolean when checking a local file for existence
+    * check_for_file_existence - returns a boolean when checking for local file
     * create_local_folder - returns a boolean when creating a local folder
     * delete_local_file - returns a boolean when deleting a local file
     * delete_local_folder - returns a boolean when deleting a local folder

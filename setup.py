@@ -9,7 +9,6 @@ Because of it, all functions here are private only
 """
 
 
-import os
 from sys import exit as exit_from_setup
 from src.libs.database_handler import is_data_in_database
 from src.libs.database_handler import add_data_to_database
@@ -373,6 +372,7 @@ def _current_bot_selector():
         CONFIG_DB_COLUMNS[0]
     )
     currently_selected_bot = get_data_from_database(
+        0,
         MAIN_DB_TABLE,
         MAIN_DB_COLUMNS[1]
     )[0]

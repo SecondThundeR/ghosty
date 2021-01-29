@@ -13,7 +13,6 @@ import requests
 from src.libs.database_handler import add_data_to_database
 from src.libs.database_handler import remove_data_from_database
 from src.libs.files_handler import import_data_from_local_file
-from src.libs.files_handler import check_for_file_existence
 from src.libs.files_handler import delete_local_file
 
 

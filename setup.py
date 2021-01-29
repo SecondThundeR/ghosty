@@ -9,41 +9,60 @@ Because of it, all functions here are private only
 """
 
 
+import os
 from sys import exit as exit_from_setup
 from src.libs.database_handler import is_data_in_database
 from src.libs.database_handler import add_data_to_database
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import edit_data_in_database
 from src.libs.database_handler import remove_data_from_database
+from src.libs.files_handler import create_local_folder
 from src.libs.files_handler import delete_local_file
-from src.libs.words_base_handler import restore_dev_word_base
+from src.libs.files_handler import delete_local_folder
+from src.libs.words_base_handler import restore_word_base
 
-DB_TABLES = ['bots', 'tokens', 'users', 'word_base', 'variables']
-DB_COLUMNS = {
-    'bots': 'bots_id',
-    'tokens': ['bot_name', 'bot_token'],
-    'users': 'users_id',
-    'word_base': 'words',
-    'variables': ['is_setup_completed', 'current_selected_bot']
-}
+
+MAIN_DB_TABLE = 'variables'
+MAIN_DB_COLUMNS = ['is_setup_completed', 'current_selected_bot']
+CONFIG_DB_TABLE = 'tokens'
+CONFIG_DB_COLUMNS = ['bot_name', 'bot_token']
+WORDS_DB_TABLES = [
+    'main_words_base',
+    'roulette_lose_words',
+    'roulette_minus_words',
+    'roulette_win_words',
+    'roulette_zero_words'
+    ]
+WORDS_DB_COLUMN = 'words'
+TABLES_TO_RESET = {
+    1: [CONFIG_DB_TABLE],
+    2: [
+        WORDS_DB_TABLES[0],
+        WORDS_DB_TABLES[1],
+        WORDS_DB_TABLES[2],
+        WORDS_DB_TABLES[3],
+        WORDS_DB_TABLES[4]
+        ]
+    }
 SETUP_STATUS = get_data_from_database(
-    DB_TABLES[4],
-    DB_COLUMNS[DB_TABLES[4]][0]
-)[0]
-WORDS_ARRAY_PATH = 'src/data/words.txt'
-WORDS_ARRAY_LINK = 'https://raw.githubusercontent.com/SecondThundeR/' \
-                   'secondthunder-js-bot/dev-2.0.0/src/data/words.txt'
+    0,
+    MAIN_DB_TABLE,
+    MAIN_DB_COLUMNS[0]
+    )[0]
+FOLDERS_PATH = ['src/words_base', 'src/words_base/roulette_words']
+WORDS_PATHS = [
+    'src/words_base/words.txt',
+    'src/words_base/roulette_words/roulette_lose.txt',
+    'src/words_base/roulette_words/roulette_minus.txt',
+    'src/words_base/roulette_words/roulette_win.txt',
+    'src/words_base/roulette_words/roulette_zero.txt'
+    ]
+ROULETTE_FOLDER_PATH = 'src/words_base/roulette_words'
+GH_WORD_LINK = 'https://raw.githubusercontent.com/SecondThundeR/' \
+               'secondthunder-js-bot/dev-2.0.0/'
 WIKI_LINK = 'https://github.com/SecondThundeR/secondthunder-js-bot/' \
             'wiki/FAQ#getting-a-bot-token'
 ERROR_MESSAGE = 'Something went wrong. Try again or open an issue on Github'
-
-
-def _delete_file():
-    """Delete local file from data folder."""
-    if delete_local_file(WORDS_ARRAY_PATH):
-        print(f'File in path \'{WORDS_ARRAY_PATH}\' was deleted successfully')
-    else:
-        print(f'File in path \'{WORDS_ARRAY_PATH}\' could not be deleted')
 
 
 def _get_user_input():
@@ -72,6 +91,53 @@ def _get_user_input():
               'please try again')
 
 
+def _restore_dev_base():
+    """Restore dev's words base.
+
+    This function initiates downloading and
+    importing words into the database
+
+    Also it's handles folder creation and deletion
+    """
+    for i, _ in enumerate(FOLDERS_PATH):
+        create_local_folder(FOLDERS_PATH[i])
+    for i, _ in enumerate(WORDS_DB_TABLES):
+        restore_word_base(
+                2,
+                WORDS_DB_TABLES[i],
+                WORDS_DB_COLUMN,
+                WORDS_PATHS[i],
+                f'{GH_WORD_LINK}{WORDS_PATHS[i]}'
+            )
+    for i, _ in reversed(list(enumerate(FOLDERS_PATH))):
+        delete_local_folder(FOLDERS_PATH[i])
+
+
+def _clear_words_database():
+    """Clear words tables in database.
+
+    This function initiates the cleaning
+    of tables in the database
+    """
+    for i, _ in enumerate(WORDS_DB_TABLES):
+        remove_data_from_database(
+                2,
+                WORDS_DB_TABLES[i],
+            )
+
+
+def _delete_words_files():
+    """Delete file and folders with files.
+
+    This function initiates the deletion
+    of a file and folder with files
+    """
+    for i, _ in reversed(list(enumerate(WORDS_DB_TABLES))):
+        delete_local_file(WORDS_PATHS[i])
+    for i, _ in reversed(list(enumerate(FOLDERS_PATH))):
+        delete_local_folder(FOLDERS_PATH[i])
+
+
 def _manage_dev_base():
     """Manage dev's words base.
 
@@ -96,22 +162,18 @@ def _manage_dev_base():
     if menu_input == '1' or setup_input.lower() == 'y':
         print('\nClearing database and importing '
               'latest developer\'s word base...')
-        restore_dev_word_base(
-            DB_TABLES[3],
-            DB_COLUMNS[DB_TABLES[3]],
-            WORDS_ARRAY_LINK,
-            WORDS_ARRAY_PATH
-        )
+        _clear_words_database()
+        _restore_dev_base()
         print('The word base was imported successfully')
         if SETUP_STATUS == 1:
             _manage_dev_base()
     elif menu_input == '2':
-        remove_data_from_database(DB_TABLES[3])
+        _clear_words_database()
         print('\nDatabase cleared successfully')
         _manage_dev_base()
     elif setup_input.lower() == 'n':
-        print('Deleting developer\'s words base...')
-        delete_local_file(WORDS_ARRAY_PATH)
+        print('Clearing database...')
+        _clear_words_database()
     elif menu_input == '0' and SETUP_STATUS == 1:
         print('')
         _bot_setup()
@@ -120,7 +182,7 @@ def _manage_dev_base():
               'please try again')
 
 
-def _bot_in_database():
+def _check_for_bot_in_database():
     """Check for bot info existence in database.
 
     **Noteworthy:** This script has failed attempts counter.
@@ -139,9 +201,10 @@ def _bot_in_database():
         else:
             bot_name = _get_user_input()
             if is_data_in_database(
-                    DB_TABLES[1],
-                    DB_COLUMNS[DB_TABLES[1]][0],
-                    bot_name
+                1,
+                CONFIG_DB_TABLE,
+                CONFIG_DB_COLUMNS[0],
+                bot_name
             ):
                 print('Bot found in the database!')
                 return bot_name
@@ -168,8 +231,9 @@ def _add_bot_to_database():
         print('Enter your Discord bot token')
     bot_token = _get_user_input()
     add_data_to_database(
-        DB_TABLES[1],
-        [DB_COLUMNS[DB_TABLES[1]][0], DB_COLUMNS[DB_TABLES[1]][1]],
+        1,
+        CONFIG_DB_TABLE,
+        [CONFIG_DB_COLUMNS[0], CONFIG_DB_COLUMNS[1]],
         [bot_name, bot_token]
     )
     if SETUP_STATUS == 0:
@@ -186,11 +250,12 @@ def _delete_bot_from_database():
     (Did you expect to see rocket launch codes here?)
     """
     print('Enter the name of the bot:')
-    bot_name = _bot_in_database()
+    bot_name = _check_for_bot_in_database()
     if remove_data_from_database(
-            DB_TABLES[1],
-            DB_COLUMNS[DB_TABLES[1]][0],
-            bot_name
+        1,
+        CONFIG_DB_TABLE,
+        CONFIG_DB_COLUMNS[0],
+        bot_name
     ):
         print('Bot has been deleted from database...\n')
         _bot_setup()
@@ -203,8 +268,9 @@ def _manage_setup_status():
     or set to 1, when initial setup was completed
     """
     if SETUP_STATUS == 0 and edit_data_in_database(
-        DB_TABLES[4],
-        DB_COLUMNS[DB_TABLES[4]][0],
+        0,
+        MAIN_DB_TABLE,
+        MAIN_DB_COLUMNS[0],
         1
     ):
         print(
@@ -212,11 +278,15 @@ def _manage_setup_status():
             ' To enable bot, run `main.py` script'
             )
     else:
-        if edit_data_in_database(DB_TABLES[4], DB_COLUMNS[DB_TABLES[4]][0], 0):
-            tables_to_reset = DB_TABLES
-            tables_to_reset.pop()
-            for item in tables_to_reset:
-                remove_data_from_database(item)
+        if edit_data_in_database(
+            0,
+            MAIN_DB_TABLE,
+            MAIN_DB_COLUMNS[0],
+            0
+        ):
+            for db_num in range(1, 3):
+                for tables in TABLES_TO_RESET[db_num]:
+                    remove_data_from_database(db_num, tables)
             print('\nThe bot\'s settings have been reset. '
                   'Restart the script for initial setup')
             exit_from_setup()
@@ -228,7 +298,7 @@ def _bot_settings_manager():
     This script allows you to change the internal name
     of the bot in the database, as well as its token
     """
-    bot_name = _bot_in_database()
+    bot_name = _check_for_bot_in_database()
     print(
         '\nWhat do you want to change:'
         '\n1. Name'
@@ -257,15 +327,17 @@ def _bot_name_changer(old_bot_name):
     print('Enter new bot\'s name:')
     new_bot_name = _get_user_input()
     bot_info = get_data_from_database(
-        DB_TABLES[1],
-        DB_COLUMNS[DB_TABLES[1]][0],
+        1,
+        CONFIG_DB_TABLE,
+        CONFIG_DB_COLUMNS[0],
         old_bot_name
     )
     if edit_data_in_database(
-            DB_TABLES[1],
-            [DB_COLUMNS[DB_TABLES[1]][0], DB_COLUMNS[DB_TABLES[1]][1]],
-            [new_bot_name, bot_info[1]],
-            True
+        1,
+        CONFIG_DB_TABLE,
+        [CONFIG_DB_COLUMNS[0], CONFIG_DB_COLUMNS[1]],
+        [new_bot_name, bot_info[1]],
+        True
     ):
         print('Great, I managed to edit bot\'s name to a new one!\n')
         _bot_setup()
@@ -280,10 +352,11 @@ def _bot_token_changer(bot_name):
     print('Enter new bot\'s token:')
     new_bot_token = _get_user_input()
     if edit_data_in_database(
-            DB_TABLES[1],
-            [DB_COLUMNS[DB_TABLES[1]][1], DB_COLUMNS[DB_TABLES[1]][0]],
-            [new_bot_token, bot_name],
-            True
+        1,
+        CONFIG_DB_TABLE,
+        [CONFIG_DB_COLUMNS[0], CONFIG_DB_COLUMNS[1]],
+        [bot_name, new_bot_token],
+        True
     ):
         print('Great, I managed to edit bot token to a new one!\n')
         _bot_setup()
@@ -295,12 +368,13 @@ def _current_bot_selector():
     This script allows you to select the desired bot to run
     """
     list_of_bots = get_data_from_database(
-        DB_TABLES[1],
-        DB_COLUMNS[DB_TABLES[1]][0]
+        1,
+        CONFIG_DB_TABLE,
+        CONFIG_DB_COLUMNS[0]
     )
     currently_selected_bot = get_data_from_database(
-        DB_TABLES[4],
-        DB_COLUMNS[DB_TABLES[4]][1]
+        MAIN_DB_TABLE,
+        MAIN_DB_COLUMNS[1]
     )[0]
     print(f'At the moment, the selected bot is '
           f'{list_of_bots[currently_selected_bot]}')
@@ -323,9 +397,10 @@ def _current_bot_selector():
                     print(f'Great choice! '
                           f'Selecting {list_of_bots[index_of_bot]} as default...\n')
                     if not edit_data_in_database(
-                            DB_TABLES[4],
-                            DB_COLUMNS[DB_TABLES[4]][1],
-                            index_of_bot
+                        1,
+                        MAIN_DB_TABLE,
+                        MAIN_DB_COLUMNS[1],
+                        index_of_bot
                     ):
                         print('Something strange happened! '
                               'Canceling bot selection...\n')
@@ -340,9 +415,8 @@ def _current_bot_selector():
 def _initial_bot_setup():
     """Bot setup, initial phase.
 
-    This script launches 4 main functions: restoration of words base,
-    addition of bot to database, managing locally stored words base and
-    changing setup status to 1 after successful completion
+    This script launches 3 main functions: addition of bot to database,
+    managing of words base and changing setup status to 1 after successful completion
     """
     _add_bot_to_database()
     _manage_dev_base()

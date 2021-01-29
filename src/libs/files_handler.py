@@ -1,4 +1,4 @@
-"""File Handler Library.
+"""Files Handler Library.
 
 This is a basic self-written module to handle operations with files
 

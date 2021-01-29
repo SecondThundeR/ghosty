@@ -10,9 +10,9 @@ This file can also be imported as a module and contains the following functions:
 import requests
 from src.libs.database_handler import add_data_to_database
 from src.libs.database_handler import remove_data_from_database
-from src.libs.file_handler import import_data_from_local_file
-from src.libs.file_handler import check_if_local_file_exists
-from src.libs.file_handler import delete_local_file
+from src.libs.files_handler import import_data_from_local_file
+from src.libs.files_handler import check_if_local_file_exists
+from src.libs.files_handler import delete_local_file
 
 
 def restore_dev_word_base(table, column, link, path):

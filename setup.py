@@ -15,7 +15,7 @@ from src.libs.database_handler import add_data_to_database
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import edit_data_in_database
 from src.libs.database_handler import remove_data_from_database
-from src.libs.file_handler import delete_local_file
+from src.libs.files_handler import delete_local_file
 from src.libs.words_base_handler import restore_dev_word_base
 
 DB_TABLES = ['bots', 'tokens', 'users', 'word_base', 'variables']

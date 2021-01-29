@@ -20,9 +20,14 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-import sqlite3
+from sqlite3 import connect
+from sqlite3 import Error as db_error
 
-DATABASE_PATH = 'src/data/botDB.db'
+DATABASE_PATHS = [
+    'src/databases/botDB.db',
+    'src/databases/configDB.db',
+    'src/databases/wordsDB.db'
+    ]
 
 
 def _connect_database(path):
@@ -34,7 +39,7 @@ def _connect_database(path):
     Returns:
         list: Array which includes connection and cursor objects of database
     """
-    connection = sqlite3.connect(path)
+    connection = connect(path)
     cursor = connection.cursor()
     return [connection, cursor]
 
@@ -55,18 +60,21 @@ def clear_data_on_execution():
     **Noteworthy:** This function is necessary for the internal work of the bot,
     when main script is executed
     """
-    edit_data_in_database('variables',
-                          ['poll_locked', 'spammer_ID', 'spammer_count'],
-                          [0, 0, 0]
-                          )
-    remove_data_from_database('bots')
-    remove_data_from_database('users')
+    edit_data_in_database(
+        0,
+        'variables',
+        ['poll_locked', 'spammer_ID', 'spammer_count'],
+        [0, 0, 0]
+        )
+    remove_data_from_database(0, 'bots')
+    remove_data_from_database(0, 'users')
 
 
-def is_data_in_database(table, keys, data, where_statement='AND'):
+def is_data_in_database(db_path, table, keys, data, where_statement='AND'):
     """Execute get_data_from_database to check data existence.
 
     Parameters:
+        db_path (int): Path of database to check data
         table (str): Name of the table
         keys (str or list[str]): Keys of the table
         data (str or int or list[str or int]): Data of the columns.
@@ -77,15 +85,16 @@ def is_data_in_database(table, keys, data, where_statement='AND'):
     Returns:
         bool: True if data is exists in database, False otherwise
     """
-    if get_data_from_database(table, keys, data, where_statement) is None:
+    if get_data_from_database(db_path, table, keys, data, where_statement) is None:
         return False
     return True
 
 
-def get_data_from_database(table, keys, data=None, where_statement='AND'):
+def get_data_from_database(db_path, table, keys, data=None, where_statement='AND'):
     """Retrieve data from a database and return it as an array.
 
     Parameters:
+        db_path (int): Path of database to get data
         table (str): Name of the table
         keys (str or list[str]): Keys of the table
         data (str or int or list[str or int]): Data of the columns.
@@ -102,7 +111,7 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
     data_array = []
     temp_array = []
     try:
-        database_connection = _connect_database(DATABASE_PATH)
+        database_connection = _connect_database(DATABASE_PATHS[db_path])
         if isinstance(keys, str):
             if data is None:
                 database_connection[1].execute(
@@ -158,14 +167,15 @@ def get_data_from_database(table, keys, data=None, where_statement='AND'):
             else:
                 data_array.append(element[0])
         return data_array
-    except sqlite3.Error as database_error:
+    except db_error as database_error:
         raise Exception from database_error
 
 
-def add_data_to_database(table, keys, data):
+def add_data_to_database(db_path, table, keys, data):
     """Add data from the database and return the result of executing an SQL query.
 
     Parameters:
+        db_path (int): Path of database to add data
         table (str): Name of the table
         keys (str or list[str]): Keys of the table
         data (str or int or list[str or int]): Data to add to the columns
@@ -177,7 +187,7 @@ def add_data_to_database(table, keys, data):
         Exception: Returns info about error
     """
     try:
-        database_connection = _connect_database(DATABASE_PATH)
+        database_connection = _connect_database(DATABASE_PATHS[db_path])
         if isinstance(keys, str):
             database_connection[1].execute(
                 f"INSERT INTO {table} "
@@ -209,14 +219,15 @@ def add_data_to_database(table, keys, data):
                 commit_completed = True
         _disconnect_database(database_connection)
         return commit_completed
-    except sqlite3.Error as database_error:
+    except db_error as database_error:
         raise Exception from database_error
 
 
-def edit_data_in_database(table, keys, data, statement=False):
+def edit_data_in_database(db_path, table, keys, data, statement=False):
     """Edit data in the database and return the status of SQL query execution.
 
     Parameters:
+        db_path (int): Path of database to edit
         table (str): Name of the table
         keys (str or list[str]): Keys of the table
         data (str or int or list[str or int]): Data to edit in the columns
@@ -231,7 +242,7 @@ def edit_data_in_database(table, keys, data, statement=False):
     temp_array = []
     commit_completed = False
     try:
-        database_connection = _connect_database(DATABASE_PATH)
+        database_connection = _connect_database(DATABASE_PATHS[db_path])
         if isinstance(keys, str) and isinstance(data, (str, int)):
             database_connection[1].execute(
                 f"UPDATE {table} "
@@ -276,14 +287,15 @@ def edit_data_in_database(table, keys, data, statement=False):
                     commit_completed = True
         _disconnect_database(database_connection)
         return commit_completed
-    except sqlite3.Error as database_error:
+    except db_error as database_error:
         raise Exception from database_error
 
 
-def remove_data_from_database(table, keys=None, data=None):
+def remove_data_from_database(db_path, table, keys=None, data=None):
     """Remove data from the table and return the status of SQL query.
 
     Parameters:
+        db_path (int): Path of database to modify
         table (str): Name of the table
         keys (str or list[str]): Keys of the table.
             Defaults to None
@@ -299,7 +311,7 @@ def remove_data_from_database(table, keys=None, data=None):
     temp_array = []
     commit_completed = False
     try:
-        database_connection = _connect_database(DATABASE_PATH)
+        database_connection = _connect_database(DATABASE_PATHS[db_path])
         if keys is None and data is None:
             database_connection[1].execute(f'DELETE FROM {table}')
             database_connection[0].commit()
@@ -334,5 +346,5 @@ def remove_data_from_database(table, keys=None, data=None):
                 commit_completed = True
         _disconnect_database(database_connection)
         return commit_completed
-    except sqlite3.Error as database_error:
+    except db_error as database_error:
         raise Exception from database_error

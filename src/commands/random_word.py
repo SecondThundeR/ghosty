@@ -15,7 +15,7 @@ from src.libs.database_handler import edit_data_in_database
 from src.libs.user_handler import get_random_user
 
 
-WORDS_ARRAY = get_data_from_database('word_base', 'words')
+WORDS_ARRAY = get_data_from_database(2, 'main_words_base', 'words')
 DELAY_TIME = 3
 
 

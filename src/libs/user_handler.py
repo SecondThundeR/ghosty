@@ -13,7 +13,7 @@ import random
 from src.libs.database_handler import get_data_from_database
 
 
-users = get_data_from_database('users', 'users_id')
+users = get_data_from_database(0, 'users', 'users_id')
 
 
 async def get_random_user(msg, mode='default'):

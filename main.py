@@ -18,6 +18,7 @@ from src.commands.get_help import send_help_message
 from src.commands.me_message import send_me_message
 from src.commands.random_number import get_random_number
 from src.commands.random_word import get_random_word
+from src.commands.russian_roulette import start_roulette
 from src.commands.system_info import get_system_info
 from src.commands.user_checker import who_is_user
 
@@ -86,6 +87,8 @@ async def on_message(message):
         await get_random_number(message, args)
     elif command == 'макар':
         await send_ded_makar_message(message, args)
+    elif command == 'рулетка':
+        await start_roulette(message, args)
     elif command == '!система' and message.author.id in ADMINS:
         await get_system_info(message)
     else:

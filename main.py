@@ -9,7 +9,7 @@ fit your needs
 """
 
 
-from discord import Client, Status, Game, Intents
+import discord as Discord
 from src.libs.database_handler import clear_data_on_execution
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import add_data_to_database
@@ -22,14 +22,14 @@ from src.commands.system_info import get_system_info
 from src.commands.user_checker import who_is_user
 
 
-TOKENS = get_data_from_database('tokens', 'bot_token')
-SELECTED_BOT = get_data_from_database('variables', 'current_selected_bot')[0]
-ADMINS = get_data_from_database('admin_list', 'admins_id')
-BLOCKED = get_data_from_database('block_list', 'blocked_id')
+TOKENS = get_data_from_database(1, 'tokens', 'bot_token')
+SELECTED_BOT = get_data_from_database(0, 'variables', 'current_selected_bot')[0]
+ADMINS = get_data_from_database(0, 'admin_list', 'admins_id')
+BLOCKED = get_data_from_database(0, 'block_list', 'blocked_id')
 ACTIVITY_NAME = 'Helltaker'
-intents = Intents.default()
+intents = Discord.Intents.default()
 intents.members = True
-client = Client(intents=intents)
+client = Discord.Client(intents=intents)
 
 
 @client.event
@@ -39,11 +39,11 @@ async def on_ready():
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
             if member.bot:
-                add_data_to_database('bots', 'bots_id', member.id)
+                add_data_to_database(0, 'bots', 'bots_id', member.id)
             else:
-                add_data_to_database('users', 'users_id', member.id)
-    await client.change_presence(status=Status.dnd,
-                                 activity=Game(name=ACTIVITY_NAME))
+                add_data_to_database(0, 'users', 'users_id', member.id)
+    await client.change_presence(status=Discord.Status.dnd,
+                                 activity=Discord.Game(name=ACTIVITY_NAME))
     print(f'Successfully logged in as {client.user}!')
 
 
@@ -55,9 +55,9 @@ async def on_member_join(member):
         member (discord.member.Member): Information about the user who joined the server
     """
     if member.bot:
-        add_data_to_database('members', 'bots_id', member.id)
+        add_data_to_database(0, 'bots', 'bots_id', member.id)
     else:
-        add_data_to_database('members', 'users_id', member.id)
+        add_data_to_database(0, 'users', 'users_id', member.id)
 
 
 @client.event

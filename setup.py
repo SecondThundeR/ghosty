@@ -1,4 +1,4 @@
-"""Initial Setup of secondthunder-py-bot.
+"""Setup of secondthunder-py-bot.
 
 This script performs the first initial and further
 configuration of the bot through the console.
@@ -9,7 +9,6 @@ Because of it, all functions here are private only
 """
 
 
-from sys import exit as exit_from_setup
 from src.libs.database_handler import is_data_in_database
 from src.libs.database_handler import add_data_to_database
 from src.libs.database_handler import get_data_from_database
@@ -79,6 +78,9 @@ def _get_user_input():
             if user_input.find("\'") != -1:
                 formatted_input = user_input.replace("\'", "''")
                 user_input = formatted_input
+            elif user_input.find("'") != -1:
+                formatted_input = user_input.replace("'", "''")
+                user_input = formatted_input
             return user_input
         if user_input.upper() == "CANCEL" and SETUP_STATUS == 1:
             print(
@@ -120,9 +122,9 @@ def _clear_words_database():
     """
     for i, _ in enumerate(WORDS_DB_TABLES):
         remove_data_from_database(
-                2,
-                WORDS_DB_TABLES[i],
-            )
+            2,
+            WORDS_DB_TABLES[i],
+        )
 
 
 def _delete_words_files():
@@ -191,11 +193,11 @@ def _check_for_bot_in_database():
         str: Bot name if it was found in database
     """
     failed_attempts = 0
-    print('Enter the name of the bot')
+    print('Enter the name of the bot:')
     while True:
         if failed_attempts == 3:
             print(f'You have entered the bot name '
-                  f'incorrectly {failed_attempts} times')
+                  f'incorrectly {failed_attempts} times\n')
             _bot_setup()
         else:
             bot_name = _get_user_input()
@@ -207,8 +209,8 @@ def _check_for_bot_in_database():
             ):
                 print('Bot found in the database!')
                 return bot_name
-            print('I did not find this name in my database, '
-                  'please try to enter the correct name again')
+            print('\nI did not find this name in my database, '
+                  'please try to enter the correct name again\n')
             failed_attempts += 1
 
 
@@ -225,9 +227,20 @@ def _add_bot_to_database():
         print(
             f'Enter your Discord bot token '
             f'(If you don\'t know where to get it, '
-            f'go to this page - {WIKI_LINK})')
+            f'go to this page - {WIKI_LINK})'
+        )
     else:
-        print('Enter your Discord bot token')
+        if is_data_in_database(
+            1,
+            CONFIG_DB_TABLE,
+            CONFIG_DB_COLUMNS[0],
+            bot_name
+        ):
+            print('A bot with the same name is already in the database!'
+                '\nCancel adding ...\n')
+            _bot_setup()
+        else:
+            print('Enter your Discord bot token')
     bot_token = _get_user_input()
     add_data_to_database(
         1,
@@ -248,16 +261,15 @@ def _delete_bot_from_database():
     This script handles bot removal from database and that's it.
     (Did you expect to see rocket launch codes here?)
     """
-    print('Enter the name of the bot:')
     bot_name = _check_for_bot_in_database()
-    if remove_data_from_database(
+    remove_data_from_database(
         1,
         CONFIG_DB_TABLE,
         CONFIG_DB_COLUMNS[0],
         bot_name
-    ):
-        print('Bot has been deleted from database...\n')
-        _bot_setup()
+    )
+    print('Bot has been deleted from database...\n')
+    _bot_setup()
 
 
 def _manage_setup_status():
@@ -266,29 +278,27 @@ def _manage_setup_status():
     This script changes setup status to 0, when it needs to be reseted
     or set to 1, when initial setup was completed
     """
-    if SETUP_STATUS == 0 and edit_data_in_database(
-        0,
-        MAIN_DB_TABLE,
-        MAIN_DB_COLUMNS[0],
-        1
-    ):
-        print(
-            '\nThe initial setup of the bot has been completed.'
-            ' To enable bot, run `main.py` script'
-            )
+    if SETUP_STATUS == 0:
+        edit_data_in_database(
+            0,
+            MAIN_DB_TABLE,
+            MAIN_DB_COLUMNS[0],
+            1
+        )
+        print('\nThe initial setup of the bot has been completed.'
+              ' To enable bot, run `main.py` script')
     else:
-        if edit_data_in_database(
+        edit_data_in_database(
             0,
             MAIN_DB_TABLE,
             MAIN_DB_COLUMNS[0],
             0
-        ):
-            for db_num in range(1, 3):
-                for tables in TABLES_TO_RESET[db_num]:
-                    remove_data_from_database(db_num, tables)
-            print('\nThe bot\'s settings have been reset. '
-                  'Restart the script for initial setup')
-            exit_from_setup()
+        )
+        for db_num in range(1, 3):
+            for tables in TABLES_TO_RESET[db_num]:
+                remove_data_from_database(db_num, tables)
+        print('\nThe bot\'s settings have been reset. '
+              'Restart the script for initial setup')
 
 
 def _bot_settings_manager():
@@ -331,15 +341,15 @@ def _bot_name_changer(old_bot_name):
         CONFIG_DB_COLUMNS[0],
         old_bot_name
     )
-    if edit_data_in_database(
+    edit_data_in_database(
         1,
         CONFIG_DB_TABLE,
         [CONFIG_DB_COLUMNS[0], CONFIG_DB_COLUMNS[1]],
         [new_bot_name, bot_info[1]],
         True
-    ):
-        print('Great, I managed to edit bot\'s name to a new one!\n')
-        _bot_setup()
+    )
+    print('Great, I managed to edit bot\'s name to a new one!\n')
+    _bot_setup()
 
 
 def _bot_token_changer(bot_name):
@@ -350,15 +360,15 @@ def _bot_token_changer(bot_name):
     """
     print('Enter new bot\'s token:')
     new_bot_token = _get_user_input()
-    if edit_data_in_database(
+    edit_data_in_database(
         1,
         CONFIG_DB_TABLE,
         [CONFIG_DB_COLUMNS[0], CONFIG_DB_COLUMNS[1]],
         [bot_name, new_bot_token],
         True
-    ):
-        print('Great, I managed to edit bot token to a new one!\n')
-        _bot_setup()
+    )
+    print('Great, I managed to edit bot token to a new one!\n')
+    _bot_setup()
 
 
 def _current_bot_selector():
@@ -396,14 +406,12 @@ def _current_bot_selector():
                 if index_of_bot in range(len(list_of_bots)):
                     print(f'Great choice! '
                           f'Selecting {list_of_bots[index_of_bot]} as default...\n')
-                    if not edit_data_in_database(
-                        1,
+                    edit_data_in_database(
+                        0,
                         MAIN_DB_TABLE,
                         MAIN_DB_COLUMNS[1],
                         index_of_bot
-                    ):
-                        print('Something strange happened! '
-                              'Canceling bot selection...\n')
+                    )
                     _bot_setup()
                 else:
                     print('Invalid number of option. Please, try again')
@@ -454,14 +462,13 @@ def _bot_setup():
         _manage_setup_status()
     elif menu_input == '0':
         print('Hope you come back soon! See you later')
-        exit_from_setup()
     else:
         print('You have chosen something wrong, please try again\n')
         _bot_setup()
 
 
 def _bot_setup_init():
-    """Select correct bot setup.
+    """Select bot setup depending on status.
 
     This script checks the current setting status
     and selects the required function to run

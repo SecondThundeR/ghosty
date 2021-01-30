@@ -8,6 +8,7 @@ This file can also be imported as a module and contains the following functions:
 from platform import system, release, version, processor, machine
 import asyncio
 
+
 DELAY_TIME = 5
 
 

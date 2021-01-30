@@ -9,7 +9,8 @@ This file can also be imported as a module and contains the following functions:
 
 
 from emoji import UNICODE_EMOJI
-from src.libs.user_handler import get_random_user, get_members_name
+from src.libs.user_handler import get_random_user
+from src.libs.user_handler import get_members_name
 
 
 def _reverse_string(word):

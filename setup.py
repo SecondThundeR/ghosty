@@ -287,6 +287,7 @@ def _manage_setup_status():
         )
         print('\nThe initial setup of the bot has been completed.'
               ' To enable bot, run `main.py` script')
+        exit()
     else:
         edit_data_in_database(
             0,
@@ -299,6 +300,7 @@ def _manage_setup_status():
                 remove_data_from_database(db_num, tables)
         print('\nThe bot\'s settings have been reset. '
               'Restart the script for initial setup')
+        exit()
 
 
 def _bot_settings_manager():
@@ -462,6 +464,7 @@ def _bot_setup():
         _manage_setup_status()
     elif menu_input == '0':
         print('Hope you come back soon! See you later')
+        exit()
     else:
         print('You have chosen something wrong, please try again\n')
         _bot_setup()

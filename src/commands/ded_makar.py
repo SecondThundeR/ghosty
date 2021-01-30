@@ -44,7 +44,6 @@ async def send_ded_makar_message(msg, args):
             return
         user = get_members_name(r_user)
     else:
-        print(args[0])
         if args[0].startswith('<@&'):
             await msg.channel.send(
                 f'{msg.author.mention}, к сожалению, я не могу обработать это'

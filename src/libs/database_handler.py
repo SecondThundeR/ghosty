@@ -14,14 +14,13 @@ This file can also be imported as a module and contains the following functions:
     * clear_data_on_execution - clears specific tables
     * is_data_in_database - returns True or False depending on the data existence
     * get_data_from_database - returns list of data from table
-    * add_data_to_database - returns True or False on the commit of data
-    * edit_data_to_database - returns True or False on the edit of data
-    * delete_data_in_database - returns True or False on the deletion of data
+    * add_data_to_database - adds data to database
+    * edit_data_to_database - edit data in database
+    * delete_data_in_database - clears tables in database
 """
 
 
-from sqlite3 import connect
-from sqlite3 import Error as db_error
+import sqlite3
 
 DATABASE_PATHS = [
     'src/databases/botDB.db',
@@ -39,7 +38,7 @@ def _connect_database(path):
     Returns:
         list: Array which includes connection and cursor objects of database
     """
-    connection = connect(path)
+    connection = sqlite3.connect(path)
     cursor = connection.cursor()
     return [connection, cursor]
 
@@ -85,7 +84,7 @@ def is_data_in_database(db_path, table, keys, data, where_statement='AND'):
     Returns:
         bool: True if data is exists in database, False otherwise
     """
-    if get_data_from_database(db_path, table, keys, data, where_statement) is None:
+    if not len(get_data_from_database(db_path, table, keys, data, where_statement)):
         return False
     return True
 
@@ -167,7 +166,7 @@ def get_data_from_database(db_path, table, keys, data=None, where_statement='AND
             else:
                 data_array.append(element[0])
         return data_array
-    except db_error as database_error:
+    except sqlite3.Error as database_error:
         raise Exception from database_error
 
 
@@ -180,9 +179,6 @@ def add_data_to_database(db_path, table, keys, data):
         keys (str or list[str]): Keys of the table
         data (str or int or list[str or int]): Data to add to the columns
 
-    Returns:
-        bool: True on successful commit to database, False otherwise
-
     Raises:
         Exception: Returns info about error
     """
@@ -194,7 +190,6 @@ def add_data_to_database(db_path, table, keys, data):
                 f"VALUES ('{data}')"
             )
             database_connection[0].commit()
-            commit_completed = True
         else:
             if len(keys) < len(data):
                 for key in keys:
@@ -204,9 +199,8 @@ def add_data_to_database(db_path, table, keys, data):
                             f"VALUES ('{item}')"
                         )
                 database_connection[0].commit()
-                commit_completed = True
             elif len(keys) > len(data):
-                commit_completed = False
+                pass
             else:
                 selected_keys = "', '".join(keys)
                 data_to_add = "', '".join(data)
@@ -216,10 +210,8 @@ def add_data_to_database(db_path, table, keys, data):
                     f"VALUES ('{data_to_add}')"
                 )
                 database_connection[0].commit()
-                commit_completed = True
         _disconnect_database(database_connection)
-        return commit_completed
-    except db_error as database_error:
+    except sqlite3.Error as database_error:
         raise Exception from database_error
 
 
@@ -233,14 +225,10 @@ def edit_data_in_database(db_path, table, keys, data, statement=False):
         data (str or int or list[str or int]): Data to edit in the columns
         statement (bool): True adds WHERE statement in SQL query, False otherwise
 
-    Returns:
-        bool: True on successful commit to database, False otherwise
-
     Raises:
         Exception: Returns info about error
     """
     temp_array = []
-    commit_completed = False
     try:
         database_connection = _connect_database(DATABASE_PATHS[db_path])
         if isinstance(keys, str) and isinstance(data, (str, int)):
@@ -249,10 +237,9 @@ def edit_data_in_database(db_path, table, keys, data, statement=False):
                 f"SET {keys} = '{data}'"
             )
             database_connection[0].commit()
-            commit_completed = True
         elif isinstance(keys, list):
             if len(keys) != len(data):
-                commit_completed = False
+                pass
             elif isinstance(data, str):
                 for i, _ in enumerate(keys):
                     temp_array.append(f"{keys[i]} = '{data}'")
@@ -262,11 +249,10 @@ def edit_data_in_database(db_path, table, keys, data, statement=False):
                     f'SET {data_to_edit}'
                 )
                 database_connection[0].commit()
-                commit_completed = True
             else:
                 if statement:
                     if len(keys) > 2 or len(data) > 2:
-                        commit_completed = False
+                        pass
                     else:
                         database_connection[1].execute(
                             f"UPDATE {table} "
@@ -274,7 +260,6 @@ def edit_data_in_database(db_path, table, keys, data, statement=False):
                             f"WHERE {keys[1]} = '{data[1]}'"
                         )
                         database_connection[0].commit()
-                        commit_completed = True
                 else:
                     for i, _ in enumerate(keys):
                         temp_array.append(f"{keys[i]} = '{data[i]}'")
@@ -284,10 +269,8 @@ def edit_data_in_database(db_path, table, keys, data, statement=False):
                         f'SET {data_to_edit}'
                     )
                     database_connection[0].commit()
-                    commit_completed = True
         _disconnect_database(database_connection)
-        return commit_completed
-    except db_error as database_error:
+    except sqlite3.Error as database_error:
         raise Exception from database_error
 
 
@@ -302,27 +285,21 @@ def remove_data_from_database(db_path, table, keys=None, data=None):
         data (str or int or list[str or int]): Data to edit in the columns.
             Defaults to None
 
-    Returns:
-        bool: True on successful commit to database, False otherwise
-
     Raises:
         Exception: Returns info about error
     """
     temp_array = []
-    commit_completed = False
     try:
         database_connection = _connect_database(DATABASE_PATHS[db_path])
         if keys is None and data is None:
             database_connection[1].execute(f'DELETE FROM {table}')
             database_connection[0].commit()
-            commit_completed = True
         elif isinstance(keys, str) and isinstance(data, str):
             database_connection[1].execute(
                 f"DELETE FROM {table} "
                 f"WHERE {keys} = '{data}'"
             )
             database_connection[0].commit()
-            commit_completed = True
         elif isinstance(keys, list):
             if isinstance(data, str):
                 for i, _ in enumerate(keys):
@@ -333,7 +310,6 @@ def remove_data_from_database(db_path, table, keys=None, data=None):
                     f"WHERE {data_to_delete}"
                 )
                 database_connection[0].commit()
-                commit_completed = True
             else:
                 for i, _ in enumerate(keys):
                     temp_array.append(f"{keys[i]} = '{data[i]}'")
@@ -343,8 +319,6 @@ def remove_data_from_database(db_path, table, keys=None, data=None):
                     f'WHERE {data_to_delete}'
                 )
                 database_connection[0].commit()
-                commit_completed = True
         _disconnect_database(database_connection)
-        return commit_completed
-    except db_error as database_error:
+    except sqlite3.Error as database_error:
         raise Exception from database_error

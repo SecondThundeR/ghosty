@@ -42,7 +42,7 @@ def _get_random_word(condition):
 
 
 async def start_roulette(msg, args):
-    """Main game logic of russian roulette.
+    """Handle game logic and start game.
 
     This function handles all russian roulette logic.
     Also, it has certain checks for any non-standard situation
@@ -63,8 +63,8 @@ async def start_roulette(msg, args):
             bullet_count = int(args[0])
         except ValueError:
             await msg.channel.send(f'{player}, похоже вы передали мне не число.'
-                                    '\nПопробуйте ещё раз, '
-                                    'но уже с правильными данными')
+                                   '\nПопробуйте ещё раз, '
+                                   'но уже с правильными данными')
 
     if bullet_count == 0:
         await msg.channel.send(f'{player}, {_get_random_word("zero")}')
@@ -72,12 +72,12 @@ async def start_roulette(msg, args):
         await msg.channel.send(f'{player}, {_get_random_word("minus")}')
     elif bullet_count == 6:
         await msg.channel.send('поздравляем! '
-                            'теперь у нас на одного суицидника меньше. '
-                            f'им был {player}!!!')
+                               'теперь у нас на одного суицидника меньше. '
+                               f'им был {player}!!!')
     elif bullet_count > 6:
         await msg.channel.send(f'{player}, если вдруг ты не знаешь, то напомню!'
-                                '\nПо правилам русской рулетки, '
-                                'можно брать только до 6 патронов')
+                               '\nПо правилам русской рулетки, '
+                               'можно брать только до 6 патронов')
     else:
         for i in range(bullet_count):
             charged_section_number = random.randint(1, 6)

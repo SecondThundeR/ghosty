@@ -14,6 +14,7 @@ from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import edit_data_in_database
 from src.libs.user_handler import get_random_user
 
+
 WORDS_ARRAY = get_data_from_database('word_base', 'words')
 DELAY_TIME = 3
 
@@ -67,24 +68,28 @@ def _check_for_spam(msg):
         bool: True if user hit message in a row limit, False otherwise
     """
     current_status = get_data_from_database(
+        0,
         'variables',
         ['spammer_ID', 'spammer_count']
     )
     if current_status[0] == msg.author.id:
         if current_status[1] >= 3:
             edit_data_in_database(
+                0,
                 'variables',
                 'spammer_count',
                 0
             )
             return True
         edit_data_in_database(
+            0,
             'variables',
             'spammer_count',
             current_status[1] + 1
         )
         return False
     edit_data_in_database(
+        0,
         'variables',
         ['spammer_ID', 'spammer_count'],
         [msg.author.id, 1]

@@ -73,23 +73,25 @@ async def on_message(message):
     if message.author == client.user or message.author.id in BLOCKED:
         return
 
-    if 'тест' in message.content or 'рандом' in message.content:
-        full_message = message.content.split(' ')
-        await who_is_user(message, full_message)
+    full_message = message.content.split(' ')
+    args = message.content.split(' ')
+    command = args.pop(0).lower()
+    if command in ('ху', 'who'):
+        await get_random_word(message, args)
+    elif command == 'йа':
+        await send_me_message(message, args)
+    elif command == 'хелп':
+        await send_help_message(message)
+    elif command == 'рандом':
+        await get_random_number(message, args)
+    elif command == 'макар':
+        await send_ded_makar_message(message, args)
+    elif command == '!система' and message.author.id in ADMINS:
+        await get_system_info(message)
     else:
-        args = message.content.split(' ')
-        command = args.pop(0).lower()
-        if command in ('ху', 'who'):
-            await get_random_word(message, args)
-        elif command == 'йа':
-            await send_me_message(message, args)
-        elif command == 'хелп':
-            await send_help_message(message)
-        elif command == 'рандом':
-            await get_random_number(message, args)
-        elif command == 'макар':
-            await send_ded_makar_message(message, args)
-        elif command == '.система' and message.author.id in ADMINS:
-            await get_system_info(message)
+        if ('тест' in full_message and full_message.index('тест') != 0 or
+            'рандом' in full_message and full_message.index('рандом') != 0):
+            await who_is_user(message, full_message)
+
 
 client.run(TOKENS[int(SELECTED_BOT)])

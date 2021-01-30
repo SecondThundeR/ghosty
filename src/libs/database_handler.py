@@ -84,7 +84,7 @@ def is_data_in_database(db_path, table, keys, data, where_statement='AND'):
     Returns:
         bool: True if data is exists in database, False otherwise
     """
-    if not len(get_data_from_database(db_path, table, keys, data, where_statement)):
+    if get_data_from_database(db_path, table, keys, data, where_statement) == []:
         return False
     return True
 

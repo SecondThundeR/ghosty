@@ -237,7 +237,7 @@ def _add_bot_to_database():
             bot_name
         ):
             print('A bot with the same name is already in the database!'
-                '\nCancel adding ...\n')
+                  '\nCancel adding ...\n')
             _bot_setup()
         else:
             print('Enter your Discord bot token')

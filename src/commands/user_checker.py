@@ -11,23 +11,21 @@ import random
 from src.libs.user_handler import get_random_user
 
 
-def _group_message_contents(message):
-    """Group message content array and return grouped list.
+def _get_who_is_user(message):
+    """Group message content array.
 
     Parameters:
         message (list): List of message contents
 
     Returns:
-        list: Grouped list of message contents
+        test_msg: Something to check with
     """
     try:
         mode_index = message.index('тест')
-        current_mode = message[mode_index]
     except ValueError:
         mode_index = message.index('рандом')
-        current_mode = message[mode_index]
     test_msg = " ".join(message[0:mode_index])
-    return [current_mode, test_msg]
+    return test_msg
 
 
 async def who_is_user(msg, full_message):
@@ -38,9 +36,10 @@ async def who_is_user(msg, full_message):
         full_message (list): List of message contents
     """
     random_percent = random.randint(0, 100)
-    user_checker_data = _group_message_contents(full_message)
+    last_item_index = len(full_message) - 1
+    test_data = _get_who_is_user(full_message)
     current_user = ''
-    if user_checker_data[0] == 'рандом':
+    if 'рандом' in full_message:
         r_user = await get_random_user(msg)
         if r_user is None:
             await msg.channel.send(
@@ -49,17 +48,19 @@ async def who_is_user(msg, full_message):
                 )
             return
         current_user = r_user.mention
-    elif user_checker_data[0] == 'тест':
+    elif 'тест' in full_message and full_message.index('тест') == last_item_index:
         current_user = msg.author.mention
+    elif 'тест' in full_message and full_message.index('тест') != last_item_index:
+        current_user = full_message[last_item_index]
     if random_percent == 0:
-        await msg.channel.send(f'{current_user} сегодня не {user_checker_data[1]} :c')
+        await msg.channel.send(f'{current_user} сегодня не {test_data} :c')
     elif random_percent == 100:
         await msg.channel.send(
             f'{current_user} кто бы мог подумать то! '
-            f'Ты {user_checker_data[1]} на {random_percent}%'
+            f'Ты {test_data} на {random_percent}%'
             )
     else:
         await msg.channel.send(
-            f'{current_user} {user_checker_data[1]} '
+            f'{current_user} {test_data} '
             f'на {random_percent}%'
             )

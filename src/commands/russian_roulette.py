@@ -27,18 +27,20 @@ def _get_random_word(condition):
     Returns:
         str: Random chosen word depending on condition
     """
+    random_word = ''
     if condition == 'win':
         win_words_list = get_data_from_database(2, 'roulette_win_words', 'words')
-        return random.choice(win_words_list)
+        random_word = random.choice(win_words_list)
     if condition == 'lose':
         lose_words_list = get_data_from_database(2, 'roulette_lose_words', 'words')
-        return random.choice(lose_words_list)
+        random_word = random.choice(lose_words_list)
     if condition == 'zero':
         zero_words_list = get_data_from_database(2, 'roulette_zero_words', 'words')
-        return random.choice(zero_words_list)
+        random_word = random.choice(zero_words_list)
     if condition == 'minus':
         minus_words_list = get_data_from_database(2, 'roulette_minus_words', 'words')
-        return random.choice(minus_words_list)
+        random_word = random.choice(minus_words_list)
+    return random_word
 
 
 async def start_roulette(msg, args):

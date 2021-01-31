@@ -13,9 +13,6 @@ import random
 from src.libs.database_handler import get_data_from_database
 
 
-users = get_data_from_database(0, 'users', 'users_id')
-
-
 async def get_random_user(msg, mode='default'):
     """Get a random user from an list and returning user's info.
 
@@ -30,9 +27,7 @@ async def get_random_user(msg, mode='default'):
             which was randomly chosen.
             None for empty array of users
     """
-    if len(users) == 0:
-        return None
-
+    users = get_data_from_database(0, 'users', 'users_id')
     if mode == 'shipping':
         first_member = await msg.guild.fetch_member(random.choice(users))
         second_member = await msg.guild.fetch_member(random.choice(users))

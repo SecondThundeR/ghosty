@@ -51,7 +51,7 @@ async def start_roulette(msg, args):
 
     Parameters:
         msg (discord.message.Message): Execute send to channel function
-        args (list): List of arguments (Custom name or mode of function)
+        args (list): List of arguments (Bullet count number)
     """
     bullet_list = []
     player = msg.author.mention

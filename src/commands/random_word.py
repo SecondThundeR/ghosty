@@ -41,7 +41,7 @@ async def get_random_word(msg, args):
     if len(WORDS_ARRAY) == 0:
         await msg.channel.send(f'{msg.author.mention}, я пока не знаю никаких слов, '
                                'однако вы можете добавить новые слова в мой словарь',
-                                delete_after=DELAY_TIME)
+                               delete_after=DELAY_TIME)
         await asyncio.sleep(DELAY_TIME)
         await msg.delete()
     elif _check_for_spam(msg):

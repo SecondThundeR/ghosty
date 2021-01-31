@@ -21,7 +21,7 @@ async def get_uptime_message(msg):
     curr_uptime = int(time.time()) - get_data_from_database(
         0, 'variables', 'bot_uptime'
     )[0]
-    time_string = str(timedelta(seconds = curr_uptime))
+    time_string = str(timedelta(seconds=curr_uptime))
     if curr_uptime < 36000:
         await msg.channel.send(f'Я не сплю уже на протяжении **0{time_string}**')
     else:

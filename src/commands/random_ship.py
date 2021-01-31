@@ -38,9 +38,9 @@ async def ship_func_chooser(msg, args):
                 await _reset_ship(msg)
             else:
                 await msg.channel.send(f'{msg.author.mention}, '
-                                    'я не могу шипперить одного человека. '
-                                    'Добавьте ещё кого-то, чтобы я смог '
-                                    'сделать "магию"')
+                                       'я не могу шипперить одного человека. '
+                                       'Добавьте ещё кого-то, чтобы я смог '
+                                       'сделать "магию"')
         elif len(args) == 2:
             await _custom_ship(msg, args)
         else:
@@ -120,7 +120,7 @@ async def _custom_ship(msg, args):
         await asyncio.sleep(DELETE_TIME)
         await msg.delete()
     elif (args[0] == '@everyone' or args[0] == '@here' or
-          args[1] == '@everyone' or args[1] == '@here'):
+            args[1] == '@everyone' or args[1] == '@here'):
         await msg.channel.send(f'{msg.author.mention}, '
                                'похоже вы пытаетесь всунуть сюда '
                                '`@here` или `@everyone`, зачем?',
@@ -149,7 +149,7 @@ async def _random_ship(msg):
     new_date = (datetime.now() + timedelta(days=1)).date()
     ship_date = get_data_from_database(0, 'variables', 'ship_date')[0]
     if (get_data_from_database(0, 'variables', 'ship_activated')[0] == 0 and
-        get_data_from_database(0, 'variables', 'ship_in_active')[0] == 0):
+            get_data_from_database(0, 'variables', 'ship_in_active')[0] == 0):
         edit_data_in_database(
             0,
             'variables',
@@ -161,7 +161,8 @@ async def _random_ship(msg):
         first_user_length = int(len(first_username) / 2)
         second_username = get_members_name(users_info[1])
         second_user_length = int(len(second_username) / 2)
-        final_username = first_username[:first_user_length] + second_username[:second_user_length]
+        final_username = first_username[:first_user_length] + \
+                         second_username[:second_user_length]
         ship_text_short = f'{users_info[0].mention} + {users_info[1].mention}'
         ship_text_full = f'{first_username} + {second_username}, #' + final_username
         await _random_ship_messages(msg, ship_text_short)
@@ -174,14 +175,17 @@ async def _random_ship(msg):
     elif get_data_from_database(0, 'variables', 'ship_in_active')[0] == 1:
         pass
     elif (get_data_from_database(0, 'variables', 'ship_activated')[0] == 1 and
-          current_date < datetime.strptime(ship_date, '%Y-%m-%d').date()):
+            current_date < datetime.strptime(ship_date, '%Y-%m-%d').date()):
         ship_text_full = get_data_from_database(0, 'variables', 'ship_text_full')[0]
         next_date = get_data_from_database(0, 'variables', 'ship_date')[0]
-        next_date_string = _get_date_string(datetime.strptime(next_date, '%Y-%m-%d').weekday())
-        await msg.channel.send(f'**Парочка дня на сегодня:** {ship_text_full} :two_hearts:'
-                               f'\n\n*Следующий шиппинг будет доступен {next_date_string}*')
+        next_date_string = _get_date_string(
+            datetime.strptime(next_date, '%Y-%m-%d').weekday()
+        )
+        await msg.channel.send(f'**Парочка дня на сегодня:** {ship_text_full} '
+                               ':two_hearts: \n\n*Следующий шиппинг будет доступен '
+                               f'{next_date_string}*')
     elif (get_data_from_database(0, 'variables', 'ship_activated')[0] == 1 and
-          current_date > datetime.strptime(ship_date, '%Y-%m-%d').date()):
+            current_date > datetime.strptime(ship_date, '%Y-%m-%d').date()):
         edit_data_in_database(0, 'variables', 'ship_activated', 0)
         await _random_ship(msg)
     else:

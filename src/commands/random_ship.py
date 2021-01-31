@@ -63,14 +63,14 @@ async def _get_user_info(msg, user):
     user_name = ''
     user_length = 0
     if user.startswith('<@!'):
-            user_id = user[3:len(user) - 1]
-            custom_member = await msg.guild.fetch_member(user_id)
-            user_name = get_members_name(custom_member)
-            user_length = int(len(user_name) / 2)
+        user_id = user[3:len(user) - 1]
+        custom_member = await msg.guild.fetch_member(user_id)
+        user_name = get_members_name(custom_member)
+        user_length = int(len(user_name) / 2)
     else:
         user_name = user
         user_length = int(len(user_name) / 2)
-    return [user_name , user_length]
+    return [user_name, user_length]
 
 
 async def _reset_ship(msg):
@@ -88,7 +88,7 @@ async def _reset_ship(msg):
         ['ship_date', 'ship_text_short ', 'ship_text_full', 'ship_activated'],
         ['', '', '', 0]
     )
-    await msg.channel.send(f'Результаты шиппинга сброшены! '
+    await msg.channel.send('Результаты шиппинга сброшены! '
                            '*(Вы разлучили, возможно, великолепную парочку!)*',
                            delete_after=DELETE_TIME)
     await asyncio.sleep(DELETE_TIME)
@@ -113,30 +113,27 @@ async def _custom_ship(msg, args):
                                delete_after=DELETE_TIME)
         await asyncio.sleep(DELETE_TIME)
         await msg.delete()
-        return
     elif args[0].startswith('<:') or args[1].startswith('<:'):
         await msg.channel.send(f'{msg.author.mention}, '
                                'какой блин шип эмодзи...',
                                delete_after=DELETE_TIME)
         await asyncio.sleep(DELETE_TIME)
         await msg.delete()
-        return
-    elif args[0] == '@everyone' or args[0] == '@here' or\
-        args[1] == '@everyone' or args[1] == '@here':
+    elif (args[0] == '@everyone' or args[0] == '@here' or
+          args[1] == '@everyone' or args[1] == '@here'):
         await msg.channel.send(f'{msg.author.mention}, '
                                'похоже вы пытаетесь всунуть сюда '
                                '`@here` или `@everyone`, зачем?',
                                delete_after=DELETE_TIME)
         await asyncio.sleep(DELETE_TIME)
         await msg.delete()
-        return
     else:
         first_user_info = await _get_user_info(msg, args[0])
         second_user_info = await _get_user_info(msg, args[1])
-    first_username_part = first_user_info[0][:first_user_info[1]]
-    second_username_part = second_user_info[0][second_user_info[1]:]
-    final_name = first_username_part + second_username_part
-    await msg.channel.send(f'Данная парочка смело бы называлась - **{final_name}**')
+        first_username_part = first_user_info[0][:first_user_info[1]]
+        second_username_part = second_user_info[0][second_user_info[1]:]
+        final_name = first_username_part + second_username_part
+        await msg.channel.send(f'Данная парочка смело бы называлась - **{final_name}**')
 
 
 async def _random_ship(msg):
@@ -151,8 +148,8 @@ async def _random_ship(msg):
     current_date = datetime.now().date()
     new_date = (datetime.now() + timedelta(days=1)).date()
     ship_date = get_data_from_database(0, 'variables', 'ship_date')[0]
-    if get_data_from_database(0, 'variables', 'ship_activated')[0] == 0 and\
-        get_data_from_database(0, 'variables', 'ship_in_active')[0] == 0:
+    if (get_data_from_database(0, 'variables', 'ship_activated')[0] == 0 and
+        get_data_from_database(0, 'variables', 'ship_in_active')[0] == 0):
         edit_data_in_database(
             0,
             'variables',
@@ -176,15 +173,15 @@ async def _random_ship(msg):
         )
     elif get_data_from_database(0, 'variables', 'ship_in_active')[0] == 1:
         pass
-    elif get_data_from_database(0, 'variables', 'ship_activated')[0] == 1 and\
-        current_date < datetime.strptime(ship_date, '%Y-%m-%d').date():
+    elif (get_data_from_database(0, 'variables', 'ship_activated')[0] == 1 and
+          current_date < datetime.strptime(ship_date, '%Y-%m-%d').date()):
         ship_text_full = get_data_from_database(0, 'variables', 'ship_text_full')[0]
         next_date = get_data_from_database(0, 'variables', 'ship_date')[0]
         next_date_string = _get_date_string(datetime.strptime(next_date, '%Y-%m-%d').weekday())
         await msg.channel.send(f'**Парочка дня на сегодня:** {ship_text_full} :two_hearts:'
                                f'\n\n*Следующий шиппинг будет доступен {next_date_string}*')
-    elif get_data_from_database(0, 'variables', 'ship_activated')[0] == 1 and\
-        current_date > datetime.strptime(ship_date, '%Y-%m-%d').date():
+    elif (get_data_from_database(0, 'variables', 'ship_activated')[0] == 1 and
+          current_date > datetime.strptime(ship_date, '%Y-%m-%d').date()):
         edit_data_in_database(0, 'variables', 'ship_activated', 0)
         await _random_ship(msg)
     else:
@@ -223,17 +220,19 @@ def _get_date_string(weekday):
     Returns:
         str: Weekday as a string
     """
+    weekday_string = ''
     if weekday == 0:
-        return 'в Понедельник'
+        weekday_string = 'в Понедельник'
     elif weekday == 1:
-            return 'во Вторник'
+        weekday_string = 'во Вторник'
     elif weekday == 2:
-            return 'в Среду'
+        weekday_string = 'в Среду'
     elif weekday == 3:
-            return 'в Четверг'
+        weekday_string = 'в Четверг'
     elif weekday == 4:
-            return 'в Пятницу'
+        weekday_string = 'в Пятницу'
     elif weekday == 5:
-            return 'в Субботу'
+        weekday_string = 'в Субботу'
     elif weekday == 6:
-            return 'в Воскресенье'
+        weekday_string = 'в Воскресенье'
+    return weekday_string

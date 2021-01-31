@@ -20,7 +20,7 @@ This is repository of some random bot for Discord which was created just for fun
 
 ### Heroku use
 
-0. Install neccesary tools *(Node.js, Heroku CLI, Any IDE or Code Editor, etc.)*
+0. Install neccesary tools *(Python, Heroku CLI, Any IDE or Code Editor, etc.)*
 1. Download or clone this repository
 2. Create a Discord Bot on [Discord Developers](https://discord.com/developers/applications) page
 3. Grab a token of your bot

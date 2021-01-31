@@ -8,8 +8,12 @@ This file can also be imported as a module and contains the following functions:
 
 
 import time
+import asyncio
 from datetime import timedelta
 from src.libs.database_handler import get_data_from_database
+
+
+DELAY_TIME = 5
 
 
 async def get_uptime_message(msg):
@@ -23,6 +27,9 @@ async def get_uptime_message(msg):
     )[0]
     time_string = str(timedelta(seconds=curr_uptime))
     if curr_uptime < 36000:
-        await msg.channel.send(f'Я не сплю уже на протяжении **0{time_string}**')
+        await msg.channel.send(f'Я не сплю уже на протяжении **0{time_string}**',
+                               delete_after=DELAY_TIME)
     else:
         await msg.channel.send(f'Я не сплю уже на протяжении **{time_string}**')
+    await asyncio.sleep(DELAY_TIME)
+    await msg.delete()

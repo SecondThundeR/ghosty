@@ -67,6 +67,7 @@ async def start_roulette(msg, args):
             await msg.channel.send(f'{player}, похоже вы передали мне не число.'
                                    '\nПопробуйте ещё раз, '
                                    'но уже с правильными данными')
+            return
 
     if bullet_count == 0:
         await msg.channel.send(f'{player}, {_get_random_word("zero")}')
@@ -83,16 +84,16 @@ async def start_roulette(msg, args):
     else:
         for i in range(bullet_count):
             charged_section_number = random.randint(1, 6)
-            if charged_section_number in bullet_count:
+            if charged_section_number in bullet_list:
                 i -= 1
             else:
                 bullet_list.append(charged_section_number)
         deadly_bullet = random.randint(1, 6)
         if deadly_bullet in bullet_list:
-            await msg.channel.send('**БАХ**')
+            bot_message = await msg.channel.send('**БАХ**')
             await asyncio.sleep(DELAY_TIME)
-            await msg.edit(content=f'{player}, {_get_random_word("lose")}')
+            await bot_message.edit(content=f'{player}, {_get_random_word("lose")}')
         else:
-            await msg.channel.send('*тишина*')
+            bot_message = await msg.channel.send('*тишина*')
             await asyncio.sleep(DELAY_TIME)
-            await msg.edit(content=f'{player}, {_get_random_word("win")}')
+            await bot_message.edit(content=f'{player}, {_get_random_word("win")}')

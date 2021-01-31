@@ -97,7 +97,7 @@ async def on_message(message):
         await start_roulette(message, args)
     elif command == 'uptime':
         await get_uptime_message(message)
-    elif command == '!система' and message.author.id in ADMINS:
+    elif command == 'система':
         await get_system_info(message)
     else:
         if 'тест' in full_message and full_message.index('тест') != 0 or \

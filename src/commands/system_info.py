@@ -1,4 +1,4 @@
-"""Module for getting info about machine, where bot is running.
+"""Script for getting info about machine, where bot is running.
 
 This file can also be imported as a module and contains the following functions:
     * get_system_info - retrives system info and sends it as message

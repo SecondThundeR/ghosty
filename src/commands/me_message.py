@@ -1,4 +1,4 @@
-"""Module for sending message on behalf of bot.
+"""Script for sending message on behalf of bot.
 
 This script allows you to send messages on behalf of the bot.
 There are several flags that change the message sending behavior

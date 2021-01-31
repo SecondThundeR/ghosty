@@ -1,4 +1,4 @@
-"""Module for getting random word from list.
+"""Script for getting random word from list.
 
 This script sends randomly chosen word from list
 Also, especially for this command, checks for spam messages

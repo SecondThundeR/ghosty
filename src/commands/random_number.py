@@ -1,4 +1,4 @@
-"""Module for getting random number.
+"""Script for getting random number.
 
 This script handles getting random number in different ranges
 (From 1 to {some number} or From {some number} to {some number})

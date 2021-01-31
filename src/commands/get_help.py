@@ -1,4 +1,4 @@
-"""Module for getting help on using the bot.
+"""Script for getting help on using the bot.
 
 Provides a message with all available commands of bot
 

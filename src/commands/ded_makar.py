@@ -1,4 +1,4 @@
-"""Module for sending meme sentence with reversed username.
+"""Script for sending meme sentence with reversed username.
 
 This script sends sentence 'Улыбок тебе дед ...' where at the end
 reverse username goes

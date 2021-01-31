@@ -1,4 +1,4 @@
-"""Module for getting random percent of who the user is.
+"""Script for getting random percent of who the user is.
 
 Also this script checks for two modes (test or random mode)
 

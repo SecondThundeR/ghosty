@@ -1,6 +1,6 @@
 """Text version of roulette game.
 
-This module handles game logic of russian roulette.
+This script handles game logic of russian roulette.
 
 This file can also be imported as a module and contains the following functions:
     * start_roulette - starts game and returning result of it

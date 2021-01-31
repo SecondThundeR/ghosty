@@ -113,50 +113,38 @@ def get_data_from_database(db_path, table, keys, data=None, where_statement='AND
         database_connection = _connect_database(DATABASE_PATHS[db_path])
         if isinstance(keys, str):
             if data is None:
-                database_connection[1].execute(
-                    f'SELECT {keys} '
-                    f'FROM {table}'
-                )
+                database_connection[1].execute(f'SELECT {keys} '
+                                               f'FROM {table}')
             elif isinstance(data, list):
                 for i, _ in enumerate(data):
                     temp_array.append(f"{keys} = '{data[i]}'")
                 data_to_find = " OR ".join(temp_array)
-                database_connection[1].execute(
-                    f"SELECT * "
-                    f"FROM {table} "
-                    f"WHERE {data_to_find}"
-                )
+                database_connection[1].execute("SELECT * "
+                                               f"FROM {table} "
+                                               f"WHERE {data_to_find}")
             else:
-                database_connection[1].execute(
-                    f"SELECT * "
-                    f"FROM {table} "
-                    f"WHERE {keys} = '{data}'"
-                )
+                database_connection[1].execute("SELECT * "
+                                               f"FROM {table} "
+                                               f"WHERE {keys} = '{data}'")
         else:
             if data is None:
                 selected_keys = ", ".join(keys)
-                database_connection[1].execute(
-                    f'SELECT {selected_keys} '
-                    f'FROM {table}'
-                )
+                database_connection[1].execute(f'SELECT {selected_keys} '
+                                               f'FROM {table}')
             elif isinstance(data, (str, int)):
                 for i, _ in enumerate(keys):
                     temp_array.append(f"{keys[i]} = '{data}'")
                 data_to_find = f" {where_statement} ".join(temp_array)
-                database_connection[1].execute(
-                    f"SELECT * "
-                    f"FROM {table} "
-                    f"WHERE {data_to_find}"
-                )
+                database_connection[1].execute("SELECT * "
+                                               f"FROM {table} "
+                                               f"WHERE {data_to_find}")
             else:
                 for i, _ in enumerate(keys):
                     temp_array.append(f"{keys[i]} = '{data[i]}'")
                 data_to_get = f" {where_statement} ".join(temp_array)
-                database_connection[1].execute(
-                    f"SELECT * "
-                    f"FROM {table} "
-                    f"WHERE {data_to_get}"
-                )
+                database_connection[1].execute("SELECT * "
+                                               f"FROM {table} "
+                                               f"WHERE {data_to_get}")
         received_data = database_connection[1].fetchall()
         _disconnect_database(database_connection)
         for element in received_data:
@@ -185,30 +173,25 @@ def add_data_to_database(db_path, table, keys, data):
     try:
         database_connection = _connect_database(DATABASE_PATHS[db_path])
         if isinstance(keys, str):
-            database_connection[1].execute(
-                f"INSERT INTO {table} "
-                f"VALUES ('{data}')"
-            )
+            database_connection[1].execute(f"INSERT INTO {table} "
+                                           f"VALUES ('{data}')")
             database_connection[0].commit()
         else:
             if len(keys) < len(data):
                 for key in keys:
                     for item in data:
-                        database_connection[1].execute(
-                            f"INSERT INTO {table} ('{key}') "
-                            f"VALUES ('{item}')"
-                        )
+                        database_connection[1].execute(f"INSERT INTO {table} "
+                                                       f"('{key}') "
+                                                       f"VALUES ('{item}')")
                 database_connection[0].commit()
             elif len(keys) > len(data):
                 pass
             else:
                 selected_keys = "', '".join(keys)
                 data_to_add = "', '".join(data)
-                database_connection[1].execute(
-                    f"INSERT INTO "
-                    f"{table} ('{selected_keys}') "
-                    f"VALUES ('{data_to_add}')"
-                )
+                database_connection[1].execute("INSERT INTO "
+                                               f"{table} ('{selected_keys}') "
+                                               f"VALUES ('{data_to_add}')")
                 database_connection[0].commit()
         _disconnect_database(database_connection)
     except sqlite3.Error as database_error:
@@ -232,10 +215,8 @@ def edit_data_in_database(db_path, table, keys, data, statement=False):
     try:
         database_connection = _connect_database(DATABASE_PATHS[db_path])
         if isinstance(keys, str) and isinstance(data, (str, int)):
-            database_connection[1].execute(
-                f"UPDATE {table} "
-                f"SET {keys} = '{data}'"
-            )
+            database_connection[1].execute(f"UPDATE {table} "
+                                           f"SET {keys} = '{data}'")
             database_connection[0].commit()
         elif isinstance(keys, list):
             if len(keys) != len(data):
@@ -244,30 +225,24 @@ def edit_data_in_database(db_path, table, keys, data, statement=False):
                 for i, _ in enumerate(keys):
                     temp_array.append(f"{keys[i]} = '{data}'")
                 data_to_edit = ",\n ".join(temp_array)
-                database_connection[1].execute(
-                    f'UPDATE {table} '
-                    f'SET {data_to_edit}'
-                )
+                database_connection[1].execute(f'UPDATE {table} '
+                                               f'SET {data_to_edit}')
                 database_connection[0].commit()
             else:
                 if statement:
                     if len(keys) > 2 or len(data) > 2:
                         pass
                     else:
-                        database_connection[1].execute(
-                            f"UPDATE {table} "
-                            f"SET {keys[0]} = '{data[0]}' "
-                            f"WHERE {keys[1]} = '{data[1]}'"
-                        )
+                        database_connection[1].execute(f"UPDATE {table} "
+                                                       f"SET {keys[0]} = '{data[0]}' "
+                                                       f"WHERE {keys[1]} = '{data[1]}'")
                         database_connection[0].commit()
                 else:
                     for i, _ in enumerate(keys):
                         temp_array.append(f"{keys[i]} = '{data[i]}'")
                     data_to_edit = ",\n ".join(temp_array)
-                    database_connection[1].execute(
-                        f'UPDATE {table} '
-                        f'SET {data_to_edit}'
-                    )
+                    database_connection[1].execute(f'UPDATE {table} '
+                                                   f'SET {data_to_edit}')
                     database_connection[0].commit()
         _disconnect_database(database_connection)
     except sqlite3.Error as database_error:
@@ -295,29 +270,23 @@ def remove_data_from_database(db_path, table, keys=None, data=None):
             database_connection[1].execute(f'DELETE FROM {table}')
             database_connection[0].commit()
         elif isinstance(keys, str) and isinstance(data, str):
-            database_connection[1].execute(
-                f"DELETE FROM {table} "
-                f"WHERE {keys} = '{data}'"
-            )
+            database_connection[1].execute(f"DELETE FROM {table} "
+                                           f"WHERE {keys} = '{data}'")
             database_connection[0].commit()
         elif isinstance(keys, list):
             if isinstance(data, str):
                 for i, _ in enumerate(keys):
                     temp_array.append(f"{keys[i]} = '{data}'")
                 data_to_delete = " AND ".join(temp_array)
-                database_connection[1].execute(
-                    f"DELETE FROM {table} "
-                    f"WHERE {data_to_delete}"
-                )
+                database_connection[1].execute(f"DELETE FROM {table} "
+                                               f"WHERE {data_to_delete}")
                 database_connection[0].commit()
             else:
                 for i, _ in enumerate(keys):
                     temp_array.append(f"{keys[i]} = '{data[i]}'")
                 data_to_delete = " AND ".join(temp_array)
-                database_connection[1].execute(
-                    f'DELETE FROM {table} '
-                    f'WHERE {data_to_delete}'
-                )
+                database_connection[1].execute(f'DELETE FROM {table} '
+                                               f'WHERE {data_to_delete}')
                 database_connection[0].commit()
         _disconnect_database(database_connection)
     except sqlite3.Error as database_error:

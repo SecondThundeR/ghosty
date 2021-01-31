@@ -18,11 +18,10 @@ async def get_system_info(msg):
     Parameters:
         msg (discord.message.Message): Execute send to channel function
     """
-    await msg.channel.send(
-        f'Я работаю на '
-        f'**{system()} {release()}** *({version()})*, '
-        f'у которого процессор *({processor()})* '
-        f'имеет архитектуру - **{machine()}**', delete_after=DELAY_TIME
-    )
+    await msg.channel.send('Я работаю на '
+                           f'**{system()} {release()}** *({version()})*, '
+                           f'у которого процессор *({processor()})* '
+                           f'имеет архитектуру - **{machine()}**',
+                           delete_after=DELAY_TIME)
     await asyncio.sleep(DELAY_TIME)
     await msg.delete()

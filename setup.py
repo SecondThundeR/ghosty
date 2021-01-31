@@ -84,10 +84,8 @@ def _get_user_input():
                 user_input = formatted_input
             return user_input
         if user_input.upper() == "CANCEL" and SETUP_STATUS == 1:
-            print(
-                'Cancelling input. '
-                'Exiting to main menu\n'
-                )
+            print('Cancelling input. '
+                  'Exiting to main menu\n')
             _bot_setup()
         print('It looks like you haven\'t entered anything, '
               'please try again')
@@ -154,12 +152,10 @@ def _manage_dev_base():
               ' or will use it from scratch? (Y/N): ')
         setup_input = _get_user_input()
     else:
-        print(
-            '\nWhat do you want to do with your word base:'
-            '\n1. Import developer\'s word base'
-            '\n2. Clear existing word base'
-            '\n0. Exit'
-        )
+        print('\nWhat do you want to do with your word base:'
+              '\n1. Import developer\'s word base'
+              '\n2. Clear existing word base'
+              '\n0. Exit')
         menu_input = _get_user_input()
     if menu_input == '1' or setup_input.lower() == 'y':
         print('\nClearing database and importing '
@@ -197,7 +193,7 @@ def _check_for_bot_in_database():
     print('Enter the name of the bot:')
     while True:
         if failed_attempts == 3:
-            print(f'You have entered the bot name '
+            print('You have entered the bot name '
                   f'incorrectly {failed_attempts} times\n')
             _bot_setup()
         else:
@@ -225,11 +221,9 @@ def _add_bot_to_database():
     print('\nEnter name of you Discord bot: ')
     bot_name = _get_user_input()
     if SETUP_STATUS == 0:
-        print(
-            f'Enter your Discord bot token '
-            f'(If you don\'t know where to get it, '
-            f'go to this page - {WIKI_LINK})'
-        )
+        print('Enter your Discord bot token '
+              '(If you don\'t know where to get it, '
+              f'go to this page - {WIKI_LINK})')
     else:
         if is_data_in_database(
             1,
@@ -286,8 +280,8 @@ def _manage_setup_status():
             MAIN_DB_COLUMNS[0],
             1
         )
-        print('\nThe initial setup of the bot has been completed.'
-              ' To enable bot, run `main.py` script')
+        print('\nThe initial setup of the bot has been completed. '
+              'To enable bot, run `main.py` script')
         sys.exit()
     else:
         edit_data_in_database(
@@ -311,12 +305,10 @@ def _bot_settings_manager():
     of the bot in the database, as well as its token
     """
     bot_name = _check_for_bot_in_database()
-    print(
-        '\nWhat do you want to change:'
-        '\n1. Name'
-        '\n2. Token'
-        '\n0. Exit'
-    )
+    print('\nWhat do you want to change:'
+          '\n1. Name'
+          '\n2. Token'
+          '\n0. Exit')
     bot_menu = _get_user_input()
     if bot_menu == '1':
         _bot_name_changer(bot_name)
@@ -389,7 +381,7 @@ def _current_bot_selector():
         MAIN_DB_TABLE,
         MAIN_DB_COLUMNS[1]
     )[0]
-    print(f'At the moment, the selected bot is '
+    print('At the moment, the selected bot is '
           f'{list_of_bots[currently_selected_bot]}')
     print('\nHere are all the bots available to choose from')
     for i, bot_name in enumerate(list_of_bots):
@@ -407,7 +399,7 @@ def _current_bot_selector():
             try:
                 index_of_bot = int(select_bot) - 1
                 if index_of_bot in range(len(list_of_bots)):
-                    print(f'Great choice! '
+                    print('Great choice! '
                           f'Selecting {list_of_bots[index_of_bot]} as default...\n')
                     edit_data_in_database(
                         0,
@@ -440,16 +432,14 @@ def _bot_setup():
     This script allows you to select 6 functions
     for configuring the bot and the database
     """
-    print(
-        'What do you want to do?'
-        '\n1. Change bot\'s settings'
-        '\n2. Add new bot in database'
-        '\n3. Remove bot from database'
-        '\n4. Choose a bot to run'
-        '\n5. Edit words database'
-        '\n6. Reset bot settings'
-        '\n0. Exit'
-    )
+    print('What do you want to do?'
+          '\n1. Change bot\'s settings'
+          '\n2. Add new bot in database'
+          '\n3. Remove bot from database'
+          '\n4. Choose a bot to run'
+          '\n5. Edit words database'
+          '\n6. Reset bot settings'
+          '\n0. Exit')
     menu_input = _get_user_input()
     if menu_input == '1':
         _bot_settings_manager()

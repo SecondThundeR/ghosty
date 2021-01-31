@@ -8,7 +8,6 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-from emoji import UNICODE_EMOJI
 from src.libs.user_handler import get_random_user
 from src.libs.user_handler import get_members_name
 
@@ -37,28 +36,24 @@ async def send_ded_makar_message(msg, args):
     if len(args) == 0:
         r_user = await get_random_user(msg)
         if r_user is None:
-            await msg.channel.send(
-                f'{msg.author.mention}, похоже я не получил список пользователей и '
-                f'поэтому мне не кого упоминать'
-            )
+            await msg.channel.send(f'{msg.author.mention}, '
+                                   'похоже я не получил список пользователей и '
+                                   'поэтому мне не кого упоминать')
             return
         user = get_members_name(r_user)
     else:
         if args[0].startswith('<@&'):
-            await msg.channel.send(
-                f'{msg.author.mention}, к сожалению, я не могу обработать это'
-            )
+            await msg.channel.send(f'{msg.author.mention}, к сожалению, '
+                                   'я не могу обработать это')
             return
-        if args[0].startswith('<:') or args[0] in UNICODE_EMOJI:
-            await msg.channel.send(
-                f'{msg.author.mention}, какой блин переворот эмодзи...'
-            )
+        if args[0].startswith('<:'):
+            await msg.channel.send(f'{msg.author.mention}, '
+                                   'какой блин переворот эмодзи...')
             return
         if args[0] == '@everyone' or args[0] == '@here':
-            await msg.channel.send(
-                f'{msg.author.mention}, похоже вы пытаетесь всунуть сюда '
-                f'`@here` или `@everyone`, зачем?'
-            )
+            await msg.channel.send(f'{msg.author.mention}, '
+                                   'похоже вы пытаетесь всунуть сюда '
+                                   '`@here` или `@everyone`, зачем?')
             return
         if args[0].startswith('<@!'):
             user_id = args[0][3:len(args[0]) - 1]

@@ -31,27 +31,22 @@ async def get_random_word(msg, args):
     elif args[0] == 'рандом':
         r_user = await get_random_user(msg)
         if r_user is None:
-            await msg.channel.send(
-                f'{msg.author.mention}, похоже cписок пользователей пуст и '
-                f'поэтому мне не кого упоминать'
-            )
+            await msg.channel.send(f'{msg.author.mention}, '
+                                   'похоже cписок пользователей пуст '
+                                   'и поэтому мне не кого упоминать')
             return
         current_user = r_user.mention
     else:
         current_user = args[0]
     if len(WORDS_ARRAY) == 0:
-        await msg.channel.send(
-            f'{msg.author.mention}, я пока не знаю никаких слов, '
-            f'однако вы можете добавить новые слова в мой словарь',
-            delete_after=DELAY_TIME
-        )
+        await msg.channel.send(f'{msg.author.mention}, я пока не знаю никаких слов, '
+                               'однако вы можете добавить новые слова в мой словарь',
+                                delete_after=DELAY_TIME)
         await asyncio.sleep(DELAY_TIME)
         await msg.delete()
     elif _check_for_spam(msg):
-        await msg.channel.send(
-            f'{msg.author.mention} куда спамиш?',
-            delete_after=DELAY_TIME
-        )
+        await msg.channel.send(f'{msg.author.mention} куда спамиш?',
+                               delete_after=DELAY_TIME)
         await asyncio.sleep(DELAY_TIME)
         await msg.delete()
     else:

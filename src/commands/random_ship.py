@@ -36,6 +36,8 @@ async def ship_func_chooser(msg, args):
         if len(args) == 1:
             if args[0] == 'скип':
                 await _reset_ship(msg)
+            elif args[0] == 'фаст':
+                await _random_ship(msg, 'fast')
             else:
                 await msg.channel.send(f'{msg.author.mention}, '
                                        'я не могу шипперить одного человека. '
@@ -136,7 +138,7 @@ async def _custom_ship(msg, args):
         await msg.channel.send(f'Данная парочка смело бы называлась - **{final_name}**')
 
 
-async def _random_ship(msg):
+async def _random_ship(msg, mode='default'):
     """Ship with two randomly chosen names.
 
     This function runs ship with random users,
@@ -166,7 +168,11 @@ async def _random_ship(msg):
         final_username = first_sliced_username + second_sliced_username
         ship_text_short = f'{users_info[0].mention} + {users_info[1].mention}'
         ship_text_full = f'{first_username} + {second_username}, #' + final_username
-        await _random_ship_messages(msg, ship_text_short)
+        if mode == 'fast':
+            await msg.channel.send(f'**Парочка дня на сегодня:** {ship_text_full} '
+                                   ':two_hearts:')
+        else:
+            await _random_ship_messages(msg, ship_text_short)
         edit_data_in_database(
             0,
             'variables',
@@ -211,7 +217,8 @@ async def _random_ship_messages(msg, short_text):
     await asyncio.sleep(DELAY_TIME)
     await msg.channel.send('**МОРЕ ВОЛНУЕТСЯ ТРИ**')
     await asyncio.sleep(DELAY_TIME)
-    await msg.channel.send('**В ЛЮБОВНОЙ ПОЗЕ ЗАСТРЯЛИ **' + short_text)
+    await msg.channel.send(f'**В ЛЮБОВНОЙ ПОЗЕ ЗАСТРЯЛИ ** {short_text} '
+                           ':two_hearts:')
 
 
 def _get_date_string(weekday):

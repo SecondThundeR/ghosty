@@ -34,7 +34,11 @@ async def get_random_user(msg, mode='default'):
         return None
 
     if mode == 'shipping':
-        return 'Not implemented'
+        first_member = await msg.guild.fetch_member(random.choice(users))
+        second_member = await msg.guild.fetch_member(random.choice(users))
+        while second_member == first_member:
+            second_member= await msg.guild.fetch_member(random.choice(users))
+        return [first_member, second_member]
     member = await msg.guild.fetch_member(random.choice(users))
     return member
 

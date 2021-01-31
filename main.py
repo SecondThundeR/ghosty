@@ -17,6 +17,7 @@ from src.commands.ded_makar import send_ded_makar_message
 from src.commands.get_help import send_help_message
 from src.commands.me_message import send_me_message
 from src.commands.random_number import get_random_number
+from src.commands.random_ship import ship_func_chooser
 from src.commands.random_word import get_random_word
 from src.commands.russian_roulette import start_roulette
 from src.commands.system_info import get_system_info
@@ -81,6 +82,8 @@ async def on_message(message):
         await get_random_word(message, args)
     elif command == 'йа':
         await send_me_message(message, args)
+    elif command == 'шип':
+        await ship_func_chooser(message, args)
     elif command == 'хелп':
         await send_help_message(message)
     elif command == 'рандом':

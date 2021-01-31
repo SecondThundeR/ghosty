@@ -9,12 +9,14 @@ fit your needs
 """
 
 
+import time
 import discord as Discord
-from src.libs.database_handler import clear_data_on_execution
+from src.libs.database_handler import clear_data_on_execution, edit_data_in_database
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import add_data_to_database
 from src.commands.ded_makar import send_ded_makar_message
 from src.commands.get_help import send_help_message
+from src.commands.get_uptime import get_uptime_message
 from src.commands.me_message import send_me_message
 from src.commands.random_number import get_random_number
 from src.commands.random_ship import ship_func_chooser
@@ -47,6 +49,7 @@ async def on_ready():
     await client.change_presence(status=Discord.Status.dnd,
                                  activity=Discord.Game(name=ACTIVITY_NAME))
     print(f'Successfully logged in as {client.user}!')
+    edit_data_in_database(0, 'variables', 'bot_uptime', int(time.time()))
 
 
 @client.event
@@ -92,6 +95,8 @@ async def on_message(message):
         await send_ded_makar_message(message, args)
     elif command == 'рулетка':
         await start_roulette(message, args)
+    elif command == 'uptime':
+        await get_uptime_message(message)
     elif command == '!система' and message.author.id in ADMINS:
         await get_system_info(message)
     else:

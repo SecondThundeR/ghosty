@@ -30,6 +30,7 @@ async def get_uptime_message(msg):
         await msg.channel.send(f'Я не сплю уже на протяжении **0{time_string}**',
                                delete_after=DELAY_TIME)
     else:
-        await msg.channel.send(f'Я не сплю уже на протяжении **{time_string}**')
+        await msg.channel.send(f'Я не сплю уже на протяжении **{time_string}**',
+                               delete_after=DELAY_TIME)
     await asyncio.sleep(DELAY_TIME)
     await msg.delete()

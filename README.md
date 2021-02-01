@@ -7,8 +7,6 @@ This is repository of some random bot for Discord which was created just for fun
 
 ## How to use this bot
 
-### Local use
-
 0. Install neccesary tools *(Python, Any IDE or Code Editor, etc.)*
 1. Download or clone this repository
 2. Create a Discord Bot on [Discord Developers](https://discord.com/developers/applications) page
@@ -16,17 +14,6 @@ This is repository of some random bot for Discord which was created just for fun
 4. Run `python setup.py` in main directory and setup your bot
 5. Run `pip install -r requirements.txt` in main directory
 6. Run `python main.py` to run bot
-7. After getting a log that bot was logged in, you are good to go
-
-### Heroku use
-
-0. Install neccesary tools *(Python, Heroku CLI, Any IDE or Code Editor, etc.)*
-1. Download or clone this repository
-2. Create a Discord Bot on [Discord Developers](https://discord.com/developers/applications) page
-3. Grab a token of your bot
-4. Run `python setup.py` in main directory and setup your bot
-5. Create a dyno for your bot on [Heroku](https://dashboard.heroku.com/)
-6. Pull bot to Heroku and wait for build
 7. After getting a log that bot was logged in, you are good to go
 
 ## Discussions

@@ -63,9 +63,9 @@ WORDS_PATHS = [
     ]
 
 LINKS = [
-    'https://raw.githubusercontent.com/SecondThundeR/' \
+    'https://raw.githubusercontent.com/SecondThundeR/'
     'secondthunder-js-bot/dev-2.0.0/',
-    'https://github.com/SecondThundeR/secondthunder-js-bot/' \
+    'https://github.com/SecondThundeR/secondthunder-js-bot/'
     'wiki/FAQ#getting-a-bot-token'
     ]
 

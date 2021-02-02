@@ -1,6 +1,6 @@
 """Setup of secondthunder-py-bot.
 
-This script performs the first initial and further
+This setup performs the first initial and further
 configuration of the bot through the console.
 
 **Noteworthy:** This script cannot be imported as a module,
@@ -23,8 +23,10 @@ from src.libs.words_base_handler import restore_word_base
 
 MAIN_DB_TABLE = 'variables'
 MAIN_DB_COLUMNS = ['is_setup_completed', 'current_selected_bot']
+
 CONFIG_DB_TABLE = 'tokens'
 CONFIG_DB_COLUMNS = ['bot_name', 'bot_token']
+
 WORDS_DB_TABLES = [
     'main_words_base',
     'roulette_lose_words',
@@ -33,6 +35,7 @@ WORDS_DB_TABLES = [
     'roulette_zero_words'
     ]
 WORDS_DB_COLUMN = 'words'
+
 TABLES_TO_RESET = {
     1: [CONFIG_DB_TABLE],
     2: [
@@ -43,12 +46,15 @@ TABLES_TO_RESET = {
         WORDS_DB_TABLES[4]
         ]
     }
+
 SETUP_STATUS = get_data_from_database(
     0,
     MAIN_DB_TABLE,
     MAIN_DB_COLUMNS[0]
     )[0]
+
 FOLDERS_PATH = ['src/words_base', 'src/words_base/roulette_words']
+
 WORDS_PATHS = [
     'src/words_base/words.txt',
     'src/words_base/roulette_words/roulette_lose.txt',
@@ -56,19 +62,23 @@ WORDS_PATHS = [
     'src/words_base/roulette_words/roulette_win.txt',
     'src/words_base/roulette_words/roulette_zero.txt'
     ]
-ROULETTE_FOLDER_PATH = 'src/words_base/roulette_words'
-GH_WORD_LINK = 'https://raw.githubusercontent.com/SecondThundeR/' \
-               'secondthunder-js-bot/dev-2.0.0/'
-WIKI_LINK = 'https://github.com/SecondThundeR/secondthunder-js-bot/' \
-            'wiki/FAQ#getting-a-bot-token'
-ERROR_MESSAGE = 'Something went wrong. Try again or open an issue on Github'
+
+LINKS = [
+    'https://raw.githubusercontent.com/SecondThundeR/' \
+    'secondthunder-js-bot/dev-2.0.0/',
+    'https://github.com/SecondThundeR/secondthunder-js-bot/' \
+    'wiki/FAQ#getting-a-bot-token'
+    ]
 
 
-def _get_user_input():
-    """Get user's input and return it.
+def _get_input():
+    """Process input and return it.
 
-    If the user wants to exit the input mode, he needs to enter "Cancel".
+    **Noteworthy:** If the user wants to exit the input mode, he can enter "Cancel".
     This was done due to the strange behavior of KeyboardInterrupt on Windows.
+
+    Also this function replace single quote to double quotes for SQL query.
+    SQL automatically return this to single quote
 
     Returns:
         str: User's input if all conditions were met
@@ -94,10 +104,8 @@ def _get_user_input():
 def _restore_dev_base():
     """Restore dev's words base.
 
-    This function initiates downloading and
-    importing words into the database
-
-    Also it's handles folder creation and deletion
+    This function initiates downloading and importing words into the database
+    and handles folder creation and deletion
     """
     for i, _ in enumerate(FOLDERS_PATH):
         create_local_folder(FOLDERS_PATH[i])
@@ -107,16 +115,16 @@ def _restore_dev_base():
                 WORDS_DB_TABLES[i],
                 WORDS_DB_COLUMN,
                 WORDS_PATHS[i],
-                f'{GH_WORD_LINK}{WORDS_PATHS[i]}'
+                f'{LINKS[0]}{WORDS_PATHS[i]}'
             )
     for i, _ in reversed(list(enumerate(FOLDERS_PATH))):
         delete_local_folder(FOLDERS_PATH[i])
 
 
-def _clear_words_database():
-    """Clear words tables in database.
+def _delete_words_base():
+    """Empty words tables in database.
 
-    This function initiates the cleaning
+    This function initiates the deleting all data
     of tables in the database
     """
     for i, _ in enumerate(WORDS_DB_TABLES):
@@ -126,52 +134,40 @@ def _clear_words_database():
         )
 
 
-def _delete_words_files():
-    """Delete file and folders with files.
+def _manage_words_base():
+    """Manage words base.
 
-    This function initiates the deletion
-    of a file and folder with files
-    """
-    for i, _ in reversed(list(enumerate(WORDS_DB_TABLES))):
-        delete_local_file(WORDS_PATHS[i])
-    for i, _ in reversed(list(enumerate(FOLDERS_PATH))):
-        delete_local_folder(FOLDERS_PATH[i])
-
-
-def _manage_dev_base():
-    """Manage dev's words base.
-
-    This script processes user input and
-    selects two scenarios: Deletion of the developer word base
-    or importing it
+    This function processes user input and selects two scenarios:
+    Deletion of the developer word base or importing it
+    and clearing words base
     """
     setup_input = ''
     menu_input = ''
     if SETUP_STATUS == 0:
         print('\nNext step. Do you want to use the developer\'s word base'
               ' or will use it from scratch? (Y/N): ')
-        setup_input = _get_user_input()
+        setup_input = _get_input()
     else:
         print('\nWhat do you want to do with your word base:'
               '\n1. Import developer\'s word base'
               '\n2. Clear existing word base'
               '\n0. Exit')
-        menu_input = _get_user_input()
+        menu_input = _get_input()
     if menu_input == '1' or setup_input.lower() == 'y':
         print('\nClearing database and importing '
               'latest developer\'s word base...')
-        _clear_words_database()
+        _delete_words_base()
         _restore_dev_base()
         print('The word base was imported successfully')
         if SETUP_STATUS == 1:
-            _manage_dev_base()
+            _manage_words_base()
     elif menu_input == '2':
-        _clear_words_database()
+        _delete_words_base()
         print('\nDatabase cleared successfully')
-        _manage_dev_base()
+        _manage_words_base()
     elif setup_input.lower() == 'n':
         print('Clearing database...')
-        _clear_words_database()
+        _delete_words_base()
     elif menu_input == '0' and SETUP_STATUS == 1:
         print('')
         _bot_setup()
@@ -180,11 +176,11 @@ def _manage_dev_base():
               'please try again')
 
 
-def _check_for_bot_in_database():
-    """Check for bot info existence in database.
+def _check_for_bot_existence():
+    """Check for bot existence in database.
 
-    **Noteworthy:** This script has failed attempts counter.
-    If it hits 3, script will redirect to main menu.
+    **Noteworthy:** This function has failed attempts counter.
+    If it hits 3, function will redirect to main menu.
 
     Returns:
         str: Bot name if it was found in database
@@ -197,7 +193,7 @@ def _check_for_bot_in_database():
                   f'incorrectly {failed_attempts} times\n')
             _bot_setup()
         else:
-            bot_name = _get_user_input()
+            bot_name = _get_input()
             if is_data_in_database(
                 1,
                 CONFIG_DB_TABLE,
@@ -211,19 +207,19 @@ def _check_for_bot_in_database():
             failed_attempts += 1
 
 
-def _add_bot_to_database():
+def _add_bot():
     """Add info about bot into the database.
 
     Current function require user to input bot's name and token to
     add this to the database. If initial setup was completed,
     also redirects to main menu of setup only
     """
-    print('\nEnter name of you Discord bot: ')
-    bot_name = _get_user_input()
+    print('\nEnter name of your Discord bot: ')
+    bot_name = _get_input()
     if SETUP_STATUS == 0:
         print('Enter your Discord bot token '
               '(If you don\'t know where to get it, '
-              f'go to this page - {WIKI_LINK})')
+              f'go to this page - {LINKS[1]})')
     else:
         if is_data_in_database(
             1,
@@ -236,7 +232,7 @@ def _add_bot_to_database():
             _bot_setup()
         else:
             print('Enter your Discord bot token')
-    bot_token = _get_user_input()
+    bot_token = _get_input()
     add_data_to_database(
         1,
         CONFIG_DB_TABLE,
@@ -250,13 +246,13 @@ def _add_bot_to_database():
         _bot_setup()
 
 
-def _delete_bot_from_database():
+def _delete_bot():
     """Delete bot from database.
 
-    This script handles bot removal from database and that's it.
+    This function handles bot removal from database and that's it.
     (Did you expect to see rocket launch codes here?)
     """
-    bot_name = _check_for_bot_in_database()
+    bot_name = _check_for_bot_existence()
     remove_data_from_database(
         1,
         CONFIG_DB_TABLE,
@@ -270,7 +266,7 @@ def _delete_bot_from_database():
 def _manage_setup_status():
     """Edit current setup status.
 
-    This script changes setup status to 0, when it needs to be reseted
+    This function changes setup status to 0, when it needs to be reseted
     or set to 1, when initial setup was completed
     """
     if SETUP_STATUS == 0:
@@ -281,7 +277,7 @@ def _manage_setup_status():
             1
         )
         print('\nThe initial setup of the bot has been completed. '
-              'To enable bot, run `main.py` script')
+              'To enable bot, run "main.py" script')
         sys.exit()
     else:
         edit_data_in_database(
@@ -301,15 +297,15 @@ def _manage_setup_status():
 def _bot_settings_manager():
     """Manage bot settings.
 
-    This script allows you to change the internal name
+    This function allows you to change the internal name
     of the bot in the database, as well as its token
     """
-    bot_name = _check_for_bot_in_database()
+    bot_name = _check_for_bot_existence()
     print('\nWhat do you want to change:'
           '\n1. Name'
           '\n2. Token'
           '\n0. Exit')
-    bot_menu = _get_user_input()
+    bot_menu = _get_input()
     if bot_menu == '1':
         _bot_name_changer(bot_name)
     elif bot_menu == '2':
@@ -329,7 +325,7 @@ def _bot_name_changer(old_bot_name):
         old_bot_name (str): Old name of bot to find in database
     """
     print('Enter new bot\'s name:')
-    new_bot_name = _get_user_input()
+    new_bot_name = _get_input()
     bot_info = get_data_from_database(
         1,
         CONFIG_DB_TABLE,
@@ -354,7 +350,7 @@ def _bot_token_changer(bot_name):
         bot_name (str): Bot's name to find in database
     """
     print('Enter new bot\'s token:')
-    new_bot_token = _get_user_input()
+    new_bot_token = _get_input()
     edit_data_in_database(
         1,
         CONFIG_DB_TABLE,
@@ -366,10 +362,10 @@ def _bot_token_changer(bot_name):
     _bot_setup()
 
 
-def _current_bot_selector():
+def _main_bot_selector():
     """Select current bot to run.
 
-    This script allows you to select the desired bot to run
+    This function allows user to select the desired bot to run
     """
     list_of_bots = get_data_from_database(
         1,
@@ -391,7 +387,7 @@ def _current_bot_selector():
     print('Enter the number of option '
           'you would like to select')
     while True:
-        select_bot = _get_user_input()
+        select_bot = _get_input()
         if select_bot == '0':
             print('Exiting to main menu\n')
             _bot_setup()
@@ -418,18 +414,18 @@ def _current_bot_selector():
 def _initial_bot_setup():
     """Bot setup, initial phase.
 
-    This script launches 3 main functions: addition of bot to database,
+    This function launches 3 main functions: addition of bot to database,
     managing of words base and changing setup status to 1 after successful completion
     """
-    _add_bot_to_database()
-    _manage_dev_base()
+    _add_bot()
+    _manage_words_base()
     _manage_setup_status()
 
 
 def _bot_setup():
     """Bot setup.
 
-    This script allows you to select 6 functions
+    This function allows user to select 6 functions
     for configuring the bot and the database
     """
     print('What do you want to do?'
@@ -440,17 +436,17 @@ def _bot_setup():
           '\n5. Edit words database'
           '\n6. Reset bot settings'
           '\n0. Exit')
-    menu_input = _get_user_input()
+    menu_input = _get_input()
     if menu_input == '1':
         _bot_settings_manager()
     elif menu_input == '2':
-        _add_bot_to_database()
+        _add_bot()
     elif menu_input == '3':
-        _delete_bot_from_database()
+        _delete_bot()
     elif menu_input == '4':
-        _current_bot_selector()
+        _main_bot_selector()
     elif menu_input == '5':
-        _manage_dev_base()
+        _manage_words_base()
     elif menu_input == '6':
         _manage_setup_status()
     elif menu_input == '0':
@@ -464,7 +460,7 @@ def _bot_setup():
 def _bot_setup_init():
     """Select bot setup depending on status.
 
-    This script checks the current setting status
+    This function checks the current setting status
     and selects the required function to run
     """
     if SETUP_STATUS == 0:

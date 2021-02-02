@@ -50,30 +50,23 @@ def create_local_folder(path):
 
     Parameters:
         path (str): Path to local folder
-
-    Returns:
-        bool: True if the folder has been created, False otherwise
     """
     try:
         os.mkdir(path)
-        return True
     except OSError:
-        return False
+        print('There is an error while creating folder. Skipping...')
 
 
 def delete_local_file(path):
     """Delete file at the specified path.
 
+    If file exists, removes it. Otherwise do nothing
+
     Parameters:
         path (str): Path to local file
-
-    Returns:
-        bool: True if the file has been deleted, False otherwise
     """
     if os.path.exists(path):
         os.remove(path)
-        return True
-    return False
 
 
 def delete_local_folder(path):
@@ -81,12 +74,8 @@ def delete_local_folder(path):
 
     Parameters:
         path (str): Path to local folder
-
-    Returns:
-        bool: True if the folder has been deleted, False otherwise
     """
     try:
         os.rmdir(path)
-        return True
     except OSError:
-        return False
+        print('There is an error while deleting folder. Skipping...')

@@ -19,8 +19,7 @@ from src.libs.files_handler import delete_local_file
 def restore_word_base(db_path, table, column, path, link):
     """Download and restore word base with link.
 
-    Function allows to download TXT file with words and import
-    it to database
+    This function allows to download .txt file and import it to database
 
     Parameters:
         db_path (int): Path of database to edit data
@@ -39,6 +38,8 @@ def restore_word_base(db_path, table, column, path, link):
 
 def _download_word_base_file(path, link):
     """Download word base by link.
+
+    This function writes downloaded data into .txt file
 
     Parameters:
         path (str): Path to local file of word base

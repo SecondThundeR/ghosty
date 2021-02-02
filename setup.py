@@ -16,7 +16,6 @@ from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import edit_data_in_database
 from src.libs.database_handler import remove_data_from_database
 from src.libs.files_handler import create_local_folder
-from src.libs.files_handler import delete_local_file
 from src.libs.files_handler import delete_local_folder
 from src.libs.words_base_handler import restore_word_base
 

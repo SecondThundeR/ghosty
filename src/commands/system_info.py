@@ -18,17 +18,22 @@ async def get_system_info(msg):
     Parameters:
         msg (discord.message.Message): Execute send to channel function
     """
-    if processor == '':
+    SYS_NAME = system()
+    SYS_RELEASE = release()
+    SYS_VERSION = version()
+    SYS_CPU = processor()
+    SYS_ARCH = machine()
+    if SYS_CPU != '':
         await msg.channel.send('Я работаю на '
-                            f'**{system()} {release()}** *({version()})*, '
-                            f'у которого процессор *({processor()})* '
-                            f'имеет архитектуру - **{machine()}**',
-                            delete_after=DELAY_TIME)
+                               f'**{SYS_NAME} {SYS_RELEASE}** *({SYS_VERSION})*, '
+                               f'у которого процессор *({SYS_CPU})* '
+                               f'имеет архитектуру - **{SYS_ARCH}**',
+                               delete_after=DELAY_TIME)
     else:
         await msg.channel.send('Я работаю на '
-                               f'**{system()} {release()}** *({version()})*, '
+                               f'**{SYS_NAME} {SYS_RELEASE}** *({SYS_VERSION})*, '
                                'у которого процессор имеет архитектуру - '
-                               f'**{machine()}**',
+                               f'**{SYS_ARCH}**',
                                delete_after=DELAY_TIME)
     await asyncio.sleep(DELAY_TIME)
     await msg.delete()

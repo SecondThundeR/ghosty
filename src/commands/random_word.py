@@ -36,7 +36,8 @@ async def get_random_word(msg, args):
         if args[0] == 'добавить':
             args.pop(0)
             word_to_add = " ".join(args)
-            await msg.channel.send(add_word(word_to_add), delete_after=DELAY_TIME)
+            await msg.channel.send(add_word(word_to_add),
+                                   delete_after=DELAY_TIME)
             await asyncio.sleep(DELAY_TIME)
             await msg.delete()
             return
@@ -45,7 +46,8 @@ async def get_random_word(msg, args):
             if msg.author.id in ADMIN_LIST:
                 args.pop(0)
                 word_to_delete = " ".join(args)
-                await msg.channel.send(delete_word(word_to_delete), delete_after=DELAY_TIME)
+                await msg.channel.send(delete_word(word_to_delete),
+                                       delete_after=DELAY_TIME)
                 await asyncio.sleep(DELAY_TIME)
                 await msg.delete()
             return

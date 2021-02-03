@@ -30,7 +30,7 @@ def add_word(word):
         str: Message about successful word addition
     """
     add_data_to_database(2, 'main_words_base', 'words', word)
-    warn_msg =  f'Хей, я успешно добавил слово "{word}" себе в базу!'
+    warn_msg = f'Хей, я успешно добавил слово "{word}" себе в базу!'
     return warn_msg
 
 
@@ -47,7 +47,7 @@ def delete_word(word):
                'Вы уверены, что вы правильно его написали?'
     if is_data_in_database(2, 'main_words_base', 'words', word):
         remove_data_from_database(2, 'main_words_base', 'words', word)
-        warn_msg =  f'Хей, я успешно удалил слово "{word}" из своей базы!'
+        warn_msg = f'Хей, я успешно удалил слово "{word}" из своей базы!'
     return warn_msg
 
 
@@ -62,7 +62,7 @@ def add_roulette_word(word, base):
         str: Message about successful word addition
     """
     add_data_to_database(2, f'roulette_{base}_words', 'words', word)
-    warn_msg =  f'Хей, я успешно добавил слово "{word}" себе в базу!'
+    warn_msg = f'Хей, я успешно добавил слово "{word}" себе в базу!'
     return warn_msg
 
 
@@ -80,7 +80,7 @@ def delete_roulette_word(word, base):
                'Вы уверены, что вы правильно его написали?'
     if is_data_in_database(2, f'roulette_{base}_words', 'words', word):
         remove_data_from_database(2, f'roulette_{base}_words', 'words', word)
-        warn_msg =  f'Хей, я успешно удалил слово "{word}" из своей базы!'
+        warn_msg = f'Хей, я успешно удалил слово "{word}" из своей базы!'
     return warn_msg
 
 

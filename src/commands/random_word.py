@@ -18,6 +18,7 @@ from src.libs.words_base_handler import delete_word
 
 
 WORDS_ARRAY = get_data_from_database(2, 'main_words_base', 'words')
+ADMIN_LIST = get_data_from_database(0, 'admin_list', 'admins_id')
 DELAY_TIME = 3
 
 
@@ -41,11 +42,12 @@ async def get_random_word(msg, args):
             return
 
         if args[0] == 'удалить':
-            args.pop(0)
-            word_to_delete = " ".join(args)
-            await msg.channel.send(delete_word(word_to_delete), delete_after=DELAY_TIME)
-            await asyncio.sleep(DELAY_TIME)
-            await msg.delete()
+            if msg.author.id in ADMIN_LIST:
+                args.pop(0)
+                word_to_delete = " ".join(args)
+                await msg.channel.send(delete_word(word_to_delete), delete_after=DELAY_TIME)
+                await asyncio.sleep(DELAY_TIME)
+                await msg.delete()
             return
 
         if args[0] == 'рандом':

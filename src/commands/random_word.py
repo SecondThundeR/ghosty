@@ -34,7 +34,7 @@ async def get_random_word(msg, args):
     else:
         if args[0] == 'добавить':
             args.pop(0)
-            word_to_add = "".join(args)
+            word_to_add = " ".join(args)
             await msg.channel.send(add_word(word_to_add), delete_after=DELAY_TIME)
             await asyncio.sleep(DELAY_TIME)
             await msg.delete()
@@ -42,7 +42,7 @@ async def get_random_word(msg, args):
 
         if args[0] == 'удалить':
             args.pop(0)
-            word_to_delete = "".join(args)
+            word_to_delete = " ".join(args)
             await msg.channel.send(delete_word(word_to_delete), delete_after=DELAY_TIME)
             await asyncio.sleep(DELAY_TIME)
             await msg.delete()

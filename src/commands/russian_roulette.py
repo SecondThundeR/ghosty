@@ -14,7 +14,11 @@ from src.libs.words_base_handler import add_roulette_word
 from src.libs.words_base_handler import delete_roulette_word
 
 
-TABLES_ALIASES = ['вин', 'луз', 'ноль', 'минус']
+TABLES_ALIASES = {
+    'вин': 'win',
+    'луз': 'lose',
+    'ноль': 'zero',
+    'минус': 'minus'}
 DELAY_TIME = 3
 
 
@@ -66,20 +70,24 @@ async def start_roulette(msg, args):
     else:
         if args[0] == 'добавить':
             if args[1] in TABLES_ALIASES:
+                TABLE_TO_MODIFY = TABLES_ALIASES[args[1]]
                 for i in range(2):
                     args.pop(0)
-                WORD_TO_ADD = "".join(args)
-                await msg.channel.send(add_roulette_word(WORD_TO_ADD),
+                WORD_TO_ADD = " ".join(args)
+                await msg.channel.send(add_roulette_word(WORD_TO_ADD, TABLE_TO_MODIFY),
                                        delete_after=DELAY_TIME)
                 await asyncio.sleep(DELAY_TIME)
                 await msg.delete()
             return
         if args[0] == 'удалить':
             if args[1] in TABLES_ALIASES:
+                TABLE_TO_MODIFY = TABLES_ALIASES[args[1]]
                 for i in range(2):
                     args.pop(0)
-                WORD_TO_DELETE = "".join(args)
-                await msg.channel.send(delete_roulette_word(WORD_TO_DELETE),
+                WORD_TO_DELETE = " ".join(args)
+                await msg.channel.send(delete_roulette_word(
+                                       WORD_TO_DELETE, TABLE_TO_MODIFY
+                                       ),
                                        delete_after=DELAY_TIME)
                 await asyncio.sleep(DELAY_TIME)
                 await msg.delete()

@@ -25,7 +25,7 @@ async def get_uptime_message(msg):
     curr_uptime = int(time.time()) - get_data_from_database(
         0, 'variables', 'bot_uptime'
     )[0]
-    time_string = str(timedelta(seconds=curr_uptime))
+    time_string = _format_timedelta(timedelta(seconds=curr_uptime))
     if curr_uptime < 36000:
         await msg.channel.send(f'Я не сплю уже на протяжении **0{time_string}**',
                                delete_after=DELAY_TIME)
@@ -34,3 +34,18 @@ async def get_uptime_message(msg):
                                delete_after=DELAY_TIME)
     await asyncio.sleep(DELAY_TIME)
     await msg.delete()
+
+
+def _format_timedelta(td):
+    """Format timedelta to hours:minutes:seconds
+
+    Parameters:
+        td (datetime.timedelta): Uptime of bot in timedelta
+
+    Returns:
+        str: Formatted string
+    """
+    print(type(td))
+    minutes, seconds = divmod(td.seconds + td.days * 86400, 60)
+    hours, minutes = divmod(minutes, 60)
+    return '{:d}:{:02d}:{:02d}'.format(hours, minutes, seconds)

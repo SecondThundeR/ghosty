@@ -82,16 +82,16 @@ async def start_roulette(msg, args):
             return
         if args[0] == 'удалить':
             if msg.author.id in ADMIN_LIST and args[1] in TABLES_ALIASES:
-                    TABLE_TO_MODIFY = TABLES_ALIASES[args[1]]
-                    for i in range(2):
-                        args.pop(0)
-                    WORD_TO_DELETE = " ".join(args)
-                    await msg.channel.send(delete_roulette_word(
-                                        WORD_TO_DELETE, TABLE_TO_MODIFY
-                                        ),
-                                        delete_after=DELAY_TIME)
-                    await asyncio.sleep(DELAY_TIME)
-                    await msg.delete()
+                TABLE_TO_MODIFY = TABLES_ALIASES[args[1]]
+                for i in range(2):
+                    args.pop(0)
+                WORD_TO_DELETE = " ".join(args)
+                await msg.channel.send(delete_roulette_word(
+                                       WORD_TO_DELETE, TABLE_TO_MODIFY
+                                       ),
+                                       delete_after=DELAY_TIME)
+                await asyncio.sleep(DELAY_TIME)
+                await msg.delete()
             return
 
         try:

@@ -13,6 +13,8 @@ import asyncio
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import edit_data_in_database
 from src.libs.user_handler import get_random_user
+from src.libs.words_base_handler import add_word
+from src.libs.words_base_handler import delete_word
 
 
 WORDS_ARRAY = get_data_from_database(2, 'main_words_base', 'words')
@@ -26,18 +28,37 @@ async def get_random_word(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List of arguments (Custom name or mode of function)
     """
+    current_user = None
     if len(args) == 0:
         current_user = msg.author.mention
-    elif args[0] == 'рандом':
-        r_user = await get_random_user(msg)
-        if r_user is None:
-            await msg.channel.send(f'{msg.author.mention}, '
-                                   'похоже cписок пользователей пуст '
-                                   'и поэтому мне не кого упоминать')
-            return
-        current_user = r_user.mention
     else:
-        current_user = args[0]
+        if args[0] == 'добавить':
+            args.pop(0)
+            word_to_add = "".join(args)
+            await msg.channel.send(add_word(word_to_add), delete_after=DELAY_TIME)
+            await asyncio.sleep(DELAY_TIME)
+            await msg.delete()
+            return
+
+        if args[0] == 'удалить':
+            args.pop(0)
+            word_to_delete = "".join(args)
+            await msg.channel.send(delete_word(word_to_delete), delete_after=DELAY_TIME)
+            await asyncio.sleep(DELAY_TIME)
+            await msg.delete()
+            return
+
+        if args[0] == 'рандом':
+            r_user = await get_random_user(msg)
+            if r_user is None:
+                await msg.channel.send(f'{msg.author.mention}, '
+                                       'похоже cписок пользователей пуст '
+                                       'и поэтому мне не кого упоминать')
+                return
+            current_user = r_user.mention
+        else:
+            current_user = args[0]
+
     if len(WORDS_ARRAY) == 0:
         await msg.channel.send(f'{msg.author.mention}, я пока не знаю никаких слов, '
                                'однако вы можете добавить новые слова в мой словарь',

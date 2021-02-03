@@ -37,7 +37,7 @@ async def get_uptime_message(msg):
 
 
 def _format_timedelta(td):
-    """Format timedelta to hours:minutes:seconds
+    """Format timedelta to hours:minutes:seconds.
 
     Parameters:
         td (datetime.timedelta): Uptime of bot in timedelta

@@ -1,15 +1,17 @@
-"""Library for obtaining information about a randomly selected user.
+"""Library for obtaining information about users.
 
-This script allows to select a random user from list of server users
+This script allows to select user from list of server users
 and get his information
 
 This file can also be imported as a module and contains the following functions:
     * get_random_user - returns info of randomly chosen user
     * get_members_name - returns nickname or name of member as a string
+    * is_user_admin - returns True, if user is admin of bot
 """
 
 
 import random
+from src.libs.database_handler import is_data_in_database
 from src.libs.database_handler import get_data_from_database
 
 
@@ -56,3 +58,18 @@ def get_members_name(member):
     if member.nick is None:
         return member.name
     return member.nick
+
+
+def is_user_admin(msg):
+    """Check if member has a nickname on server.
+
+    Parameters:
+        msg (discord.message.Message): Get ID of user's message
+
+    Returns:
+        bool: True, if user is admin of bot. False otherwise
+    """
+    return is_data_in_database(0,
+                               'admin_list',
+                               'admins_id',
+                               msg.author.id)

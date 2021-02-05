@@ -24,12 +24,7 @@ async def admin_manager(bot, msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List with operation and user's ID
     """
-    if len(args) == 2 and is_data_in_database(
-        0,
-        'admin_list',
-        'admins_id',
-        msg.author.id
-    ):
+    if len(args) == 2:
         if args[0] == 'добавить':
             await _add_admin(msg, args[1])
         elif args[0] == 'удалить':

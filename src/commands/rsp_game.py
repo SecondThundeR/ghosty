@@ -7,6 +7,7 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
+import discord
 import random
 import asyncio
 from src.libs.database_handler import edit_data_in_database
@@ -51,7 +52,9 @@ def _join_check(msg):
     Returns:
         True, if all conditions are met
     """
-    return msg.content.lower() == 'играть'
+    if (msg.content.lower() == 'играть'
+            and not isinstance(msg.channel, discord.channel.DMChannel)):
+        return True
 
 
 def _choice_check(msg):
@@ -63,7 +66,9 @@ def _choice_check(msg):
     Returns:
         True, if all conditions are met
     """
-    return msg.content.lower() in rsp_win_variants
+    if (msg.content.lower() in rsp_win_variants
+            and isinstance(msg.channel, discord.channel.DMChannel)):
+        return True
 
 
 def _rsp_game_logic(first_var, second_var, first_user_id, second_user_id):

@@ -10,7 +10,7 @@ fit your needs
 
 
 import time
-import discord as Discord
+import discord
 from src.libs.database_handler import clear_data_on_execution
 from src.libs.database_handler import is_data_in_database
 from src.libs.database_handler import edit_data_in_database
@@ -28,14 +28,15 @@ from src.commands.random_word import get_random_word
 from src.commands.russian_roulette import start_roulette
 from src.commands.system_info import get_system_info
 from src.commands.user_checker import who_is_user
+from src.commands.user_finder import user_finder_mode
 
 
 TOKENS = get_data_from_database(1, 'tokens', 'bot_token')
 SELECTED_BOT = get_data_from_database(0, 'variables', 'current_selected_bot')[0]
 ACTIVITY_NAME = 'Helltaker'
-intents = Discord.Intents.default()
+intents = discord.Intents.default()
 intents.members = True
-client = Discord.Client(intents=intents)
+client = discord.Client(intents=intents)
 
 
 @client.event
@@ -48,8 +49,8 @@ async def on_ready():
                 add_data_to_database(0, 'bots', 'bots_id', member.id)
             else:
                 add_data_to_database(0, 'users', 'users_id', member.id)
-    await client.change_presence(status=Discord.Status.dnd,
-                                 activity=Discord.Game(name=ACTIVITY_NAME))
+    await client.change_presence(status=discord.Status.dnd,
+                                 activity=discord.Game(name=ACTIVITY_NAME))
     print(f'Successfully logged in as {client.user}!')
     edit_data_in_database(0, 'variables', 'bot_uptime', int(time.time()))
 
@@ -88,18 +89,19 @@ async def on_message(message):
     args = message.content.split(' ')
     command = args.pop(0).lower()
 
-    if message.channel.id == message.author.dm_channel.id:
-        if is_data_in_database(
-            0,
-            'admin_list',
-            'admins_id',
-            message.author.id
-        ):
-            if command in 'админ':
-                await admin_manager(client, message, args)
-            if command in 'чс':
-                await ignored_manager(message, args)
-    else:
+    try:
+        if message.channel.id == message.author.dm_channel.id:
+            if is_data_in_database(
+                0,
+                'admin_list',
+                'admins_id',
+                message.author.id
+            ):
+                if command in 'админ':
+                    await admin_manager(client, message, args)
+                if command in 'чс':
+                    await ignored_manager(message, args)
+    except AttributeError:
         if command in ('ху', 'who'):
             await get_random_word(message, args)
         elif command == 'йа':
@@ -118,6 +120,8 @@ async def on_message(message):
             await get_uptime_message(message)
         elif command == 'система':
             await get_system_info(message)
+        elif command == 'поиск':
+            await user_finder_mode(message, args)
         else:
             if ('тест' in full_message and full_message.index('тест') != 0
                     or 'рандом' in full_message and full_message.index('рандом') != 0):

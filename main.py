@@ -11,7 +11,9 @@ fit your needs
 
 import time
 import discord as Discord
-from src.libs.database_handler import clear_data_on_execution, edit_data_in_database
+from src.libs.database_handler import clear_data_on_execution
+from src.libs.database_handler import is_data_in_database
+from src.libs.database_handler import edit_data_in_database
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import add_data_to_database
 from src.commands.ded_makar import send_ded_makar_message
@@ -87,10 +89,16 @@ async def on_message(message):
     command = args.pop(0).lower()
 
     if message.channel.id == message.author.dm_channel.id:
-        if command in 'админ':
-            await admin_manager(client, message, args)
-        if command in 'чс':
-            await ignored_manager(message, args)
+        if is_data_in_database(
+        0,
+        'admin_list',
+        'admins_id',
+        message.author.id
+        ):
+            if command in 'админ':
+                await admin_manager(client, message, args)
+            if command in 'чс':
+                await ignored_manager(message, args)
     else:
         if command in ('ху', 'who'):
             await get_random_word(message, args)

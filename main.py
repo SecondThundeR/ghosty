@@ -25,6 +25,7 @@ from src.commands.me_message import send_me_message
 from src.commands.random_number import get_random_number
 from src.commands.random_ship import ship_func_chooser
 from src.commands.random_word import get_random_word
+from src.commands.rsp_game import rsp_mode
 from src.commands.russian_roulette import start_roulette
 from src.commands.system_info import get_system_info
 from src.commands.user_checker import who_is_user
@@ -121,6 +122,8 @@ async def on_message(message):
             await get_system_info(message)
         elif command == 'поиск':
             await user_finder_mode(message, args)
+        elif command == 'цуефа':
+            await rsp_mode(client, message, args)
         else:
             if ('тест' in full_message and full_message.index('тест') != 0
                     or 'рандом' in full_message and full_message.index('рандом') != 0):

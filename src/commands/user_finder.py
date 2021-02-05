@@ -3,7 +3,7 @@
 This script repeats the good old meme about search *p-word*
 
 This file can also be imported as a module and contains the following functions:
-    * user_finder_mode - executes reqired finder mode depending on arguments
+    * user_finder_mode - executes required finder mode depending on arguments
 """
 
 
@@ -15,11 +15,11 @@ DELAY_TIME = 2
 
 
 async def user_finder_mode(msg, args):
-    """Execute reqired finder mode depending on arguments.
+    """Execute required finder mode depending on arguments.
 
     Parameters:
         msg (discord.message.Message): Execute send to channel function
-        args (list): List with reqired mode of finder
+        args (list): List with required mode of finder
     """
     if len(args) == 0:
         pass

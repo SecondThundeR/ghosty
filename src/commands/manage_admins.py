@@ -3,7 +3,7 @@
 This script handles addition/removal id's of user to/from admin list
 
 This file can also be imported as a module and contains the following functions:
-    * admin_manager - checks if user is admin and executes reqired function
+    * admin_manager - checks if user is admin and executes required function
 """
 
 

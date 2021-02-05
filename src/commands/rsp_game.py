@@ -31,7 +31,7 @@ async def rsp_mode(bot, msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List of arguments (RSP variants, if playing with bot)
     """
-    if len(args) == 0:
+    if not args:
         if get_data_from_database(0, 'variables', 'rsp_game_active')[0] == 1:
             await msg.channel.send('Сессия игры уже запущена, '
                                    'чтобы начать новую игру, закончите старую')

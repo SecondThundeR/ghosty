@@ -63,10 +63,8 @@ async def start_roulette(msg, args):
     """
     PLAYER = msg.author.mention
     bullet_list = []
-    deadly_bullet = 0
-    bullet_count = 0
 
-    if args == []:
+    if not args:
         bullet_count = 1
     else:
         if args[0] == 'добавить':

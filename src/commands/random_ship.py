@@ -1,12 +1,11 @@
 """Script for shipping.
 
-This script allows user to ship two random people or two customly
-chosen by user. Script returns halves of each name and adds a heart.
+This script allows user to ship two random people or two chosen by user.
+Script returns halves of each name and adds a heart.
 
 This file can also be imported as a module and contains the following functions:
     * ship_func_chooser - choose correct function depending on statement
 """
-
 
 import asyncio
 from datetime import datetime
@@ -14,7 +13,6 @@ from datetime import timedelta
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import edit_data_in_database
 from src.libs.user_handler import get_members_name, get_random_user
-
 
 DELAY_TIME = 2
 DELETE_TIME = 5
@@ -57,13 +55,11 @@ async def _get_user_info(msg, user):
 
     Parameters:
         msg (discord.message.Message): Execute send to channel function
-        user (list): Custom names for shipping
+        user (str): Custom names for shipping
 
     Returns:
         list: List with username and it's length divided by two
     """
-    user_name = ''
-    user_length = 0
     if user.startswith('<@!'):
         user_id = user[3:len(user) - 1]
         custom_member = await msg.guild.fetch_member(user_id)
@@ -107,8 +103,6 @@ async def _custom_ship(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List of arguments (Custom names for ship)
     """
-    first_user_info = []
-    second_user_info = []
     if args[0].startswith('<@&') or args[1].startswith('<@&'):
         await msg.channel.send(f'{msg.author.mention}, к сожалению, '
                                'я не могу обработать это',
@@ -159,6 +153,20 @@ async def _random_ship(msg, mode='default'):
             [1, 1]
         )
         users_info = await get_random_user(msg, 'shipping')
+        if users_info is None:
+            edit_data_in_database(
+                0,
+                'variables',
+                ['ship_in_active', 'ship_activated'],
+                [0, 0]
+            )
+            await msg.channel.send(f'{msg.author.mention}, '
+                                   'похоже cписок пользователей пуст '
+                                   'и поэтому мне не кого шипперить',
+                                   delete_after=DELAY_TIME)
+            await asyncio.sleep(DELAY_TIME)
+            await msg.delete()
+            return
         first_username = get_members_name(users_info[0])
         first_user_length = int(len(first_username) / 2)
         second_username = get_members_name(users_info[1])

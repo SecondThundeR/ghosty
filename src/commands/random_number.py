@@ -21,7 +21,7 @@ async def get_random_number(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List of arguments (Range numbers)
     """
-    if len(args) == 0:
+    if not args:
         await msg.channel.send(f'{msg.author.mention}, к сожалению, '
                                f'я не получил аргументов для вывода рандома',
                                delete_after=DELAY_TIME)

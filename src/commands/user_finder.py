@@ -21,7 +21,7 @@ async def user_finder_mode(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List with required mode of finder
     """
-    if len(args) == 0:
+    if not args:
         pass
     else:
         if args[0] == 'пидорасов':

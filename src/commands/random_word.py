@@ -29,8 +29,7 @@ async def get_random_word(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List of arguments (Custom name or mode of function)
     """
-    current_user = None
-    if len(args) == 0:
+    if not args:
         current_user = msg.author.mention
     else:
         if args[0] == 'добавить':

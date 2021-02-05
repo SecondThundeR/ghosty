@@ -33,7 +33,7 @@ async def send_makar_message(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List of arguments (Custom name or user mention)
     """
-    if len(args) == 0:
+    if not args:
         r_user = await get_random_user(msg)
         if r_user is None:
             await msg.channel.send(f'{msg.author.mention}, '

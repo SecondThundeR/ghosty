@@ -12,13 +12,13 @@ import random
 import asyncio
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import edit_data_in_database
+from src.libs.database_handler import is_data_in_database
 from src.libs.user_handler import get_random_user
 from src.libs.words_base_handler import add_word
 from src.libs.words_base_handler import delete_word
 
 
 WORDS_ARRAY = get_data_from_database(2, 'main_words_base', 'words')
-ADMIN_LIST = get_data_from_database(0, 'admin_list', 'admins_id')
 DELAY_TIME = 3
 
 
@@ -43,7 +43,7 @@ async def get_random_word(msg, args):
             return
 
         if args[0] == 'удалить':
-            if msg.author.id in ADMIN_LIST:
+            if is_data_in_database(0, 'admin_list', 'admins_id', msg.author.id):
                 args.pop(0)
                 word_to_delete = " ".join(args)
                 await msg.channel.send(delete_word(word_to_delete),

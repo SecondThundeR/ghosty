@@ -90,17 +90,16 @@ async def on_message(message):
     command = args.pop(0).lower()
 
     try:
-        if message.channel.id == message.author.dm_channel.id:
-            if is_data_in_database(
-                0,
-                'admin_list',
-                'admins_id',
-                message.author.id
-            ):
-                if command in 'админ':
-                    await admin_manager(client, message, args)
-                if command in 'чс':
-                    await ignored_manager(message, args)
+        if (message.channel.id == message.author.dm_channel.id
+                and is_data_in_database(
+                    0,
+                    'admin_list',
+                    'admins_id',
+                    message.author.id)):
+            if command in 'админ':
+                await admin_manager(client, message, args)
+            if command in 'чс':
+                await ignored_manager(message, args)
     except AttributeError:
         if command in ('ху', 'who'):
             await get_random_word(message, args)

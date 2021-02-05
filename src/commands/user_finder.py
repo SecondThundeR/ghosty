@@ -29,7 +29,7 @@ async def user_finder_mode(msg, args):
 
 
 async def _pidor_finder(msg):
-    """Get random user and launch 'finder' of *p-word*
+    """Get random user and launch 'finder' of *p-word*.
 
     Parameters:
         msg (discord.message.Message): Execute send to channel function
@@ -40,13 +40,12 @@ async def _pidor_finder(msg):
                                'похоже cписок пользователей пуст '
                                'и поэтому мне не кого упоминать')
         return
-    else:
-        await msg.channel.send('Система поиска пидорасов активирована!')
-        await asyncio.sleep(DELAY_TIME)
-        await msg.channel.send('*пип*')
-        await asyncio.sleep(DELAY_TIME)
-        await msg.channel.send('*пип*')
-        await asyncio.sleep(DELAY_TIME)
-        await msg.channel.send('*пип*')
-        await asyncio.sleep(DELAY_TIME)
-        await msg.channel.send(f'Пидорас найден ({r_user.mention})')
+    await msg.channel.send('Система поиска пидорасов активирована!')
+    await asyncio.sleep(DELAY_TIME)
+    await msg.channel.send('*пип*')
+    await asyncio.sleep(DELAY_TIME)
+    await msg.channel.send('*пип*')
+    await asyncio.sleep(DELAY_TIME)
+    await msg.channel.send('*пип*')
+    await asyncio.sleep(DELAY_TIME)
+    await msg.channel.send(f'Пидорас найден ({r_user.mention})')

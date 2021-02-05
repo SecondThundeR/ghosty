@@ -90,10 +90,10 @@ async def on_message(message):
 
     if message.channel.id == message.author.dm_channel.id:
         if is_data_in_database(
-        0,
-        'admin_list',
-        'admins_id',
-        message.author.id
+            0,
+            'admin_list',
+            'admins_id',
+            message.author.id
         ):
             if command in 'админ':
                 await admin_manager(client, message, args)

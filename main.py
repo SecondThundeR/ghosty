@@ -12,7 +12,6 @@ fit your needs
 import time
 import discord
 from src.libs.database_handler import clear_data_on_execution
-from src.libs.database_handler import is_data_in_database
 from src.libs.database_handler import edit_data_in_database
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import add_data_to_database

@@ -90,40 +90,34 @@ async def on_message(message):
     args = message.content.split(' ')
     command = args.pop(0).lower()
 
-    try:
-        if (message.channel.id == message.author.dm_channel.id
-                and is_data_in_database(
-                    0,
-                    'admin_list',
-                    'admins_id',
-                    message.author.id)):
-            if command in 'админ':
-                await admin_manager(client, message, args)
-            if command in 'чс':
-                await ignored_manager(message, args)
-    except AttributeError:
-        if command in ('ху', 'who'):
-            await get_random_word(message, args)
-        elif command == 'йа':
-            await send_me_message(message, args)
-        elif command == 'шип':
-            await ship_func_chooser(message, args)
+    if isinstance(message.channel, discord.channel.DMChannel):
+        if command in 'админ':
+            await admin_manager(client, message, args)
+        if command in 'чс':
+            await ignored_manager(message, args)
+    else:
+        if command == 'макар':
+            await send_ded_makar_message(message, args)
         elif command == 'хелп':
             await send_help_message(message)
-        elif command == 'рандом':
-            await get_random_number(message, args)
-        elif command == 'макар':
-            await send_ded_makar_message(message, args)
-        elif command == 'рулетка':
-            await start_roulette(message, args)
         elif command == 'uptime':
             await get_uptime_message(message)
-        elif command == 'система':
-            await get_system_info(message)
-        elif command == 'поиск':
-            await user_finder_mode(message, args)
+        elif command == 'йа':
+            await send_me_message(message, args)
+        elif command == 'рандом':
+            await get_random_number(message, args)
+        elif command == 'шип':
+            await ship_func_chooser(message, args)
         elif command == 'цуефа':
             await rsp_mode(client, message, args)
+        elif command == 'рулетка':
+            await start_roulette(message, args)
+        elif command == 'система':
+            await get_system_info(message)
+        elif command in ('ху', 'who'):
+            await get_random_word(message, args)
+        elif command == 'поиск':
+            await user_finder_mode(message, args)
         else:
             if ('тест' in full_message and full_message.index('тест') != 0
                     or 'рандом' in full_message and full_message.index('рандом') != 0):

@@ -62,8 +62,8 @@ def clear_data_on_execution():
     edit_data_in_database(
         0,
         'variables',
-        ['poll_locked', 'spammer_ID', 'spammer_count'],
-        [0, 0, 0]
+        ['poll_locked', 'spammer_ID', 'spammer_count', 'rsp_game_active'],
+        [0, 0, 0, 0]
         )
     remove_data_from_database(0, 'bots')
     remove_data_from_database(0, 'users')

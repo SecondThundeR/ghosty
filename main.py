@@ -111,8 +111,8 @@ async def on_message(message):
         elif command == 'система':
             await get_system_info(message)
         else:
-            if ('тест' in full_message and full_message.index('тест') != 0 or
-                'рандом' in full_message and full_message.index('рандом') != 0):
+            if ('тест' in full_message and full_message.index('тест') != 0
+                    or 'рандом' in full_message and full_message.index('рандом') != 0):
                 await who_is_user(message, full_message)
 
 

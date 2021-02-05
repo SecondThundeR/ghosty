@@ -81,8 +81,8 @@ async def start_roulette(msg, args):
                 await msg.delete()
             return
         if args[0] == 'удалить':
-            if (is_data_in_database(0, 'admin_list', 'admins_id', msg.author.id) and
-                args[1] in TABLES_ALIASES):
+            if (is_data_in_database(0, 'admin_list', 'admins_id', msg.author.id)
+                    and args[1] in TABLES_ALIASES):
                 TABLE_TO_MODIFY = TABLES_ALIASES[args[1]]
                 for i in range(2):
                     args.pop(0)

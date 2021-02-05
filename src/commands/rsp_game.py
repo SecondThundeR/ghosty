@@ -32,14 +32,26 @@ async def rsp_mode(bot, msg, args):
         args (list): List of arguments (RSP variants, if playing with bot)
     """
     if len(args) == 0:
-        rsp_game_status = get_data_from_database(0, 'variables', 'rsp_game_active')
-        if rsp_game_status[0] == 1:
+        if get_data_from_database(0, 'variables', 'rsp_game_active')[0] == 1:
             await msg.channel.send('Сессия игры уже запущена, '
                                    'чтобы начать новую игру, закончите старую')
         else:
             await _rsp_multi_game(bot, msg)
+            return
     else:
         await _rsp_bot_game(bot, msg, args[0])
+
+
+def _join_check(msg):
+    """Check for correct command to join.
+
+    Parameters:
+        msg (discord.message.Message): Get content from message and author's ID
+
+    Returns:
+        True, if all conditions are met
+    """
+    return msg.content.lower() == 'играть'
 
 
 def _choice_check(msg):
@@ -69,7 +81,6 @@ def _rsp_game_logic(first_var, second_var, first_user_id, second_user_id):
     Returns:
         str: Outcome of the game
     """
-    rsp_text = ''
     f_user_mention = f'<@{first_user_id}>'
     s_user_mention = f'<@{second_user_id}>'
     if first_var == rsp_win_variants[second_var]:
@@ -123,30 +134,33 @@ async def _rsp_multi_game(bot, msg):
     edit_data_in_database(0, 'variables', 'rsp_game_active', 1)
     current_channel = msg.channel
     first_user = msg.author
-    second_user = ''
     users_choice = []
     await current_channel.send(f'{first_user.mention} запустил игру! '
                                'Чтобы начать игру с ним, напишите "Играть"')
-    while True:
-        try:
-            wait_msg = await bot.wait_for('message', timeout=60)
-        except asyncio.TimeoutError:
-            await current_channel.send('Похоже никто не хочет играть с вами, '
-                                       'пока что я отменил данную игру')
+    try:
+        wait_msg = await bot.wait_for('message', timeout=60, check=_join_check)
+        second_user = wait_msg.author
+    except asyncio.TimeoutError:
+        edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
+        await current_channel.send('Похоже никто не хочет играть с вами, '
+                                   'пока что я отменил данную игру')
+        return
+    else:
+        if wait_msg.author.id == first_user.id:
+            edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
+            await current_channel.send(f'{first_user.mention}, '
+                                       'решил поиграть сам собой, '
+                                       'отменяю данную игру')
             return
-        else:
-            if (wait_msg.content.lower() == 'играть'
-                    and wait_msg.author.id != first_user.id):
-                second_user = wait_msg.author
-                await current_channel.send(f'{second_user.mention} '
-                                           'присоединился к игре')
-                break
+    await current_channel.send(f'{second_user.mention} '
+                               'присоединился к игре')
     await current_channel.send('Ждем пока первый игрок сделает свой выбор...')
     await first_user.send('Ваш вариант (На ответ 1 минута):')
     try:
-        response = await bot.wait_for('message', timeout=60, check=_choice_check)
-        users_choice.append(response.content.lower())
+        first_response = await bot.wait_for('message', timeout=30, check=_choice_check)
+        users_choice.append(first_response.content.lower())
     except asyncio.TimeoutError:
+        edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
         await current_channel.send(f'{first_user.mention} '
                                    'не успел отправить свой вариант вовремя. '
                                    'Игра отменена')
@@ -154,12 +168,13 @@ async def _rsp_multi_game(bot, msg):
     await current_channel.send('Ждем пока второй игрок сделает свой выбор...')
     await second_user.send('Ваш вариант (На ответ 1 минута):')
     try:
-        response = await bot.wait_for('message', timeout=60, check=_choice_check)
-        users_choice.append(response.content.lower())
+        second_response = await bot.wait_for('message', timeout=30, check=_choice_check)
+        users_choice.append(second_response.content.lower())
     except asyncio.TimeoutError:
+        edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
         await current_channel.send(f'{second_user.mention} '
                                    'не успел отправить свой вариант вовремя. '
                                    'Игра отменена')
+    edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
     await current_channel.send(_rsp_game_logic(users_choice[0], users_choice[1],
                                                first_user.id, second_user.id))
-    edit_data_in_database(0, 'variables', 'rsp_game_active', 0)

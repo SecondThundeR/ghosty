@@ -55,6 +55,7 @@ def _join_check(msg):
     if (msg.content.lower() == 'играть'
             and not isinstance(msg.channel, discord.channel.DMChannel)):
         return True
+    return False
 
 
 def _choice_check(msg):
@@ -69,6 +70,7 @@ def _choice_check(msg):
     if (msg.content.lower() in rsp_win_variants
             and isinstance(msg.channel, discord.channel.DMChannel)):
         return True
+    return False
 
 
 def _rsp_game_logic(first_var, second_var, first_user_id, second_user_id):

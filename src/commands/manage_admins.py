@@ -37,7 +37,7 @@ async def admin_manager(bot, msg, args):
 
 
 async def _add_admin(msg, admin_id):
-    """Add user's ID to admin list
+    """Add user's ID to admin list.
 
     This function handles addition of user's ID to admin list.
 
@@ -53,7 +53,7 @@ async def _add_admin(msg, admin_id):
 
 
 async def _remove_admin(bot, msg, admin_id):
-    """Remove user's ID from admin list
+    """Remove user's ID from admin list.
 
     This function handles removal of user's ID from admin list.
 
@@ -80,12 +80,12 @@ async def _remove_admin(bot, msg, admin_id):
                                    'поэтому я отменяю удаление')
         else:
             await msg.channel.send('Вы уверены что хотите убрать себя из списка?'
-                                ' (Да/Нет)')
+                                   ' (Да/Нет)')
             try:
                 wait_msg = await bot.wait_for('message', timeout=15)
             except asyncio.TimeoutError:
                 await msg.channel.send('Похоже вы не решились с выбором, '
-                                    'пока что я отменил удаление вас из списка')
+                                       'пока что я отменил удаление вас из списка')
             else:
                 if wait_msg.content.lower() == 'да':
                     remove_data_from_database(0, 'admin_list', 'admins_id', admin_id)
@@ -94,7 +94,7 @@ async def _remove_admin(bot, msg, admin_id):
                     await msg.channel.send('Удаление было отменено')
                 else:
                     await msg.channel.send('Вы ответили как-то иначе, '
-                                        'удаление было отменено')
+                                           'удаление было отменено')
     else:
         if not is_data_in_database(0, 'admin_list', 'admins_id', admin_id):
             await msg.channel.send('Данный пользователь не является админом')

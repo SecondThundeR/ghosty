@@ -38,7 +38,6 @@ client = Discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
-    print(type(client))
     """Execute necessary functions during the bot launch."""
     clear_data_on_execution()
     for guild in client.guilds:
@@ -83,11 +82,9 @@ async def on_message(message):
     ):
         return
 
-
     full_message = message.content.split(' ')
     args = message.content.split(' ')
     command = args.pop(0).lower()
-
 
     if message.channel.id == message.author.dm_channel.id:
         if command in 'админ':
@@ -114,8 +111,8 @@ async def on_message(message):
         elif command == 'система':
             await get_system_info(message)
         else:
-            if 'тест' in full_message and full_message.index('тест') != 0 or \
-            'рандом' in full_message and full_message.index('рандом') != 0:
+            if ('тест' in full_message and full_message.index('тест') != 0 or
+                'рандом' in full_message and full_message.index('рандом') != 0):
                 await who_is_user(message, full_message)
 
 

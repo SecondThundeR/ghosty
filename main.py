@@ -16,7 +16,7 @@ from src.libs.database_handler import is_data_in_database
 from src.libs.database_handler import edit_data_in_database
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import add_data_to_database
-from src.commands.ded_makar import send_ded_makar_message
+from src.commands.ded_makar import send_makar_message
 from src.commands.get_help import send_help_message
 from src.commands.get_uptime import get_uptime_message
 from src.commands.manage_admins import admin_manager
@@ -97,7 +97,7 @@ async def on_message(message):
             await ignored_manager(message, args)
     else:
         if command == 'макар':
-            await send_ded_makar_message(message, args)
+            await send_makar_message(message, args)
         elif command == 'хелп':
             await send_help_message(message)
         elif command == 'uptime':

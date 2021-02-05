@@ -4,7 +4,7 @@ This script sends sentence 'Улыбок тебе дед ...' where at the end
 reverse username goes
 
 This file can also be imported as a module and contains the following functions:
-    * send_ded_makar_message - sends message with sentence and reversed username
+    * send_makar_message - sends message with sentence and reversed username
 """
 
 
@@ -26,7 +26,7 @@ def _reverse_string(word):
     return "".join(reversed_string)
 
 
-async def send_ded_makar_message(msg, args):
+async def send_makar_message(msg, args):
     """Send famous (maybe) sentence.
 
     Parameters:

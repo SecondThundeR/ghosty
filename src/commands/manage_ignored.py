@@ -3,17 +3,18 @@
 This script handles addition/removal id's of user to/from ignore list
 
 This file can also be imported as a module and contains the following functions:
-    * ignored_manager - checks if user is admin and executes reqired function
+    * ignored_manager - checks if user is admin and executes required function
 """
 
 
 from src.libs.database_handler import is_data_in_database
 from src.libs.database_handler import add_data_to_database
 from src.libs.database_handler import remove_data_from_database
+from src.libs.user_handler import is_user_admin
 
 
 async def ignored_manager(msg, args):
-    """Check if user is admin and execute reqired operation.
+    """Check if user is admin and execute required operation.
 
     This function handles user checking and executing addition/deletion
     of user's ID to/from ignore list
@@ -22,7 +23,7 @@ async def ignored_manager(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List with operation and user's ID
     """
-    if len(args) == 2:
+    if len(args) == 2 and is_user_admin(msg):
         if args[0] == 'заблокировать':
             await _add_ignored(msg, args[1])
         elif args[0] == 'разблокировать':

@@ -55,7 +55,7 @@ def _choice_check(msg):
 
 
 def _rsp_game_logic(first_var, second_var, first_user_id, second_user_id):
-    """Main game logic function.
+    """Get the outcome of the game and return its result.
 
     This function handles check for winner of RSP
     If no one wins, throw 'Draw'

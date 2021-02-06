@@ -171,6 +171,7 @@ async def _rsp_multi_game(bot, msg):
         await current_channel.send(f'{first_user.mention} '
                                    'не успел отправить свой вариант вовремя. '
                                    'Игра отменена')
+        return
     await current_channel.send('Первый игрок сделал свой выбор!')
     await current_channel.send('Ждем пока второй игрок сделает свой выбор...')
     await second_user.send('Ваш вариант (На ответ 1 минута):')
@@ -182,6 +183,7 @@ async def _rsp_multi_game(bot, msg):
         await current_channel.send(f'{second_user.mention} '
                                    'не успел отправить свой вариант вовремя. '
                                    'Игра отменена')
+        return
     edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
     await current_channel.send(_rsp_game_logic(users_choice[0], users_choice[1],
                                                first_user.id, second_user.id))

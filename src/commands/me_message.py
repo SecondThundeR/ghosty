@@ -16,7 +16,7 @@ async def send_me_message(msg, args):
         args (list): List of arguments to follow (Message content and/or flags)
     """
     await msg.delete()
-    if len(args) >= 1:
+    if args:
         if args[0] == 'анон':
             args.pop(0)
             text_string = " ".join(args)

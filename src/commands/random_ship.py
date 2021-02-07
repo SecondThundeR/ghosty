@@ -7,6 +7,7 @@ This file can also be imported as a module and contains the following functions:
     * ship_func_chooser - choose correct function depending on statement
 """
 
+import emoji
 import asyncio
 from datetime import datetime
 from datetime import timedelta
@@ -103,7 +104,13 @@ async def _custom_ship(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List of arguments (Custom names for ship)
     """
-    if args[0].startswith('<@&') or args[1].startswith('<@&'):
+    if emoji.emoji_count(msg.content) > 0:
+        await msg.channel.send(f'{msg.author.mention}, '
+                               'какой блин шип смайлов...',
+                               delete_after=DELETE_TIME)
+        await asyncio.sleep(DELETE_TIME)
+        await msg.delete()
+    elif args[0].startswith('<@&') or args[1].startswith('<@&'):
         await msg.channel.send(f'{msg.author.mention}, к сожалению, '
                                'я не могу обработать это',
                                delete_after=DELETE_TIME)
@@ -115,8 +122,8 @@ async def _custom_ship(msg, args):
                                delete_after=DELETE_TIME)
         await asyncio.sleep(DELETE_TIME)
         await msg.delete()
-    elif (args[0] == '@everyone' or args[0] == '@here' or
-            args[1] == '@everyone' or args[1] == '@here'):
+    elif ('@everyone' in args[0] or '@here' in args[0] or
+            '@everyone' in args[1] or '@here' in args[1]):
         await msg.channel.send(f'{msg.author.mention}, '
                                'похоже вы пытаетесь всунуть сюда '
                                '`@here` или `@everyone`, зачем?',

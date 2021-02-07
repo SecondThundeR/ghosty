@@ -15,6 +15,7 @@ from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import edit_data_in_database
 from src.libs.user_handler import get_members_name, get_random_user
 
+
 DELAY_TIME = 2
 DELETE_TIME = 5
 

@@ -9,6 +9,7 @@ This file can also be imported as a module and contains the following functions:
 
 import asyncio
 
+
 HELP_MESSAGE = 'Доступные команды бота: ' \
                '\n\n**полл (время и текст | текст)** - запускает простое голосование' \
                '\n**макар** - возвращает предложение "Улыбок тебе ' \

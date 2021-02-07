@@ -22,6 +22,7 @@ This file can also be imported as a module and contains the following functions:
 
 import sqlite3
 
+
 DATABASE_PATHS = [
     'src/databases/botDB.db',
     'src/databases/configDB.db',

@@ -42,9 +42,6 @@ async def who_is_user(msg, full_message):
     if 'рандом' in full_message:
         r_user = await get_random_user(msg)
         if r_user is None:
-            await msg.channel.send(f'{msg.author.mention}, '
-                                   'похоже cписок пользователей пуст '
-                                   'и поэтому мне не кого упоминать')
             return
         current_user = r_user.mention
     elif 'тест' in full_message and full_message.index('тест') == last_item_index:

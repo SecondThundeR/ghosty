@@ -54,9 +54,6 @@ async def get_random_word(msg, args):
         if args[0] == 'рандом':
             r_user = await get_random_user(msg)
             if r_user is None:
-                await msg.channel.send(f'{msg.author.mention}, '
-                                       'похоже cписок пользователей пуст '
-                                       'и поэтому мне не кого упоминать')
                 return
             current_user = r_user.mention
         else:

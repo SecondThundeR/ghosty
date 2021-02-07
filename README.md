@@ -8,7 +8,7 @@ This is repository of some random bot for Discord which was created just for fun
 ## How to use this bot
 
 0. Install neccesary tools *(Python, Any IDE or Code Editor, etc.)*
-1. Download or clone this repository
+1. Clone this repository *(If you want to clone with Webhook-Nofitier, use* `git clone --recurse-submodules`*)*
 2. Create a Discord Bot on [Discord Developers](https://discord.com/developers/applications) page
 3. Grab a token of your bot
 4. Run `python setup.py` in main directory and setup your bot

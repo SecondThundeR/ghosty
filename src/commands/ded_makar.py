@@ -7,9 +7,13 @@ This file can also be imported as a module and contains the following functions:
     * send_makar_message - sends message with sentence and reversed username
 """
 
-
+import emoji
+import asyncio
 from src.libs.user_handler import get_random_user
 from src.libs.user_handler import get_members_name
+
+
+DELETE_TIME = 5
 
 
 def _reverse_string(word):
@@ -23,7 +27,7 @@ def _reverse_string(word):
     """
     reversed_string = list(word)
     reversed_string.reverse()
-    return "".join(reversed_string)
+    return " ".join(reversed_string)
 
 
 async def send_makar_message(msg, args):
@@ -36,29 +40,40 @@ async def send_makar_message(msg, args):
     if not args:
         r_user = await get_random_user(msg)
         if r_user is None:
-            await msg.channel.send(f'{msg.author.mention}, '
-                                   'похоже я не получил список пользователей и '
-                                   'поэтому мне не кого упоминать')
             return
         user = get_members_name(r_user)
+        await msg.channel.send(f'Улыбок тебе дед {_reverse_string(user)}')
     else:
-        if args[0].startswith('<@&'):
+        if emoji.emoji_count(msg.content) > 0:
+            await msg.channel.send(f'{msg.author.mention}, '
+                               'какой блин шип смайлов...',
+                               delete_after=DELETE_TIME)
+            await asyncio.sleep(DELETE_TIME)
+            await msg.delete()
+        elif args[0].startswith('<@&'):
             await msg.channel.send(f'{msg.author.mention}, к сожалению, '
-                                   'я не могу обработать это')
-            return
-        if args[0].startswith('<:'):
+                                   'я не могу обработать это',
+                                   delete_after=DELETE_TIME)
+            await asyncio.sleep(DELETE_TIME)
+            await msg.delete()
+        elif args[0].startswith('<:'):
             await msg.channel.send(f'{msg.author.mention}, '
-                                   'какой блин переворот эмодзи...')
-            return
-        if '@everyone' in args[0] or '@here' in args[0]:
+                                   'какой блин переворот эмодзи...',
+                                   delete_after=DELETE_TIME)
+            await asyncio.sleep(DELETE_TIME)
+            await msg.delete()
+        elif '@everyone' in args[0] or '@here' in args[0]:
             await msg.channel.send(f'{msg.author.mention}, '
-                                   'похоже вы пытаетесь всунуть сюда '
-                                   '`@here` или `@everyone`, зачем?')
-            return
-        if args[0].startswith('<@!'):
-            user_id = args[0][3:len(args[0]) - 1]
-            custom_member = await msg.guild.fetch_member(user_id)
-            user = get_members_name(custom_member)
+                                'похоже вы пытаетесь всунуть сюда '
+                                '`@here` или `@everyone`, зачем?',
+                                delete_after=DELETE_TIME)
+            await asyncio.sleep(DELETE_TIME)
+            await msg.delete()
         else:
-            user = " ".join(args)
-    await msg.channel.send(f'Улыбок тебе дед {_reverse_string(user)}')
+            if args[0].startswith('<@!'):
+                user_id = args[0][3:len(args[0]) - 1]
+                custom_member = await msg.guild.fetch_member(user_id)
+                user = get_members_name(custom_member)
+            else:
+                user = " ".join(args)
+            await msg.channel.send(f'Улыбок тебе дед {_reverse_string(user)}')

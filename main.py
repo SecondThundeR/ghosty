@@ -15,6 +15,7 @@ from src.libs.database_handler import clear_data_on_execution
 from src.libs.database_handler import edit_data_in_database
 from src.libs.database_handler import get_data_from_database
 from src.libs.database_handler import add_data_to_database
+from src.commands.create_poll import create_poll
 from src.commands.ded_makar import send_makar_message
 from src.commands.get_help import send_help_message
 from src.commands.get_uptime import get_uptime_message
@@ -95,7 +96,9 @@ async def on_message(message):
         if command in 'чс':
             await ignored_manager(message, args)
     else:
-        if command == 'макар':
+        if command == 'полл':
+            await create_poll(message, args)
+        elif command == 'макар':
             await send_makar_message(message, args)
         elif command == 'хелп':
             await send_help_message(message)

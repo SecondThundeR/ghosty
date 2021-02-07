@@ -10,7 +10,8 @@ This file can also be imported as a module and contains the following functions:
 import asyncio
 
 HELP_MESSAGE = 'Доступные команды бота: ' \
-               '\n\n**макар** - возвращает предложение "Улыбок тебе ' \
+               '\n\n**полл (время и текст | текст)** - запускает простое голосование' \
+               '\n**макар** - возвращает предложение "Улыбок тебе ' \
                'дед [перевёрнутое предложение]"' \
                '\n**хелп** - выводит информацию с командами' \
                '\n**uptime** - выводит сколько бот проработал ' \
@@ -36,7 +37,7 @@ async def send_help_message(msg):
         msg (discord.message.Message): Execute send to channel function
     """
     await msg.author.send(HELP_MESSAGE)
-    warn_message = await msg.channel.send('Проверь личку! '
+    warn_message = await msg.channel.send(f'{msg.author.mention}, проверь личку! '
                                           'Я отправил тебе помощь по командам',
                                           delete_after=DELAY_TIME)
     await asyncio.sleep(DELAY_TIME)

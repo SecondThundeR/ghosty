@@ -4,11 +4,43 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and starting with changes from 29.11.2020, this bot will have a correct [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.0.0 - xx.xx.2021
+## [2.0.0] - 07.02.2021
+
+## Added
+
+- Docstring for all scripts
+- SQL databases for long-term variables
+- Setup script for convenient and simple bot setup
+- Words were moved to separate .txt files *(Used only for import)*
+- Fetching of users and bot on startup
+- Fetching of newcomers and adding to database
+- Ignore for blocked users
+- Dynamic testing without predifined aliases
+- New commands `система` and `поиск`
+- Сommands for controlling admin and block lists directly from DM
+- Custom libraries for simplifying scripts workflow
+- Multiplayer for RSP game
+- Checks for regular emoji in messages for certain commands
+- Checks for unexpected situations
 
 ## Changed
 
-- Codebase rewritten in Python
+- Bot status from 'Online' to 'DND'
+- Unlock polls *(You can now run an unlimited number of polls)*
+- Addition/deletion of words now part of `random_word.py` and `russian_roulette.py`
+- Method of getting random words in `russian_roulette.py` by getting only needed list of words
+- All variables from `variables.js` were moved to SQL database
+- Help message is now sent to user's DM
+- Move getting string of date to `random_ship.py`
+- Method of getting outcome of RSP game by comparing with value from dictionary
+
+## Removed
+
+- Heroku files *(Due to unexpected work of bot here and filesystem reset)*
+- Strings that were in a separate file `variables.js`
+- Custom libs on JS
+- JSON arrays
+- ESlint configuration file *(Now code checked by DeepSource and Pylint)*
 
 ## [1.1.4] - 24.12.2020
 
@@ -139,6 +171,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Multiple commands and functions was deleted due to move to Heroku *(Some of commands will present in additional branches)*
 - Commented code was deleted from main branch
 
+[2.0.0]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.1.4...v2.0.0
 [1.1.4]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/SecondThundeR/secondthunder-js-bot/compare/v1.1.1...v1.1.2

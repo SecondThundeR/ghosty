@@ -1,7 +1,7 @@
 # secondthunder-py-bot
 
-[![CodeFactor](https://www.codefactor.io/repository/github/secondthunder/secondthunder-js-bot/badge)](https://www.codefactor.io/repository/github/secondthunder/secondthunder-js-bot)
-[![DeepSource](https://deepsource.io/gh/SecondThundeR/secondthunder-js-bot.svg/?label=active+issues)](https://deepsource.io/gh/SecondThundeR/secondthunder-js-bot/?ref=repository-badge)
+[![CodeFactor](https://www.codefactor.io/repository/github/secondthunder/secondthunder-py-bot/badge/master)](https://www.codefactor.io/repository/github/secondthunder/secondthunder-py-bot/overview/master)
+[![DeepSource](https://deepsource.io/gh/SecondThundeR/secondthunder-py-bot.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/SecondThundeR/secondthunder-py-bot/?ref=repository-badge)
 
 This is repository of some random bot for Discord which was created just for fun and for some educational purposes *(Made with Discord.py library)*
 
@@ -18,16 +18,16 @@ This is repository of some random bot for Discord which was created just for fun
 
 ## Discussions
 
-This project has a [Github Discussions](https://github.com/SecondThundeR/secondthunder-js-bot/discussions) turned on. Feel free to ask about this project or give new ideas and etc.
+This project has a [Github Discussions](https://github.com/SecondThundeR/secondthunder-py-bot/discussions) turned on. Feel free to ask about this project or give new ideas and etc.
 
 ## Changelog
 
-This project has a changelog, which you can find [here](https://github.com/SecondThundeR/secondthunder-js-bot/blob/master/Changelog.md)
+This project has a changelog, which you can find [here](https://github.com/SecondThundeR/secondthunder-py-bot/blob/master/Changelog.md)
 
-Also you can track changes of new versions [here](https://github.com/SecondThundeR/secondthunder-js-bot/projects)
+Also you can track changes of new versions [here](https://github.com/SecondThundeR/secondthunder-py-bot/projects)
 
 ## License
 
 This project is licensed under **MIT License**.
 
-For the complete licensing terms, please read [LICENSE](https://github.com/SecondThundeR/secondthunder-js-bot/blob/master/LICENSE) file
+For the complete licensing terms, please read [LICENSE](https://github.com/SecondThundeR/secondthunder-py-bot/blob/master/LICENSE) file

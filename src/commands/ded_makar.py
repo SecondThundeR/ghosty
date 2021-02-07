@@ -27,7 +27,7 @@ def _reverse_string(word):
     """
     reversed_string = list(word)
     reversed_string.reverse()
-    return " ".join(reversed_string)
+    return "".join(reversed_string)
 
 
 async def send_makar_message(msg, args):

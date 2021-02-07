@@ -46,8 +46,8 @@ async def send_makar_message(msg, args):
     else:
         if emoji.emoji_count(msg.content) > 0:
             await msg.channel.send(f'{msg.author.mention}, '
-                               'какой блин шип смайлов...',
-                               delete_after=DELETE_TIME)
+                                   'какой блин шип смайлов...',
+                                   delete_after=DELETE_TIME)
             await asyncio.sleep(DELETE_TIME)
             await msg.delete()
         elif args[0].startswith('<@&'):
@@ -64,9 +64,9 @@ async def send_makar_message(msg, args):
             await msg.delete()
         elif '@everyone' in args[0] or '@here' in args[0]:
             await msg.channel.send(f'{msg.author.mention}, '
-                                'похоже вы пытаетесь всунуть сюда '
-                                '`@here` или `@everyone`, зачем?',
-                                delete_after=DELETE_TIME)
+                                   'похоже вы пытаетесь всунуть сюда '
+                                   '`@here` или `@everyone`, зачем?',
+                                   delete_after=DELETE_TIME)
             await asyncio.sleep(DELETE_TIME)
             await msg.delete()
         else:

@@ -62,7 +62,7 @@ async def create_poll(msg, args):
                                'набрал одинаковое голосов\n'
                                'Данное голосование объявляется **несостоявшимся!**')
     elif p_answers == 0 and n_answers == 0:
-         await msg.channel.send('**Голосование окончено!**\n'
+        await msg.channel.send('**Голосование окончено!**\n'
                                f'Вопрос **{vote_text}** от {vote_author.mention} '
                                'не получил никаких голосов\n'
                                'Данное голосование объявляется **несостоявшимся!**')

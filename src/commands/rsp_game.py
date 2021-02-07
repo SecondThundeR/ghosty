@@ -103,8 +103,8 @@ def _rsp_game_logic(first_var, second_var, first_user_id, second_user_id):
     f_user_mention = f'<@{first_user_id}>'
     s_user_mention = f'<@{second_user_id}>'
     end_text = '**Игра между ' \
-                f'{f_user_mention} и {s_user_mention} ' \
-                'окончена!**\n'
+               f'{f_user_mention} и {s_user_mention} ' \
+               'окончена!**\n'
     outcome_text = ''
     if first_var == rsp_win_variants[second_var]:
         outcome_text = f'**Результаты:** {second_var}  🤜  {first_var}\n' \

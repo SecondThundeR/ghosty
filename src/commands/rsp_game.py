@@ -14,6 +14,8 @@ from src.libs.database_handler import edit_data_in_database
 from src.libs.database_handler import get_data_from_database
 
 
+FAIL_DELAY = 4
+SUCCESS_DELAY = 1
 rsp_win_variants = {
   'камень': 'ножницы',
   'бумага': 'камень',
@@ -73,6 +75,16 @@ def _choice_check(msg):
     return False
 
 
+async def _purge_messages(messages):
+    """Delete all messages, that can distract users in channel.
+
+    Parameters:
+        message (list): List with messages to delete
+    """
+    for i, message in enumerate(messages):
+        await message.delete()
+
+
 def _rsp_game_logic(first_var, second_var, first_user_id, second_user_id):
     """Get the outcome of the game and return its result.
 
@@ -90,16 +102,20 @@ def _rsp_game_logic(first_var, second_var, first_user_id, second_user_id):
     """
     f_user_mention = f'<@{first_user_id}>'
     s_user_mention = f'<@{second_user_id}>'
+    end_text = '**Игра между ' \
+                f'{f_user_mention} и {s_user_mention} ' \
+                'окончена!**\n'
+    outcome_text = ''
     if first_var == rsp_win_variants[second_var]:
-        rsp_text = f'{second_var} > {first_var}, ' \
-                   f'{s_user_mention} победил!'
+        outcome_text = f'**Результаты:** {second_var}  🤜  {first_var}\n' \
+                       f'{s_user_mention} победил!'
     elif second_var == rsp_win_variants[first_var]:
-        rsp_text = f'{first_var} > {second_var}, ' \
-                   f'{f_user_mention} победил!'
+        outcome_text = f'**Результаты:** {first_var}  🤜  {second_var}\n' \
+                       f'{f_user_mention} победил!'
     else:
-        rsp_text = f'{first_var} = {second_var}, ' \
-                   'ничья!'
-    return rsp_text
+        outcome_text = f'**Результаты:** {first_var}  🙏  {second_var}\n' \
+                       'И у нас ничья!'
+    return end_text + outcome_text
 
 
 async def _rsp_bot_game(bot, msg, user_choice):
@@ -142,48 +158,65 @@ async def _rsp_multi_game(bot, msg):
     current_channel = msg.channel
     first_user = msg.author
     users_choice = []
-    await current_channel.send(f'{first_user.mention} запустил игру! '
-                               'Чтобы начать игру с ним, напишите "Играть"')
+    messages_to_purge = []
+    await msg.delete()
+    init_msg = await current_channel.send(f'{first_user.mention} запустил игру! '
+                                          'Второй игрок, напишите "Играть"\n'
+                                          '*Время ожидания второго игрока - 1 минута*')
+    messages_to_purge.append(init_msg)
     try:
-        wait_msg = await bot.wait_for('message', timeout=60, check=_join_check)
-        second_user = wait_msg.author
+        s_user_wait = await bot.wait_for('message', timeout=60, check=_join_check)
+        second_user = s_user_wait.author
     except asyncio.TimeoutError:
         edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
-        await current_channel.send('Похоже никто не хочет играть с вами, '
-                                   'пока что я отменил данную игру')
+        game_fail = current_channel.send(f'{first_user.mention}, '
+                                         'похоже никто не решил сыграть с вами. '
+                                         'Пока что я отменил данную игру')
+        messages_to_purge.append(game_fail)
+        await asyncio.sleep(FAIL_DELAY)
+        await _purge_messages(messages_to_purge)
         return
     else:
-        if wait_msg.author.id == first_user.id:
+        if s_user_wait.author.id == first_user.id:
             edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
-            await current_channel.send(f'{first_user.mention}, '
-                                       'решил поиграть сам собой, '
-                                       'отменяю данную игру')
+            f_user_join = await current_channel.send(f'{first_user.mention}, '
+                                                     'решил поиграть сам собой, '
+                                                     'отменяю данную игру')
+            messages_to_purge.append(s_user_wait)
+            messages_to_purge.append(f_user_join)
+            await asyncio.sleep(FAIL_DELAY)
+            await _purge_messages(messages_to_purge)
             return
-    await current_channel.send(f'{second_user.mention} '
-                               'присоединился к игре')
-    await current_channel.send('Ждем пока первый игрок сделает свой выбор...')
-    await first_user.send('Ваш вариант (На ответ 1 минута):')
+    await s_user_wait.delete()
+    await init_msg.edit(content='Сейчас идёт игра между '
+                                f'{first_user.mention} и {second_user.mention}')
     try:
+        await first_user.send('Ваш вариант *(На ответ 1 минута)*:')
         first_response = await bot.wait_for('message', timeout=30, check=_choice_check)
         users_choice.append(first_response.content.lower())
     except asyncio.TimeoutError:
         edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
-        await current_channel.send(f'{first_user.mention} '
-                                   'не успел отправить свой вариант вовремя. '
-                                   'Игра отменена')
+        f_move_fail = await current_channel.send(f'{first_user.mention} '
+                                                 'не успел отправить вариант вовремя. '
+                                                 'Игра отменена')
+        messages_to_purge.append(f_move_fail)
+        await asyncio.sleep(FAIL_DELAY)
+        await _purge_messages(messages_to_purge)
         return
-    await current_channel.send('Первый игрок сделал свой выбор!')
-    await current_channel.send('Ждем пока второй игрок сделает свой выбор...')
-    await second_user.send('Ваш вариант (На ответ 1 минута):')
     try:
+        await second_user.send('Ваш вариант *(На ответ 1 минута)*:')
         second_response = await bot.wait_for('message', timeout=30, check=_choice_check)
         users_choice.append(second_response.content.lower())
     except asyncio.TimeoutError:
         edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
-        await current_channel.send(f'{second_user.mention} '
-                                   'не успел отправить свой вариант вовремя. '
-                                   'Игра отменена')
+        s_move_fail = await current_channel.send(f'{second_user.mention} '
+                                                 'не успел отправить вариант вовремя. '
+                                                 'Игра отменена')
+        messages_to_purge.append(s_move_fail)
+        await asyncio.sleep(FAIL_DELAY)
+        await _purge_messages(messages_to_purge)
         return
     edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
     await current_channel.send(_rsp_game_logic(users_choice[0], users_choice[1],
                                                first_user.id, second_user.id))
+    await _purge_messages(messages_to_purge)

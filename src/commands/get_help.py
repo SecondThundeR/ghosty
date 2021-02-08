@@ -7,6 +7,7 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
+from discord import channel
 import asyncio
 
 
@@ -37,9 +38,12 @@ async def send_help_message(msg):
     Parameters:
         msg (discord.message.Message): Execute send to channel function
     """
-    await msg.author.send(HELP_MESSAGE)
-    warn_message = await msg.channel.send(f'{msg.author.mention}, проверь личку! '
-                                          'Я отправил тебе помощь по командам',
-                                          delete_after=DELAY_TIME)
-    await asyncio.sleep(DELAY_TIME)
-    await warn_message.delete()
+    if isinstance(msg.channel, channel.DMChannel):
+        await msg.channel.send(HELP_MESSAGE)
+    else:
+        await msg.author.send(HELP_MESSAGE)
+        warn_message = await msg.channel.send(f'{msg.author.mention}, проверь личку! '
+                                            'Я отправил тебе помощь по командам',
+                                            delete_after=DELAY_TIME)
+        await asyncio.sleep(DELAY_TIME)
+        await warn_message.delete()

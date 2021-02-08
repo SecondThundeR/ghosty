@@ -7,6 +7,7 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
+from discord import channel
 import asyncio
 from src.libs.database_handler import is_data_in_database
 from src.libs.database_handler import get_data_from_database
@@ -26,11 +27,12 @@ async def admin_manager(bot, msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List with operation and user's ID
     """
-    if len(args) == 2 and is_user_admin(msg):
-        if args[0] == 'добавить':
-            await _add_admin(msg, args[1])
-        elif args[0] == 'удалить':
-            await _remove_admin(bot, msg, args[1])
+    if isinstance(msg.channel, channel.DMChannel):
+        if len(args) == 2 and is_user_admin(msg):
+            if args[0] == 'добавить':
+                await _add_admin(msg, args[1])
+            elif args[0] == 'удалить':
+                await _remove_admin(bot, msg, args[1])
 
 
 async def _add_admin(msg, admin_id):

@@ -7,6 +7,7 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
+from discord import channel
 from src.libs.database_handler import is_data_in_database
 from src.libs.database_handler import add_data_to_database
 from src.libs.database_handler import remove_data_from_database
@@ -23,11 +24,12 @@ async def ignored_manager(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List with operation and user's ID
     """
-    if len(args) == 2 and is_user_admin(msg):
-        if args[0] == 'заблокировать':
-            await _add_ignored(msg, args[1])
-        elif args[0] == 'разблокировать':
-            await _remove_ignored(msg, args[1])
+    if isinstance(msg.channel, channel.DMChannel):
+        if len(args) == 2 and is_user_admin(msg):
+            if args[0] == 'заблокировать':
+                await _add_ignored(msg, args[1])
+            elif args[0] == 'разблокировать':
+                await _remove_ignored(msg, args[1])
 
 
 async def _add_ignored(msg, block_id):

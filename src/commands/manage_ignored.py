@@ -24,12 +24,12 @@ async def ignored_manager(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List with operation and user's ID
     """
-    if isinstance(msg.channel, channel.DMChannel):
-        if len(args) == 2 and is_user_admin(msg):
-            if args[0] == 'заблокировать':
-                await _add_ignored(msg, args[1])
-            elif args[0] == 'разблокировать':
-                await _remove_ignored(msg, args[1])
+    if (isinstance(msg.channel, channel.DMChannel)
+            and len(args) == 2 and is_user_admin(msg)):
+        if args[0] == 'заблокировать':
+            await _add_ignored(msg, args[1])
+        elif args[0] == 'разблокировать':
+            await _remove_ignored(msg, args[1])
 
 
 async def _add_ignored(msg, block_id):

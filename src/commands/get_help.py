@@ -43,7 +43,7 @@ async def send_help_message(msg):
     else:
         await msg.author.send(HELP_MESSAGE)
         warn_message = await msg.channel.send(f'{msg.author.mention}, проверь личку! '
-                                            'Я отправил тебе помощь по командам',
-                                            delete_after=DELAY_TIME)
+                                              'Я отправил тебе помощь по командам',
+                                              delete_after=DELAY_TIME)
         await asyncio.sleep(DELAY_TIME)
         await warn_message.delete()

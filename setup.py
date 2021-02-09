@@ -390,14 +390,14 @@ def _main_bot_selector():
         _bot_setup()
     else:
         print('At the moment, the selected bot is '
-            f'{list_of_bots[currently_selected_bot]}')
+              f'{list_of_bots[currently_selected_bot]}')
         print('\nHere are all the bots available to choose from')
         for bot_name in list_of_bots:
             bots_count += 1
             print(f'{bots_count}. {bot_name}')
         print('0. Exit')
         print('Enter the number of option '
-            'you would like to select')
+              'you would like to select')
         while True:
             select_bot = _get_input()
             if select_bot == '0':
@@ -408,7 +408,7 @@ def _main_bot_selector():
                     index_of_bot = int(select_bot) - 1
                     if index_of_bot in range(len(list_of_bots)):
                         print('Great choice! '
-                            f'Selecting {list_of_bots[index_of_bot]} as default...\n')
+                              f'Selecting {list_of_bots[index_of_bot]} as default...\n')
                         edit_data_in_database(
                             0,
                             MAIN_DB_TABLE,
@@ -420,7 +420,7 @@ def _main_bot_selector():
                         print('Invalid number of option. Please, try again')
                 except ValueError:
                     print('It looks like you entered not a number. '
-                        'Please, try again')
+                          'Please, try again')
 
 
 def _initial_bot_setup():

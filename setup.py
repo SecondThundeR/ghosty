@@ -64,7 +64,7 @@ WORDS_PATHS = [
 
 LINKS = [
     'https://raw.githubusercontent.com/SecondThundeR/'
-    'secondthunder-py-bot/dev-2.0.0/',
+    'secondthunder-py-bot/master/',
     'https://github.com/SecondThundeR/secondthunder-py-bot/'
     'wiki/FAQ#getting-a-bot-token'
     ]

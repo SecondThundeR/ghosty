@@ -95,13 +95,18 @@ def restore_word_base(db_path, table, column, path, link):
         column (str): Name of column in table
         path (str): Path to local file of word base
         link (str): Link to latest word base
+
+    Returns:
+        bool: True if word base was imported successfully, False otherwise
     """
-    _download_word_base_file(path, link)
+    if not _download_word_base_file(path, link):
+        return False
     remove_data_from_database(db_path, table)
     words_array = import_data_from_local_file(path)
     for element in words_array:
         add_data_to_database(db_path, table, column, element)
     delete_local_file(path)
+    return True
 
 
 def _download_word_base_file(path, link):
@@ -112,7 +117,13 @@ def _download_word_base_file(path, link):
     Parameters:
         path (str): Path to local file of word base
         link (str): Link to latest word base
+
+    Returns:
+        bool: True status code was 200, False - 404
     """
     r = requests.get(link)
+    if r.status_code == 404:
+        return False
     with open(path, 'wb') as f:
         f.write(r.content)
+    return True

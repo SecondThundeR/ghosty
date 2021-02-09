@@ -64,7 +64,7 @@ WORDS_PATHS = [
 
 LINKS = [
     'https://raw.githubusercontent.com/SecondThundeR/'
-    'secondthunder-py-bot/dev-2.0.0/',
+    'secondthunder-py-bot/master/',
     'https://github.com/SecondThundeR/secondthunder-py-bot/'
     'wiki/FAQ#getting-a-bot-token'
     ]
@@ -105,19 +105,23 @@ def _restore_dev_base():
 
     This function initiates downloading and importing words into the database
     and handles folder creation and deletion
+
+    If link is incorrect, abort importing
     """
-    for i, _ in enumerate(FOLDERS_PATH):
-        create_local_folder(FOLDERS_PATH[i])
-    for i, _ in enumerate(WORDS_DB_TABLES):
-        restore_word_base(
-                2,
-                WORDS_DB_TABLES[i],
-                WORDS_DB_COLUMN,
-                WORDS_PATHS[i],
-                f'{LINKS[0]}{WORDS_PATHS[i]}'
-            )
-    for i, _ in reversed(list(enumerate(FOLDERS_PATH))):
-        delete_local_folder(FOLDERS_PATH[i])
+    for path in FOLDERS_PATH:
+        create_local_folder(path)
+    for (tables, paths) in (WORDS_DB_TABLES, WORDS_PATHS):
+        if not restore_word_base(
+            2,
+            tables,
+            WORDS_DB_COLUMN,
+            paths,
+            f'{LINKS[0]}{paths}'
+        ):
+            return False
+    for path in reversed(FOLDERS_PATH):
+        delete_local_folder(path)
+    return True
 
 
 def _delete_words_base():
@@ -126,10 +130,10 @@ def _delete_words_base():
     This function initiates the deleting all data
     of tables in the database
     """
-    for i, _ in enumerate(WORDS_DB_TABLES):
+    for tables in WORDS_DB_TABLES:
         remove_data_from_database(
             2,
-            WORDS_DB_TABLES[i],
+            tables,
         )
 
 
@@ -156,8 +160,12 @@ def _manage_words_base():
         print('\nClearing database and importing '
               'latest developer\'s word base...')
         _delete_words_base()
-        _restore_dev_base()
-        print('The word base was imported successfully')
+        if not _restore_dev_base():
+            print('The word base wasn\'t imported.\n'
+                  'Seems like link to word base is incorrect, '
+                  'so it\'s better to open issue on Github')
+        else:
+            print('The word base was imported successfully')
         if SETUP_STATUS == 1:
             _manage_words_base()
     elif menu_input == '2':
@@ -376,38 +384,43 @@ def _main_bot_selector():
         MAIN_DB_TABLE,
         MAIN_DB_COLUMNS[1]
     )[0]
-    print('At the moment, the selected bot is '
-          f'{list_of_bots[currently_selected_bot]}')
-    print('\nHere are all the bots available to choose from')
-    for i, bot_name in enumerate(list_of_bots):
-        i += 1
-        print(f'{i}. {bot_name}')
-    print('0. Exit')
-    print('Enter the number of option '
-          'you would like to select')
-    while True:
-        select_bot = _get_input()
-        if select_bot == '0':
-            print('Exiting to main menu\n')
-            _bot_setup()
-        else:
-            try:
-                index_of_bot = int(select_bot) - 1
-                if index_of_bot in range(len(list_of_bots)):
-                    print('Great choice! '
-                          f'Selecting {list_of_bots[index_of_bot]} as default...\n')
-                    edit_data_in_database(
-                        0,
-                        MAIN_DB_TABLE,
-                        MAIN_DB_COLUMNS[1],
-                        index_of_bot
-                    )
-                    _bot_setup()
-                else:
-                    print('Invalid number of option. Please, try again')
-            except ValueError:
-                print('It looks like you entered not a number. '
-                      'Please, try again')
+    bots_count = 1
+    if not list_of_bots:
+        print('It looks like there are no bots in my list, try adding a new one\n')
+        _bot_setup()
+    else:
+        print('At the moment, the selected bot is '
+            f'{list_of_bots[currently_selected_bot]}')
+        print('\nHere are all the bots available to choose from')
+        for bot_name in list_of_bots:
+            bots_count += 1
+            print(f'{bots_count}. {bot_name}')
+        print('0. Exit')
+        print('Enter the number of option '
+            'you would like to select')
+        while True:
+            select_bot = _get_input()
+            if select_bot == '0':
+                print('Exiting to main menu\n')
+                _bot_setup()
+            else:
+                try:
+                    index_of_bot = int(select_bot) - 1
+                    if index_of_bot in range(len(list_of_bots)):
+                        print('Great choice! '
+                            f'Selecting {list_of_bots[index_of_bot]} as default...\n')
+                        edit_data_in_database(
+                            0,
+                            MAIN_DB_TABLE,
+                            MAIN_DB_COLUMNS[1],
+                            index_of_bot
+                        )
+                        _bot_setup()
+                    else:
+                        print('Invalid number of option. Please, try again')
+                except ValueError:
+                    print('It looks like you entered not a number. '
+                        'Please, try again')
 
 
 def _initial_bot_setup():

@@ -159,34 +159,6 @@ def get_data_from_database(db_path, table, keys, data=None, where_statement='AND
         raise Exception from database_error
 
 
-def get_data_with_order(db_path, table, keys, order_type='ASC'):
-    data_array = []
-    try:
-        database_connection = _connect_database(DATABASE_PATHS[db_path])
-        database_connection[1].execute(f'SELECT {keys[0]} '
-                                       f'FROM {table} '
-                                       f'ORDER BY {keys[1]} '
-                                       f'{order_type}')
-        received_data = database_connection[1].fetchall()
-        _disconnect_database(database_connection)
-        for element in received_data:
-            if len(element) > 1:
-                for item in element:
-                    data_array.append(item)
-            else:
-                data_array.append(element[0])
-        return data_array
-    except sqlite3.Error as database_error:
-        raise Exception from database_error
-"""
-                                       f'SELECT * '
-                                       f'FROM {table} '
-                                       f'ORDER BY {key} '
-                                       f'{order_type}'
-"""
-
-
-
 def add_data_to_database(db_path, table, keys, data):
     """Add data from the database and return the result of executing an SQL query.
 

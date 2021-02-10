@@ -11,8 +11,8 @@ This is repository of some random bot for Discord which was created just for fun
 1. Clone this repository *(If you want to clone with Webhook-Nofitier, use* `git clone --recurse-submodules`*)*
 2. Create a Discord Bot on [Discord Developers](https://discord.com/developers/applications) page
 3. Grab a token of your bot
-4. Run `python setup.py` in main directory and setup your bot
-5. Run `pip install -r requirements.txt` in main directory
+4. Run `pip install -r requirements.txt` in main directory
+5. Run `python setup.py` in main directory and setup your bot
 6. Run `python main.py` to run bot
 7. After getting a log that bot was logged in, you are good to go
 

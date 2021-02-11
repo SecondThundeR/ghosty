@@ -238,10 +238,9 @@ def _add_bot():
         bot_token = _get_input()
         if len(bot_token) == 59:
             break
-        else:
-            print('\nIt looks like your token is wrong.\n'
-                  'It must be 59 characters long '
-                  f'(Yours is {len(bot_token)} characters long)')
+        print('\nIt looks like your token is wrong.\n'
+              'It must be 59 characters long '
+              f'(Yours is {len(bot_token)} characters long)')
     add_data_to_database(
         1,
         CONFIG_DB_TABLE,
@@ -353,10 +352,9 @@ def _bot_token_changer(bot_name):
         new_bot_token = _get_input()
         if len(new_bot_token) == 59:
             break
-        else:
-            print('\nIt looks like your token is wrong.\n'
-                  'It must be 59 characters long '
-                  f'(Yours is {len(new_bot_token)} characters long)')
+        print('\nIt looks like your token is wrong.\n'
+              'It must be 59 characters long '
+              f'(Yours is {len(new_bot_token)} characters long)')
     edit_data_in_database(
         1,
         CONFIG_DB_TABLE,

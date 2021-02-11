@@ -291,7 +291,7 @@ def _manage_setup_status():
               'Restart the script for initial setup')
         sys.exit()
     print('\nThe initial setup of the bot has been completed. '
-              'To enable bot, run "main.py" script')
+          'To enable bot, run "main.py" script')
     sys.exit()
 
 

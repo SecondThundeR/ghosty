@@ -140,7 +140,7 @@ def get_data_from_database(db_path, table, keys, data=None, where_statement='AND
                                                f"FROM {table} "
                                                f"WHERE {data_to_find}")
             else:
-                for (key, value) in (keys, data):
+                for key, value in zip(keys, data):
                     temp_array.append(f"{key} = '{value}'")
                 data_to_get = f" {where_statement} ".join(temp_array)
                 database_connection[1].execute("SELECT * "
@@ -239,7 +239,7 @@ def edit_data_in_database(db_path, table, keys, data, statement=False):
                                                        f"WHERE {keys[1]} = '{data[1]}'")
                         database_connection[0].commit()
                 else:
-                    for (key, value) in (keys, data):
+                    for key, value in zip(keys, data):
                         temp_array.append(f"{key} = '{value}'")
                     data_to_edit = ",\n ".join(temp_array)
                     database_connection[1].execute(f'UPDATE {table} '
@@ -283,7 +283,7 @@ def remove_data_from_database(db_path, table, keys=None, data=None):
                                                f"WHERE {data_to_delete}")
                 database_connection[0].commit()
             else:
-                for (key, value) in (keys, data):
+                for key, value in zip(keys, data):
                     temp_array.append(f"{key} = '{value}'")
                 data_to_delete = " AND ".join(temp_array)
                 database_connection[1].execute(f'DELETE FROM {table} '

@@ -8,16 +8,18 @@ as it is a separate file without any use in other files.
 Because of it, all functions here are private only
 """
 
-
-import sys
-from src.libs.database_handler import is_data_in_database
-from src.libs.database_handler import add_data_to_database
-from src.libs.database_handler import get_data_from_database
-from src.libs.database_handler import edit_data_in_database
-from src.libs.database_handler import remove_data_from_database
-from src.libs.files_handler import create_local_folder
-from src.libs.files_handler import delete_local_folder
-from src.libs.words_base_handler import restore_word_base
+try:
+    import sys
+    from src.libs.database_handler import is_data_in_database
+    from src.libs.database_handler import add_data_to_database
+    from src.libs.database_handler import get_data_from_database
+    from src.libs.database_handler import edit_data_in_database
+    from src.libs.database_handler import remove_data_from_database
+    from src.libs.files_handler import create_local_folder
+    from src.libs.files_handler import delete_local_folder
+    from src.libs.words_base_handler import restore_word_base
+except ModuleNotFoundError:
+    print('Some important modules are missing!')
 
 
 MAIN_DB_TABLE = 'variables'
@@ -117,8 +119,7 @@ def _check_for_installed_modules():
         if package.key in MODULES_TO_CHECK:
             modules_counter += 1
     if modules_counter < 3:
-        print('Seems like some modules aren\'t installed on your system! '
-              'Do you want to install them? (Y/N)')
+        print('Do you want to install missing modules for correct work of bot? (Y/N)')
         while True:
             user_input = _get_input()
             if user_input.lower() == 'y':
@@ -129,12 +130,12 @@ def _check_for_installed_modules():
                         [sys.executable,
                         "-m", "pip", "install",
                         "-r", "requirements.txt",
-                        "--use-feature=2020-resolver"])
+                        "--upgrade", "--use-feature=2020-resolver"])
                 else:
                     subprocess.check_call(
                         [sys.executable,
                         "-m", "pip", "install",
-                        "-r", "requirements.txt"])
+                        "-r", "requirements.txt", "--upgrade"])
                 print('\nRequirements installed!\nContinuing the setup...')
                 break
             if user_input.lower() == 'n':

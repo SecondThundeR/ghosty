@@ -61,7 +61,7 @@ LINKS = [
     'https://github.com/SecondThundeR/secondthunder-py-bot/'
     'wiki/FAQ#getting-a-bot-token'
     ]
-
+MODULES_TO_CHECK = ['discord.py', 'requests', 'emoji']
 
 def _get_input(text=''):
     """Process input and return it.
@@ -97,6 +97,53 @@ def _get_input(text=''):
         print('\nIt looks like you haven\'t entered anything, '
               'please try again')
     _bot_setup()
+
+
+def _check_for_installed_modules():
+    """Check for currently installed modules and install missing ones.
+
+    This function gets a list of currently installed modules
+    and checks if the necessary ones are installed.
+    If not, it suggests installing the missing ones
+    by running the installation of requirements.txt
+    """
+    import pkg_resources
+    import subprocess
+    modules_counter = 0
+    pip_version = pkg_resources.get_distribution("pip").version
+    installed_packages = pkg_resources.working_set
+    packages_list = sorted(["%s" % i.key for i in installed_packages])
+    for module in MODULES_TO_CHECK:
+        if module in packages_list:
+            modules_counter += 1
+    if modules_counter != 3:
+        print('Seems like some modules aren\'t installed on your system! '
+              'Do you want to install them? (Y/N)')
+        while True:
+            user_input = _get_input()
+            if user_input.lower() == 'y':
+                if len(pip_version) > 4:
+                    pip_version = pip_version[:-2]
+                if float(pip_version) < 21:
+                    subprocess.check_call(
+                        [sys.executable,
+                        "-m", "pip", "install",
+                        "-r", "requirements.txt",
+                        "--use-feature=2020-resolver"])
+                else:
+                    subprocess.check_call(
+                        [sys.executable,
+                        "-m", "pip", "install",
+                        "-r", "requirements.txt"])
+                print('\nRequirements installed!\nContinuing the setup...')
+                break
+            elif user_input.lower() == 'n':
+                print('Note that the code may not work '
+                      'if you don\'t install the dependencies. '
+                      'To install them manually, read item 4 in the README')
+                break
+            else:
+                print('You have chosen something wrong, please try again\n')
 
 
 def _restore_dev_base():
@@ -430,6 +477,7 @@ def _initial_bot_setup():
     This function launches 3 main functions: addition of bot to database,
     managing of words base and changing setup status to 1 after successful completion
     """
+    _check_for_installed_modules()
     _add_bot()
     _manage_words_base()
     _manage_setup_status()

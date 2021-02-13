@@ -112,8 +112,8 @@ def _check_for_installed_modules():
     import subprocess
     modules_counter = 0
     pip_version = pkg_resources.get_distribution("pip").version
-    installed_packages = pkg_resources.working_set
-    for package in installed_packages:
+    packages = list(pkg_resources.working_set)
+    for package in packages:
         if package.key in MODULES_TO_CHECK:
             modules_counter += 1
     if modules_counter < 3:

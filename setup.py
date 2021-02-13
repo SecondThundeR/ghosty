@@ -63,6 +63,7 @@ LINKS = [
     ]
 MODULES_TO_CHECK = ['discord.py', 'requests', 'emoji']
 
+
 def _get_input(text=''):
     """Process input and return it.
 
@@ -112,11 +113,10 @@ def _check_for_installed_modules():
     modules_counter = 0
     pip_version = pkg_resources.get_distribution("pip").version
     installed_packages = pkg_resources.working_set
-    packages_list = sorted(["%s" % i.key for i in installed_packages])
-    for module in MODULES_TO_CHECK:
-        if module in packages_list:
+    for package in installed_packages:
+        if package.key in MODULES_TO_CHECK:
             modules_counter += 1
-    if modules_counter != 3:
+    if modules_counter < 3:
         print('Seems like some modules aren\'t installed on your system! '
               'Do you want to install them? (Y/N)')
         while True:
@@ -137,13 +137,12 @@ def _check_for_installed_modules():
                         "-r", "requirements.txt"])
                 print('\nRequirements installed!\nContinuing the setup...')
                 break
-            elif user_input.lower() == 'n':
+            if user_input.lower() == 'n':
                 print('Note that the code may not work '
                       'if you don\'t install the dependencies. '
                       'To install them manually, read item 4 in the README')
                 break
-            else:
-                print('You have chosen something wrong, please try again\n')
+            print('You have chosen something wrong, please try again\n')
 
 
 def _restore_dev_base():

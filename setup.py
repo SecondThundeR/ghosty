@@ -128,14 +128,14 @@ def _check_for_installed_modules():
                 if float(pip_version) < 21:
                     subprocess.check_call(
                         [sys.executable,
-                        "-m", "pip", "install",
-                        "-r", "requirements.txt",
-                        "--upgrade", "--use-feature=2020-resolver"])
+                         "-m", "pip", "install",
+                         "-r", "requirements.txt",
+                         "--upgrade", "--use-feature=2020-resolver"])
                 else:
                     subprocess.check_call(
                         [sys.executable,
-                        "-m", "pip", "install",
-                        "-r", "requirements.txt", "--upgrade"])
+                         "-m", "pip", "install",
+                         "-r", "requirements.txt", "--upgrade"])
                 print('\nRequirements installed!\nContinuing the setup...')
                 break
             if user_input.lower() == 'n':

@@ -15,9 +15,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fetching of users and bot on startup
 - Fetching of newcomers and adding to database
 - Ignore for blocked users
-- Dynamic testing without predifined aliases
+- Dynamic testing without predefined aliases
 - New commands `система` and `поиск`
-- Сommands for controlling admin and block lists directly from DM
+- Commands for controlling admin and block lists directly from DM
 - Custom libraries for simplifying scripts workflow
 - Multiplayer for RSP game
 - Checks for regular emoji in messages for certain commands
@@ -48,11 +48,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Ability to pass someone's nickname with `@...` in `хуископ` command
 - Messages for some exceptions in mention parsing
-- Check for formatted word in array before sending
+- Check for formatted word in an array before sending
 
 ## Changed
 
-- Message formatting for custom goroscope
+- Message formatting for custom horoscope
 
 ## Fixed
 
@@ -72,7 +72,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Command selector has been moved to a separate function
 - Text of help command was updated and decoded from Base64
 - Text formatting for JSON array *(Add bold and italic texts)*
-- Changed emoji in shipping text
+- Emoji in shipping text
 
 ### Fixed
 
@@ -118,7 +118,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- All similar subfunctions were merged
+- All similar functions were merged
 - Random delay time replaced to fixed and has been moved to an external variable
 - All text moved to shared variables for localization purposes
 - Some if/else statements were changed to switch statement
@@ -168,7 +168,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Removed
 
 - Checks for user to ignore
-- Multiple commands and functions was deleted due to move to Heroku *(Some of commands will present in additional branches)*
+- Multiple commands and functions was deleted due to move to Heroku *(Some of the commands will present in additional branches)*
 - Commented code was deleted from main branch
 
 [2.0.0]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v1.1.4...v2.0.0

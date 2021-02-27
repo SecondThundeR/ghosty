@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and starting with changes from 29.11.2020, this bot will have a correct [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 28.02.2021
+
+## Added
+
+- Getting help from DM
+- Check for 404 status when getting words from link
+- Flag for requirements installing
+- Check for missing packages in `setup.py`
+- Reset of active ship status on bot startup
+- Ignore of IDEA folder *(for future work with PyCharm and etc.)*
+
+## Changed
+
+- Check for DM moved to commands scripts
+- Enumerate loops replace with regular ones
+- Check for folders and files were merged
+- Small change of setup script internals
+- Help message text
+- Simplify makar text reversing
+- Poll's variables moved to dictionary
+
+## Fixed
+
+- Wrong link for word base in setup
+- Error of loop with two arrays
+- Wrong bold formatting of word
+- Typos in README and Changelog files
+-
+
 ## [2.0.0] - 07.02.2021
 
 ## Added
@@ -52,7 +81,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Changed
 
-- Message formatting for custom goroscope
+- Message formatting for custom horoscope
 
 ## Fixed
 
@@ -154,7 +183,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Multiple functions and commands was merge into single main commands file
 - Timeout for some messages was reduced to 2 seconds
 - Timeout for help command was increased to 30 seconds
-- Cooldowns of some modules was increased
+- Delay time of some modules was increased
 - Some functions was renamed
 - Many conditions was simplified and refactored
 - Some descriptions of modules was rewritten
@@ -171,6 +200,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Multiple commands and functions was deleted due to move to Heroku *(Some of commands will present in additional branches)*
 - Commented code was deleted from main branch
 
+[2.0.1]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v1.1.4...v2.0.0
 [1.1.4]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v1.1.2...v1.1.3

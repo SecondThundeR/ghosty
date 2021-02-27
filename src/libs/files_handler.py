@@ -6,7 +6,7 @@ This is a basic self-written module to handle operations with files
 
 This file can also be imported as a module and contains the following functions:
     * import_data_from_file - imports data from file to variable
-    * check_for_file_existence - returns a boolean when checking for local file
+    * check_for_existence - returns a boolean when checking for local file or folder
     * create_local_folder - returns a boolean when creating a local folder
     * delete_local_file - returns a boolean when deleting a local file
     * delete_local_folder - returns a boolean when deleting a local folder
@@ -31,14 +31,14 @@ def import_data_from_local_file(path):
     return file_data
 
 
-def check_for_file_existence(path):
-    """Check for the presence of a file at the specified path.
+def check_for_existence(path):
+    """Check for the presence of a file or folder at the specified path.
 
     Parameters:
-        path (str): Path to local file
+        path (str): Path to local file or folder
 
     Returns:
-        bool: True if file exists, False otherwise
+        bool: True if file or folder exists, False otherwise
     """
     if os.path.exists(path):
         return True
@@ -52,7 +52,8 @@ def create_local_folder(path):
         path (str): Path to local folder
     """
     try:
-        os.mkdir(path)
+        if not check_for_existence(path):
+            os.mkdir(path)
     except OSError:
         print('There is an error while creating folder. Skipping...')
 
@@ -65,7 +66,7 @@ def delete_local_file(path):
     Parameters:
         path (str): Path to local file
     """
-    if os.path.exists(path):
+    if check_for_existence(path):
         os.remove(path)
 
 
@@ -76,6 +77,7 @@ def delete_local_folder(path):
         path (str): Path to local folder
     """
     try:
-        os.rmdir(path)
+        if check_for_existence(path):
+            os.rmdir(path)
     except OSError:
         print('There is an error while deleting folder. Skipping...')

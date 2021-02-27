@@ -63,8 +63,10 @@ def clear_data_on_execution():
     edit_data_in_database(
         0,
         'variables',
-        ['poll_locked', 'spammer_ID', 'spammer_count', 'rsp_game_active'],
-        [0, 0, 0, 0]
+        ['poll_locked', 'ship_in_active',
+         'spammer_ID', 'spammer_count',
+         'rsp_game_active'],
+        [0, 0, 0, 0, 0]
         )
     remove_data_from_database(0, 'bots')
     remove_data_from_database(0, 'users')
@@ -117,8 +119,8 @@ def get_data_from_database(db_path, table, keys, data=None, where_statement='AND
                 database_connection[1].execute(f'SELECT {keys} '
                                                f'FROM {table}')
             elif isinstance(data, list):
-                for i, _ in enumerate(data):
-                    temp_array.append(f"{keys} = '{data[i]}'")
+                for values in data:
+                    temp_array.append(f"{keys} = '{values}'")
                 data_to_find = " OR ".join(temp_array)
                 database_connection[1].execute("SELECT * "
                                                f"FROM {table} "
@@ -133,15 +135,15 @@ def get_data_from_database(db_path, table, keys, data=None, where_statement='AND
                 database_connection[1].execute(f'SELECT {selected_keys} '
                                                f'FROM {table}')
             elif isinstance(data, (str, int)):
-                for i, _ in enumerate(keys):
-                    temp_array.append(f"{keys[i]} = '{data}'")
+                for key in keys:
+                    temp_array.append(f"{key} = '{data}'")
                 data_to_find = f" {where_statement} ".join(temp_array)
                 database_connection[1].execute("SELECT * "
                                                f"FROM {table} "
                                                f"WHERE {data_to_find}")
             else:
-                for i, _ in enumerate(keys):
-                    temp_array.append(f"{keys[i]} = '{data[i]}'")
+                for key, value in zip(keys, data):
+                    temp_array.append(f"{key} = '{value}'")
                 data_to_get = f" {where_statement} ".join(temp_array)
                 database_connection[1].execute("SELECT * "
                                                f"FROM {table} "
@@ -223,8 +225,8 @@ def edit_data_in_database(db_path, table, keys, data, statement=False):
             if len(keys) != len(data):
                 pass
             elif isinstance(data, str):
-                for i, _ in enumerate(keys):
-                    temp_array.append(f"{keys[i]} = '{data}'")
+                for key in keys:
+                    temp_array.append(f"{key} = '{data}'")
                 data_to_edit = ",\n ".join(temp_array)
                 database_connection[1].execute(f'UPDATE {table} '
                                                f'SET {data_to_edit}')
@@ -239,8 +241,8 @@ def edit_data_in_database(db_path, table, keys, data, statement=False):
                                                        f"WHERE {keys[1]} = '{data[1]}'")
                         database_connection[0].commit()
                 else:
-                    for i, _ in enumerate(keys):
-                        temp_array.append(f"{keys[i]} = '{data[i]}'")
+                    for key, value in zip(keys, data):
+                        temp_array.append(f"{key} = '{value}'")
                     data_to_edit = ",\n ".join(temp_array)
                     database_connection[1].execute(f'UPDATE {table} '
                                                    f'SET {data_to_edit}')
@@ -276,15 +278,15 @@ def remove_data_from_database(db_path, table, keys=None, data=None):
             database_connection[0].commit()
         elif isinstance(keys, list):
             if isinstance(data, str):
-                for i, _ in enumerate(keys):
-                    temp_array.append(f"{keys[i]} = '{data}'")
+                for key in keys:
+                    temp_array.append(f"{key} = '{data}'")
                 data_to_delete = " AND ".join(temp_array)
                 database_connection[1].execute(f"DELETE FROM {table} "
                                                f"WHERE {data_to_delete}")
                 database_connection[0].commit()
             else:
-                for i, _ in enumerate(keys):
-                    temp_array.append(f"{keys[i]} = '{data[i]}'")
+                for key, value in zip(keys, data):
+                    temp_array.append(f"{key} = '{value}'")
                 data_to_delete = " AND ".join(temp_array)
                 database_connection[1].execute(f'DELETE FROM {table} '
                                                f'WHERE {data_to_delete}')

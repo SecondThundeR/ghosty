@@ -16,20 +16,6 @@ from src.libs.user_handler import get_members_name
 DELETE_TIME = 5
 
 
-def _reverse_string(word):
-    """Get non-reversed string and return reversed one.
-
-    Parameters:
-        word (str): Non-reversed string
-
-    Returns:
-        str: Reversed string
-    """
-    reversed_string = list(word)
-    reversed_string.reverse()
-    return "".join(reversed_string)
-
-
 async def send_makar_message(msg, args):
     """Send famous (maybe) sentence.
 
@@ -42,7 +28,7 @@ async def send_makar_message(msg, args):
         if r_user is None:
             return
         user = get_members_name(r_user)
-        await msg.channel.send(f'Улыбок тебе дед {_reverse_string(user)}')
+        await msg.channel.send(f'Улыбок тебе дед {user[::-1]}')
     else:
         if emoji.emoji_count(msg.content) > 0:
             await msg.channel.send(f'{msg.author.mention}, '
@@ -76,4 +62,4 @@ async def send_makar_message(msg, args):
                 user = get_members_name(custom_member)
             else:
                 user = " ".join(args)
-            await msg.channel.send(f'Улыбок тебе дед {_reverse_string(user)}')
+            await msg.channel.send(f'Улыбок тебе дед {user[::-1]}')

@@ -22,47 +22,55 @@ async def create_poll(msg, args):
     """
     if not args:
         return
-    vote_time = 60
-    vote_text = ''
-    vote_author = msg.author
-    p_answers = 0
-    n_answers = 0
+    poll_data = {
+        "time": 60,
+        "text": "",
+        "author": msg.author.mention,
+        "p_votes": 0,
+        "n_votes": 0
+    }
     if args[0].isnumeric():
-        vote_time = int(args[0])
+        poll_data["time"] = int(args[0])
         args.pop(0)
-    vote_text = " ".join(args)
+    poll_data["text"] = " ".join(args)
     await msg.delete()
     vote_msg = await msg.channel.send('**Время голосования от '
-                                      f'{vote_author.mention}**\n'
-                                      f'Вопрос: {vote_text}\n'
-                                      f'*На подумать - {vote_time} секунд*')
+                                      f'{poll_data["author"]}**\n'
+                                      f'Вопрос: {poll_data["text"]}\n'
+                                      '*Голосование закончится через '
+                                      f'{poll_data["time"]} секунд*')
     await vote_msg.add_reaction(emoji="👍")
     await vote_msg.add_reaction(emoji="👎")
-    await asyncio.sleep(vote_time)
+    await asyncio.sleep(poll_data["time"])
     vote_msg = await vote_msg.channel.fetch_message(vote_msg.id)
     for reaction in vote_msg.reactions:
         if reaction.emoji == '👍':
-            p_answers = reaction.count - 1
+            poll_data["p_votes"] = reaction.count - 1
         if reaction.emoji == '👎':
-            n_answers = reaction.count - 1
+            poll_data["n_votes"] = reaction.count - 1
     await vote_msg.delete()
-    if p_answers > n_answers:
+    if poll_data["p_votes"] > poll_data["n_votes"]:
         await msg.channel.send('**Голосование окончено!**\n'
-                               f'Вопрос **{vote_text}** от {vote_author.mention} '
+                               f'Вопрос **{poll_data["text"]}** '
+                               f'от {poll_data["author"]} '
                                'был принят среди многих **положительно**!\n'
                                '*Ну разве это не счастье?*')
-    elif p_answers < n_answers:
+    elif poll_data["p_votes"] < poll_data["n_votes"]:
         await msg.channel.send('**Голосование окончено!**\n'
-                               f'Вопрос **{vote_text}** от {vote_author.mention} '
+                               f'Вопрос **{poll_data["text"]}** от '
+                               f'{poll_data["author"]} '
                                'был принят среди многих **отрицательно**!\n'
                                '*Что ж, неудачам тоже свойственно быть*')
-    elif p_answers == n_answers and p_answers > 0 and n_answers > 0:
+    elif (poll_data["p_votes"] == poll_data["n_votes"]
+            and poll_data["p_votes"] > 0 and poll_data["n_votes"] > 0):
         await msg.channel.send('**Голосование окончено!**\n'
-                               f'Вопрос **{vote_text}** от {vote_author.mention} '
+                               f'Вопрос **{poll_data["text"]}** от '
+                               f'{poll_data["author"]} '
                                'набрал одинаковое голосов\n'
-                               'Данное голосование объявляется **несостоявшимся!**')
-    elif p_answers == 0 and n_answers == 0:
+                               'Голосование объявляется **несостоявшимся!**')
+    elif poll_data["p_votes"] == 0 and poll_data["n_votes"] == 0:
         await msg.channel.send('**Голосование окончено!**\n'
-                               f'Вопрос **{vote_text}** от {vote_author.mention} '
+                               f'Вопрос **{poll_data["text"]}** от '
+                               f'{poll_data["author"]} '
                                'не получил никаких голосов\n'
-                               'Данное голосование объявляется **несостоявшимся!**')
+                               'Голосование объявляется **несостоявшимся!**')

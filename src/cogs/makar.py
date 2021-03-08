@@ -1,4 +1,4 @@
-"""Script for sending meme sentence with reversed username.
+"""Send meme sentence with reversed username.
 
 This script sends sentence 'Улыбок тебе дед ...' where at the end
 reverse username goes
@@ -7,10 +7,9 @@ This file can also be imported as a module and contains the following functions:
     * send_makar_message - sends message with sentence and reversed username
 """
 
-import emoji
-import asyncio
-from src.libs.user_handler import get_random_user
-from src.libs.user_handler import get_members_name
+from emoji import emoji_count
+from asyncio import sleep
+from src.lib.users import get_random_user, get_members_name
 
 
 DELETE_TIME = 5
@@ -30,30 +29,30 @@ async def send_makar_message(msg, args):
         user = get_members_name(r_user)
         await msg.channel.send(f'Улыбок тебе дед {user[::-1]}')
     else:
-        if emoji.emoji_count(msg.content) > 0:
+        if emoji_count(msg.content) > 0:
             await msg.channel.send(f'{msg.author.mention}, '
                                    'какой блин шип смайлов...',
                                    delete_after=DELETE_TIME)
-            await asyncio.sleep(DELETE_TIME)
+            await sleep(DELETE_TIME)
             await msg.delete()
         elif args[0].startswith('<@&'):
             await msg.channel.send(f'{msg.author.mention}, к сожалению, '
                                    'я не могу обработать это',
                                    delete_after=DELETE_TIME)
-            await asyncio.sleep(DELETE_TIME)
+            await sleep(DELETE_TIME)
             await msg.delete()
         elif args[0].startswith('<:'):
             await msg.channel.send(f'{msg.author.mention}, '
                                    'какой блин переворот эмодзи...',
                                    delete_after=DELETE_TIME)
-            await asyncio.sleep(DELETE_TIME)
+            await sleep(DELETE_TIME)
             await msg.delete()
         elif '@everyone' in args[0] or '@here' in args[0]:
             await msg.channel.send(f'{msg.author.mention}, '
                                    'похоже вы пытаетесь всунуть сюда '
                                    '`@here` или `@everyone`, зачем?',
                                    delete_after=DELETE_TIME)
-            await asyncio.sleep(DELETE_TIME)
+            await sleep(DELETE_TIME)
             await msg.delete()
         else:
             if args[0].startswith('<@!'):

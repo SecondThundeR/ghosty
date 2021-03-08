@@ -1,4 +1,4 @@
-"""Script for getting random percent of who the user is.
+"""Get random percent of who the user is.
 
 Also this script checks for two modes (test or random mode)
 
@@ -7,8 +7,8 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-import random
-from src.libs.user_handler import get_random_user
+from random import randint
+from src.lib.users import get_random_user
 
 
 def _get_who_is_user(message):
@@ -35,7 +35,7 @@ async def who_is_user(msg, full_message):
         msg (discord.message.Message): Execute send to channel function
         full_message (list): List of message contents
     """
-    random_percent = random.randint(0, 100)
+    random_percent = randint(0, 100)
     last_item_index = len(full_message) - 1
     test_data = _get_who_is_user(full_message)
     current_user = ''

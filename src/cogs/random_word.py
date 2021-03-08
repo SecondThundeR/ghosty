@@ -1,4 +1,4 @@
-"""Script for getting random word from list.
+"""Get random word from list.
 
 This script sends randomly chosen word from list
 Also, especially for this command, checks for spam messages
@@ -8,17 +8,14 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-import random
-import asyncio
-from src.libs.database_handler import get_data_from_database
-from src.libs.database_handler import edit_data_in_database
-from src.libs.database_handler import is_data_in_database
-from src.libs.user_handler import get_random_user
-from src.libs.words_base_handler import add_word
-from src.libs.words_base_handler import delete_word
+from random import choice
+from asyncio import sleep
+from src.lib.database import get_data, modify_data
+from src.lib.users import get_random_user
+from src.lib.words_base import manage_word
 
 
-WORDS_ARRAY = get_data_from_database(2, 'main_words_base', 'words')
+WORDS_ARRAY = get_data(2, 'SELECT words FROM main_words_base')
 DELAY_TIME = 3
 
 
@@ -30,24 +27,29 @@ async def get_random_word(msg, args):
         args (list): List of arguments (Custom name or mode of function)
     """
     if not args:
-        current_user = msg.author.mention
+        curr_user = msg.author.mention
     else:
         if args[0] == 'добавить':
             args.pop(0)
             word_to_add = " ".join(args)
-            await msg.channel.send(add_word(word_to_add),
+            await msg.channel.send(manage_word(word_to_add, 'add'),
                                    delete_after=DELAY_TIME)
-            await asyncio.sleep(DELAY_TIME)
+            await sleep(DELAY_TIME)
             await msg.delete()
             return
 
         if args[0] == 'удалить':
-            if is_data_in_database(0, 'admin_list', 'admins_id', msg.author.id):
+            if get_data(
+                0,
+                True,
+                'SELECT * FROM admin_list WHERE admins_id = ?',
+                msg.author.id
+            ):
                 args.pop(0)
                 word_to_delete = " ".join(args)
-                await msg.channel.send(delete_word(word_to_delete),
+                await msg.channel.send(manage_word(word_to_delete, 'del'),
                                        delete_after=DELAY_TIME)
-                await asyncio.sleep(DELAY_TIME)
+                await sleep(DELAY_TIME)
                 await msg.delete()
             return
 
@@ -55,23 +57,23 @@ async def get_random_word(msg, args):
             r_user = await get_random_user(msg)
             if r_user is None:
                 return
-            current_user = r_user.mention
+            curr_user = r_user.mention
         else:
-            current_user = args[0]
+            curr_user = args[0]
 
     if len(WORDS_ARRAY) == 0:
         await msg.channel.send(f'{msg.author.mention}, я пока не знаю никаких слов, '
                                'однако вы можете добавить новые слова в мой словарь',
                                delete_after=DELAY_TIME)
-        await asyncio.sleep(DELAY_TIME)
+        await sleep(DELAY_TIME)
         await msg.delete()
     elif _check_for_spam(msg):
         await msg.channel.send(f'{msg.author.mention} куда спамиш?',
                                delete_after=DELAY_TIME)
-        await asyncio.sleep(DELAY_TIME)
+        await sleep(DELAY_TIME)
         await msg.delete()
     else:
-        await msg.channel.send(f'{current_user} {random.choice(WORDS_ARRAY)}')
+        await msg.channel.send(f'{curr_user} {choice(WORDS_ARRAY)}')
 
 
 def _check_for_spam(msg):
@@ -83,31 +85,29 @@ def _check_for_spam(msg):
     Returns:
         bool: True if user hit message in a row limit, False otherwise
     """
-    current_status = get_data_from_database(
+    spam_info = get_data(
         0,
-        'variables',
-        ['spammer_ID', 'spammer_count']
+        False,
+        'SELECT spammer_ID, spammer_count FROM variables'
     )
-    if current_status[0] == msg.author.id:
-        if current_status[1] >= 3:
-            edit_data_in_database(
+    if spam_info[0] == msg.author.id:
+        if spam_info[1] >= 3:
+            modify_data(
                 0,
-                'variables',
-                'spammer_count',
+                'UPDATE variables SET spammer_count = ?',
                 0
             )
             return True
-        edit_data_in_database(
+        modify_data(
             0,
-            'variables',
-            'spammer_count',
-            current_status[1] + 1
+            'UPDATE variables SET spammer_count = ?',
+            spam_info[1] + 1
         )
         return False
-    edit_data_in_database(
+    modify_data(
         0,
-        'variables',
-        ['spammer_ID', 'spammer_count'],
-        [msg.author.id, 1]
+        'UPDATE variables SET spammer_ID = ?, spammer_count = ?',
+        msg.author.id,
+        1
     )
     return False

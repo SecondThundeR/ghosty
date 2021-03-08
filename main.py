@@ -9,51 +9,46 @@ fit your needs
 """
 
 
-import time
-import discord
-from src.libs.database_handler import clear_data_on_execution
-from src.libs.database_handler import edit_data_in_database
-from src.libs.database_handler import get_data_from_database
-from src.libs.database_handler import add_data_to_database
-from src.commands.create_poll import create_poll
-from src.commands.ded_makar import send_makar_message
-from src.commands.get_help import send_help_message
-from src.commands.get_uptime import get_uptime_message
-from src.commands.manage_admins import admin_manager
-from src.commands.manage_ignored import ignored_manager
-from src.commands.me_message import send_me_message
-from src.commands.random_number import get_random_number
-from src.commands.random_ship import ship_func_chooser
-from src.commands.random_word import get_random_word
-from src.commands.rsp_game import rsp_mode
-from src.commands.russian_roulette import start_roulette
-from src.commands.system_info import get_system_info
-from src.commands.user_checker import who_is_user
-from src.commands.user_finder import user_finder_mode
+from time import time as curr_time
+from discord import Client, Intents, Status, Game
+from src.lib.database import clear_on_load, get_data, modify_data
+from src.lib.users import add_member_to_db
+from src.cogs.help import send_help_message
+from src.cogs.makar import send_makar_message
+from src.cogs.manage_admins import admin_manager
+from src.cogs.manage_ignored import ignored_manager
+from src.cogs.me import send_me_message
+from src.cogs.poll import init_poll
+from src.cogs.random_number import get_random_number
+from src.cogs.random_ship import ship_func_chooser
+from src.cogs.random_word import get_random_word
+from src.cogs.rsp_game import rsp_mode
+from src.cogs.russian_roulette import start_roulette
+from src.cogs.system import get_system_info
+from src.cogs.uptime import get_bot_uptime
+from src.cogs.user_checker import who_is_user
+from src.cogs.user_finder import user_finder_mode
 
 
-TOKENS = get_data_from_database(1, 'tokens', 'bot_token')
-SELECTED_BOT = get_data_from_database(0, 'variables', 'current_selected_bot')[0]
+TOKENS = get_data(1, False, 'SELECT bot_token FROM tokens')
+SELECTED_BOT = get_data(0, 'SELECT current_selected_bot FROM variables')
 ACTIVITY_NAME = 'Helltaker'
-intents = discord.Intents.default()
+intents = Intents.default()
 intents.members = True
-client = discord.Client(intents=intents)
+client = Client(intents=intents)
 
 
 @client.event
 async def on_ready():
     """Execute necessary functions during the bot launch."""
-    clear_data_on_execution()
+    clear_on_load()
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
-            if member.bot:
-                add_data_to_database(0, 'bots', 'bots_id', member.id)
-            else:
-                add_data_to_database(0, 'users', 'users_id', member.id)
-    await client.change_presence(status=discord.Status.dnd,
-                                 activity=discord.Game(name=ACTIVITY_NAME))
+            add_member_to_db(member.id)
+    await client.change_presence(status=Status.dnd,
+                                 activity=Game(name=ACTIVITY_NAME))
     print(f'Successfully logged in as {client.user}!')
-    edit_data_in_database(0, 'variables', 'bot_uptime', int(time.time()))
+    modify_data(0, 'UPDATE variables SET bot_uptime = ?', int(curr_time()))
 
 
 @client.event
@@ -63,10 +58,7 @@ async def on_member_join(member):
     Parameters:
         member (discord.member.Member): Information about the user who joined the server
     """
-    if member.bot:
-        add_data_to_database(0, 'bots', 'bots_id', member.id)
-    else:
-        add_data_to_database(0, 'users', 'users_id', member.id)
+    add_member_to_db(member.id)
 
 
 @client.event
@@ -79,11 +71,10 @@ async def on_message(message):
     Parameters:
         message (discord.message.Message): User message to perform required functions
     """
-    if message.author == client.user or message.author.id in get_data_from_database(
+    if message.author == client.user or message.author.id in get_data(
         0,
-        'block_list',
-        'blocked_id'
-    ):
+        False,
+        'SELECT blocked_id FROM block_list'):
         return
 
     full_message = message.content.split(' ')
@@ -91,13 +82,13 @@ async def on_message(message):
     command = args.pop(0).lower()
 
     if command == 'полл':
-        await create_poll(message, args)
+        await init_poll(message, args)
     elif command == 'макар':
         await send_makar_message(message, args)
     elif command == 'хелп':
         await send_help_message(message)
     elif command == 'uptime':
-        await get_uptime_message(message)
+        await get_bot_uptime(message)
     elif command in 'админ':
         await admin_manager(client, message, args)
     elif command in 'чс':

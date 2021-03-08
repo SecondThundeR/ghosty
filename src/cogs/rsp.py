@@ -9,7 +9,8 @@ This file can also be imported as a module and contains the following functions:
 
 from discord import channel
 from random import choice
-from asyncio import sleep, TimeoutError
+from asyncio import sleep,
+from asyncio import TimeoutError as Timeout
 from src.lib.database import get_data, modify_data
 
 
@@ -167,7 +168,7 @@ async def _rsp_multi_game(bot, msg):
     try:
         s_user_wait = await bot.wait_for('message', timeout=60, check=_join_check)
         second_user = s_user_wait.author
-    except TimeoutError:
+    except Timeout:
         modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
         game_fail = current_channel.send(f'{first_user.mention}, '
                                          'похоже никто не решил сыграть с вами. '
@@ -194,7 +195,7 @@ async def _rsp_multi_game(bot, msg):
         await first_user.send('Ваш вариант *(На ответ 1 минута)*:')
         first_response = await bot.wait_for('message', timeout=30, check=_choice_check)
         users_choice.append(first_response.content.lower())
-    except TimeoutError:
+    except Timeout:
         modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
         f_move_fail = await current_channel.send(f'{first_user.mention} '
                                                  'не успел отправить вариант вовремя. '
@@ -207,7 +208,7 @@ async def _rsp_multi_game(bot, msg):
         await second_user.send('Ваш вариант *(На ответ 1 минута)*:')
         second_response = await bot.wait_for('message', timeout=30, check=_choice_check)
         users_choice.append(second_response.content.lower())
-    except TimeoutError:
+    except Timeout:
         modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
         s_move_fail = await current_channel.send(f'{second_user.mention} '
                                                  'не успел отправить вариант вовремя. '

@@ -28,6 +28,7 @@ DB_PATH = [
 
 
 class Database:
+
     """A class to represent a database.
 
     Parameters:
@@ -37,6 +38,7 @@ class Database:
         connect_db: Makes connection with database
         disconnect_db: Closes connection with database
     """
+
     def __init__(self, path):
         """Initialize all necessary variables for DB.
 
@@ -100,16 +102,15 @@ def get_data(path_num, is_single, command, *data):
             received_data = database.cur.fetchone()
             database.disconnect_db()
             return received_data[0]
-        else:
-            received_data = database.cur.fetchall()
-            database.disconnect_db()
-            for element in received_data:
-                if len(element) > 1:
-                    for item in element:
-                        data_arr.append(item)
-                else:
-                    data_arr.append(element[0])
-            return data_arr
+        received_data = database.cur.fetchall()
+        database.disconnect_db()
+        for element in received_data:
+            if len(element) > 1:
+                for item in element:
+                    data_arr.append(item)
+            else:
+                data_arr.append(element[0])
+        return data_arr
     except DBError as err:
         print('There is an error while working with DB.\n'
               f'Here are error details: {err}')

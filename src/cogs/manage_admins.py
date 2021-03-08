@@ -8,7 +8,7 @@ This file can also be imported as a module and contains the following functions:
 
 
 from discord import channel
-from asyncio import TimeoutError
+from asyncio import TimeoutError as Timeout
 from src.lib.database import get_data, modify_data
 from src.lib.users import is_user_admin
 
@@ -74,12 +74,16 @@ async def _remove_admin(bot, msg, user_id):
                                    ' (Да/Нет)')
             try:
                 wait_msg = await bot.wait_for('message', timeout=15)
-            except TimeoutError:
+            except Timeout:
                 await msg.channel.send('Похоже вы не решились с выбором, '
                                        'пока что я отменил удаление вас из списка')
             else:
                 if wait_msg.content.lower() == 'да':
-                    modify_data(0, 'DELETE FROM admin_list WHERE admins_id = ?', user_id)
+                    modify_data(
+                        0,
+                        'DELETE FROM admin_list WHERE admins_id = ?',
+                        user_id
+                    )
                     await msg.channel.send('Я удалил вас из админов :(')
                 elif wait_msg.content.lower() in ['не', 'нет']:
                     await msg.channel.send('Удаление было отменено')

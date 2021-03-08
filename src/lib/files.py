@@ -61,8 +61,7 @@ def folder_status(path):
     try:
         if not listdir(path):
             return False
-        else:
-            return True
+        return True
     except OSError as err:
         print('There is an error while checking folder.\n'
               f'Here are error details: {err}')

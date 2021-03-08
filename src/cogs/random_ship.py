@@ -11,7 +11,7 @@ from emoji import emoji_count
 from asyncio import sleep
 from datetime import datetime, timedelta
 from src.lib.database import get_data, modify_data
-from src.lib.users import get_random_user, get_members_name
+from src.lib.users import get_shipping_users, get_members_name
 
 
 DELAY_TIME = 2
@@ -161,7 +161,7 @@ async def _random_ship(msg, mode='default'):
             1,
             1
         )
-        users_info = await get_random_user(msg, 'shipping')
+        users_info = await get_shipping_users(msg)
         if users_info is None:
             modify_data(
                 0,

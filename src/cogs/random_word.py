@@ -15,7 +15,7 @@ from src.lib.users import get_random_user
 from src.lib.words_base import manage_word
 
 
-WORDS_ARRAY = get_data(2, 'SELECT words FROM main_words_base')
+WORDS_ARRAY = get_data(2, False, 'SELECT words FROM main_words_base')
 DELAY_TIME = 3
 
 

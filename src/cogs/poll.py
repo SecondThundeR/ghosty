@@ -21,16 +21,23 @@ async def init_poll(msg, args):
         args (list): List with custom poll time and/or with poll text
     """
     class Poll:
+
+        """A class to represent a database.
+
+        Parameters:
+            author (discord.member.Member): Info about author to mention
+        """
+
         def __init__(self, author):
             self.time = 60
             self.text = ''
-            self.author = author
+            self.author = author.mention
             self.p_votes = 0
             self.n_votes = 0
 
     if not args:
         return
-    poll = Poll(msg.author.mention)
+    poll = Poll(msg.author)
     if args[0].isnumeric():
         poll.time = int(args[0])
         args.pop(0)

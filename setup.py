@@ -9,7 +9,8 @@ Because of it, all functions here are private only
 """
 
 try:
-    from sys import executable, exit
+    from sys import executable
+    from sys import exit as script_exit
     from src.lib.database import get_data, modify_data
     from src.lib.files import create_folder, delete_folder
     from src.lib.words_base import restore_word_base
@@ -83,15 +84,12 @@ def _get_input(text=''):
     while True:
         user_input = str(input('> '))
         if user_input.upper() not in ["", "CANCEL"]:
-            # TODO: Test SQL queries without formatting
-            """
-            if user_input.find("\'") != -1:
-                formatted_input = user_input.replace("\'", "''")
-                user_input = formatted_input
-            elif user_input.find("'") != -1:
-                formatted_input = user_input.replace("'", "''")
-                user_input = formatted_input
-            """
+            # if user_input.find("\'") != -1:
+            #     formatted_input = user_input.replace("\'", "''")
+            #     user_input = formatted_input
+            # elif user_input.find("'") != -1:
+            #     formatted_input = user_input.replace("'", "''")
+            #     user_input = formatted_input
             return user_input
         if user_input.upper() == "CANCEL" and SETUP_STATUS == 1:
             print('Cancelling input. '
@@ -334,10 +332,10 @@ def _manage_setup_status():
                 )
         print('\nThe bot\'s settings have been reset. '
               'Restart the script for initial setup')
-        exit()
+        script_exit()
     print('\nThe initial setup of the bot has been completed. '
           'To enable bot, run "main.py" script')
-    exit()
+    script_exit()
 
 
 def _bot_settings_manager():
@@ -510,7 +508,7 @@ def _bot_setup():
             _manage_setup_status()
         elif menu_input == '0':
             print('Hope you come back soon! See you later')
-            exit()
+            script_exit()
         else:
             print('You have chosen something wrong, please try again\n')
 

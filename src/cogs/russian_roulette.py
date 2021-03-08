@@ -59,12 +59,19 @@ async def start_roulette(msg, args):
         args (list): List of arguments (Bullet count number)
     """
     class Roulette:
+
+        """A class to represent a database.
+
+        Parameters:
+            player (discord.member.Member): Info about player to mention
+        """
+
         def __init__(self, player):
-            self.player = player
+            self.player = player.mention
             self.bullet_list = []
             self.bullet_count = 0
 
-    roulette = Roulette(msg.author.id)
+    roulette = Roulette(msg.author)
 
     if not args:
         roulette.bullet_count = 1
@@ -88,10 +95,10 @@ async def start_roulette(msg, args):
             if (get_data(
                     0,
                     True,
-                    'SELECT * FROM admin_list WHERE admins_id = ?',
+                    'SELECT * FROM admin_list '
+                    'WHERE admins_id = ?',
                     msg.author.id
-                )
-                and args[1] in TABLES_ALIASES
+                ) and args[1] in TABLES_ALIASES
             ):
                 TABLE_TO_MODIFY = TABLES_ALIASES[args[1]]
                 for i in range(2):
@@ -124,8 +131,8 @@ async def start_roulette(msg, args):
                                'теперь у нас на одного суицидника меньше. '
                                f'им был {roulette.player}!!!')
     elif roulette.bullet_count > 6:
-        await msg.channel.send(f'{roulette.player}, если вдруг ты не знаешь, то напомню!'
-                               '\nПо правилам русской рулетки, '
+        await msg.channel.send(f'{roulette.player}, стоит напомнить, '
+                               'что по правилам русской рулетки, '
                                'можно брать только до 6 патронов')
     else:
         for i in range(roulette.bullet_count):

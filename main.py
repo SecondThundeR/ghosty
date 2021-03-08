@@ -31,7 +31,7 @@ from src.cogs.user_finder import user_finder_mode
 
 
 TOKENS = get_data(1, False, 'SELECT bot_token FROM tokens')
-SELECTED_BOT = get_data(0, 'SELECT current_selected_bot FROM variables')
+SELECTED_BOT = get_data(0, True, 'SELECT current_selected_bot FROM variables')
 ACTIVITY_NAME = 'Helltaker'
 intents = Intents.default()
 intents.members = True
@@ -74,7 +74,8 @@ async def on_message(message):
     if message.author == client.user or message.author.id in get_data(
         0,
         False,
-        'SELECT blocked_id FROM block_list'):
+        'SELECT blocked_id FROM block_list'
+    ):
         return
 
     full_message = message.content.split(' ')

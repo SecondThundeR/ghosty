@@ -1,4 +1,4 @@
-"""Setup of secondthunder-py-bot.
+"""Setup of secondthunder-py-bot (Beta).
 
 This setup performs the first initial and further
 configuration of the bot through the console.
@@ -9,33 +9,23 @@ Because of it, all functions here are private only
 """
 
 try:
-    import sys
-    from src.libs.database_handler import is_data_in_database
-    from src.libs.database_handler import add_data_to_database
-    from src.libs.database_handler import get_data_from_database
-    from src.libs.database_handler import edit_data_in_database
-    from src.libs.database_handler import remove_data_from_database
-    from src.libs.files_handler import create_local_folder
-    from src.libs.files_handler import delete_local_folder
-    from src.libs.words_base_handler import restore_word_base
+    from sys import executable, exit
+    from src.lib.database import get_data, modify_data
+    from src.lib.files import create_folder, delete_folder
+    from src.lib.words_base import restore_word_base
 except ModuleNotFoundError:
     print('Some important modules are missing!')
 
 
-MAIN_DB_TABLE = 'variables'
-MAIN_DB_COLUMNS = ['is_setup_completed', 'current_selected_bot']
-CONFIG_DB_TABLE = 'tokens'
-CONFIG_DB_COLUMNS = ['bot_name', 'bot_token']
 WORDS_DB_TABLES = [
     'main_words_base',
     'roulette_lose_words',
     'roulette_minus_words',
     'roulette_win_words',
     'roulette_zero_words'
-    ]
-WORDS_DB_COLUMN = 'words'
+]
 TABLES_TO_RESET = {
-    1: [CONFIG_DB_TABLE],
+    1: 'tokens',
     2: [
         WORDS_DB_TABLES[0],
         WORDS_DB_TABLES[1],
@@ -43,19 +33,22 @@ TABLES_TO_RESET = {
         WORDS_DB_TABLES[3],
         WORDS_DB_TABLES[4]
         ]
-    }
-SETUP_STATUS = get_data_from_database(
+}
+SETUP_STATUS = get_data(
     0,
-    MAIN_DB_TABLE,
-    MAIN_DB_COLUMNS[0]
-    )[0]
-FOLDERS_PATH = ['src/words_base', 'src/words_base/roulette_words']
-WORDS_PATHS = [
-    'src/words_base/words.txt',
-    'src/words_base/roulette_words/roulette_lose.txt',
-    'src/words_base/roulette_words/roulette_minus.txt',
-    'src/words_base/roulette_words/roulette_win.txt',
-    'src/words_base/roulette_words/roulette_zero.txt'
+    True,
+    'SELECT is_setup_completed FROM variables'
+)
+FOLDER_PATH = [
+    'src/words_base/',
+    'src/words_base/roulette_words/'
+]
+WORDS_BASE_NAME = [
+    f'{FOLDER_PATH[0]}words.txt',
+    f'{FOLDER_PATH[1]}roulette_lose.txt',
+    f'{FOLDER_PATH[1]}roulette_minus.txt',
+    f'{FOLDER_PATH[1]}roulette_win.txt',
+    f'{FOLDER_PATH[1]}roulette_zero.txt'
     ]
 LINKS = [
     'https://raw.githubusercontent.com/SecondThundeR/'
@@ -63,7 +56,11 @@ LINKS = [
     'https://github.com/SecondThundeR/secondthunder-py-bot/'
     'wiki/FAQ#getting-a-bot-token'
     ]
-MODULES_TO_CHECK = ['discord.py', 'requests', 'emoji']
+MODULES_TO_CHECK = [
+    'discord.py',
+    'requests',
+    'emoji'
+]
 
 
 def _get_input(text=''):
@@ -85,13 +82,16 @@ def _get_input(text=''):
         print(text)
     while True:
         user_input = str(input('> '))
-        if user_input != "" and user_input.upper() != "CANCEL":
+        if user_input.upper() not in ["", "CANCEL"]:
+            # TODO: Test SQL queries without formatting
+            """
             if user_input.find("\'") != -1:
                 formatted_input = user_input.replace("\'", "''")
                 user_input = formatted_input
             elif user_input.find("'") != -1:
                 formatted_input = user_input.replace("'", "''")
                 user_input = formatted_input
+            """
             return user_input
         if user_input.upper() == "CANCEL" and SETUP_STATUS == 1:
             print('Cancelling input. '
@@ -110,11 +110,11 @@ def _check_for_installed_modules():
     If not, it suggests installing the missing ones
     by running the installation of requirements.txt
     """
-    import pkg_resources
-    import subprocess
+    from pkg_resources import get_distribution, working_set
+    from subprocess import check_call
     modules_counter = 0
-    pip_version = pkg_resources.get_distribution("pip").version
-    packages = list(pkg_resources.working_set)
+    pip_version = get_distribution("pip").version
+    packages = list(working_set)
     for package in packages:
         if package.key in MODULES_TO_CHECK:
             modules_counter += 1
@@ -126,14 +126,14 @@ def _check_for_installed_modules():
                 if len(pip_version) > 4:
                     pip_version = pip_version[:-2]
                 if float(pip_version) < 21:
-                    subprocess.check_call(
-                        [sys.executable,
+                    check_call(
+                        [executable,
                          "-m", "pip", "install",
                          "-r", "requirements.txt",
                          "--upgrade", "--use-feature=2020-resolver"])
                 else:
-                    subprocess.check_call(
-                        [sys.executable,
+                    check_call(
+                        [executable,
                          "-m", "pip", "install",
                          "-r", "requirements.txt", "--upgrade"])
                 print('\nRequirements installed!\nContinuing the setup...')
@@ -153,20 +153,21 @@ def _restore_dev_base():
     and handles folder creation and deletion
 
     If link is incorrect, abort importing
+
+    Returns:
+        bool: True if words base restored successfully, False otherwise
     """
-    for path in FOLDERS_PATH:
-        create_local_folder(path)
-    for tables, paths in zip(WORDS_DB_TABLES, WORDS_PATHS):
+    for path in FOLDER_PATH:
+        create_folder(path)
+    for tables, paths in zip(WORDS_DB_TABLES, WORDS_BASE_NAME):
         if not restore_word_base(
             2,
             tables,
-            WORDS_DB_COLUMN,
             paths,
             f'{LINKS[0]}{paths}'
         ):
             return False
-    for path in reversed(FOLDERS_PATH):
-        delete_local_folder(path)
+    delete_folder(FOLDER_PATH[0])
     return True
 
 
@@ -177,10 +178,7 @@ def _delete_words_base():
     of tables in the database
     """
     for tables in WORDS_DB_TABLES:
-        remove_data_from_database(
-            2,
-            tables,
-        )
+        modify_data(2, f'DELETE FROM {tables}')
 
 
 def _manage_words_base():
@@ -207,7 +205,7 @@ def _manage_words_base():
               'latest developer\'s word base...')
         _delete_words_base()
         if not _restore_dev_base():
-            print('The word base wasn\'t imported.\n'
+            print("The word base wasn't imported.\n"
                   'Seems like link to word base is incorrect, '
                   'so it\'s better to open issue on Github')
         else:
@@ -242,10 +240,10 @@ def _check_for_bot_existence():
     print('\nEnter the name of the bot:')
     while True:
         bot_name = _get_input()
-        if is_data_in_database(
+        if get_data(
             1,
-            CONFIG_DB_TABLE,
-            CONFIG_DB_COLUMNS[0],
+            True,
+            'SELECT bot_name FROM tokens',
             bot_name
         ):
             return bot_name
@@ -271,10 +269,10 @@ def _add_bot():
               '(If you don\'t know where to get it, '
               f'go to this page - {LINKS[1]})')
     else:
-        if is_data_in_database(
+        if get_data(
             1,
-            CONFIG_DB_TABLE,
-            CONFIG_DB_COLUMNS[0],
+            True,
+            'SELECT bot_name FROM tokens',
             bot_name
         ):
             print('A bot with the same name is already in the database!'
@@ -288,11 +286,11 @@ def _add_bot():
         print('\nIt looks like your token is wrong.\n'
               'It must be 59 characters long '
               f'(Yours is {len(bot_token)} characters long)')
-    add_data_to_database(
+    modify_data(
         1,
-        CONFIG_DB_TABLE,
-        [CONFIG_DB_COLUMNS[0], CONFIG_DB_COLUMNS[1]],
-        [bot_name, bot_token]
+        'INSERT INTO tokens VALUES (?, ?)',
+        bot_name,
+        bot_token
     )
     print(f'\nGreat, I added bot "{bot_name}" to the database!')
     if SETUP_STATUS == 1:
@@ -307,10 +305,9 @@ def _delete_bot():
     (Did you expect to see rocket launch codes here?)
     """
     bot_name = _check_for_bot_existence()
-    remove_data_from_database(
+    modify_data(
         1,
-        CONFIG_DB_TABLE,
-        CONFIG_DB_COLUMNS[0],
+        'DELETE FROM tokens WHERE bot_name = ?',
         bot_name
     )
     print(f'\nBot "{bot_name}" has been found and deleted from the database!\n')
@@ -320,25 +317,27 @@ def _delete_bot():
 def _manage_setup_status():
     """Edit current setup status.
 
-    This function changes setup status to 0, when it needs to be reseted
+    This function changes setup status to 0, when it needs to be reset
     or set to 1, when initial setup was completed
     """
-    edit_data_in_database(
+    modify_data(
         0,
-        MAIN_DB_TABLE,
-        MAIN_DB_COLUMNS[0],
+        'UPDATE variables SET is_setup_completed = ?',
         1 if SETUP_STATUS == 0 else 0
     )
     if SETUP_STATUS == 1:
         for db_num in range(1, 3):
             for tables in TABLES_TO_RESET[db_num]:
-                remove_data_from_database(db_num, tables)
+                modify_data(
+                    db_num,
+                    f'DELETE FROM {tables}'
+                )
         print('\nThe bot\'s settings have been reset. '
               'Restart the script for initial setup')
-        sys.exit()
+        exit()
     print('\nThe initial setup of the bot has been completed. '
           'To enable bot, run "main.py" script')
-    sys.exit()
+    exit()
 
 
 def _bot_settings_manager():
@@ -371,18 +370,17 @@ def _bot_name_changer(bot_name):
         bot_name (str): Current name of bot
     """
     new_bot_name = _get_input('\nEnter new bot\'s name:')
-    bot_info = get_data_from_database(
+    bot_info = get_data(
         1,
-        CONFIG_DB_TABLE,
-        CONFIG_DB_COLUMNS[0],
+        False,
+        'SELECT * FROM tokens WHERE bot_name = ?',
         bot_name
     )
-    edit_data_in_database(
+    modify_data(
         1,
-        CONFIG_DB_TABLE,
-        [CONFIG_DB_COLUMNS[0], CONFIG_DB_COLUMNS[1]],
-        [new_bot_name, bot_info[1]],
-        True
+        'UPDATE tokens SET bot_name = ?, bot_token = ?',
+        new_bot_name,
+        bot_info[1]
     )
     print(f'\nGreat, I changed name from "{bot_name}" to "{new_bot_name}"\n')
     _bot_setup()
@@ -402,12 +400,11 @@ def _bot_token_changer(bot_name):
         print('\nIt looks like your token is wrong.\n'
               'It must be 59 characters long '
               f'(Yours is {len(new_bot_token)} characters long)')
-    edit_data_in_database(
+    modify_data(
         1,
-        CONFIG_DB_TABLE,
-        [CONFIG_DB_COLUMNS[0], CONFIG_DB_COLUMNS[1]],
-        [bot_name, new_bot_token],
-        True
+        'UPDATE tokens SET bot_name = ?, bot_token = ?',
+        bot_name,
+        new_bot_token
     )
     print(f'\nGreat, I changed token of "{bot_name}" to a new one!\n')
     _bot_setup()
@@ -419,27 +416,27 @@ def _main_bot_selector():
     This function allows user to select the desired bot to run
     when main script starts up
     """
-    list_of_bots = get_data_from_database(
+    list_of_bots = get_data(
         1,
-        CONFIG_DB_TABLE,
-        CONFIG_DB_COLUMNS[0]
+        False,
+        'SELECT bot_name FROM tokens'
     )
-    currently_selected_bot = get_data_from_database(
+    curr_selected_bot = get_data(
         0,
-        MAIN_DB_TABLE,
-        MAIN_DB_COLUMNS[1]
-    )[0]
+        True,
+        'SELECT current_selected_bot FROM variables'
+    )
     bots_count = 0
     if not list_of_bots:
         print('\nIt looks like there are no bots in my list, try adding a new one\n')
         _bot_setup()
     elif len(list_of_bots) == 1:
         print('\nSince you haven\'t added any more bots, '
-              f'your only active bot is "{list_of_bots[currently_selected_bot]}"\n')
+              f'your only active bot is "{list_of_bots[curr_selected_bot]}"\n')
         _bot_setup()
     else:
         print('\nAt the moment, the selected bot is '
-              f'"{list_of_bots[currently_selected_bot]}"')
+              f'"{list_of_bots[curr_selected_bot]}"')
         print('Here are all the added bots:')
         for bot_name in list_of_bots:
             bots_count += 1
@@ -457,10 +454,9 @@ def _main_bot_selector():
                     if index_of_bot in range(len(list_of_bots)):
                         print('Great choice! '
                               f'Selecting {selected_bot} as default...\n')
-                        edit_data_in_database(
+                        modify_data(
                             0,
-                            MAIN_DB_TABLE,
-                            MAIN_DB_COLUMNS[1],
+                            'UPDATE variables SET current_selected_bot = ?',
                             index_of_bot
                         )
                         _bot_setup()
@@ -474,8 +470,9 @@ def _main_bot_selector():
 def _initial_bot_setup():
     """Bot setup, initial phase.
 
-    This function launches 3 main functions: addition of bot to database,
-    managing of words base and changing setup status to 1 after successful completion
+    This function launches 4 main functions: check for installed modules,
+    addition of bot to database, managing of words base
+    and changing setup status to 1 after successful completion
     """
     _check_for_installed_modules()
     _add_bot()
@@ -513,7 +510,7 @@ def _bot_setup():
             _manage_setup_status()
         elif menu_input == '0':
             print('Hope you come back soon! See you later')
-            sys.exit()
+            exit()
         else:
             print('You have chosen something wrong, please try again\n')
 

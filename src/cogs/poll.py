@@ -22,7 +22,7 @@ async def init_poll(msg, args):
     """
     class Poll:
 
-        """A class to represent a database.
+        """A class to create poll.
 
         Parameters:
             author (discord.member.Member): Info about author to mention

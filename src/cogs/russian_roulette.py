@@ -60,7 +60,7 @@ async def start_roulette(msg, args):
     """
     class Roulette:
 
-        """A class to represent a database.
+        """A class to store roulette info.
 
         Parameters:
             player (discord.member.Member): Info about player to mention

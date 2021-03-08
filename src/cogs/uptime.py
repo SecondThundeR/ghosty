@@ -1,28 +1,28 @@
-"""Script for sending current uptime of bot.
+"""Send current uptime of bot.
 
 This script handles calculating and sending current bot's uptime
 
 This file can also be imported as a module and contains the following functions:
-    * get_uptime_message - sends message with current uptime of bot
+    * get_bot_uptime - gets current bot's uptime and sends it
 """
 
 
-import time
-import asyncio
+from time import time as curr_time
+from asyncio import sleep
 from datetime import timedelta
-from src.libs.database_handler import get_data_from_database
+from src.lib.database import get_data
 
 
 DELAY_TIME = 5
 
 
-async def get_uptime_message(msg):
+async def get_bot_uptime(msg):
     """Send current uptime of bot.
 
     Parameters:
         msg (discord.message.Message): Execute send to channel function
     """
-    curr_uptime = int(time.time()) - get_data_from_database(
+    curr_uptime = int(curr_time()) - get_data(
         0, 'variables', 'bot_uptime'
     )[0]
     time_string = _format_timedelta(timedelta(seconds=curr_uptime))
@@ -32,7 +32,7 @@ async def get_uptime_message(msg):
     else:
         await msg.channel.send(f'Я не сплю уже на протяжении **{time_string}**',
                                delete_after=DELAY_TIME)
-    await asyncio.sleep(DELAY_TIME)
+    await sleep(DELAY_TIME)
     await msg.delete()
 
 

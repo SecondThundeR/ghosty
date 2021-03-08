@@ -28,7 +28,7 @@ DB_PATH = [
 
 
 class Database:
-    """A class to represent a database.
+    """A class to control database.
 
     Parameters:
         path (str): Path to database

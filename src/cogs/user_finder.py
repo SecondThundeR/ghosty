@@ -1,4 +1,4 @@
-"""Search script *insert any word or something else here*.
+"""Search *insert any word or something else here*.
 
 This script repeats the good old meme about search *p-word*
 
@@ -7,8 +7,8 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-import asyncio
-from src.libs.user_handler import get_random_user
+from asyncio import sleep
+from src.lib.users import get_random_user
 
 
 DELAY_TIME = 2
@@ -38,11 +38,11 @@ async def _pidor_finder(msg):
     if r_user is None:
         return
     await msg.channel.send('Система поиска пидорасов активирована!')
-    await asyncio.sleep(DELAY_TIME)
+    await sleep(DELAY_TIME)
     await msg.channel.send('*пип*')
-    await asyncio.sleep(DELAY_TIME)
+    await sleep(DELAY_TIME)
     await msg.channel.send('*пип*')
-    await asyncio.sleep(DELAY_TIME)
+    await sleep(DELAY_TIME)
     await msg.channel.send('*пип*')
-    await asyncio.sleep(DELAY_TIME)
+    await sleep(DELAY_TIME)
     await msg.channel.send(f'Пидорас найден ({r_user.mention})')

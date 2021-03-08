@@ -1,22 +1,24 @@
-"""Files Handler Library.
+"""Files Handler Library (Beta).
 
 This is a basic self-written module to handle operations with files
 
 **Noteworthy:** As the script and needs grow, this module can be expanded and improved
 
 This file can also be imported as a module and contains the following functions:
-    * import_data_from_file - imports data from file to variable
-    * check_for_existence - returns a boolean when checking for local file or folder
-    * create_local_folder - returns a boolean when creating a local folder
-    * delete_local_file - returns a boolean when deleting a local file
-    * delete_local_folder - returns a boolean when deleting a local folder
+    * import_data - imports data from file to variable
+    * is_exist - returns a bool when checking for presence of local file or folder
+    * folder_status - return a bool when checking if folder empty or not
+    * create_folder - returns a bool when creating a local folder
+    * delete_file - returns a bool when deleting a local file
+    * delete_folder - returns a bool when deleting a local folder
 """
 
 
 import os
+import shutil
 
 
-def import_data_from_local_file(path):
+def import_data(path):
     """Import data from local file and returning as variable.
 
     Parameters:
@@ -31,7 +33,7 @@ def import_data_from_local_file(path):
     return file_data
 
 
-def check_for_existence(path):
+def is_exist(path):
     """Check for the presence of a file or folder at the specified path.
 
     Parameters:
@@ -45,20 +47,40 @@ def check_for_existence(path):
     return False
 
 
-def create_local_folder(path):
+def folder_status(path):
+    """Check if folder is empty or not.
+
+    Parameters:
+        path (str): Path to local folder
+
+    Returns:
+        bool: True if not empty, False otherwise
+    """
+    try:
+        if not os.listdir(path):
+            return False
+        else:
+            return True
+    except OSError as err:
+        print('There is an error while checking folder.\n'
+              f'Here are error details: {err}')
+
+
+def create_folder(path):
     """Create folder at the specified path.
 
     Parameters:
         path (str): Path to local folder
     """
     try:
-        if not check_for_existence(path):
+        if not is_exist(path):
             os.mkdir(path)
-    except OSError:
-        print('There is an error while creating folder. Skipping...')
+    except OSError as err:
+        print('There is an error while creating folder.\n'
+              f'Here are error details: {err}')
 
 
-def delete_local_file(path):
+def delete_file(path):
     """Delete file at the specified path.
 
     If file exists, removes it. Otherwise do nothing
@@ -66,18 +88,19 @@ def delete_local_file(path):
     Parameters:
         path (str): Path to local file
     """
-    if check_for_existence(path):
+    if is_exist(path):
         os.remove(path)
 
 
-def delete_local_folder(path):
+def delete_folder(path):
     """Delete folder at the specified path.
 
     Parameters:
         path (str): Path to local folder
     """
     try:
-        if check_for_existence(path):
-            os.rmdir(path)
-    except OSError:
-        print('There is an error while deleting folder. Skipping...')
+        if is_exist(path):
+            shutil.rmtree(path)
+    except shutil.Error as err:
+        print('There is an error while deleting folder.\n'
+              f'Here are error details: {err}')

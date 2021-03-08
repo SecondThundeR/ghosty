@@ -1,4 +1,4 @@
-"""Text version of roulette game.
+"""Init text version of roulette game.
 
 This script handles game logic of russian roulette.
 
@@ -7,12 +7,10 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-import random
-import asyncio
-from src.libs.database_handler import is_data_in_database
-from src.libs.database_handler import get_data_from_database
-from src.libs.words_base_handler import add_roulette_word
-from src.libs.words_base_handler import delete_roulette_word
+from random import choice, randint
+from asyncio import sleep
+from src.lib.database import get_data
+from src.lib.words_base import manage_r_word
 
 
 TABLES_ALIASES = {
@@ -35,19 +33,18 @@ def _get_random_word(condition):
     Returns:
         str: Random chosen word depending on condition
     """
-    random_word = ''
     if condition == 'win':
-        WIN_WORDS_LIST = get_data_from_database(2, 'roulette_win_words', 'words')
-        random_word = random.choice(WIN_WORDS_LIST)
+        WIN_WORDS_LIST = get_data(2, False, 'SELECT words FROM roulette_win_words')
+        random_word = choice(WIN_WORDS_LIST)
     if condition == 'lose':
-        LOSE_WORDS_LIST = get_data_from_database(2, 'roulette_lose_words', 'words')
-        random_word = random.choice(LOSE_WORDS_LIST)
+        LOSE_WORDS_LIST = get_data(2, False, 'SELECT words FROM roulette_lose_words')
+        random_word = choice(LOSE_WORDS_LIST)
     if condition == 'zero':
-        ZERO_WORDS_LIST = get_data_from_database(2, 'roulette_zero_words', 'words')
-        random_word = random.choice(ZERO_WORDS_LIST)
+        ZERO_WORDS_LIST = get_data(2, False, 'SELECT words FROM roulette_zero_words')
+        random_word = choice(ZERO_WORDS_LIST)
     if condition == 'minus':
-        MINUS_WORDS_LIST = get_data_from_database(2, 'roulette_minus_words', 'words')
-        random_word = random.choice(MINUS_WORDS_LIST)
+        MINUS_WORDS_LIST = get_data(2, False, 'SELECT words FROM roulette_minus_words')
+        random_word = choice(MINUS_WORDS_LIST)
     return random_word
 
 
@@ -61,11 +58,16 @@ async def start_roulette(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List of arguments (Bullet count number)
     """
-    PLAYER = msg.author.mention
-    bullet_list = []
+    class Roulette:
+        def __init__(self, player):
+            self.player = player
+            self.bullet_list = []
+            self.bullet_count = 0
+
+    roulette = Roulette(msg.author.id)
 
     if not args:
-        bullet_count = 1
+        roulette.bullet_count = 1
     else:
         if args[0] == 'добавить':
             if args[1] in TABLES_ALIASES:
@@ -73,59 +75,73 @@ async def start_roulette(msg, args):
                 for i in range(2):
                     args.pop(0)
                 WORD_TO_ADD = " ".join(args)
-                await msg.channel.send(add_roulette_word(WORD_TO_ADD, TABLE_TO_MODIFY),
+                await msg.channel.send(manage_r_word(
+                                        WORD_TO_ADD,
+                                        TABLE_TO_MODIFY,
+                                        'add'
+                                       ),
                                        delete_after=DELAY_TIME)
-                await asyncio.sleep(DELAY_TIME)
+                await sleep(DELAY_TIME)
                 await msg.delete()
             return
         if args[0] == 'удалить':
-            if (is_data_in_database(0, 'admin_list', 'admins_id', msg.author.id)
-                    and args[1] in TABLES_ALIASES):
+            if (get_data(
+                    0,
+                    True,
+                    'SELECT * FROM admin_list WHERE admins_id = ?',
+                    msg.author.id
+                )
+                and args[1] in TABLES_ALIASES
+            ):
                 TABLE_TO_MODIFY = TABLES_ALIASES[args[1]]
                 for i in range(2):
                     args.pop(0)
                 WORD_TO_DELETE = " ".join(args)
-                await msg.channel.send(delete_roulette_word(
-                                       WORD_TO_DELETE, TABLE_TO_MODIFY
+                await msg.channel.send(manage_r_word(
+                                        WORD_TO_DELETE,
+                                        TABLE_TO_MODIFY,
+                                        'del'
                                        ),
                                        delete_after=DELAY_TIME)
-                await asyncio.sleep(DELAY_TIME)
+                await sleep(DELAY_TIME)
                 await msg.delete()
             return
 
         try:
-            bullet_count = int(args[0])
+            roulette.bullet_count = int(args[0])
         except ValueError:
-            await msg.channel.send(f'{PLAYER}, похоже вы передали мне не число.'
+            await msg.channel.send(f'{roulette.player}, похоже вы передали не число.'
                                    '\nПопробуйте ещё раз, '
                                    'но уже с правильными данными')
             return
 
-    if bullet_count == 0:
-        await msg.channel.send(f'{PLAYER}, {_get_random_word("zero")}')
-    elif bullet_count < 0:
-        await msg.channel.send(f'{PLAYER}, {_get_random_word("minus")}')
-    elif bullet_count == 6:
+    if roulette.bullet_count == 0:
+        await msg.channel.send(f'{roulette.player}, {_get_random_word("zero")}')
+    elif roulette.bullet_count < 0:
+        await msg.channel.send(f'{roulette.player}, {_get_random_word("minus")}')
+    elif roulette.bullet_count == 6:
         await msg.channel.send('поздравляем! '
                                'теперь у нас на одного суицидника меньше. '
-                               f'им был {PLAYER}!!!')
-    elif bullet_count > 6:
-        await msg.channel.send(f'{PLAYER}, если вдруг ты не знаешь, то напомню!'
+                               f'им был {roulette.player}!!!')
+    elif roulette.bullet_count > 6:
+        await msg.channel.send(f'{roulette.player}, если вдруг ты не знаешь, то напомню!'
                                '\nПо правилам русской рулетки, '
                                'можно брать только до 6 патронов')
     else:
-        for i in range(bullet_count):
-            CHARGED_SECTION = random.randint(1, 6)
-            if CHARGED_SECTION in bullet_list:
+        for i in range(roulette.bullet_count):
+            CHARGED_SECTION = randint(1, 6)
+            if CHARGED_SECTION in roulette.bullet_list:
                 i -= 1
             else:
-                bullet_list.append(CHARGED_SECTION)
-        deadly_bullet = random.randint(1, 6)
-        if deadly_bullet in bullet_list:
+                roulette.bullet_list.append(CHARGED_SECTION)
+        deadly_bullet = randint(1, 6)
+        if deadly_bullet in roulette.bullet_list:
             bot_message = await msg.channel.send('**БАХ**')
-            await asyncio.sleep(DELAY_TIME)
-            await bot_message.edit(content=f'{PLAYER}, {_get_random_word("lose")}')
+            await sleep(DELAY_TIME)
+            await bot_message.edit(content=f'{roulette.player}, '
+                                           f'{_get_random_word("lose")}')
         else:
             bot_message = await msg.channel.send('*тишина*')
-            await asyncio.sleep(DELAY_TIME)
-            await bot_message.edit(content=f'{PLAYER}, {_get_random_word("win")}')
+            await sleep(DELAY_TIME)
+            await bot_message.edit(content=f'{roulette.player}, '
+                                           f'{_get_random_word("win")}')

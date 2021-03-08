@@ -22,7 +22,7 @@ from src.cogs.poll import init_poll
 from src.cogs.random_number import get_random_number
 from src.cogs.random_ship import ship_func_chooser
 from src.cogs.random_word import get_random_word
-from src.cogs.rsp_game import rsp_mode
+from src.cogs.rsp import rsp_mode
 from src.cogs.russian_roulette import start_roulette
 from src.cogs.system import get_system_info
 from src.cogs.uptime import get_bot_uptime

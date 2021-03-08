@@ -9,8 +9,7 @@ This file can also be imported as a module and contains the following functions:
 
 from discord import channel
 from asyncio import TimeoutError
-from src.lib.database import get_data
-from src.lib.database import modify_data
+from src.lib.database import get_data, modify_data
 from src.lib.users import is_user_admin
 
 

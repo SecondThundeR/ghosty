@@ -1,4 +1,4 @@
-"""Text version of RSP game.
+"""Init text version of RSP game.
 
 This script handles game logic of rock scissors paper.
 
@@ -8,10 +8,9 @@ This file can also be imported as a module and contains the following functions:
 
 
 from discord import channel
-import random
-import asyncio
-from src.libs.database_handler import edit_data_in_database
-from src.libs.database_handler import get_data_from_database
+from random import choice
+from asyncio import sleep, TimeoutError
+from src.lib.database import get_data, modify_data
 
 
 FAIL_DELAY = 4
@@ -35,7 +34,7 @@ async def rsp_mode(bot, msg, args):
         args (list): List of arguments (RSP variants, if playing with bot)
     """
     if not args:
-        if get_data_from_database(0, 'variables', 'rsp_game_active')[0] == 1:
+        if get_data(0, True, 'SELECT rsp_game_active FROM variables') == 1:
             await msg.channel.send('Сессия игры уже запущена, '
                                    'чтобы начать новую игру, закончите старую')
         else:
@@ -134,7 +133,7 @@ async def _rsp_bot_game(bot, msg, user_choice):
         await msg.channel.send(f'{msg.author.mention}, '
                                'похоже вы выбрали что-то не то...')
     else:
-        bot_choice = random.choice(list(rsp_win_variants))
+        bot_choice = choice(list(rsp_win_variants))
         await msg.channel.send(_rsp_game_logic(user_choice, bot_choice,
                                                msg.author.id, bot.user.id))
 
@@ -155,7 +154,7 @@ async def _rsp_multi_game(bot, msg):
         bot (discord.client.Client): Execute wait_for for waiting user's message
         msg (discord.message.Message): Execute send to channel function
     """
-    edit_data_in_database(0, 'variables', 'rsp_game_active', 1)
+    modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 1)
     current_channel = msg.channel
     first_user = msg.author
     users_choice = []
@@ -168,24 +167,24 @@ async def _rsp_multi_game(bot, msg):
     try:
         s_user_wait = await bot.wait_for('message', timeout=60, check=_join_check)
         second_user = s_user_wait.author
-    except asyncio.TimeoutError:
-        edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
+    except TimeoutError:
+        modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
         game_fail = current_channel.send(f'{first_user.mention}, '
                                          'похоже никто не решил сыграть с вами. '
                                          'Пока что я отменил данную игру')
         messages_to_purge.append(game_fail)
-        await asyncio.sleep(FAIL_DELAY)
+        await sleep(FAIL_DELAY)
         await _purge_messages(messages_to_purge)
         return
     else:
         if s_user_wait.author.id == first_user.id:
-            edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
+            modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
             f_user_join = await current_channel.send(f'{first_user.mention}, '
                                                      'решил поиграть сам собой, '
                                                      'отменяю данную игру')
             messages_to_purge.append(s_user_wait)
             messages_to_purge.append(f_user_join)
-            await asyncio.sleep(FAIL_DELAY)
+            await sleep(FAIL_DELAY)
             await _purge_messages(messages_to_purge)
             return
     await s_user_wait.delete()
@@ -195,29 +194,29 @@ async def _rsp_multi_game(bot, msg):
         await first_user.send('Ваш вариант *(На ответ 1 минута)*:')
         first_response = await bot.wait_for('message', timeout=30, check=_choice_check)
         users_choice.append(first_response.content.lower())
-    except asyncio.TimeoutError:
-        edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
+    except TimeoutError:
+        modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
         f_move_fail = await current_channel.send(f'{first_user.mention} '
                                                  'не успел отправить вариант вовремя. '
                                                  'Игра отменена')
         messages_to_purge.append(f_move_fail)
-        await asyncio.sleep(FAIL_DELAY)
+        await sleep(FAIL_DELAY)
         await _purge_messages(messages_to_purge)
         return
     try:
         await second_user.send('Ваш вариант *(На ответ 1 минута)*:')
         second_response = await bot.wait_for('message', timeout=30, check=_choice_check)
         users_choice.append(second_response.content.lower())
-    except asyncio.TimeoutError:
-        edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
+    except TimeoutError:
+        modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
         s_move_fail = await current_channel.send(f'{second_user.mention} '
                                                  'не успел отправить вариант вовремя. '
                                                  'Игра отменена')
         messages_to_purge.append(s_move_fail)
-        await asyncio.sleep(FAIL_DELAY)
+        await sleep(FAIL_DELAY)
         await _purge_messages(messages_to_purge)
         return
-    edit_data_in_database(0, 'variables', 'rsp_game_active', 0)
+    modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
     await current_channel.send(_rsp_game_logic(users_choice[0], users_choice[1],
                                                first_user.id, second_user.id))
     await _purge_messages(messages_to_purge)

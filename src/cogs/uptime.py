@@ -23,8 +23,10 @@ async def get_bot_uptime(msg):
         msg (discord.message.Message): Execute send to channel function
     """
     curr_uptime = int(curr_time()) - get_data(
-        0, 'variables', 'bot_uptime'
-    )[0]
+        0,
+        True,
+        'SELECT bot_uptime FROM variables',
+    )
     time_string = _format_timedelta(timedelta(seconds=curr_uptime))
     if curr_uptime < 36000:
         await msg.channel.send(f'Я не сплю уже на протяжении **0{time_string}**',

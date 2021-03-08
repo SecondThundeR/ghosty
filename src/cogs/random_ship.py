@@ -1,4 +1,4 @@
-"""Script for shipping.
+"""Ship randomly selected users.
 
 This script allows user to ship two random people or two chosen by user.
 Script returns halves of each name and adds a heart.
@@ -7,13 +7,11 @@ This file can also be imported as a module and contains the following functions:
     * ship_func_chooser - choose correct function depending on statement
 """
 
-import emoji
-import asyncio
-from datetime import datetime
-from datetime import timedelta
-from src.libs.database_handler import get_data_from_database
-from src.libs.database_handler import edit_data_in_database
-from src.libs.user_handler import get_members_name, get_random_user
+from emoji import emoji_count
+from asyncio import sleep
+from datetime import datetime, timedelta
+from src.lib.database import get_data, modify_data
+from src.lib.users import get_random_user, get_members_name
 
 
 DELAY_TIME = 2
@@ -30,7 +28,7 @@ async def ship_func_chooser(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List of arguments
     """
-    if 1 in get_data_from_database(0, 'variables', 'ship_in_active'):
+    if get_data(0, True, 'SELECT ship_in_active FROM variables') == 1:
         pass
     else:
         if len(args) == 1:
@@ -82,16 +80,19 @@ async def _reset_ship(msg):
     Parameters:
         msg (discord.message.Message): Execute send to channel function
     """
-    edit_data_in_database(
+    modify_data(
         0,
-        'variables',
-        ['ship_date', 'ship_text_short ', 'ship_text_full', 'ship_activated'],
-        ['', '', '', 0]
+        'UPDATE variables SET ship_date = ?, ship_text_short = ?, '
+        'ship_text_full = ?, ship_activated = ?'
+        '',
+        '',
+        '',
+        0
     )
     await msg.channel.send('Результаты шиппинга сброшены! '
                            '*(Вы разлучили, возможно, великолепную парочку!)*',
                            delete_after=DELETE_TIME)
-    await asyncio.sleep(DELETE_TIME)
+    await sleep(DELETE_TIME)
     await msg.delete()
 
 
@@ -105,23 +106,23 @@ async def _custom_ship(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List of arguments (Custom names for ship)
     """
-    if emoji.emoji_count(msg.content) > 0:
+    if emoji_count(msg.content) > 0:
         await msg.channel.send(f'{msg.author.mention}, '
                                'какой блин шип смайлов...',
                                delete_after=DELETE_TIME)
-        await asyncio.sleep(DELETE_TIME)
+        await sleep(DELETE_TIME)
         await msg.delete()
     elif args[0].startswith('<@&') or args[1].startswith('<@&'):
         await msg.channel.send(f'{msg.author.mention}, к сожалению, '
                                'я не могу обработать это',
                                delete_after=DELETE_TIME)
-        await asyncio.sleep(DELETE_TIME)
+        await sleep(DELETE_TIME)
         await msg.delete()
     elif args[0].startswith('<:') or args[1].startswith('<:'):
         await msg.channel.send(f'{msg.author.mention}, '
                                'какой блин шип эмодзи...',
                                delete_after=DELETE_TIME)
-        await asyncio.sleep(DELETE_TIME)
+        await sleep(DELETE_TIME)
         await msg.delete()
     elif ('@everyone' in args[0] or '@here' in args[0] or
             '@everyone' in args[1] or '@here' in args[1]):
@@ -129,7 +130,7 @@ async def _custom_ship(msg, args):
                                'похоже вы пытаетесь всунуть сюда '
                                '`@here` или `@everyone`, зачем?',
                                delete_after=DELETE_TIME)
-        await asyncio.sleep(DELETE_TIME)
+        await sleep(DELETE_TIME)
         await msg.delete()
     else:
         first_user_info = await _get_user_info(msg, args[0])
@@ -151,28 +152,28 @@ async def _random_ship(msg, mode='default'):
     """
     current_date = datetime.now().date()
     new_date = (datetime.now() + timedelta(days=1)).date()
-    ship_date = get_data_from_database(0, 'variables', 'ship_date')[0]
-    if (get_data_from_database(0, 'variables', 'ship_activated')[0] == 0 and
-            get_data_from_database(0, 'variables', 'ship_in_active')[0] == 0):
-        edit_data_in_database(
+    ship_date = get_data(0, True, 'SELECT ship_date FROM variables')
+    if (get_data(0, True, 'SELECT ship_activated FROM variables') == 0 and
+            get_data(0, True, 'SELECT ship_in_active FROM variables') == 0):
+        modify_data(
             0,
-            'variables',
-            ['ship_in_active', 'ship_activated'],
-            [1, 1]
+            'UPDATE variables SET ship_in_active = ?, ship_activated = ?',
+            1,
+            1
         )
         users_info = await get_random_user(msg, 'shipping')
         if users_info is None:
-            edit_data_in_database(
+            modify_data(
                 0,
-                'variables',
-                ['ship_in_active', 'ship_activated'],
-                [0, 0]
+                'UPDATE variables SET ship_in_active = ?, ship_activated = ?',
+                0,
+                0
             )
             await msg.channel.send(f'{msg.author.mention}, '
                                    'похоже cписок пользователей пуст '
                                    'и поэтому мне не кого шипперить',
                                    delete_after=DELAY_TIME)
-            await asyncio.sleep(DELAY_TIME)
+            await sleep(DELAY_TIME)
             await msg.delete()
             return
         first_username = get_members_name(users_info[0])
@@ -189,27 +190,30 @@ async def _random_ship(msg, mode='default'):
                                    ':two_hearts:')
         else:
             await _random_ship_messages(msg, ship_text_short)
-        edit_data_in_database(
+        modify_data(
             0,
-            'variables',
-            ['ship_date', 'ship_text_full', 'ship_text_short', 'ship_in_active'],
-            [new_date, ship_text_full, ship_text_short, 0]
+            'UPDATE variables SET ship_date = ?, ship_text_full = ?, '
+            'ship_text_short = ?, ship_in_active = ?',
+            new_date,
+            ship_text_full,
+            ship_text_short,
+            0
         )
-    elif get_data_from_database(0, 'variables', 'ship_in_active')[0] == 1:
+    elif get_data(0, True, 'SELECT ship_in_active FROM variables') == 1:
         pass
-    elif (get_data_from_database(0, 'variables', 'ship_activated')[0] == 1 and
+    elif (get_data(0, True, 'SELECT ship_activated FROM variables') == 1 and
             current_date < datetime.strptime(ship_date, '%Y-%m-%d').date()):
-        ship_text_full = get_data_from_database(0, 'variables', 'ship_text_full')[0]
-        next_date = get_data_from_database(0, 'variables', 'ship_date')[0]
+        ship_text_full = get_data(0, True, 'SELECT ship_text_full FROM variables')
+        next_date = get_data(0, True, 'SELECT ship_date FROM variables')
         next_date_string = _get_date_string(
             datetime.strptime(next_date, '%Y-%m-%d').weekday()
         )
         await msg.channel.send(f'**Парочка дня на сегодня:** {ship_text_full} '
                                ':two_hearts: \n\n*Следующий шиппинг будет доступен '
                                f'{next_date_string}*')
-    elif (get_data_from_database(0, 'variables', 'ship_activated')[0] == 1 and
+    elif (get_data(0, True, 'SELECT ship_activated FROM variables') == 1 and
             current_date > datetime.strptime(ship_date, '%Y-%m-%d').date()):
-        edit_data_in_database(0, 'variables', 'ship_activated', 0)
+        modify_data(0, 'UPDATE variables SET ship_activated = ?', 0)
         await _random_ship(msg)
     else:
         pass
@@ -223,16 +227,16 @@ async def _random_ship_messages(msg, short_text):
 
     Parameters:
         msg (discord.message.Message): Execute send to channel function
-        short_text(str): Ship's short text
+        short_text (str): Ship's short text
     """
     await msg.channel.send('*чтож...*')
-    await asyncio.sleep(DELAY_TIME)
+    await sleep(DELAY_TIME)
     await msg.channel.send('**МОРЕ ВОЛНУЕТСЯ РАЗ**')
-    await asyncio.sleep(DELAY_TIME)
+    await sleep(DELAY_TIME)
     await msg.channel.send('**МОРЕ ВОЛНУЕТСЯ ДВА**')
-    await asyncio.sleep(DELAY_TIME)
+    await sleep(DELAY_TIME)
     await msg.channel.send('**МОРЕ ВОЛНУЕТСЯ ТРИ**')
-    await asyncio.sleep(DELAY_TIME)
+    await sleep(DELAY_TIME)
     await msg.channel.send(f'**В ЛЮБОВНОЙ ПОЗЕ ЗАСТРЯЛИ ** {short_text} '
                            ':two_hearts:')
 

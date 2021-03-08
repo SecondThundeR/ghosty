@@ -21,7 +21,6 @@ async def init_poll(msg, args):
         args (list): List with custom poll time and/or with poll text
     """
     class Poll:
-
         """A class to create poll.
 
         Parameters:

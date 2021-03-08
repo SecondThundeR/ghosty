@@ -9,7 +9,7 @@ This file can also be imported as a module and contains the following functions:
 
 from discord import channel
 from random import choice
-from asyncio import sleep,
+from asyncio import sleep
 from asyncio import TimeoutError as Timeout
 from src.lib.database import get_data, modify_data
 

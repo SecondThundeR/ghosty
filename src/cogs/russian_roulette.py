@@ -59,7 +59,6 @@ async def start_roulette(msg, args):
         args (list): List of arguments (Bullet count number)
     """
     class Roulette:
-
         """A class to store roulette info.
 
         Parameters:
@@ -92,14 +91,14 @@ async def start_roulette(msg, args):
                 await msg.delete()
             return
         if args[0] == 'удалить':
-            if (get_data(
-                    0,
-                    True,
-                    'SELECT * FROM admin_list '
-                    'WHERE admins_id = ?',
-                    msg.author.id
-                ) and args[1] in TABLES_ALIASES
-            ):
+            bot_admin = get_data(
+                0,
+                True,
+                'SELECT * FROM admin_list '
+                'WHERE admins_id = ?',
+                msg.author.id
+            )
+            if bot_admin and args[1] in TABLES_ALIASES:
                 TABLE_TO_MODIFY = TABLES_ALIASES[args[1]]
                 for i in range(2):
                     args.pop(0)

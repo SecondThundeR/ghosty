@@ -14,8 +14,10 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-import os
-import shutil
+from os import remove, mkdir, listdir
+from os.path import exists
+from shutil import rmtree
+from shutil import Error as shutil_error
 
 
 def import_data(path):
@@ -42,7 +44,7 @@ def is_exist(path):
     Returns:
         bool: True if file or folder exists, False otherwise
     """
-    if os.path.exists(path):
+    if exists(path):
         return True
     return False
 
@@ -57,7 +59,7 @@ def folder_status(path):
         bool: True if not empty, False otherwise
     """
     try:
-        if not os.listdir(path):
+        if not listdir(path):
             return False
         else:
             return True
@@ -74,7 +76,7 @@ def create_folder(path):
     """
     try:
         if not is_exist(path):
-            os.mkdir(path)
+            mkdir(path)
     except OSError as err:
         print('There is an error while creating folder.\n'
               f'Here are error details: {err}')
@@ -89,7 +91,7 @@ def delete_file(path):
         path (str): Path to local file
     """
     if is_exist(path):
-        os.remove(path)
+        remove(path)
 
 
 def delete_folder(path):
@@ -100,7 +102,7 @@ def delete_folder(path):
     """
     try:
         if is_exist(path):
-            shutil.rmtree(path)
-    except shutil.Error as err:
+            rmtree(path)
+    except shutil_error as err:
         print('There is an error while deleting folder.\n'
               f'Here are error details: {err}')

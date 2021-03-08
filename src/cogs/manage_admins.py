@@ -1,4 +1,4 @@
-"""Script for managing admin list of bot.
+"""Manage admin list of bot.
 
 This script handles addition/removal id's of user to/from admin list
 
@@ -9,11 +9,9 @@ This file can also be imported as a module and contains the following functions:
 
 from discord import channel
 import asyncio
-from src.libs.database_handler import is_data_in_database
-from src.libs.database_handler import get_data_from_database
-from src.libs.database_handler import add_data_to_database
-from src.libs.database_handler import remove_data_from_database
-from src.libs.user_handler import is_user_admin
+from src.lib.database import get_data
+from src.lib.database import modify_data
+from src.lib.users import is_user_admin
 
 
 async def admin_manager(bot, msg, args):
@@ -28,30 +26,30 @@ async def admin_manager(bot, msg, args):
         args (list): List with operation and user's ID
     """
     if (isinstance(msg.channel, channel.DMChannel)
-            and len(args) == 2 and is_user_admin(msg)):
+            and len(args) == 2 and is_user_admin(msg.author.id)):
         if args[0] == 'добавить':
             await _add_admin(msg, args[1])
         elif args[0] == 'удалить':
             await _remove_admin(bot, msg, args[1])
 
 
-async def _add_admin(msg, admin_id):
+async def _add_admin(msg, user_id):
     """Add user's ID to admin list.
 
     This function handles addition of user's ID to admin list.
 
     Parameters:
         msg (discord.message.Message): Execute send to channel function
-        admin_id (str): Admin's ID to add to list
+        user_id (int): User's ID to add as an admin
     """
-    if is_data_in_database(0, 'admin_list', 'admins_id', admin_id):
+    if is_user_admin(user_id):
         await msg.channel.send('Данный пользователь уже админ')
     else:
-        add_data_to_database(0, 'admin_list', 'admins_id', admin_id)
+        modify_data(0, 'INSERT INTO admin_list VALUES (?)', user_id)
         await msg.channel.send('Я успешно добавил такого админа')
 
 
-async def _remove_admin(bot, msg, admin_id):
+async def _remove_admin(bot, msg, user_id):
     """Remove user's ID from admin list.
 
     This function handles removal of user's ID from admin list.
@@ -64,15 +62,10 @@ async def _remove_admin(bot, msg, admin_id):
     Parameters:
         bot (discord.client.Client): Execute wait_for for waiting user's message
         msg (discord.message.Message): Execute send to channel function
-        admin_id (str): Admin's ID to remove from list
+        user_id (int): User's ID to remove from admins
     """
-    if msg.author.id == int(admin_id) and is_data_in_database(
-        0,
-        'admin_list',
-        'admins_id',
-        admin_id
-    ):
-        if len(get_data_from_database(0, 'admin_list', 'admins_id')) == 1:
+    if msg.author.id == int(user_id) and is_user_admin(user_id):
+        if len(get_data(0, False, 'SELECT admins_id FROM admin_list')) == 1:
             await msg.channel.send('Вы единственный админ бота. '
                                    'Управление ботом будет затруднено, '
                                    'если список админов будет пуст, '
@@ -87,7 +80,7 @@ async def _remove_admin(bot, msg, admin_id):
                                        'пока что я отменил удаление вас из списка')
             else:
                 if wait_msg.content.lower() == 'да':
-                    remove_data_from_database(0, 'admin_list', 'admins_id', admin_id)
+                    modify_data(0, 'DELETE FROM admin_list WHERE admins_id = ?', user_id)
                     await msg.channel.send('Я удалил вас из админов :(')
                 elif wait_msg.content.lower() in ['не', 'нет']:
                     await msg.channel.send('Удаление было отменено')
@@ -95,8 +88,8 @@ async def _remove_admin(bot, msg, admin_id):
                     await msg.channel.send('Вы ответили как-то иначе, '
                                            'удаление было отменено')
     else:
-        if not is_data_in_database(0, 'admin_list', 'admins_id', admin_id):
+        if not is_user_admin(user_id):
             await msg.channel.send('Данный пользователь не является админом')
         else:
-            remove_data_from_database(0, 'admin_list', 'admins_id', admin_id)
+            modify_data(0, 'INSERT INTO admin_list VALUES (?)', user_id)
             await msg.channel.send('Я успешно удалил такого админа')

@@ -21,14 +21,9 @@ from sqlite3 import Error as DBError
 
 
 DB_PATH = [
-    './src/db/botDB.db',
+    './src/db/mainDB.db',
     './src/db/confDB.db',
     './src/db/wordsDB.db'
-]
-BUILD_PATH = [
-    'db/build_scripts/bot_build.sql',
-    'db/build_scripts/conf_build.sql',
-    'db/build_scripts/words_build.sql'
 ]
 
 
@@ -89,8 +84,7 @@ def get_data(path_num, is_single, command, *data):
         *data: Variable length list of data
 
     Returns:
-        list | str | int: Array with data from database when executing 'fetchall'
-            or single data when executing 'fetchone'
+        list | str | int: Array with data or single data
 
     Raises:
         Exception: Returns info about error

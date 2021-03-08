@@ -1,22 +1,22 @@
-"""Script for getting random number.
+"""Get random number.
 
 This script handles getting random number in different ranges
 (From 1 to {some number} or From {some number} to {some number})
 
 This file can also be imported as a module and contains the following functions:
-    * get_random_number - sends message with randomly generated number
+    * get_random_number - gets random number and sends it
 """
 
 
-import random
-import asyncio
+from random import randint
+from asyncio import sleep
 
 
 DELAY_TIME = 10
 
 
 async def get_random_number(msg, args):
-    """Get random number and return it.
+    """Get random number and send it.
 
     Parameters:
         msg (discord.message.Message): Execute send to channel function
@@ -26,7 +26,7 @@ async def get_random_number(msg, args):
         await msg.channel.send(f'{msg.author.mention}, к сожалению, '
                                f'я не получил аргументов для вывода рандома',
                                delete_after=DELAY_TIME)
-        await asyncio.sleep(DELAY_TIME)
+        await sleep(DELAY_TIME)
         await msg.delete()
     elif len(args) == 1:
         try:
@@ -36,10 +36,10 @@ async def get_random_number(msg, args):
                                        'я не могу выдать рандомное число '
                                        f'от 1 до {range_number}',
                                        delete_after=DELAY_TIME)
-                await asyncio.sleep(DELAY_TIME)
+                await sleep(DELAY_TIME)
                 await msg.delete()
             else:
-                random_number = random.randint(1, range_number)
+                random_number = randint(1, range_number)
                 await msg.channel.send(f'{msg.author.mention}, '
                                        'ваше рандомное число '
                                        f'от 1 до {range_number}: **{random_number}**')
@@ -49,7 +49,7 @@ async def get_random_number(msg, args):
                 f'ваш аргумент был введён неправильно',
                 delete_after=DELAY_TIME
             )
-            await asyncio.sleep(DELAY_TIME)
+            await sleep(DELAY_TIME)
             await msg.delete()
     elif len(args) == 2:
         try:
@@ -61,10 +61,10 @@ async def get_random_number(msg, args):
                                        f'в диапазоне от {first_number} до '
                                        f'{second_number}',
                                        delete_after=DELAY_TIME)
-                await asyncio.sleep(DELAY_TIME)
+                await sleep(DELAY_TIME)
                 await msg.delete()
             else:
-                random_number = random.randint(first_number, second_number)
+                random_number = randint(first_number, second_number)
                 await msg.channel.send(f'{msg.author.mention}, '
                                        f'ваше рандомное число '
                                        f'от {first_number} до {second_number}: '
@@ -74,12 +74,12 @@ async def get_random_number(msg, args):
                                    'ваш аргумент или аргументы '
                                    'были введены неправильно',
                                    delete_after=DELAY_TIME)
-            await asyncio.sleep(DELAY_TIME)
+            await sleep(DELAY_TIME)
             await msg.delete()
     else:
         await msg.channel.send(f'{msg.author.mention}, к сожалению, '
                                'я получил аргументов больше, чем нужно, '
                                f'а именно `{len(args) - 2}`',
                                delete_after=DELAY_TIME)
-        await asyncio.sleep(DELAY_TIME)
+        await sleep(DELAY_TIME)
         await msg.delete()

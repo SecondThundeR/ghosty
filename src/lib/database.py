@@ -111,7 +111,9 @@ def get_data(path_num, is_single, command, *data):
                     data_arr.append(element[0])
             return data_arr
     except DBError as err:
-        raise Exception from err
+        print('There is an error while working with DB.\n'
+              f'Here are error details: {err}')
+        raise Exception
 
 
 def modify_data(path_num, command, *data):
@@ -133,5 +135,7 @@ def modify_data(path_num, command, *data):
             database.cur.execute(command, tuple(data))
         database.conn.commit()
         database.disconnect_db()
-    except DBError as database_error:
-        raise Exception from database_error
+    except DBError as err:
+        print('There is an error while working with DB.\n'
+              f'Here are error details: {err}')
+        raise Exception

@@ -5,6 +5,8 @@
 
 This is repository of some random bot for Discord which was created just for fun and for some educational purposes *(Made with Discord.py library)*
 
+> **NOTE!** Due to an accidental error with experiments on the GPG key, it has been removed and past commits with it are marked as "Unverified". These commits remain safe, but due to the fact that my decision to stop signing was made later, only the last commits (after dev-2.1.0) no longer have these labels 🤷
+
 ## How to use this bot
 
 0. Install necessary tools *(Python, Any IDE or Code Editor, etc.)*

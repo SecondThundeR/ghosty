@@ -10,7 +10,7 @@ This file can also be imported as a module and contains the following functions:
 
 from random import choice
 from asyncio import sleep
-from src.lib.database import get_data, modify_data
+from src.lib.database import get_data
 from src.lib.users import get_random_user
 from src.lib.words_base import manage_words
 

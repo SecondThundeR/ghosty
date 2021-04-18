@@ -12,10 +12,9 @@ from random import choice
 from asyncio import sleep
 from src.lib.database import get_data, modify_data
 from src.lib.users import get_random_user
-from src.lib.words_base import manage_word
+from src.lib.words_base import manage_words
 
 
-WORDS_ARRAY = get_data(2, False, 'SELECT words FROM main_words_base')
 DELAY_TIME = 3
 
 
@@ -32,7 +31,7 @@ async def get_random_word(msg, args):
         if args[0] == 'добавить':
             args.pop(0)
             word_to_add = " ".join(args)
-            await msg.channel.send(manage_word(word_to_add, 'add'),
+            await msg.channel.send(manage_words(word_to_add, 'add'),
                                    delete_after=DELAY_TIME)
             await sleep(DELAY_TIME)
             await msg.delete()
@@ -47,7 +46,7 @@ async def get_random_word(msg, args):
             ):
                 args.pop(0)
                 word_to_delete = " ".join(args)
-                await msg.channel.send(manage_word(word_to_delete, 'del'),
+                await msg.channel.send(manage_words(word_to_delete, 'del'),
                                        delete_after=DELAY_TIME)
                 await sleep(DELAY_TIME)
                 await msg.delete()
@@ -60,6 +59,8 @@ async def get_random_word(msg, args):
             curr_user = r_user.mention
         else:
             curr_user = args[0]
+
+    WORDS_ARRAY = get_data(2, False, 'SELECT words FROM main_words_base')
 
     if len(WORDS_ARRAY) == 0:
         await msg.channel.send(f'{msg.author.mention}, я пока не знаю никаких слов, '

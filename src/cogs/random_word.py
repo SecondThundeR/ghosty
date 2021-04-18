@@ -68,47 +68,5 @@ async def get_random_word(msg, args):
                                delete_after=DELAY_TIME)
         await sleep(DELAY_TIME)
         await msg.delete()
-    elif _check_for_spam(msg):
-        await msg.channel.send(f'{msg.author.mention} куда спамиш?',
-                               delete_after=DELAY_TIME)
-        await sleep(DELAY_TIME)
-        await msg.delete()
     else:
         await msg.channel.send(f'{curr_user} {choice(WORDS_ARRAY)}')
-
-
-def _check_for_spam(msg):
-    """Get random word from list and send it.
-
-    Parameters:
-        msg (discord.message.Message): User ID to compare with database
-
-    Returns:
-        bool: True if user hit message in a row limit, False otherwise
-    """
-    spam_info = get_data(
-        0,
-        False,
-        'SELECT spammer_ID, spammer_count FROM variables'
-    )
-    if spam_info[0] == msg.author.id:
-        if spam_info[1] >= 3:
-            modify_data(
-                0,
-                'UPDATE variables SET spammer_count = ?',
-                0
-            )
-            return True
-        modify_data(
-            0,
-            'UPDATE variables SET spammer_count = ?',
-            spam_info[1] + 1
-        )
-        return False
-    modify_data(
-        0,
-        'UPDATE variables SET spammer_ID = ?, spammer_count = ?',
-        msg.author.id,
-        1
-    )
-    return False

@@ -62,7 +62,7 @@ async def get_random_word(msg, args):
 
     WORDS_ARRAY = get_data(2, False, 'SELECT words FROM main_words_base')
 
-    if len(WORDS_ARRAY) == 0:
+    if not len(WORDS_ARRAY):
         await msg.channel.send(f'{msg.author.mention}, я пока не знаю никаких слов, '
                                'однако вы можете добавить новые слова в мой словарь',
                                delete_after=DELAY_TIME)

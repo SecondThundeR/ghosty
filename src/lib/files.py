@@ -44,9 +44,7 @@ def is_exist(path):
     Returns:
         bool: True if file or folder exists, False otherwise
     """
-    if exists(path):
-        return True
-    return False
+    return True if exists(path) else False
 
 
 def folder_status(path):
@@ -59,9 +57,7 @@ def folder_status(path):
         bool: True if not empty, False otherwise
     """
     try:
-        if not listdir(path):
-            return False
-        return True
+        return True if listdir(path) else False
     except OSError as err:
         print('There is an error while checking folder.\n'
               f'Here are error details: {err}')

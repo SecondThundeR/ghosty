@@ -3,9 +3,7 @@
 This script allows the user to work with a SQL database with basic functions
 that only require the necessary data from the user to work with
 
-The module can accept strings as single queries or records
-of single data to the database, and lists of strings as multiple queries
-or records of several data at once
+The module can accept commands as strings and list of data to add
 
 **Noteworthy:** Module returns custom exception on every SQL failure to
 prevent the main script from making sudden errors

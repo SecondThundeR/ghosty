@@ -1,14 +1,14 @@
 <div align="center">
 
-<img width="256" height="256" src="assets/project-logo.png">
+<img width="256" height="256" src="assets/logos.gif">
 
-# Project Odysseus
+# Ghosty
 *Previously known as 'secondthunder-py-bot'*
 
 </div
 
-[![CodeFactor](https://www.codefactor.io/repository/github/secondthunder/project-odysseus/badge)](https://www.codefactor.io/repository/github/secondthunder/project-odysseus)
-[![DeepSource](https://deepsource.io/gh/SecondThundeR/project-odysseus.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/SecondThundeR/project-odysseus/?ref=repository-badge)
+[![CodeFactor](https://www.codefactor.io/repository/github/secondthunder/ghosty/badge)](https://www.codefactor.io/repository/github/secondthunder/ghosty)
+[![DeepSource](https://deepsource.io/gh/SecondThundeR/ghosty.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/SecondThundeR/ghosty/?ref=repository-badge)
 
 This is repository of some random bot for Discord which was created just for fun and for some educational purposes *(Made with Discord.py library)*
 

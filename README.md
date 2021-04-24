@@ -43,3 +43,15 @@ Also, you can track changes of new versions [here](https://github.com/SecondThun
 This project is licensed under **MIT License**.
 
 For the complete licensing terms, please read [LICENSE](https://github.com/SecondThundeR/secondthunder-py-bot/blob/master/LICENSE) file
+
+## Credits
+
+`Ghost icon` provided by [VKUI](https://github.com/VKCOM/icons). Licensed with [**MIT License**](https://github.com/VKCOM/icons/blob/master/LICENSE)
+
+`discord.py` provided by [Rapptz](https://github.com/Rapptz/discord.py). Licensed with [**MIT License**](https://github.com/Rapptz/discord.py/blob/master/LICENSE)
+
+`requests` provided by [psf](https://github.com/psf/requests). Licensed with [**Apache License 2.0**](https://github.com/psf/requests/blob/master/LICENSE)
+
+`emoji` provided by [carpedm20](https://github.com/carpedm20/emoji/). Licensed with [**BSD License**](https://github.com/carpedm20/emoji/blob/master/LICENSE.txt)
+
+`aiocron` provided by [gawel](https://github.com/gawel/aiocron). Licensed with [**MIT License**](https://github.com/gawel/aiocron/blob/master/LICENSE)

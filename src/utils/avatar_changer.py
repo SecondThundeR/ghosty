@@ -25,7 +25,11 @@ def get_avatar_bytes():
     if curr_cooldown > 0:
         return int(curr_cooldown)
     else:
-        modify_data(0, 'UPDATE variables SET avatar_cooldown = ?', int(curr_time()) + CHANGE_COOLDOWN)
+        modify_data(
+            0, 
+            'UPDATE variables SET avatar_cooldown = ?', 
+            int(curr_time()) + CHANGE_COOLDOWN
+        )
         avatar_path = f"{Path().absolute()}/src/avatars/Avatar_{randrange(1, 16)}.png"
         f = open(avatar_path, 'rb')
         bytes = f.read()

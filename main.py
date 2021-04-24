@@ -43,7 +43,7 @@ client = Client(intents=intents)
 @crontab('0 */6 * * *')
 async def update_avatar():
     """Update avatar picture automatically every 6 hours.
-    
+
     This function also checkes and updates the avatar_cooldown value
     to prevent a sudden avatar change during cron update
     """
@@ -59,7 +59,7 @@ async def update_member_list():
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
             add_member_to_db(member.id)
-    
+
 
 @client.event
 async def on_ready():

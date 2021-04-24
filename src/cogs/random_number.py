@@ -12,7 +12,7 @@ from random import randint
 from asyncio import sleep
 
 
-DELAY_TIME = 10
+DELAY_TIME = 5
 
 
 async def get_random_number(msg, args):

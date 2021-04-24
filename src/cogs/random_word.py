@@ -15,7 +15,7 @@ from src.lib.users import get_random_user
 from src.lib.words_base import manage_words
 
 
-DELAY_TIME = 3
+DELAY_TIME = 5
 
 
 async def get_random_word(msg, args):

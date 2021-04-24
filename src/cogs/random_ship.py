@@ -172,8 +172,8 @@ async def _random_ship(msg, mode='default'):
             await msg.channel.send(f'{msg.author.mention}, '
                                    'похоже cписок пользователей пуст '
                                    'и поэтому мне не кого шипперить',
-                                   delete_after=DELAY_TIME)
-            await sleep(DELAY_TIME)
+                                   delete_after=DELETE_TIME)
+            await sleep(DELETE_TIME)
             await msg.delete()
             return
         first_username = get_members_name(users_info[0])

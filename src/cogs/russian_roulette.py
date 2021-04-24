@@ -18,7 +18,7 @@ TABLES_ALIASES = {
     'луз': 'lose',
     'ноль': 'zero',
     'минус': 'minus'}
-DELAY_TIME = 3
+DELAY_TIME = 5
 
 
 def _get_random_word(condition):

@@ -121,5 +121,6 @@ def _download_wb_file(path, link):
     if r.status_code == 200:
         with open(path, 'wb') as f:
             f.write(r.content)
+        f.close()
         return True
     return False

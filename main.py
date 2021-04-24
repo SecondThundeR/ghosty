@@ -9,6 +9,7 @@ fit your needs
 """
 
 
+from aiocron import crontab
 from time import time as curr_time
 from discord import Client, Intents, Status, Game
 from src.lib.database import clear_on_load, get_data, modify_data
@@ -24,18 +25,30 @@ from src.cogs.random_ship import ship_func_chooser
 from src.cogs.random_word import get_random_word
 from src.cogs.rsp import rsp_mode
 from src.cogs.russian_roulette import start_roulette
+from src.cogs.switch_avatar import switch_avatar
 from src.cogs.system import get_system_info
 from src.cogs.uptime import get_bot_uptime
 from src.cogs.user_checker import who_is_user
 from src.cogs.user_finder import user_finder_mode
+from src.utils.avatar_changer import change_profile_picture
 
 
 TOKENS = get_data(1, False, 'SELECT bot_token FROM tokens')
 SELECTED_BOT = get_data(0, True, 'SELECT current_selected_bot FROM variables')
-ACTIVITY_NAME = 'Helltaker'
 intents = Intents.default()
 intents.members = True
 client = Client(intents=intents)
+
+
+@crontab('0 */6 * * *')
+async def update_avatar():
+    """Update avatar picture automatically every 6 hours.
+    
+    This function also updates the avatar_cooldown value
+    to prevent a sudden avatar change during cron update
+    """
+    modify_data(0, 'UPDATE variables SET avatar_cooldown = ?', int(curr_time()))
+    await client.user.edit(avatar=change_profile_picture())
 
 
 @client.event
@@ -45,8 +58,8 @@ async def on_ready():
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
             add_member_to_db(member.id)
-    await client.change_presence(status=Status.dnd,
-                                 activity=Game(name=ACTIVITY_NAME))
+    await client.change_presence(status=Status.dnd)
+    await client.user.edit(avatar=change_profile_picture())
     print(f'Successfully logged in as {client.user}!')
     modify_data(0, 'UPDATE variables SET bot_uptime = ?', int(curr_time()))
 
@@ -104,6 +117,8 @@ async def on_message(message):
         await rsp_mode(client, message, args)
     elif command == 'рулетка':
         await start_roulette(message, args)
+    elif command == 'аватарка':
+        await switch_avatar(message, client)
     elif command == 'система':
         await get_system_info(message)
     elif command in ('ху', 'who'):

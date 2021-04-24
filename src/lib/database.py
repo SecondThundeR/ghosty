@@ -128,7 +128,7 @@ def modify_data(path_num, command, *data):
     """
     try:
         database = Database(DB_PATH[path_num])
-        if not data:
+        if len(data) > 0:
             database.cur.execute(command, data)
         else:
             database.cur.execute(command)

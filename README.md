@@ -5,7 +5,7 @@
 # Ghosty
 *Previously known as 'secondthunder-py-bot'*
 
-</div
+</div>
 
 [![CodeFactor](https://www.codefactor.io/repository/github/secondthunder/ghosty/badge)](https://www.codefactor.io/repository/github/secondthunder/ghosty)
 [![DeepSource](https://deepsource.io/gh/SecondThundeR/ghosty.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/SecondThundeR/ghosty/?ref=repository-badge)

@@ -1,3 +1,13 @@
+"""Avatar switcher (Beta).
+
+This script allows users to change avatar of bot while it's running
+with certain command.
+
+This file can also be imported as a module and contains the following functions:
+    * switch_avatar - changes avatar of bot via command
+"""
+
+
 import asyncio
 from datetime import timedelta
 from src.utils.timedelta_formatter import format_timedelta

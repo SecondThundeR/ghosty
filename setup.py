@@ -60,7 +60,8 @@ LINKS = [
 MODULES_TO_CHECK = [
     'discord.py',
     'requests',
-    'emoji'
+    'emoji',
+    'aiocron'
 ]
 
 
@@ -116,7 +117,7 @@ def _check_for_installed_modules():
     for package in packages:
         if package.key in MODULES_TO_CHECK:
             modules_counter += 1
-    if modules_counter < 3:
+    if modules_counter < 4:
         print('Do you want to install missing modules for correct work of bot? (Y/N)')
         while True:
             user_input = _get_input()

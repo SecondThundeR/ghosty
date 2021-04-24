@@ -31,6 +31,6 @@ def get_avatar_bytes():
     )
     avatar_path = f"{Path().absolute()}/src/avatars/Avatar_{randrange(1, 16)}.png"
     with open(avatar_path, 'rb') as f:
-        bytes = f.read()
+        avatar_bytes = f.read()
     f.close()
-    return bytes
+    return avatar_bytes

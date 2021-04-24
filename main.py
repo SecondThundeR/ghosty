@@ -54,13 +54,18 @@ async def update_avatar():
         await client.user.edit(avatar=avatar_data)
 
 
+async def update_member_list():
+    """Update users database on load."""
+    for guild in client.guilds:
+        async for member in guild.fetch_members(limit=None):
+            add_member_to_db(member.id)
+    
+
 @client.event
 async def on_ready():
     """Execute necessary functions during the bot launch."""
     clear_on_load()
-    for guild in client.guilds:
-        async for member in guild.fetch_members(limit=None):
-            add_member_to_db(member.id)
+    await update_member_list()
     await client.change_presence(status=Status.dnd)
     avatar_data = get_avatar_bytes()
     if isinstance(avatar_data, int):

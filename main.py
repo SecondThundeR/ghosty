@@ -58,7 +58,7 @@ async def update_member_list():
     """Update users database on load."""
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
-            add_member_to_db(member.id)
+            add_member_to_db(member)
 
 
 @client.event
@@ -83,7 +83,7 @@ async def on_member_join(member):
     Parameters:
         member (discord.member.Member): Information about the user who joined the server
     """
-    add_member_to_db(member.id)
+    add_member_to_db(member)
 
 
 @client.event

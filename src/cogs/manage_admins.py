@@ -7,7 +7,6 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-from discord import channel
 from asyncio import TimeoutError as Timeout
 from src.lib.database import get_data, modify_data
 from src.lib.users import is_user_admin
@@ -24,8 +23,7 @@ async def admin_manager(bot, msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List with operation and user's ID
     """
-    if (isinstance(msg.channel, channel.DMChannel)
-            and len(args) == 2 and is_user_admin(msg.author.id)):
+    if len(args) == 2 and is_user_admin(msg.author.id):
         if args[0] == 'добавить':
             await _add_admin(msg, args[1])
         elif args[0] == 'удалить':

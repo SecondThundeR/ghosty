@@ -14,6 +14,7 @@ This file can also be imported as a module and contains the following functions:
     * modify_data - operates with data by executing SQL queries
 """
 
+
 from sqlite3 import connect
 from sqlite3 import Error as DBError
 

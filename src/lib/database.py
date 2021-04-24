@@ -67,8 +67,8 @@ def clear_on_load():
     """
     modify_data(0,
                 'UPDATE variable SET poll_locked = ?, ship_in_active = ?,'
-                ' spammer_ID = ?, spammer_count = ?, rsp_game_active = ?',
-                0, 0, 0, 0, 0)
+                'rsp_game_active = ?',
+                0, 0, 0)
     modify_data(0, 'DELETE FROM bots')
     modify_data(0, 'DELETE FROM users')
 

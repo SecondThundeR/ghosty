@@ -17,7 +17,7 @@ def get_avatar_bytes():
         int: Cooldown time
         bytes: Bytes of PNG
     """
-    curr_cooldown =  - get_data(
+    curr_cooldown = get_data(
         0,
         True,
         'SELECT avatar_cooldown FROM variables',

@@ -136,7 +136,7 @@ async def on_message(message):
         elif command == 'аватарка':
             await switch_avatar(message, client)
         elif command == 'система':
-            await get_system_info(message)
+            await get_system_info(message, args)
         elif command in ('ху', 'who'):
             await get_random_word(message, args)
         elif command == 'поиск':

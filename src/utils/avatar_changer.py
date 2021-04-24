@@ -6,6 +6,7 @@ from src.lib.database import get_data, modify_data
 
 CHANGE_COOLDOWN = 900
 
+
 def get_avatar_bytes():
     """Get bytes from avatar picture.
     

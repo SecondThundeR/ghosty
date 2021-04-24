@@ -9,7 +9,7 @@ CHANGE_COOLDOWN = 900
 
 def get_avatar_bytes():
     """Get bytes from avatar picture.
-    
+
     This function has built-in check for
     avatar change cooldown
 

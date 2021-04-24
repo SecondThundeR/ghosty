@@ -11,7 +11,7 @@ fit your needs
 
 from aiocron import crontab
 from time import time as curr_time
-from discord import Client, Intents, Status
+from discord import Client, Intents, Status, channel
 from src.lib.database import clear_on_load, get_data, modify_data
 from src.lib.users import add_member_to_db
 from src.cogs.help import send_help_message
@@ -107,40 +107,44 @@ async def on_message(message):
     args = message.content.split(' ')
     command = args.pop(0).lower()
 
-    if command == 'полл':
-        await init_poll(message, args)
-    elif command == 'макар':
-        await send_makar_message(message, args)
-    elif command == 'хелп':
-        await send_help_message(message)
-    elif command == 'uptime':
-        await get_bot_uptime(message)
-    elif command in 'админ':
-        await admin_manager(client, message, args)
-    elif command in 'чс':
-        await ignored_manager(message, args)
-    elif command == 'йа':
-        await send_me_message(message, args)
-    elif command == 'рандом':
-        await get_random_number(message, args)
-    elif command == 'шип':
-        await ship_func_chooser(message, args)
-    elif command == 'цуефа':
-        await rsp_mode(client, message, args)
-    elif command == 'рулетка':
-        await start_roulette(message, args)
-    elif command == 'аватарка':
-        await switch_avatar(message, client)
-    elif command == 'система':
-        await get_system_info(message)
-    elif command in ('ху', 'who'):
-        await get_random_word(message, args)
-    elif command == 'поиск':
-        await user_finder_mode(message, args)
+    if isinstance(message.channel, channel.DMChannel):
+        if command == 'хелп':
+            await send_help_message(message)
+        elif command in 'админ':
+            await admin_manager(client, message, args)
+        elif command in 'чс':
+            await ignored_manager(message, args)
     else:
-        if ('тест' in full_message and full_message.index('тест') != 0
-                or 'рандом' in full_message and full_message.index('рандом') != 0):
-            await who_is_user(message, full_message)
+        if command == 'полл':
+            await init_poll(message, args)
+        elif command == 'хелп':
+            await send_help_message(message)
+        elif command == 'макар':
+            await send_makar_message(message, args)
+        elif command == 'uptime':
+            await get_bot_uptime(message)
+        elif command == 'йа':
+            await send_me_message(message, args)
+        elif command == 'рандом':
+            await get_random_number(message, args)
+        elif command == 'шип':
+            await ship_func_chooser(message, args)
+        elif command == 'цуефа':
+            await rsp_mode(client, message, args)
+        elif command == 'рулетка':
+            await start_roulette(message, args)
+        elif command == 'аватарка':
+            await switch_avatar(message, client)
+        elif command == 'система':
+            await get_system_info(message)
+        elif command in ('ху', 'who'):
+            await get_random_word(message, args)
+        elif command == 'поиск':
+            await user_finder_mode(message, args)
+        else:
+            if ('тест' in full_message and full_message.index('тест') != 0
+                    or 'рандом' in full_message and full_message.index('рандом') != 0):
+                await who_is_user(message, full_message)
 
 
 client.run(TOKENS[int(SELECTED_BOT)])

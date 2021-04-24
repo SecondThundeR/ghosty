@@ -7,7 +7,6 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-from discord import channel
 from src.lib.database import modify_data
 from src.lib.users import is_user_admin, is_user_blocked
 
@@ -22,8 +21,7 @@ async def ignored_manager(msg, args):
         msg (discord.message.Message): Execute send to channel function
         args (list): List with operation and user's ID
     """
-    if (isinstance(msg.channel, channel.DMChannel)
-            and len(args) == 2 and is_user_admin(msg.author.id)):
+    if len(args) == 2 and is_user_admin(msg.author.id):
         if args[0] == 'заблокировать':
             await _add_ignored(msg, args[1])
         elif args[0] == 'разблокировать':

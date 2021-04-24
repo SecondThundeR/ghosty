@@ -1,3 +1,13 @@
+"""'On-fly' avatar changer (Beta).
+
+This script allows to change avatar of bot while it's running.
+Script gets randomly choosen avatar data to replace current avatar.
+
+This file can also be imported as a module and contains the following functions:
+    * get_avatar_bytes - gets bytes from avatar picture
+"""
+
+
 from random import randrange
 from time import time as curr_time
 from pathlib import Path

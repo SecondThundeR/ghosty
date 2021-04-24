@@ -128,7 +128,10 @@ def modify_data(path_num, command, *data):
     """
     try:
         database = Database(DB_PATH[path_num])
-        database.cur.execute(command, data)
+        if not data:
+            database.cur.execute(command, data)
+        else:
+            database.cur.execute(command)
         database.conn.commit()
         database.disconnect_db()
     except DBError as err:

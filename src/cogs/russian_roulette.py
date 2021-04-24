@@ -18,7 +18,8 @@ TABLES_ALIASES = {
     'луз': 'lose',
     'ноль': 'zero',
     'минус': 'minus'}
-DELAY_TIME = 5
+DELETE_TIME = 5
+DELAY_TIME = 2
 
 
 def _get_random_word(condition):
@@ -86,7 +87,7 @@ async def start_roulette(msg, args):
                                         TABLE_TO_MODIFY,
                                         'add'
                                        ),
-                                       delete_after=DELAY_TIME)
+                                       delete_after=DELETE_TIME)
                 await sleep(DELAY_TIME)
                 await msg.delete()
             return
@@ -108,7 +109,7 @@ async def start_roulette(msg, args):
                                         TABLE_TO_MODIFY,
                                         'del'
                                        ),
-                                       delete_after=DELAY_TIME)
+                                       delete_after=DELETE_TIME)
                 await sleep(DELAY_TIME)
                 await msg.delete()
             return

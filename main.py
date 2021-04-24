@@ -30,7 +30,7 @@ from src.cogs.system import get_system_info
 from src.cogs.uptime import get_bot_uptime
 from src.cogs.user_checker import who_is_user
 from src.cogs.user_finder import user_finder_mode
-from src.utils.avatar_changer import change_profile_picture
+from src.utils.avatar_changer import get_avatar_bytes
 
 
 TOKENS = get_data(1, False, 'SELECT bot_token FROM tokens')
@@ -47,16 +47,11 @@ async def update_avatar():
     This function also checkes and updates the avatar_cooldown value
     to prevent a sudden avatar change during cron update
     """
-    curr_cooldown = int(curr_time()) - get_data(
-        0,
-        True,
-        'SELECT avatar_cooldown FROM variables',
-    )
-    if curr_cooldown > 0:
+    avatar_data = get_avatar_bytes()
+    if isinstance(avatar_data, int):
         pass
     else:
-        modify_data(0, 'UPDATE variables SET avatar_cooldown = ?', int(curr_time()))
-        await client.user.edit(avatar=change_profile_picture())
+        await client.user.edit(avatar=avatar_data)
 
 
 @client.event
@@ -67,7 +62,11 @@ async def on_ready():
         async for member in guild.fetch_members(limit=None):
             add_member_to_db(member.id)
     await client.change_presence(status=Status.dnd)
-    await client.user.edit(avatar=change_profile_picture())
+    avatar_data = get_avatar_bytes()
+    if isinstance(avatar_data, int):
+        pass
+    else:
+        await client.user.edit(avatar=avatar_data)
     print(f'Successfully logged in as {client.user}!')
     modify_data(0, 'UPDATE variables SET bot_uptime = ?', int(curr_time()))
 

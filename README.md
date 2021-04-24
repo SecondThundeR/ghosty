@@ -1,7 +1,14 @@
-# secondthunder-py-bot
+<div align="center">
 
-[![CodeFactor](https://www.codefactor.io/repository/github/secondthunder/secondthunder-py-bot/badge/master)](https://www.codefactor.io/repository/github/secondthunder/secondthunder-py-bot/overview/master)
-[![DeepSource](https://deepsource.io/gh/SecondThundeR/secondthunder-py-bot.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/SecondThundeR/secondthunder-py-bot/?ref=repository-badge)
+<img width="256" height="256" src="assets/project-logo.png">
+
+# Project Odysseus
+*Previously known as 'secondthunder-py-bot'*
+
+</div
+
+[![CodeFactor](https://www.codefactor.io/repository/github/secondthunder/project-odysseus/badge)](https://www.codefactor.io/repository/github/secondthunder/project-odysseus)
+[![DeepSource](https://deepsource.io/gh/SecondThundeR/project-odysseus.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/SecondThundeR/project-odysseus/?ref=repository-badge)
 
 This is repository of some random bot for Discord which was created just for fun and for some educational purposes *(Made with Discord.py library)*
 

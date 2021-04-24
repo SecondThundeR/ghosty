@@ -29,7 +29,7 @@ async def get_random_user(msg):
             which was randomly chosen.
         None for empty array of users
     """
-    users = get_data(0, False, 'SELECT users FROM users_id')
+    users = get_data(0, False, 'SELECT users_id FROM users')
     try:
         member = await msg.guild.fetch_member(choice(users))
         return member
@@ -47,7 +47,7 @@ async def get_shipping_users(msg):
         list: Users objects with their info which was randomly chosen.
         None for empty array of users
     """
-    users = get_data(0, False, 'SELECT users FROM users_id')
+    users = get_data(0, False, 'SELECT users_id FROM users')
     try:
         first_member = await msg.guild.fetch_member(choice(users))
         second_member = await msg.guild.fetch_member(choice(users))

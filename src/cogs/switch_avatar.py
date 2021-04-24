@@ -13,7 +13,7 @@ async def switch_avatar(msg, client):
     Parameters:
         msg (discord.message.Message): Execute send to channel function
         client (discord.Client): Execute avatar change function
-    
+
     """
     avatar_data = get_avatar_bytes()
     if isinstance(avatar_data, int):

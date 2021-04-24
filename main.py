@@ -11,7 +11,7 @@ fit your needs
 
 from aiocron import crontab
 from time import time as curr_time
-from discord import Client, Intents, Status, Game
+from discord import Client, Intents, Status
 from src.lib.database import clear_on_load, get_data, modify_data
 from src.lib.users import add_member_to_db
 from src.cogs.help import send_help_message

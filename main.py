@@ -44,11 +44,19 @@ client = Client(intents=intents)
 async def update_avatar():
     """Update avatar picture automatically every 6 hours.
     
-    This function also updates the avatar_cooldown value
+    This function also checkes and updates the avatar_cooldown value
     to prevent a sudden avatar change during cron update
     """
-    modify_data(0, 'UPDATE variables SET avatar_cooldown = ?', int(curr_time()))
-    await client.user.edit(avatar=change_profile_picture())
+    curr_cooldown = int(curr_time()) - get_data(
+        0,
+        True,
+        'SELECT avatar_cooldown FROM variables',
+    )
+    if curr_cooldown > 0:
+        pass
+    else:
+        modify_data(0, 'UPDATE variables SET avatar_cooldown = ?', int(curr_time()))
+        await client.user.edit(avatar=change_profile_picture())
 
 
 @client.event

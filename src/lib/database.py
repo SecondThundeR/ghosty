@@ -67,7 +67,7 @@ def clear_on_load():
     when main script is executed
     """
     modify_data(0,
-                'UPDATE variable SET poll_locked = ?, ship_in_active = ?,'
+                'UPDATE variables SET poll_locked = ?, ship_in_active = ?,'
                 'rsp_game_active = ?',
                 0, 0, 0)
     modify_data(0, 'DELETE FROM bots')

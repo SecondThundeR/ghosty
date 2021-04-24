@@ -1,3 +1,11 @@
+"""Timedelta formatter.
+
+This script allows to format a given timedelta to a specific look.
+
+This file can also be imported as a module and contains the following functions:
+    * format_timedelta - formats timedelta to hours:minutes:seconds
+"""
+
 def format_timedelta(td):
     """Format timedelta to hours:minutes:seconds.
 

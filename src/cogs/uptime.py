@@ -11,7 +11,7 @@ from time import time as curr_time
 from asyncio import sleep
 from datetime import timedelta
 from src.lib.database import get_data
-from src.utils.timedelta_formatting import format_timedelta
+from src.utils.timedelta_formatter import format_timedelta
 
 
 DELAY_TIME = 5

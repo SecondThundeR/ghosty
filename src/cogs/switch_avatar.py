@@ -1,6 +1,6 @@
 import asyncio
 from datetime import timedelta
-from src.utils.timedelta_formatting import format_timedelta
+from src.utils.timedelta_formatter import format_timedelta
 from src.utils.avatar_changer import get_avatar_bytes
 
 

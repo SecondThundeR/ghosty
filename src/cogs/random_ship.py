@@ -83,7 +83,7 @@ async def _reset_ship(msg):
     modify_data(
         0,
         'UPDATE variables SET ship_date = ?, ship_text_short = ?, '
-        'ship_text_full = ?, ship_activated = ?'
+        'ship_text_full = ?, ship_activated = ?',
         '',
         '',
         '',

@@ -39,7 +39,7 @@ async def get_system_info(msg, args):
                                        f'*({sys_version})*, '
                                        'у которого процессор имеет архитектуру - '
                                        f'**{sys_arch}**',
-                                       delete_after=DELAY_TIME)      
+                                       delete_after=DELAY_TIME)
     else:
         await msg.channel.send('Я работаю на '
                                f'**{sys_name} {sys_release}** *({sys_version})*',

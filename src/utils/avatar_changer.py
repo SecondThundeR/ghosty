@@ -1,6 +1,7 @@
 import random
 import pathlib
 
+
 def change_profile_picture():
     """Change profile picture of bot to random one.
     

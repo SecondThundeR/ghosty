@@ -121,17 +121,14 @@ def modify_data(path_num, command, *data):
     Parameters:
         path_num (int): Number of path in path list
         command (str): Command to execute
-        *data: Variable length list of data
+        data (tuple): List of data
 
     Raises:
         Exception: Returns info about error
     """
     try:
         database = Database(DB_PATH[path_num])
-        if not tuple(data):
-            database.cur.execute(command)
-        else:
-            database.cur.execute(command, tuple(data))
+        database.cur.execute(command, data)
         database.conn.commit()
         database.disconnect_db()
     except DBError as err:

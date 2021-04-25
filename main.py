@@ -40,7 +40,7 @@ intents.members = True
 client = Client(intents=intents)
 
 
-@crontab('0 */6 * * *')
+@crontab('0 */3 * * *')
 async def update_avatar():
     """Update avatar picture automatically every 6 hours.
 

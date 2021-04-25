@@ -42,7 +42,7 @@ client = Client(intents=intents)
 
 @crontab('0 */3 * * *')
 async def update_avatar():
-    """Update avatar picture automatically every 6 hours.
+    """Update avatar picture automatically every 3 hours.
 
     This function also checkes and updates the avatar_cooldown value
     to prevent a sudden avatar change during cron update

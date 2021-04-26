@@ -15,6 +15,7 @@ from discord import Client, Intents, Status, channel
 from src.lib.database import clear_on_load, get_data, modify_data
 from src.lib.users import add_member_to_db
 from src.cogs.help import send_help_message
+from src.cogs.magic_ball import roll_magic_ball
 from src.cogs.makar import send_makar_message
 from src.cogs.manage_admins import admin_manager
 from src.cogs.manage_ignored import ignored_manager
@@ -119,6 +120,8 @@ async def on_message(message):
             await init_poll(message, args)
         elif command == 'хелп':
             await send_help_message(message)
+        elif command == 'шар':
+            await roll_magic_ball(message, ''.join(args))
         elif command == 'макар':
             await send_makar_message(message, args)
         elif command == 'uptime':

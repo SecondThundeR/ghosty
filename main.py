@@ -116,22 +116,22 @@ async def on_message(message):
         elif command in 'чс':
             await ignored_manager(message, args)
     else:
-        if command == 'полл':
-            await init_poll(message, args)
-        elif command == 'хелп':
+        if command == 'хелп':
             await send_help_message(message)
         elif command == 'шар':
             await roll_magic_ball(message, ''.join(args))
         elif command == 'макар':
             await send_makar_message(message, args)
-        elif command == 'uptime':
-            await get_bot_uptime(message)
         elif command == 'йа':
             await send_me_message(message, args)
+        elif command == 'полл':
+            await init_poll(message, args)
         elif command == 'рандом':
             await get_random_number(message, args)
         elif command == 'шип':
             await ship_func_chooser(message, args)
+        elif command in ('ху', 'who'):
+            await get_random_word(message, args)
         elif command == 'цуефа':
             await rsp_mode(client, message, args)
         elif command == 'рулетка':
@@ -140,8 +140,8 @@ async def on_message(message):
             await switch_avatar(message, client)
         elif command == 'система':
             await get_system_info(message, args)
-        elif command in ('ху', 'who'):
-            await get_random_word(message, args)
+        elif command == 'uptime':
+            await get_bot_uptime(message)
         elif command == 'поиск':
             await user_finder_mode(message, args)
         else:

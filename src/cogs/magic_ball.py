@@ -32,13 +32,12 @@ async def roll_magic_ball(msg, text):
     """
     if not text:
         await msg.channel.send(f'{msg.author.mention}, '
-                                'вы не дали мне вопроса, '
-                                'чтобы я на него ответил',
-                                delete_after=DELAY_TIME)
+                               'вы не дали мне вопроса, '
+                               'чтобы я на него ответил',
+                               delete_after=DELAY_TIME)
         await sleep(DELAY_TIME)
         await msg.delete()
-        return                          
     else:
         answer = choice(MAGIC_BALL_ANSWERS)
         await msg.channel.send(f'{msg.author.mention}, {answer.lower()}')
-        return
+    return

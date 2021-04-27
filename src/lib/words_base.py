@@ -1,4 +1,4 @@
-"""Words Base Handler Library (Beta).
+"""Words Base Handler Library.
 
 This script allows the user to work with a words base (e.g. add new word,
 restore developers word base, etc.)

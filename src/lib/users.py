@@ -1,4 +1,4 @@
-"""User Handler Library (Beta).
+"""User Handler Library.
 
 This script allows to select user from list of server users
 and get his information

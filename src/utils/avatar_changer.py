@@ -1,4 +1,4 @@
-"""'On-fly' avatar changer (Beta).
+"""'On-fly' avatar changer.
 
 This script allows to change avatar of bot while it's running.
 Script gets randomly choosen avatar data to replace current avatar.

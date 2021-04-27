@@ -85,12 +85,6 @@ def _get_input(text=''):
     while True:
         user_input = str(input('> '))
         if user_input.upper() not in ["", "CANCEL"]:
-            # if user_input.find("\'") != -1:
-            #     formatted_input = user_input.replace("\'", "''")
-            #     user_input = formatted_input
-            # elif user_input.find("'") != -1:
-            #     formatted_input = user_input.replace("'", "''")
-            #     user_input = formatted_input
             return user_input
         if user_input.upper() == "CANCEL" and SETUP_STATUS == 1:
             print('Cancelling input. '

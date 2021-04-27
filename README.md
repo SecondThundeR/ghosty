@@ -1,6 +1,6 @@
 <div align="center">
 
-<img width="256" height="256" src="assets/logos.gif">
+<img width="256" height="256" src="assets/logo.gif">
 
 # Ghosty
 *Previously known as 'secondthunder-py-bot'*

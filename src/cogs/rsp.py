@@ -83,7 +83,6 @@ async def _purge_messages(messages):
     """
     for message in messages:
         await message.delete()
-    print(f'[RSP Game] Deleted {len(messages)} messages')
 
 
 def _rsp_game_logic(first_var, second_var, first_user_id, second_user_id):

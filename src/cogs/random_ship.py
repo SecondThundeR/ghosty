@@ -186,7 +186,7 @@ async def _random_ship(msg, mode='default'):
         ship_text_short = f'{users_info[0].mention} + {users_info[1].mention}'
         ship_text_full = f'{first_username} + {second_username}, #' + final_username
         if mode == 'fast':
-            await msg.channel.send(f'**Парочка дня на сегодня:** {ship_text_full} '
+            await msg.channel.send(f'**Парочка дня на сегодня:** {ship_text_short} '
                                    ':two_hearts:')
         else:
             await _random_ship_messages(msg, ship_text_short)

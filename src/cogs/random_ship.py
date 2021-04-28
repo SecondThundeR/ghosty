@@ -212,7 +212,7 @@ async def _random_ship(msg, mode='default'):
                                ':two_hearts: \n\n*Следующий шиппинг будет доступен '
                                f'{next_date_string}*')
     elif (get_data(0, True, 'SELECT ship_activated FROM variables') == 1 and
-            current_date > datetime.strptime(ship_date, '%Y-%m-%d').date()):
+            current_date >= datetime.strptime(ship_date, '%Y-%m-%d').date()):
         modify_data(0, 'UPDATE variables SET ship_activated = ?', 0)
         await _random_ship(msg)
     else:

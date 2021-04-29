@@ -16,6 +16,7 @@ This file can also be imported as a module and contains the following functions:
 
 from random import choice
 from src.lib.database import get_data, modify_data
+from src.lib.exceptions import UsersNotFound
 
 
 async def get_random_user(msg):
@@ -27,14 +28,16 @@ async def get_random_user(msg):
     Returns:
         discord.member.Member: Object with info about member
             which was randomly chosen.
-        None for empty array of users
+
+    Raises:
+        UsersNotFound: If list of users is empty
     """
     users = get_data(0, False, 'SELECT users_id FROM users')
     try:
         member = await msg.guild.fetch_member(choice(users))
         return member
     except IndexError:
-        return None
+        raise UsersNotFound("В базе данных нет пользователей")
 
 
 async def get_shipping_users(msg):
@@ -44,8 +47,10 @@ async def get_shipping_users(msg):
         msg (discord.message.Message): Info about guild from message
 
     Returns:
-        list: Users objects with their info which was randomly chosen.
-        None for empty array of users
+        list: Users objects with their info which was randomly chosen
+
+    Raises:
+        UsersNotFound: If list of users is empty
     """
     users = get_data(0, False, 'SELECT users_id FROM users')
     try:
@@ -55,7 +60,7 @@ async def get_shipping_users(msg):
             second_member = await msg.guild.fetch_member(choice(users))
         return [first_member, second_member]
     except IndexError:
-        return None
+        raise UsersNotFound("В базе данных нет пользователей")
 
 
 def get_members_name(member):

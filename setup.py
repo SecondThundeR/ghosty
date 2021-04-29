@@ -1,4 +1,4 @@
-"""Setup of secondthunder-py-bot (Beta).
+"""Setup of ghosty (Beta).
 
 This setup performs the first initial and further
 configuration of the bot through the console.
@@ -53,8 +53,8 @@ WORDS_BASE_NAME = [
     ]
 LINKS = [
     'https://raw.githubusercontent.com/SecondThundeR/'
-    'secondthunder-py-bot/master/',
-    'https://github.com/SecondThundeR/secondthunder-py-bot/'
+    'ghosty/master/',
+    'https://github.com/SecondThundeR/ghosty/'
     'wiki/FAQ#getting-a-bot-token'
     ]
 MODULES_TO_CHECK = [

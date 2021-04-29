@@ -30,19 +30,19 @@ This is repository of some random bot for Discord which was created just for fun
 
 ## Discussions
 
-This project has a [Github Discussions](https://github.com/SecondThundeR/secondthunder-py-bot/discussions) turned on. Feel free to ask about this project or give new ideas etc.
+This project has a [Github Discussions](https://github.com/SecondThundeR/ghosty/discussions) turned on. Feel free to ask about this project or give new ideas etc.
 
 ## Changelog
 
-This project has a changelog, which you can find [here](https://github.com/SecondThundeR/secondthunder-py-bot/blob/master/Changelog.md)
+This project has a changelog, which you can find [here](https://github.com/SecondThundeR/ghosty/blob/master/Changelog.md)
 
-Also, you can track changes of new versions [here](https://github.com/SecondThundeR/secondthunder-py-bot/projects)
+Also, you can track changes of new versions [here](https://github.com/SecondThundeR/ghosty/projects)
 
 ## License
 
 This project is licensed under **MIT License**.
 
-For the complete licensing terms, please read [LICENSE](https://github.com/SecondThundeR/secondthunder-py-bot/blob/master/LICENSE) file
+For the complete licensing terms, please read [LICENSE](https://github.com/SecondThundeR/ghosty/blob/master/LICENSE) file
 
 ## Credits
 

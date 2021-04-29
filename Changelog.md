@@ -200,12 +200,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Multiple commands and functions was deleted due to move to Heroku *(Some of commands will present in additional branches)*
 - Commented code was deleted from main branch
 
-[2.0.1]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v2.0.0...v2.0.1
-[2.0.0]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v1.1.4...v2.0.0
-[1.1.4]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v1.1.3...v1.1.4
-[1.1.3]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v1.1.2...v1.1.3
-[1.1.2]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v1.1.1...v1.1.2
-[1.1.1]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v1.1.0...v1.1.1
-[1.1.0]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v1.0.1...v1.1.0
-[1.0.1]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/SecondThundeR/secondthunder-py-bot/compare/v0.9.9...v1.0.0
+[2.0.1]: https://github.com/SecondThundeR/ghosty/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/SecondThundeR/ghosty/compare/v1.1.4...v2.0.0
+[1.1.4]: https://github.com/SecondThundeR/ghosty/compare/v1.1.3...v1.1.4
+[1.1.3]: https://github.com/SecondThundeR/ghosty/compare/v1.1.2...v1.1.3
+[1.1.2]: https://github.com/SecondThundeR/ghosty/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/SecondThundeR/ghosty/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/SecondThundeR/ghosty/compare/v1.0.1...v1.1.0
+[1.0.1]: https://github.com/SecondThundeR/ghosty/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/SecondThundeR/ghosty/compare/v0.9.9...v1.0.0

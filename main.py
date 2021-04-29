@@ -1,4 +1,4 @@
-"""Ghosty bot.
+"""Main script of Ghosty.
 
 This is a Discord bot script that runs on the Discord.py library and
 allows you to execute functions using specific text commands

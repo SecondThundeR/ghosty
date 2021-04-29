@@ -1,4 +1,4 @@
-"""Setup of ghosty (Beta).
+"""Setup of Ghosty (Beta).
 
 This setup performs the first initial and further
 configuration of the bot through the console.

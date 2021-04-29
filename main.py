@@ -147,13 +147,12 @@ async def on_message(message):
         else:
             try:
                 full_message.index('тест')
-                await who_is_user(message, full_message)
             except ValueError:
                 try:
                     full_message.index('рандом')
-                    await who_is_user(message, full_message)
                 except ValueError:
-                    pass
+                    return
+            await who_is_user(message, full_message)
 
 
 client.run(TOKENS[int(SELECTED_BOT)])

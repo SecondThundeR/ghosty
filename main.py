@@ -111,9 +111,9 @@ async def on_message(message):
     if isinstance(message.channel, channel.DMChannel):
         if command == 'хелп':
             await send_help_message(message)
-        elif command in 'админ':
+        elif command == 'админ':
             await admin_manager(client, message, args)
-        elif command in 'чс':
+        elif command == 'чс':
             await ignored_manager(message, args)
     else:
         if command == 'хелп':
@@ -145,8 +145,7 @@ async def on_message(message):
         elif command == 'поиск':
             await user_finder_mode(message, args)
         else:
-            if ('тест' in full_message and full_message.index('тест') != 0
-                    or 'рандом' in full_message and full_message.index('рандом') != 0):
+            if full_message.index('тест') or full_message.index('рандом'):
                 await who_is_user(message, full_message)
 
 

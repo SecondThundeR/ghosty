@@ -8,6 +8,7 @@ This file can also be imported as a module and contains the following functions:
 
 
 from random import randint
+from src.lib.exceptions import UsersNotFound
 from src.lib.users import get_random_user
 
 
@@ -36,18 +37,21 @@ async def who_is_user(msg, full_message):
         full_message (list): List of message contents
     """
     random_percent = randint(0, 100)
-    last_item_index = len(full_message) - 1
+    index_to_check = len(full_message) - 1
     test_data = _get_who_is_user(full_message)
     current_user = ''
     if 'рандом' in full_message:
-        r_user = await get_random_user(msg)
-        if r_user is None:
+        try:
+            r_user = await get_random_user(msg)
+        except UsersNotFound as warning:
+            await msg.channel.send(f'Произошла ошибка: {warning}!')
             return
         current_user = r_user.mention
-    elif 'тест' in full_message and full_message.index('тест') == last_item_index:
-        current_user = msg.author.mention
-    elif 'тест' in full_message and full_message.index('тест') != last_item_index:
-        current_user = full_message[last_item_index]
+    elif 'тест' in full_message:
+        if full_message.index('тест') == index_to_check:
+            current_user = msg.author.mention
+        else:
+            current_user = full_message[index_to_check]
     if random_percent == 0:
         await msg.channel.send(f'{current_user} сегодня не {test_data} :c')
     elif random_percent == 100:

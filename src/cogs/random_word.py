@@ -11,6 +11,7 @@ This file can also be imported as a module and contains the following functions:
 from random import choice
 from asyncio import sleep
 from src.lib.database import get_data
+from src.lib.exceptions import UsersNotFound
 from src.lib.users import get_random_user
 from src.lib.words_base import manage_words
 
@@ -53,8 +54,10 @@ async def get_random_word(msg, args):
             return
 
         if args[0] == 'рандом':
-            r_user = await get_random_user(msg)
-            if r_user is None:
+            try:
+                r_user = await get_random_user(msg)
+            except UsersNotFound as warning:
+                await msg.channel.send(f'Произошла ошибка: {warning}!')
                 return
             curr_user = r_user.mention
         else:

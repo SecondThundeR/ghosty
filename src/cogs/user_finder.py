@@ -8,6 +8,7 @@ This file can also be imported as a module and contains the following functions:
 
 
 from asyncio import sleep
+from src.lib.exceptions import UsersNotFound
 from src.lib.users import get_random_user
 
 
@@ -34,8 +35,10 @@ async def _pidor_finder(msg):
     Parameters:
         msg (discord.message.Message): Execute send to channel function
     """
-    r_user = await get_random_user(msg)
-    if r_user is None:
+    try:
+        r_user = await get_random_user(msg)
+    except UsersNotFound as warning:
+        await msg.channel.send(f'Произошла ошибка: {warning}!')
         return
     await msg.channel.send('Система поиска пидорасов активирована!')
     await sleep(DELAY_TIME)

@@ -9,6 +9,7 @@ This file can also be imported as a module and contains the following functions:
 
 from emoji import emoji_count
 from asyncio import sleep
+from src.lib.exceptions import UsersNotFound
 from src.lib.users import get_random_user, get_members_name
 
 
@@ -23,8 +24,10 @@ async def send_makar_message(msg, args):
         args (list): List of arguments (Custom name or user mention)
     """
     if not args:
-        r_user = await get_random_user(msg)
-        if r_user is None:
+        try:
+            r_user = await get_random_user(msg)
+        except UsersNotFound as warning:
+            await msg.channel.send(f'Произошла ошибка: {warning}!')
             return
         user = get_members_name(r_user)
         await msg.channel.send(f'Улыбок тебе дед {user[::-1]}')

@@ -11,6 +11,7 @@ from emoji import emoji_count
 from asyncio import sleep
 from datetime import datetime, timedelta
 from src.lib.database import get_data, modify_data
+from src.lib.exceptions import UsersNotFound
 from src.lib.users import get_shipping_users, get_members_name
 
 
@@ -161,17 +162,16 @@ async def _random_ship(msg, mode='default'):
             1,
             1
         )
-        users_info = await get_shipping_users(msg)
-        if users_info is None:
+        try:
+            users_info = await get_shipping_users(msg)
+        except UsersNotFound as warning:
             modify_data(
                 0,
                 'UPDATE variables SET ship_in_active = ?, ship_activated = ?',
                 0,
                 0
             )
-            await msg.channel.send(f'{msg.author.mention}, '
-                                   'похоже cписок пользователей пуст '
-                                   'и поэтому мне не кого шипперить',
+            await msg.channel.send(f'Произошла ошибка: {warning}!',
                                    delete_after=DELETE_TIME)
             await sleep(DELETE_TIME)
             await msg.delete()

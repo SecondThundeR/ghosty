@@ -145,8 +145,15 @@ async def on_message(message):
         elif command == 'поиск':
             await user_finder_mode(message, args)
         else:
-            if full_message.index('тест') or full_message.index('рандом'):
+            try:
+                full_message.index('тест')
                 await who_is_user(message, full_message)
+            except ValueError:
+                try:
+                    full_message.index('рандом')
+                    await who_is_user(message, full_message)
+                except ValueError:
+                    pass
 
 
 client.run(TOKENS[int(SELECTED_BOT)])

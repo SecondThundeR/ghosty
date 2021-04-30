@@ -25,7 +25,8 @@ def _get_who_is_user(message):
         mode_index = message.index('тест')
     except ValueError:
         mode_index = message.index('рандом')
-    test_msg = " ".join(message[0:mode_index])
+    test_words = [word for word in message[0:mode_index] if word.strip()]
+    test_msg = " ".join(test_words)
     return test_msg
 
 

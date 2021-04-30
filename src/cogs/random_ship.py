@@ -32,10 +32,10 @@ async def ship_func_chooser(msg, args):
     if get_data(0, True, 'SELECT ship_in_active FROM variables') == 1:
         pass
     else:
-        if len(args) == 1:
-            if args[0] == 'скип':
+        if args:
+            if 'скип' in args:
                 await _reset_ship(msg)
-            elif args[0] == 'фаст':
+            elif 'фаст' in args:
                 await _random_ship(msg, 'fast')
             else:
                 await msg.channel.send(f'{msg.author.mention}, '

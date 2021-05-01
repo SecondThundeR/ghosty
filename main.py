@@ -12,8 +12,6 @@ fit your needs
 from aiocron import crontab
 from time import time as curr_time
 from discord import Client, Intents, Status, channel
-from src.lib.database import clear_on_load, get_data, modify_data
-from src.lib.users import add_member_to_db
 from src.cogs.help import send_help_message
 from src.cogs.magic_ball import roll_magic_ball
 from src.cogs.makar import send_makar_message
@@ -31,7 +29,10 @@ from src.cogs.system import get_system_info
 from src.cogs.uptime import get_bot_uptime
 from src.cogs.user_checker import who_is_user
 from src.cogs.user_finder import user_finder_mode
+from src.lib.database import clear_on_load, get_data, modify_data
+from src.lib.users import add_member_to_db, rem_member_from_db
 from src.utils.avatar_changer import get_avatar_bytes
+from src.utils.main_scripts import update_member_list
 
 
 TOKENS = get_data(1, False, 'SELECT bot_token FROM tokens')
@@ -55,18 +56,11 @@ async def update_avatar():
         await client.user.edit(avatar=avatar_data)
 
 
-async def update_member_list():
-    """Update users database on load."""
-    for guild in client.guilds:
-        async for member in guild.fetch_members(limit=None):
-            add_member_to_db(member)
-
-
 @client.event
 async def on_ready():
     """Execute necessary functions during the bot launch."""
     clear_on_load()
-    await update_member_list()
+    await update_member_list(client)
     await client.change_presence(status=Status.dnd)
     avatar_data = get_avatar_bytes()
     if isinstance(avatar_data, int):
@@ -79,12 +73,22 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member):
-    """Add new server users to the database while the bot is running.
+    """Add new server users to database while bot is running.
 
     Parameters:
         member (discord.member.Member): Information about the user who joined the server
     """
     add_member_to_db(member)
+
+
+@client.event
+async def on_member_leave(member):
+    """Remove left server users from database while bot is running.
+
+    Parameters:
+        member (discord.member.Member): Information about the user who left the server
+    """
+    rem_member_from_db(member)
 
 
 @client.event

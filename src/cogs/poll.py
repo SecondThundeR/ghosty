@@ -13,7 +13,7 @@ class Poll(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.time = 60
-        self.text = ''
+        self.text = None
         self.author = None
         self.p_votes = 0
         self.n_votes = 0
@@ -35,6 +35,7 @@ class Poll(commands.Cog):
             self.time = int(args[0])
             self.text = " ".join(args[1:])
         else:
+            self.time = 60
             self.text = " ".join(args)
         vote_msg = await ctx.send('**Время голосования от '
                                    f'{self.author}**\n'

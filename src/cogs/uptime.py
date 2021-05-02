@@ -17,6 +17,7 @@ class Uptime(commands.Cog):
         self.client = client
         self.delay_time = 5
 
+
     @commands.command(aliases=['uptime'])
     async def send_uptime(self, ctx):
         """Calculate and send current uptime of bot.

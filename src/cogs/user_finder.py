@@ -44,6 +44,7 @@ class UserFinder(commands.Cog):
             await ctx.send(f'Произошла ошибка: {warning}!')
             return
         init_msg = await ctx.send('Система поиска пидорасов активирована!')
+        self.loop_count = 0
         while self.loop_count < 3:
             await ctx.send('*пип*')
             await asyncio.sleep(self.delay_time)

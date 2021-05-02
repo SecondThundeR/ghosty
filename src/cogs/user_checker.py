@@ -85,9 +85,9 @@ class UserChecker(commands.Cog):
 
     def format_percent_to_message(self, percent, text, user):
         warn_msg = 'Вы превысили лимит Discord по длине сообщения!'
-        if type(user) == str:
+        if type(user) is str:
             user = f'**{user}**'
-        if type(percent) == list:
+        if type(percent) is list:
             msg = f'Журнал тестирования {user}\n\n'
             for i, perc in enumerate(percent):
                 if len(msg) > 2000:
@@ -103,10 +103,9 @@ class UserChecker(commands.Cog):
             return msg
         if percent == 0:
             return f'{user} сегодня не {text} :c'
-        elif percent == 100:
+        if percent == 100:
             return f'Кто бы мог подумать то! {user} {text} на {percent}%'
-        else:
-            return f'{user} {text} на {percent}%'
+        return f'{user} {text} на {percent}%'
 
 
 def setup(client):

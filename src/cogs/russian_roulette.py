@@ -143,6 +143,7 @@ class RussianRoulette(commands.Cog):
                                 'что по правилам русской рулетки, '
                                 'можно брать только до 6 патронов, не?')
         else:
+            self.bullet_list = []
             for i in range(self.bullet_count):
                 CHARGED_SECTION = random.randint(1, 6)
                 if CHARGED_SECTION in self.bullet_list:

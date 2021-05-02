@@ -16,8 +16,8 @@ class UserChecker(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.delay_time = 5
-        self.loop_count = 0
-        self.count = 1
+        self.loop_count = None
+        self.count = None
         self.text = None
         self.user = None
         self.random_mode = False
@@ -33,6 +33,8 @@ class UserChecker(commands.Cog):
             await ctx.message.delete()
             return
         self.user = ctx.author.mention
+        self.count = 1
+        self.random_mode = False
         if args[0].isnumeric():
             self.count = int(args[0])
             args.pop(0)
@@ -74,6 +76,7 @@ class UserChecker(commands.Cog):
         if amount == 1:
             return random.randrange(0, 100)
         perc_list = []
+        self.loop_count = 0
         while self.loop_count < amount:
             perc_list.append(random.randrange(0, 100))
             self.loop_count += 1

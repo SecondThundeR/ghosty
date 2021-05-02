@@ -18,7 +18,6 @@ async def update_member_list(client):
     Parameters:
         client (discord.Client): Used to fetch members of server
     """
-    # TODO: Add blacklist of removed users from database
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
             users.add_member_to_db(member)

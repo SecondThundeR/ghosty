@@ -60,7 +60,7 @@ class Database:
         self.conn.close()
 
 
-def clear_on_load():
+def reset_tables():
     """Clear specific tables in the database.
 
     **Noteworthy:** This function is necessary for the internal work of the bot,

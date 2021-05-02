@@ -70,11 +70,11 @@ class UserChecker(commands.Cog):
 
     def get_test_percent(self, amount):
         if amount == 1:
-            return random.randrange(0, 100)
+            return random.randint(0, 100)
         perc_list = []
         self.loop_count = 0
         while self.loop_count < amount:
-            perc_list.append(random.randrange(0, 100))
+            perc_list.append(random.randint(0, 100))
             self.loop_count += 1
         return perc_list
 

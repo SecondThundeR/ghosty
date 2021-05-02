@@ -33,7 +33,6 @@ class ManageAdmins(commands.Cog):
             elif args[0] == 'удалить':
                 await ManageAdmins.remove_admin(self, ctx, args[1])
 
-
     async def add_admin(self, ctx, user_id):
         """Add user's ID to admin list.
 

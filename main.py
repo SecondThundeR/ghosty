@@ -60,7 +60,6 @@ async def on_ready():
     print(f'Successfully logged in as {client.user}!')
 
 
-
 @client.event
 async def on_command_error(ctx, error):
     """Handle `CommandNotFound` exception and send message about it.

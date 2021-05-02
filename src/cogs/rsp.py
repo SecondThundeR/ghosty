@@ -54,7 +54,7 @@ class RSPGame(commands.Cog):
         """
         test_string = ctx.message.content.lower()
         test_channel = isinstance(ctx.message.channel, discord.channel.DMChannel)
-        return True if test_string == 'играть' and not test_channel else False
+        return bool(test_string == 'играть' and not test_channel)
 
 
     def choice_check(self, ctx):
@@ -68,7 +68,7 @@ class RSPGame(commands.Cog):
         """
         test_string = ctx.message.content.lower()
         test_channel = isinstance(ctx.message.channel, discord.channel.DMChannel)
-        return True if test_string in self.win_variants and test_channel else False
+        return bool(test_string in self.win_variants and test_channel)
 
 
     async def purge_messages(self, messages):

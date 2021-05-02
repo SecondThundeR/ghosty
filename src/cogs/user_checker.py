@@ -93,16 +93,17 @@ class UserChecker(commands.Cog):
                 if perc == 0:
                     msg += f'**Тест {i + 1}.** Пациент сегодня не {text} :c\n'
                 elif perc == 100:
-                    msg += f'**Тест {i + 1}.** Кто бы мог подумать то! ' \
-                           f'Пациент {text} на {perc}%\n'
+                    msg += f'**Тест {i + 1}.** Кто бы мог подумать то!\n' \
+                           f'Пациент {text} на **{perc}%**\n'
                 else:
                     msg += f'**Тест {i + 1}.** Пациент {text} на {perc}%\n'
             return msg
         if percent == 0:
             return f'{user} сегодня не {text} :c'
         if percent == 100:
-            return f'Кто бы мог подумать то! {user} {text} на {percent}%'
-        return f'{user} {text} на {percent}%'
+            return f'Кто бы мог подумать то! {user}' \
+                   f'\n{text} на **{percent}%**'
+        return f'{user} {text} на **{percent}%**'
 
 
 def setup(client):

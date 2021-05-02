@@ -26,49 +26,6 @@ class RussianRoulette(commands.Cog):
         self.bullet_count = 0
 
 
-    def get_random_word(self, condition):
-        """Get random word from database.
-
-        This function handles getting random word from DB
-        depending on condition of game
-
-        Parameters:
-            condition (str): Condition of game when executed
-
-        Returns:
-            str: Random chosen word depending on condition
-        """
-        if condition == 'win':
-            WIN_WORDS_LIST = database.get_data(
-                2,
-                False,
-                'SELECT words FROM roulette_win_words'
-            )
-            random_word = random.choice(WIN_WORDS_LIST)
-        elif condition == 'lose':
-            LOSE_WORDS_LIST = database.get_data(
-                2,
-                False,
-                'SELECT words FROM roulette_lose_words'
-            )
-            random_word = random.choice(LOSE_WORDS_LIST)
-        elif condition == 'zero':
-            ZERO_WORDS_LIST = database.get_data(
-                2,
-                False,
-                'SELECT words FROM roulette_zero_words'
-            )
-            random_word = random.choice(ZERO_WORDS_LIST)
-        elif condition == 'minus':
-            MINUS_WORDS_LIST = database.get_data(
-                2,
-                False,
-                'SELECT words FROM roulette_minus_words'
-            )
-            random_word = random.choice(MINUS_WORDS_LIST)
-        return random_word
-
-
     @commands.command(aliases=['рулетка'])
     async def switch_avatar(self, ctx, *args):
         """Handle game logic and start game.
@@ -132,9 +89,9 @@ class RussianRoulette(commands.Cog):
                                 'но уже с правильными данными')
                 return
         if self.bullet_count == 0:
-            await ctx.reply(RussianRoulette.get_random_word(self, "zero"))
+            await ctx.reply(RussianRoulette.get_random_word("zero"))
         elif self.bullet_count < 0:
-            await ctx.reply(RussianRoulette.get_random_word(self, "minus"))
+            await ctx.reply(RussianRoulette.get_random_word("minus"))
         elif self.bullet_count == 6:
             await ctx.reply('Поздравляю! Вы гуль!')
         elif self.bullet_count > 6:
@@ -154,14 +111,58 @@ class RussianRoulette(commands.Cog):
                 result_msg = await ctx.reply('**БАХ**')
                 await asyncio.sleep(self.delay_time)
                 await result_msg.edit(
-                    content=RussianRoulette.get_random_word(self, "lose")
+                    content=RussianRoulette.get_random_word("lose")
                 )
             else:
                 result_msg = await ctx.reply('*тишина*')
                 await asyncio.sleep(self.delay_time)
                 await result_msg.edit(
-                    content=RussianRoulette.get_random_word(self, "win")
+                    content=RussianRoulette.get_random_word("win")
                 )
+
+
+    @staticmethod
+    def get_random_word(condition):
+        """Get random word from database.
+
+        This function handles getting random word from DB
+        depending on condition of game
+
+        Parameters:
+            condition (str): Condition of game when executed
+
+        Returns:
+            str: Random chosen word depending on condition
+        """
+        if condition == 'win':
+            WIN_WORDS_LIST = database.get_data(
+                2,
+                False,
+                'SELECT words FROM roulette_win_words'
+            )
+            random_word = random.choice(WIN_WORDS_LIST)
+        elif condition == 'lose':
+            LOSE_WORDS_LIST = database.get_data(
+                2,
+                False,
+                'SELECT words FROM roulette_lose_words'
+            )
+            random_word = random.choice(LOSE_WORDS_LIST)
+        elif condition == 'zero':
+            ZERO_WORDS_LIST = database.get_data(
+                2,
+                False,
+                'SELECT words FROM roulette_zero_words'
+            )
+            random_word = random.choice(ZERO_WORDS_LIST)
+        elif condition == 'minus':
+            MINUS_WORDS_LIST = database.get_data(
+                2,
+                False,
+                'SELECT words FROM roulette_minus_words'
+            )
+            random_word = random.choice(MINUS_WORDS_LIST)
+        return random_word
 
 
 def setup(client):

@@ -43,7 +43,8 @@ class RSPGame(commands.Cog):
             await RSPGame.rsp_bot_game(self, ctx, args[0])
 
 
-    def join_check(self, ctx):
+    @staticmethod
+    def join_check(ctx):
         """Check for correct command to join.
 
         Parameters:

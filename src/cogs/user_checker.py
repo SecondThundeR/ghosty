@@ -64,7 +64,6 @@ class UserChecker(commands.Cog):
             await ctx.message.delete()
             return
         final_msg = UserChecker.format_percent_to_message(
-            self,
             percent_data,
             self.text,
             self.user
@@ -83,7 +82,8 @@ class UserChecker(commands.Cog):
         return perc_list
 
 
-    def format_percent_to_message(self, percent, text, user):
+    @staticmethod
+    def format_percent_to_message(percent, text, user):
         warn_msg = 'Вы превысили лимит Discord по длине сообщения!'
         if type(user) is str:
             user = f'**{user}**'

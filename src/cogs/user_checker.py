@@ -5,6 +5,7 @@ certain test outputs
 """
 
 
+import discord
 import asyncio
 import random
 import src.lib.users as users
@@ -24,14 +25,14 @@ class UserChecker(commands.Cog):
 
     @commands.command(aliases=['тест'])
     async def regular_user_checker(self, ctx, *args):
-        args = list(args)
         if not args:
             await ctx.reply('Вы не передали никаких аргументов',
                             delete_after=self.delay_time)
             await asyncio.sleep(self.delay_time)
             await ctx.message.delete()
             return
-        self.user = ctx.author.mention
+        args = list(args)
+        self.user = ctx.author
         self.count = 1
         self.random_mode = False
         if args[0].isnumeric():
@@ -39,11 +40,10 @@ class UserChecker(commands.Cog):
             args.pop(0)
         if args[0] == 'рандом':
             try:
-                random_user = await users.get_random_user(ctx.message)
+                self.user = await users.get_random_user(ctx.message)
             except UsersNotFound as warning:
                 await ctx.reply(f'Произошла ошибка: {warning}!')
                 return
-            self.user = random_user.mention
             self.random_mode = True
             args.pop(0)
         if not self.random_mode:
@@ -51,8 +51,7 @@ class UserChecker(commands.Cog):
                 self.user = args[0][2:]
                 args.pop(0)
             if args[0].startswith('<@!'):
-                user = await ctx.guild.fetch_member(args[0][3:len(args[0]) - 1])
-                self.user = user.mention
+                self.user = await ctx.guild.fetch_member(args[0][3:len(args[0]) - 1])
                 args.pop(0)
         self.text = ' '.join(args)
         percent_data = UserChecker.get_test_percent(self, self.count)
@@ -82,8 +81,13 @@ class UserChecker(commands.Cog):
     @staticmethod
     def format_percent_to_message(percent, text, user):
         warn_msg = 'Вы превысили лимит Discord по длине сообщения!'
+        user_name = None
         if isinstance(user, str):
             user = f'**{user}**'
+            user_name = user
+        if isinstance(user, discord.Member):
+            user_name = users.get_members_name(user)
+            user = user.mention
         if isinstance(percent, list):
             msg = f'Журнал тестирования {user}\n\n'
             for i, perc in enumerate(percent):
@@ -91,12 +95,12 @@ class UserChecker(commands.Cog):
                     msg = warn_msg
                     break
                 if perc == 0:
-                    msg += f'**Тест {i + 1}.** Пациент сегодня не {text} :c\n'
+                    msg += f'*Тест {i + 1}.* **{user_name}** сегодня не {text} :c\n'
                 elif perc == 100:
-                    msg += f'**Тест {i + 1}.** Кто бы мог подумать то!\n' \
-                           f'Пациент {text} на **{perc}%**\n'
+                    msg += f'*Тест {i + 1}.* Кто бы мог подумать то!\n' \
+                           f'**{user_name}** {text} на **{perc}%**\n'
                 else:
-                    msg += f'**Тест {i + 1}.** Пациент {text} на {perc}%\n'
+                    msg += f'*Тест {i + 1}.* **{user_name}** {text} на **{perc}%**\n'
             return msg
         if percent == 0:
             return f'{user} сегодня не {text} :c'

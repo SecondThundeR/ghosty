@@ -66,13 +66,11 @@ class RandomWord(commands.Cog):
                 self.curr_user = r_user.mention
             else:
                 self.curr_user = args[0]
-
         WORDS_ARRAY = database.get_data(
             2,
             False,
             'SELECT words FROM main_words_base'
         )
-
         if not WORDS_ARRAY:
             await ctx.reply('Я пока не знаю никаких слов, '
                             'однако вы можете добавить новые слова в мой словарь',

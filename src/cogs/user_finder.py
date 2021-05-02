@@ -14,8 +14,6 @@ class UserFinder(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.delay_time = 2
-        self.loop_count = 0
-        self.random_user = None
 
     @commands.command(aliases=['поиск'])
     async def user_finder_hub(self, ctx, mode=None):
@@ -37,18 +35,19 @@ class UserFinder(commands.Cog):
             ctx (commands.context.Context): Context object to execute functions
         """
         try:
-            self.random_user = await users.get_random_user(ctx.message)
+            random_user = await users.get_random_user(ctx.message)
         except UsersNotFound as warning:
             await ctx.send(f'Произошла ошибка: {warning}!')
             return
+        loop_count = 0
         init_msg = await ctx.send('Система поиска пидорасов активирована!')
-        self.loop_count = 0
-        while self.loop_count < 3:
+        await asyncio.sleep(self.delay_time)
+        while loop_count < 3:
             await ctx.send('*пип*')
             await asyncio.sleep(self.delay_time)
-            self.loop_count += 1
+            loop_count += 1
         await init_msg.reply('Пидорас найден. '
-                             f'Им оказался - {self.random_user.mention}')
+                             f'Им оказался - {random_user.mention}')
 
 
 def setup(client):

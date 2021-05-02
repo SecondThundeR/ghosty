@@ -49,7 +49,7 @@ class HelpMessage(commands.Cog):
             await ctx.send(HELP_MESSAGE)
         else:
             await ctx.author.send(HELP_MESSAGE)
-            await ctx.reply(f'Хей, проверь личку! '
+            await ctx.reply('Хей, проверь личку! '
                             'Я отправил тебе помощь по командам',
                             delete_after=self.delay_time)
             await asyncio.sleep(self.delay_time)

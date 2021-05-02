@@ -15,7 +15,6 @@ class ManageAdmins(commands.Cog):
         self.client = client
         self.delete_time = 5
 
-
     @commands.command(aliases=['админ'])
     @commands.dm_only()
     async def admin_manager(self, ctx, *args):
@@ -29,11 +28,10 @@ class ManageAdmins(commands.Cog):
             args (tuple): List with selected mode and user's ID
         """
         if len(args) == 2 and users.is_user_admin(ctx.author.id):
-                if args[0] == 'добавить':
-                    await ManageAdmins.add_admin(self, ctx, args[1])
-                elif args[0] == 'удалить':
-                    await ManageAdmins.remove_admin(self, ctx, args[1])
-
+            if args[0] == 'добавить':
+                await ManageAdmins.add_admin(self, ctx, args[1])
+            elif args[0] == 'удалить':
+                await ManageAdmins.remove_admin(self, ctx, args[1])
 
 
     async def add_admin(self, ctx, user_id):
@@ -51,7 +49,6 @@ class ManageAdmins(commands.Cog):
             database.modify_data(0, 'INSERT INTO admin_list VALUES (?)', user_id)
             await ctx.reply('Я успешно добавил такого админа')
 
-
     async def remove_admin(self, ctx, user_id):
         """Remove user's ID from admin list.
 
@@ -66,7 +63,7 @@ class ManageAdmins(commands.Cog):
             ctx (commands.context.Context): Context object to execute functions
             user_id (str): User's ID to remove from admins
         """
-        if int(user_id) == ctx.author.id  and users.is_user_admin(user_id):
+        if int(user_id) == ctx.author.id and users.is_user_admin(user_id):
             if len(database.get_data(
                 0,
                 False,
@@ -101,7 +98,11 @@ class ManageAdmins(commands.Cog):
             if not users.is_user_admin(user_id):
                 await ctx.reply('Данный пользователь не является админом')
             else:
-                database.modify_data(0, 'DELETE FROM admin_list WHERE admins_id = ?', user_id)
+                database.modify_data(
+                    0,
+                    'DELETE FROM admin_list WHERE admins_id = ?',
+                    user_id
+                )
                 await ctx.reply('Я успешно удалил такого админа')
 
 

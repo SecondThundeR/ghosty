@@ -18,7 +18,6 @@ class Poll(commands.Cog):
         self.p_votes = 0
         self.n_votes = 0
 
-
     @commands.command(aliases=['полл'])
     async def create_poll(self, ctx, *args):
         """Create poll and send message with it.
@@ -31,17 +30,17 @@ class Poll(commands.Cog):
             return
         await ctx.message.delete()
         self.author = ctx.author.mention
-        if args[0].isnumeric():  
+        if args[0].isnumeric():
             self.time = int(args[0])
             self.text = " ".join(args[1:])
         else:
             self.time = 60
             self.text = " ".join(args)
         vote_msg = await ctx.send('**Время голосования от '
-                                   f'{self.author}**\n'
-                                   f'Вопрос: {self.text}\n'
-                                   '*Голосование закончится через '
-                                   f'{self.time} секунд*')
+                                  f'{self.author}**\n'
+                                  f'Вопрос: {self.text}\n'
+                                  '*Голосование закончится через '
+                                  f'{self.time} секунд*')
         await vote_msg.add_reaction(emoji="👍")
         await vote_msg.add_reaction(emoji="👎")
         await asyncio.sleep(self.time)

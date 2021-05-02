@@ -25,7 +25,6 @@ class RussianRoulette(commands.Cog):
         self.bullet_list = []
         self.bullet_count = 0
 
-
     @commands.command(aliases=['рулетка'])
     async def switch_avatar(self, ctx, *args):
         """Handle game logic and start game.
@@ -95,9 +94,9 @@ class RussianRoulette(commands.Cog):
         elif self.bullet_count == 6:
             await ctx.reply('Поздравляю! Вы гуль!')
         elif self.bullet_count > 6:
-                await ctx.reply('Может стоит напомнить, '
-                                'что по правилам русской рулетки, '
-                                'можно брать только до 6 патронов, не?')
+            await ctx.reply('Может стоит напомнить, '
+                            'что по правилам русской рулетки, '
+                            'можно брать только до 6 патронов, не?')
         else:
             self.bullet_list = []
             for i in range(self.bullet_count):
@@ -119,7 +118,6 @@ class RussianRoulette(commands.Cog):
                 await result_msg.edit(
                     content=RussianRoulette.get_random_word("win")
                 )
-
 
     @staticmethod
     def get_random_word(condition):

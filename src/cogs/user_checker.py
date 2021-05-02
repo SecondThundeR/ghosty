@@ -22,7 +22,6 @@ class UserChecker(commands.Cog):
         self.user = None
         self.random_mode = False
 
-
     @commands.command(aliases=['тест'])
     async def regular_user_checker(self, ctx, *args):
         args = list(args)
@@ -70,7 +69,6 @@ class UserChecker(commands.Cog):
         )
         await ctx.send(final_msg)
 
-
     def get_test_percent(self, amount):
         if amount == 1:
             return random.randrange(0, 100)
@@ -80,7 +78,6 @@ class UserChecker(commands.Cog):
             perc_list.append(random.randrange(0, 100))
             self.loop_count += 1
         return perc_list
-
 
     @staticmethod
     def format_percent_to_message(percent, text, user):

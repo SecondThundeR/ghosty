@@ -32,11 +32,9 @@ class HelpMessage(commands.Cog):
         self.client = client
         self.delay_time = 5
 
-
     @commands.Cog.listener()
     async def on_ready(self):
         self.client.remove_command('help')
-
 
     @commands.command(aliases=['хелп'])
     async def send_help_message(self, ctx):

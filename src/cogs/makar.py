@@ -16,7 +16,6 @@ class DedMakar(commands.Cog):
         self.client = client
         self.delay_time = 5
 
-
     @commands.command(aliases=['макар'])
     async def send_makar_message(self, ctx, *, arg=None):
         """Send famous (maybe) sentence.

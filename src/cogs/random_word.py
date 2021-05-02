@@ -19,7 +19,6 @@ class RandomWord(commands.Cog):
         self.delay_time = 5
         self.curr_user = None
 
-
     @commands.command(aliases=['ху', 'who'])
     async def get_random_word(self, ctx, *args):
         """Get random word from list and send it.
@@ -82,6 +81,7 @@ class RandomWord(commands.Cog):
             await ctx.message.delete()
         else:
             await ctx.send(f'{self.curr_user} {random.choice(WORDS_ARRAY)}')
+
 
 def setup(client):
     client.add_cog(RandomWord(client))

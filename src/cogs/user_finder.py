@@ -17,9 +17,8 @@ class UserFinder(commands.Cog):
         self.loop_count = 0
         self.random_user = None
 
-
     @commands.command(aliases=['поиск'])
-    async def user_finder_hub(self, ctx, mode = None):
+    async def user_finder_hub(self, ctx, mode=None):
         """Execute required finder mode depending on arguments.
 
         Parameters:
@@ -30,7 +29,6 @@ class UserFinder(commands.Cog):
             return
         if 'пидорасов' in mode:
             await UserFinder.pidor_finder(self, ctx)
-
 
     async def pidor_finder(self, ctx):
         """Get random user and launch 'finder' of *p-word*.
@@ -51,7 +49,7 @@ class UserFinder(commands.Cog):
             self.loop_count += 1
         await init_msg.reply('Пидорас найден. '
                              f'Им оказался - {self.random_user.mention}')
-        
+
 
 def setup(client):
     client.add_cog(UserFinder(client))

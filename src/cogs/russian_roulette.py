@@ -84,23 +84,22 @@ class RussianRoulette(commands.Cog):
             self.bullet_count = 1
         else:
             args = list(args)
-            if args[0] == 'добавить':
-                if args[1] in self.tables_aliases:
-                    TABLE_TO_MODIFY = self.tables_aliases[args[1]]
-                    for i in range(2):
-                        args.pop(0)
-                    WORD_TO_ADD = " ".join(args)
-                    await ctx.reply(
-                        words_base.manage_r_word(
-                            WORD_TO_ADD,
-                            TABLE_TO_MODIFY,
-                            'add'
-                        ),
-                        delete_after=self.delete_time
-                    )
-                    await asyncio.sleep(self.delete_time)
-                    await ctx.message.delete()
-                    return
+            if args[0] == 'добавить' and args[1] in self.tables_aliases:
+                TABLE_TO_MODIFY = self.tables_aliases[args[1]]
+                for i in range(2):
+                    args.pop(0)
+                WORD_TO_ADD = " ".join(args)
+                await ctx.reply(
+                    words_base.manage_r_word(
+                        WORD_TO_ADD,
+                        TABLE_TO_MODIFY,
+                        'add'
+                    ),
+                    delete_after=self.delete_time
+                )
+                await asyncio.sleep(self.delete_time)
+                await ctx.message.delete()
+                return
             if args[0] == 'удалить':
                 bot_admin = database.get_data(
                     0,

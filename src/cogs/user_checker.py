@@ -1,63 +1,110 @@
 """Get random percent of who the user is.
 
-Also this script checks for two modes (test or random mode)
-
-This file can also be imported as a module and contains the following functions:
-    * who_is_user - sends random percent of who the user is
+Also, this cog allows to pass many options to execute
+certain test outputs
 """
 
 
-from random import randint
+import asyncio
+import random
+import src.lib.users as users
 from src.lib.exceptions import UsersNotFound
-from src.lib.users import get_random_user
+from discord.ext import commands
 
 
-def _get_who_is_user(message):
-    """Group message content array.
-
-    Parameters:
-        message (list): List of message contents
-
-    Returns:
-        test_msg: Something to check with
-    """
-    try:
-        mode_index = message.index('тест')
-    except ValueError:
-        mode_index = message.index('рандом')
-    test_words = [word for word in message[0:mode_index] if word.strip()]
-    test_msg = " ".join(test_words)
-    return test_msg
+class UserChecker(commands.Cog):
+    def __init__(self, client):
+        self.client = client
+        self.delay_time = 5
+        self.loop_count = 0
+        self.count = 1
+        self.text = None
+        self.user = None
+        self.random_mode = False
 
 
-async def who_is_user(msg, full_message):
-    """Get random percent of who the user.
-
-    Parameters:
-        msg (discord.message.Message): Execute send to channel function
-        full_message (list): List of message contents
-    """
-    random_percent = randint(0, 100)
-    index_to_check = len(full_message) - 1
-    test_data = _get_who_is_user(full_message)
-    current_user = ''
-    if 'тест' in full_message:
-        if full_message.index('тест') == index_to_check:
-            current_user = msg.author.mention
-        else:
-            current_user = full_message[index_to_check]
-    if 'рандом' in full_message and 'тест' not in full_message:
-        try:
-            r_user = await get_random_user(msg)
-        except UsersNotFound as warning:
-            await msg.channel.send(f'Произошла ошибка: {warning}!')
+    @commands.command(aliases=['тест'])
+    async def regular_user_checker(self, ctx, *args):
+        args = list(args)
+        if not args:
+            await ctx.reply('Вы не передали никаких аргументов',
+                            delete_after=self.delay_time)
+            await asyncio.sleep(self.delay_time)
+            await ctx.message.delete()
             return
-        current_user = r_user.mention
-    if random_percent == 0:
-        await msg.channel.send(f'{current_user} сегодня не {test_data} :c')
-    elif random_percent == 100:
-        await msg.channel.send(f'{current_user} кто бы мог подумать то! '
-                               f'Ты {test_data} на {random_percent}%')
-    else:
-        await msg.channel.send(f'{current_user} {test_data} '
-                               f'на {random_percent}%')
+        self.user = ctx.author.mention
+        if args[0].isnumeric():
+            self.count = int(args[0])
+            args.pop(0)
+        if args[0] == 'рандом':
+            try:
+                random_user = await users.get_random_user(ctx.message)
+            except UsersNotFound as warning:
+                await ctx.reply(f'Произошла ошибка: {warning}!')
+                return
+            self.user = random_user.mention
+            self.random_mode = True
+            args.pop(0)
+        if not self.random_mode:
+            if args[0].startswith('--'):
+                self.user = args[0][2:]
+                args.pop(0)
+            if args[0].startswith('<@!'):
+                user = await ctx.guild.fetch_member(args[0][3:len(args[0]) - 1])
+                self.user = user.mention
+                args.pop(0)
+        self.text = ' '.join(args)
+        percent_data = UserChecker.get_test_percent(self, self.count)
+        if not self.text:
+            await ctx.reply('Вы не передали текст для теста',
+                            delete_after=self.delay_time)
+            await asyncio.sleep(self.delay_time)
+            await ctx.message.delete()
+            return
+        final_msg = UserChecker.format_percent_to_message(
+            self,
+            percent_data,
+            self.text,
+            self.user
+        )
+        await ctx.send(final_msg)
+
+
+    def get_test_percent(self, amount):
+        if amount == 1:
+            return random.randrange(0, 100)
+        perc_list = []
+        while self.loop_count < amount:
+            perc_list.append(random.randrange(0, 100))
+            self.loop_count += 1
+        return perc_list
+
+
+    def format_percent_to_message(self, percent, text, user):
+        warn_msg = 'Вы превысили лимит Discord по длине сообщения!'
+        if type(user) == str:
+            user = f'**{user}**'
+        if type(percent) == list:
+            msg = f'Журнал тестирования {user}\n\n'
+            for i, perc in enumerate(percent):
+                if len(msg) > 2000:
+                    msg = warn_msg
+                    break
+                if perc == 0:
+                    msg += f'**Тест {i + 1}.** Пациент сегодня не {text} :c\n'
+                elif perc == 100:
+                    msg += f'**Тест {i + 1}.** Кто бы мог подумать то! ' \
+                           f'Пациент {text} на {perc}%\n'
+                else:
+                    msg += f'**Тест {i + 1}.** Пациент {text} на {perc}%\n'
+            return msg
+        if percent == 0:
+            return f'{user} сегодня не {text} :c'
+        elif percent == 100:
+            return f'Кто бы мог подумать то! {user} {text} на {percent}%'
+        else:
+            return f'{user} {text} на {percent}%'
+
+
+def setup(client):
+    client.add_cog(UserChecker(client))

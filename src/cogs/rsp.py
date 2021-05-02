@@ -128,8 +128,10 @@ class RSPGame(commands.Cog):
             await ctx.reply('Похоже вы выбрали что-то не то...')
         else:
             bot_choice = random.choice(list(self.win_variants))
-            await ctx.send(RSPGame.rsp_game(user_choice, bot_choice,
-                                            ctx.author.id, self.client.user.id))
+            await ctx.send(RSPGame.rsp_game(
+                self, user_choice, bot_choice,
+                ctx.author.id, self.client.user.id
+            ))
 
 
     async def rsp_multi_game(self, ctx):
@@ -170,7 +172,7 @@ class RSPGame(commands.Cog):
                                   'Пока что я отменил данную игру')
             messages_to_purge.append(game_fail)
             await asyncio.sleep(self.fail_delay)
-            await RSPGame.purge_messages(messages_to_purge)
+            await RSPGame.purge_messages(self, messages_to_purge)
             return
         else:
             if s_user_wait.author.id == first_user.id:
@@ -180,7 +182,7 @@ class RSPGame(commands.Cog):
                 messages_to_purge.append(s_user_wait)
                 messages_to_purge.append(f_user_join)
                 await asyncio.sleep(self.fail_delay)
-                await RSPGame.purge_messages(messages_to_purge)
+                await RSPGame.purge_messages(self, messages_to_purge)
                 return
         await s_user_wait.delete()
         await init_msg.edit(content='Сейчас идёт игра между '
@@ -200,7 +202,7 @@ class RSPGame(commands.Cog):
                                                     'Игра отменена')
             messages_to_purge.append(f_move_fail)
             await asyncio.sleep(self.fail_delay)
-            await RSPGame.purge_messages(messages_to_purge)
+            await RSPGame.purge_messages(self, messages_to_purge)
             return
         try:
             await second_user.send('Ваш вариант *(На ответ 1 минута)*:')
@@ -217,12 +219,14 @@ class RSPGame(commands.Cog):
                                                     'Игра отменена')
             messages_to_purge.append(s_move_fail)
             await asyncio.sleep(self.fail_delay)
-            await RSPGame.purge_messages(messages_to_purge)
+            await RSPGame.purge_messages(self, messages_to_purge)
             return
         database.modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
-        await current_channel.send(RSPGame.rsp_game(users_choice[0], users_choice[1],
-                                                    first_user.id, second_user.id))
-        await RSPGame.purge_messages(messages_to_purge)
+        await current_channel.send(RSPGame.rsp_game(
+            self, users_choice[0], users_choice[1],
+            first_user.id, second_user.id
+        ))
+        await RSPGame.purge_messages(self, messages_to_purge)
 
 
 def setup(client):

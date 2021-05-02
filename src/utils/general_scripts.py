@@ -1,11 +1,15 @@
-"""Bot main script utils.
+"""General utils.
 
 This script contains functions used in bot's main script
 
 This file can also be imported as a module and contains the following functions:
     * update_member_list - updates users database on load
+    * load_commands - prepares extensions on load
 """
-from src.lib.users import add_member_to_db
+
+
+import os
+import src.lib.users as users
 
 
 async def update_member_list(client):
@@ -17,4 +21,15 @@ async def update_member_list(client):
     # TODO: Add blacklist of removed users from database
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
-            add_member_to_db(member)
+            users.add_member_to_db(member)
+
+
+async def load_commands(client):
+    """Prepare extensions on load.
+    
+    Parameters:
+        client (discord.Client): Client object to load extension
+    """
+    for filename in os.listdir('./src/cogs'):
+        if filename.endswith('.py'):
+            client.load_extension(f'src.cogs.{filename[:-3]}')

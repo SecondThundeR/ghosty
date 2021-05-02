@@ -9,11 +9,10 @@ Because of it, all functions here are private only
 """
 
 try:
-    from sys import executable
-    from sys import exit as script_exit
-    from src.lib.database import get_data, modify_data
-    from src.lib.files import create_folder, delete_folder
-    from src.lib.words_base import restore_word_base
+    import sys
+    import src.lib.database as database
+    import src.lib.files as files
+    import src.lib.words_base as words_base
 except ModuleNotFoundError:
     print('Some important modules are missing!')
 
@@ -35,7 +34,7 @@ TABLES_TO_RESET = {
         WORDS_DB_TABLES[4]
         ]
 }
-SETUP_STATUS = get_data(
+SETUP_STATUS = database.get_data(
     0,
     True,
     'SELECT is_setup_completed FROM variables'
@@ -120,13 +119,13 @@ def _check_for_installed_modules():
                     pip_version = pip_version[:-2]
                 if float(pip_version) < 21:
                     check_call(
-                        [executable,
+                        [sys.executable,
                          "-m", "pip", "install",
                          "-r", "requirements.txt",
                          "--upgrade", "--use-feature=2020-resolver"])
                 else:
                     check_call(
-                        [executable,
+                        [sys.executable,
                          "-m", "pip", "install",
                          "-r", "requirements.txt", "--upgrade"])
                 print('\nRequirements installed!\nContinuing the setup...')
@@ -151,16 +150,16 @@ def _restore_dev_base():
         bool: True if words base restored successfully, False otherwise
     """
     for path in FOLDER_PATH:
-        create_folder(path)
+        files.create_folder(path)
     for tables, paths in zip(WORDS_DB_TABLES, WORDS_BASE_NAME):
-        if not restore_word_base(
+        if not words_base.restore_word_base(
             2,
             tables,
             paths,
             f'{LINKS[0]}{paths}'
         ):
             return False
-    delete_folder(FOLDER_PATH[0])
+    files.delete_folder(FOLDER_PATH[0])
     return True
 
 
@@ -171,7 +170,7 @@ def _delete_words_base():
     of tables in the database
     """
     for tables in WORDS_DB_TABLES:
-        modify_data(2, f'DELETE FROM {tables}')
+        database.modify_data(2, f'DELETE FROM {tables}')
 
 
 def _manage_words_base():
@@ -233,7 +232,7 @@ def _check_for_bot_existence():
     print('\nEnter the name of the bot:')
     while True:
         bot_name = _get_input()
-        if get_data(
+        if database.get_data(
             1,
             True,
             'SELECT bot_name FROM tokens',
@@ -262,7 +261,7 @@ def _add_bot():
               '(If you don\'t know where to get it, '
               f'go to this page - {LINKS[1]})')
     else:
-        if get_data(
+        if database.get_data(
             1,
             True,
             'SELECT bot_name FROM tokens',
@@ -279,7 +278,7 @@ def _add_bot():
         print('\nIt looks like your token is wrong.\n'
               'It must be 59 characters long '
               f'(Yours is {len(bot_token)} characters long)')
-    modify_data(
+    database.modify_data(
         1,
         'INSERT INTO tokens VALUES (?, ?)',
         bot_name,
@@ -298,7 +297,7 @@ def _delete_bot():
     (Did you expect to see rocket launch codes here?)
     """
     bot_name = _check_for_bot_existence()
-    modify_data(
+    database.modify_data(
         1,
         'DELETE FROM tokens WHERE bot_name = ?',
         bot_name
@@ -313,7 +312,7 @@ def _manage_setup_status():
     This function changes setup status to 0, when it needs to be reset
     or set to 1, when initial setup was completed
     """
-    modify_data(
+    database.modify_data(
         0,
         'UPDATE variables SET is_setup_completed = ?',
         1 if SETUP_STATUS == 0 else 0
@@ -321,16 +320,16 @@ def _manage_setup_status():
     if SETUP_STATUS == 1:
         for db_num in range(1, 3):
             for tables in TABLES_TO_RESET[db_num]:
-                modify_data(
+                database.modify_data(
                     db_num,
                     f'DELETE FROM {tables}'
                 )
         print('\nThe bot\'s settings have been reset. '
               'Restart the script for initial setup')
-        script_exit()
+        sys.exit()
     print('\nThe initial setup of the bot has been completed. '
           'To enable bot, run "python main.py"')
-    script_exit()
+    sys.exit()
 
 
 def _bot_settings_manager():
@@ -363,13 +362,13 @@ def _bot_name_changer(bot_name):
         bot_name (str): Current name of bot
     """
     new_bot_name = _get_input('\nEnter new bot\'s name:')
-    bot_info = get_data(
+    bot_info = database.get_data(
         1,
         False,
         'SELECT * FROM tokens WHERE bot_name = ?',
         bot_name
     )
-    modify_data(
+    database.modify_data(
         1,
         'UPDATE tokens SET bot_name = ?, bot_token = ?',
         new_bot_name,
@@ -393,7 +392,7 @@ def _bot_token_changer(bot_name):
         print('\nIt looks like your token is wrong.\n'
               'It must be 59 characters long '
               f'(Yours is {len(new_bot_token)} characters long)')
-    modify_data(
+    database.modify_data(
         1,
         'UPDATE tokens SET bot_name = ?, bot_token = ?',
         bot_name,
@@ -409,12 +408,12 @@ def _main_bot_selector():
     This function allows user to select the desired bot to run
     when main script starts up
     """
-    list_of_bots = get_data(
+    list_of_bots = database.get_data(
         1,
         False,
         'SELECT bot_name FROM tokens'
     )
-    curr_selected_bot = get_data(
+    curr_selected_bot = database.get_data(
         0,
         True,
         'SELECT current_selected_bot FROM variables'
@@ -447,7 +446,7 @@ def _main_bot_selector():
                     if index_of_bot in range(len(list_of_bots)):
                         print('Great choice! '
                               f'Selecting {selected_bot} as default...\n')
-                        modify_data(
+                        database.modify_data(
                             0,
                             'UPDATE variables SET current_selected_bot = ?',
                             index_of_bot
@@ -503,7 +502,7 @@ def _bot_setup():
             _manage_setup_status()
         elif menu_input == '0':
             print('Hope you come back soon! See you later')
-            script_exit()
+            sys.exit()
         else:
             print('You have chosen something wrong, please try again\n')
 

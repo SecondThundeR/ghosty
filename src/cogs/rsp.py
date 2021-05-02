@@ -10,6 +10,7 @@ import asyncio
 import src.lib.database as database
 from discord.ext import commands
 
+
 class RSPGame(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -20,7 +21,6 @@ class RSPGame(commands.Cog):
             'бумага': 'камень',
             'ножницы': 'бумага'
         }
-
 
     @commands.command(aliases=['цуефа'])
     async def rsp_mode(self, ctx, *args):
@@ -42,7 +42,6 @@ class RSPGame(commands.Cog):
         else:
             await RSPGame.rsp_bot_game(self, ctx, args[0])
 
-
     @staticmethod
     def join_check(ctx):
         """Check for correct command to join.
@@ -57,7 +56,6 @@ class RSPGame(commands.Cog):
         test_channel = isinstance(ctx.message.channel, discord.channel.DMChannel)
         return bool(test_string == 'играть' and not test_channel)
 
-
     def choice_check(self, ctx):
         """Check for correct answer from user.
 
@@ -71,7 +69,6 @@ class RSPGame(commands.Cog):
         test_channel = isinstance(ctx.message.channel, discord.channel.DMChannel)
         return bool(test_string in self.win_variants and test_channel)
 
-
     async def purge_messages(self, messages):
         """Delete all messages, that can distract users in channel.
 
@@ -80,7 +77,6 @@ class RSPGame(commands.Cog):
         """
         for message in messages:
             await message.delete()
-
 
     def rsp_game(self, first_var, second_var, first_user_id, second_user_id):
         """Get the outcome of the game and return its result.
@@ -100,8 +96,8 @@ class RSPGame(commands.Cog):
         f_user_mention = f'<@{first_user_id}>'
         s_user_mention = f'<@{second_user_id}>'
         end_text = '**Игра между ' \
-                f'{f_user_mention} и {s_user_mention} ' \
-                'окончена!**\n'
+                   f'{f_user_mention} и {s_user_mention} ' \
+                   'окончена!**\n'
         outcome_text = ''
         if first_var == self.win_variants[second_var]:
             outcome_text = f'**Результаты:** {second_var}  🤜  {first_var}\n' \
@@ -113,7 +109,6 @@ class RSPGame(commands.Cog):
             outcome_text = f'**Результаты:** {first_var}  🙏  {second_var}\n' \
                         'И у нас ничья!'
         return end_text + outcome_text
-
 
     async def rsp_bot_game(self, ctx, user_choice):
         """Game with bot.
@@ -133,7 +128,6 @@ class RSPGame(commands.Cog):
                 self, user_choice, bot_choice,
                 ctx.author.id, self.client.user.id
             ))
-
 
     async def rsp_multi_game(self, ctx):
         """Game with other users of server.
@@ -199,8 +193,8 @@ class RSPGame(commands.Cog):
         except asyncio.TimeoutError:
             database.modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
             f_move_fail = await current_channel.send(f'{first_user.mention} '
-                                                    'не успел отправить вариант вовремя. '
-                                                    'Игра отменена')
+                                                     'не успел ответить вовремя. '
+                                                     'Игра отменена')
             messages_to_purge.append(f_move_fail)
             await asyncio.sleep(self.fail_delay)
             await RSPGame.purge_messages(self, messages_to_purge)
@@ -216,8 +210,8 @@ class RSPGame(commands.Cog):
         except asyncio.TimeoutError:
             database.modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
             s_move_fail = await current_channel.send(f'{second_user.mention} '
-                                                    'не успел отправить вариант вовремя. '
-                                                    'Игра отменена')
+                                                     'не успел ответить вовремя. '
+                                                     'Игра отменена')
             messages_to_purge.append(s_move_fail)
             await asyncio.sleep(self.fail_delay)
             await RSPGame.purge_messages(self, messages_to_purge)

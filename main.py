@@ -64,7 +64,7 @@ async def on_ready():
 @client.event
 async def on_command_error(ctx, error):
     """Handle `CommandNotFound` exception and send message about it.
-    
+
     This function catches certain exception and sends message to user
     that provided command isn't valid
 
@@ -78,7 +78,7 @@ async def on_command_error(ctx, error):
                         delete_after=DELAY_TIME)
         await asyncio.sleep(DELAY_TIME)
         await ctx.message.delete()
-    elif (isinstance(error, commands.PrivateMessageOnly)):
+    elif isinstance(error, commands.PrivateMessageOnly):
         await ctx.reply('Данной команда доступна только в личных сообщениях.',
                         delete_after=DELAY_TIME)
         await asyncio.sleep(DELAY_TIME)

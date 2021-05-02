@@ -20,7 +20,6 @@ class SystemInfo(commands.Cog):
         self.cpu = platform.processor()
         self.arch = platform.machine()
 
-
     @commands.command(aliases=['система'])
     async def send_system_info(self, ctx, mode=None):
         """Get system info and send it.

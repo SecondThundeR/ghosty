@@ -6,7 +6,7 @@ Cog returns halves of each name and adds a heart.
 
 
 import emoji
-import asyncio 
+import asyncio
 import datetime as dt
 import src.lib.database as database
 import src.lib.users as users
@@ -32,7 +32,6 @@ class RandomShip(commands.Cog):
             5: 'в Субботу',
             6: 'в Воскресенье',
         }
-
 
     @commands.command(aliases=['шип'])
     async def ship_func_chooser(self, ctx, *args):
@@ -61,7 +60,6 @@ class RandomShip(commands.Cog):
         else:
             await RandomShip.random_ship(self, ctx)
 
-
     async def get_user_info(self, ctx, user):
         """Get names of users from arguments.
 
@@ -84,7 +82,6 @@ class RandomShip(commands.Cog):
             user_name = user
             user_length = int(len(user_name) / 2)
         return [user_name, user_length]
-
 
     async def reset_ship(self, ctx):
         """Reset latest ship results to start over.
@@ -109,7 +106,6 @@ class RandomShip(commands.Cog):
                         delete_after=self.delete_time)
         await asyncio.sleep(self.delete_time)
         await ctx.message.delete()
-
 
     async def custom_ship(self, ctx, args):
         """Ship with two custom names from user.
@@ -149,7 +145,6 @@ class RandomShip(commands.Cog):
             second_username_part = second_user_info[0][second_user_info[1]:]
             final_name = first_username_part + second_username_part
             await ctx.reply(f'Данная парочка смело бы называлась - **{final_name}**')
-
 
     async def random_ship(self, ctx, fast_mode=False):
         """Ship with two randomly chosen names.
@@ -212,7 +207,11 @@ class RandomShip(commands.Cog):
             pass
         elif (database.get_data(0, True, 'SELECT ship_activated FROM variables') and
                 current_date < dt.datetime.strptime(ship_date, '%Y-%m-%d').date()):
-            ship_text_full = database.get_data(0, True, 'SELECT ship_text_full FROM variables')
+            ship_text_full = database.get_data(
+                0,
+                True,
+                'SELECT ship_text_full FROM variables'
+            )
             next_date = database.get_data(0, True, 'SELECT ship_date FROM variables')
             next_date_string = self.weekday_dict[
                 dt.datetime.strptime(next_date, '%Y-%m-%d').weekday()
@@ -226,7 +225,6 @@ class RandomShip(commands.Cog):
             await RandomShip.random_ship(self, ctx)
         else:
             pass
-
 
     async def random_ship_messages(self, ctx, short_text):
         """Send pre-messages and result of shipping.

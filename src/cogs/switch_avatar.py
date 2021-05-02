@@ -17,7 +17,6 @@ class AvatarSwitcher(commands.Cog):
         self.client = client
         self.delay_time = 5
 
-
     @commands.command(aliases=['аватарка'])
     async def avatar_switch(self, ctx):
         """Change avatar of bot via command.

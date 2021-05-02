@@ -13,7 +13,6 @@ class ManageIgnoreList(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-
     @commands.command(aliases=['чс'])
     @commands.dm_only()
     async def ignore_list_manager(self, ctx, *args):
@@ -31,7 +30,6 @@ class ManageIgnoreList(commands.Cog):
                 await ManageIgnoreList.add_ignored(self, ctx, args[1])
             elif args[0] == 'удалить':
                 await ManageIgnoreList.remove_ignored(self, ctx, args[1])
-
 
     async def add_ignored(self, ctx, user_id):
         """Add user's ID to blacklist.
@@ -51,7 +49,6 @@ class ManageIgnoreList(commands.Cog):
                 database.modify_data(0, 'INSERT INTO block_list VALUES (?)', user_id)
                 await ctx.reply('Я успешно заблокировал этого юзера')
 
-
     async def remove_ignored(self, ctx, user_id):
         """Remove user's ID from ignore list.
 
@@ -64,7 +61,11 @@ class ManageIgnoreList(commands.Cog):
         if not users.is_user_blocked(user_id):
             await ctx.reply('Данный юзер уже разблокирован')
         else:
-            database.modify_data(0, 'DELETE FROM block_list WHERE blocked_id = ?', user_id)
+            database.modify_data(
+                0,
+                'DELETE FROM block_list WHERE blocked_id = ?',
+                user_id
+            )
             await ctx.reply('Я успешно разблокировал этого юзера')
 
 

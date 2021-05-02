@@ -19,7 +19,6 @@ class RandomNumbers(commands.Cog):
         self.first_number = None
         self.second_number = None
 
-
     @commands.command(aliases=['рандом'])
     async def get_random_number(self, ctx, *args):
         """Get random number and send it.
@@ -70,7 +69,8 @@ class RandomNumbers(commands.Cog):
                             self.second_number
                         )
                         await ctx.reply('Ваше рандомное число '
-                                        f'от {self.first_number} до {self.second_number}: '
+                                        f'от {self.first_number} '
+                                        f'до {self.second_number}: '
                                         f'**{self.random_number}**')
                 except ValueError:
                     await ctx.reply('Ваш аргумент или аргументы '

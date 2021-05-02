@@ -112,29 +112,29 @@ def is_user_admin(user_id):
     """Check if user is an admin of bot.
 
     Parameters:
-        user_id (int): ID of user to check
+        user_id (str): ID of user to check
 
     Returns:
         bool: True, if user is admin of bot. False otherwise
     """
     db_id = get_data(0,
-                     True,
+                     False,
                      'SELECT admins_id FROM admin_list WHERE admins_id = ?',
                      user_id)
-    return user_id == db_id
+    return int(user_id) in db_id
 
 
 def is_user_blocked(user_id):
     """Check if user is in blacklist of bot.
 
     Parameters:
-        user_id (int): ID of user to check
+        user_id (str): ID of user to check
 
     Returns:
         bool: True, if user is banned. False otherwise
     """
     db_id = get_data(0,
-                     True,
+                     False,
                      'SELECT blocked_id FROM block_list WHERE blocked_id = ?',
                      user_id)
-    return user_id == db_id
+    return int(user_id) in db_id

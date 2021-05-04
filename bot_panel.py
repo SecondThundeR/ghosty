@@ -1,4 +1,4 @@
-"""Setup of Ghosty (Beta).
+"""Ghosty Control Panel (Beta).
 
 This setup performs the first initial and further
 configuration of the bot through the console.

@@ -37,7 +37,7 @@ class UserChecker(commands.Cog):
         if args[0].isnumeric():
             self.count = int(args[0])
             args.pop(0)
-        if args[0] == 'рандом':
+        elif args[0] == 'рандом':
             try:
                 self.user = await users.get_random_user(ctx.message)
             except UsersNotFound as warning:
@@ -45,12 +45,12 @@ class UserChecker(commands.Cog):
                 return
             self.random_mode = True
             args.pop(0)
-        if not self.random_mode:
-            if args[0].startswith('--'):
-                self.user = args[0][2:]
-                args.pop(0)
+        elif not self.random_mode:
             if args[0].startswith('<@!'):
                 self.user = await ctx.guild.fetch_member(args[0][3:len(args[0]) - 1])
+                args.pop(0)
+            elif args[0].startswith('--'):
+                self.user = args[0][2:]
                 args.pop(0)
         self.text = ' '.join(args)
         percent_data = UserChecker.get_test_percent(self.count)

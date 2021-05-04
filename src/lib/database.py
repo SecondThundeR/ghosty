@@ -48,7 +48,7 @@ class Database:
 
     def connect_db(self, selected_db):
         """Make connection with local database.
-        
+
         Parameters:
             selected_db (str): Name of DB to connect to
         """

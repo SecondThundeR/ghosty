@@ -8,11 +8,10 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-from random import randrange
-from time import time as curr_time
-from pathlib import Path
-from src.lib.database import get_data, modify_data
-
+import random
+import time
+import pathlib
+import src.lib.database as database
 
 CHANGE_COOLDOWN = 900
 
@@ -27,19 +26,20 @@ def get_avatar_bytes():
         int: Cooldown time
         bytes: Bytes of PNG
     """
-    curr_cooldown = get_data(
+    curr_cooldown = database.get_data(
         0,
         True,
         'SELECT avatar_cooldown FROM variables',
-    ) - int(curr_time())
+    ) - int(time.time())
     if curr_cooldown > 0:
         return int(curr_cooldown)
-    modify_data(
+    database.modify_data(
         0,
         'UPDATE variables SET avatar_cooldown = ?',
-        int(curr_time()) + CHANGE_COOLDOWN
+        int(time.time()) + CHANGE_COOLDOWN
     )
-    avatar_path = f"{Path().absolute()}/src/avatars/Avatar_{randrange(1, 16)}.png"
+    avatar_path = f"{pathlib.Path().absolute()}/src/avatars/" \
+                  f"Avatar_{random.randint(1, 16)}.png"
     with open(avatar_path, 'rb') as f:
         avatar_bytes = f.read()
     f.close()

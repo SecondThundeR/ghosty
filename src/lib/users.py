@@ -33,7 +33,7 @@ async def get_random_user(msg):
         UsersNotFound: If list of users is empty
     """
     users = database.get_data(
-        0,
+        'mainDB',
         False,
         'SELECT users_id FROM users'
     )
@@ -57,7 +57,7 @@ async def get_shipping_users(msg):
         UsersNotFound: If list of users is empty
     """
     users = database.get_data(
-        0,
+        'mainDB',
         False,
         'SELECT users_id FROM users'
     )
@@ -96,12 +96,12 @@ def add_member_to_db(member):
     """
     if member.bot:
         return database.modify_data(
-            0,
+            'mainDB',
             'INSERT INTO bots VALUES (?)',
             member.id
         )
     return database.modify_data(
-        0,
+        'mainDB',
         'INSERT INTO users VALUES (?)',
         member.id
     )
@@ -121,12 +121,12 @@ def rem_member_from_db(member):
     """
     if member.bot:
         return database.modify_data(
-            0,
+            'mainDB',
             'DELETE FROM bots WHERE bots_id = ?',
             member.id
         )
     return database.modify_data(
-        0,
+        'mainDB',
         'DELETE FROM users WHERE users_id = ?',
         member.id
     )
@@ -142,7 +142,7 @@ def is_user_admin(user_id):
         bool: True, if user is admin of bot. False otherwise
     """
     db_id = database.get_data(
-        0,
+        'mainDB',
         False,
         'SELECT admins_id FROM admin_list WHERE admins_id = ?',
         user_id
@@ -160,7 +160,7 @@ def is_user_blocked(user_id):
         bool: True, if user is banned. False otherwise
     """
     db_id = database.get_data(
-        0,
+        'mainDB',
         False,
         'SELECT blocked_id FROM block_list WHERE blocked_id = ?',
         user_id

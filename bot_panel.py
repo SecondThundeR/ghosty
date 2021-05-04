@@ -17,6 +17,11 @@ except ModuleNotFoundError:
     print('Some important modules are missing!')
 
 
+DB_NAMES = [
+    'mainDB',
+    'confDB',
+    'wordsDB'
+]
 WORDS_DB_TABLES = [
     'main_words_base',
     'roulette_lose_words',
@@ -25,17 +30,17 @@ WORDS_DB_TABLES = [
     'roulette_zero_words'
 ]
 TABLES_TO_RESET = {
-    1: 'tokens',
-    2: [
+    'confDB': 'tokens',
+    'wordsDB': [
         WORDS_DB_TABLES[0],
         WORDS_DB_TABLES[1],
         WORDS_DB_TABLES[2],
         WORDS_DB_TABLES[3],
         WORDS_DB_TABLES[4]
-        ]
+    ]
 }
 SETUP_STATUS = database.get_data(
-    0,
+    'mainDB',
     True,
     'SELECT is_setup_completed FROM variables'
 )
@@ -153,7 +158,7 @@ def _restore_dev_base():
         files.create_folder(path)
     for tables, paths in zip(WORDS_DB_TABLES, WORDS_BASE_NAME):
         if not words_base.restore_word_base(
-            2,
+            'wordsDB',
             tables,
             paths,
             f'{LINKS[0]}{paths}'
@@ -170,7 +175,10 @@ def _delete_words_base():
     of tables in the database
     """
     for tables in WORDS_DB_TABLES:
-        database.modify_data(2, f'DELETE FROM {tables}')
+        database.modify_data(
+            'wordsDB',
+            f'DELETE FROM {tables}'
+        )
 
 
 def _manage_words_base():
@@ -233,7 +241,7 @@ def _check_for_bot_existence():
     while True:
         bot_name = _get_input()
         if database.get_data(
-            1,
+            'confDB',
             True,
             'SELECT bot_name FROM tokens',
             bot_name
@@ -262,7 +270,7 @@ def _add_bot():
               f'go to this page - {LINKS[1]})')
     else:
         if database.get_data(
-            1,
+            'confDB',
             True,
             'SELECT bot_name FROM tokens',
             bot_name
@@ -279,7 +287,7 @@ def _add_bot():
               'It must be 59 characters long '
               f'(Yours is {len(bot_token)} characters long)')
     database.modify_data(
-        1,
+        'confDB',
         'INSERT INTO tokens VALUES (?, ?)',
         bot_name,
         bot_token
@@ -298,7 +306,7 @@ def _delete_bot():
     """
     bot_name = _check_for_bot_existence()
     database.modify_data(
-        1,
+        'confDB',
         'DELETE FROM tokens WHERE bot_name = ?',
         bot_name
     )
@@ -313,15 +321,15 @@ def _manage_setup_status():
     or set to 1, when initial setup was completed
     """
     database.modify_data(
-        0,
+        'mainDB',
         'UPDATE variables SET is_setup_completed = ?',
         1 if SETUP_STATUS == 0 else 0
     )
     if SETUP_STATUS == 1:
-        for db_num in range(1, 3):
-            for tables in TABLES_TO_RESET[db_num]:
+        for db_name in DB_NAMES:
+            for tables in TABLES_TO_RESET[db_name]:
                 database.modify_data(
-                    db_num,
+                    db_name,
                     f'DELETE FROM {tables}'
                 )
         print('\nThe bot\'s settings have been reset. '
@@ -363,13 +371,13 @@ def _bot_name_changer(bot_name):
     """
     new_bot_name = _get_input('\nEnter new bot\'s name:')
     bot_info = database.get_data(
-        1,
+        'confDB',
         False,
         'SELECT * FROM tokens WHERE bot_name = ?',
         bot_name
     )
     database.modify_data(
-        1,
+        'confDB',
         'UPDATE tokens SET bot_name = ?, bot_token = ?',
         new_bot_name,
         bot_info[1]
@@ -393,7 +401,7 @@ def _bot_token_changer(bot_name):
               'It must be 59 characters long '
               f'(Yours is {len(new_bot_token)} characters long)')
     database.modify_data(
-        1,
+        'confDB',
         'UPDATE tokens SET bot_name = ?, bot_token = ?',
         bot_name,
         new_bot_token
@@ -409,12 +417,12 @@ def _main_bot_selector():
     when main script starts up
     """
     list_of_bots = database.get_data(
-        1,
+        'confDB',
         False,
         'SELECT bot_name FROM tokens'
     )
     curr_selected_bot = database.get_data(
-        0,
+        'mainDB',
         True,
         'SELECT current_selected_bot FROM variables'
     )
@@ -447,7 +455,7 @@ def _main_bot_selector():
                         print('Great choice! '
                               f'Selecting {selected_bot} as default...\n')
                         database.modify_data(
-                            0,
+                            'mainDB',
                             'UPDATE variables SET current_selected_bot = ?',
                             index_of_bot
                         )

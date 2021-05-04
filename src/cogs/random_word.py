@@ -43,7 +43,7 @@ class RandomWord(commands.Cog):
                 return
             if args[0] == 'удалить':
                 if database.get_data(
-                    0,
+                    'mainDB',
                     True,
                     'SELECT * FROM admin_list WHERE admins_id = ?',
                     ctx.author.id
@@ -67,7 +67,7 @@ class RandomWord(commands.Cog):
             else:
                 self.curr_user = args[0]
         WORDS_ARRAY = database.get_data(
-            2,
+            'wordsDB',
             False,
             'SELECT words FROM main_words_base'
         )

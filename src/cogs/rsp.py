@@ -34,7 +34,11 @@ class RSPGame(commands.Cog):
             args (tuple): List of arguments (RSP variants, if playing with bot)
         """
         if not args:
-            if database.get_data(0, True, 'SELECT rsp_game_active FROM variables'):
+            if database.get_data(
+                'mainDB',
+                True,
+                'SELECT rsp_game_active FROM variables'
+            ):
                 await ctx.reply('Сессия игры уже запущена, '
                                 'чтобы начать новую игру, закончите старую')
             else:
@@ -144,7 +148,11 @@ class RSPGame(commands.Cog):
         Parameters:
             ctx (commands.context.Context): Context object to execute functions
         """
-        database.modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 1)
+        database.modify_data(
+            'mainDB',
+            'UPDATE variables SET rsp_game_active = ?',
+            1
+        )
         current_channel = ctx.message.channel
         first_user = ctx.author
         users_choice = []
@@ -162,7 +170,11 @@ class RSPGame(commands.Cog):
             )
             second_user = s_user_wait.author
         except asyncio.TimeoutError:
-            database.modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
+            database.modify_data(
+                'mainDB',
+                'UPDATE variables SET rsp_game_active = ?',
+                0
+            )
             game_fail = ctx.reply('Похоже никто не решил сыграть с вами. '
                                   'Пока что я отменил данную игру')
             messages_to_purge.append(game_fail)
@@ -171,7 +183,11 @@ class RSPGame(commands.Cog):
             return
         else:
             if s_user_wait.author.id == first_user.id:
-                database.modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
+                database.modify_data(
+                    'mainDB',
+                    'UPDATE variables SET rsp_game_active = ?',
+                    0
+                )
                 f_user_join = await ctx.reply('Вы решили поиграть сам собой, '
                                               'я отменяю данную игру')
                 messages_to_purge.append(s_user_wait)
@@ -191,7 +207,11 @@ class RSPGame(commands.Cog):
             )
             users_choice.append(first_response.content.lower())
         except asyncio.TimeoutError:
-            database.modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
+            database.modify_data(
+                'mainDB',
+                'UPDATE variables SET rsp_game_active = ?',
+                0
+            )
             f_move_fail = await current_channel.send(f'{first_user.mention} '
                                                      'не успел ответить вовремя. '
                                                      'Игра отменена')
@@ -208,7 +228,11 @@ class RSPGame(commands.Cog):
             )
             users_choice.append(second_response.content.lower())
         except asyncio.TimeoutError:
-            database.modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
+            database.modify_data(
+                'mainDB',
+                'UPDATE variables SET rsp_game_active = ?',
+                0
+            )
             s_move_fail = await current_channel.send(f'{second_user.mention} '
                                                      'не успел ответить вовремя. '
                                                      'Игра отменена')
@@ -216,7 +240,11 @@ class RSPGame(commands.Cog):
             await asyncio.sleep(self.fail_delay)
             await RSPGame.purge_messages(self, messages_to_purge)
             return
-        database.modify_data(0, 'UPDATE variables SET rsp_game_active = ?', 0)
+        database.modify_data(
+            'mainDB',
+            'UPDATE variables SET rsp_game_active = ?',
+            0
+        )
         await current_channel.send(RSPGame.rsp_game(
             self, users_choice[0], users_choice[1],
             first_user.id, second_user.id

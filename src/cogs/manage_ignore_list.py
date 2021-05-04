@@ -46,7 +46,11 @@ class ManageIgnoreList(commands.Cog):
             if users.is_user_blocked(user_id):
                 await ctx.reply('Данный пользователь уже заблокирован')
             else:
-                database.modify_data(0, 'INSERT INTO block_list VALUES (?)', user_id)
+                database.modify_data(
+                    'mainDB',
+                    'INSERT INTO block_list VALUES (?)',
+                    user_id
+                )
                 await ctx.reply('Я успешно заблокировал этого юзера')
 
     async def remove_ignored(self, ctx, user_id):
@@ -62,7 +66,7 @@ class ManageIgnoreList(commands.Cog):
             await ctx.reply('Данный юзер уже разблокирован')
         else:
             database.modify_data(
-                0,
+                'mainDB',
                 'DELETE FROM block_list WHERE blocked_id = ?',
                 user_id
             )

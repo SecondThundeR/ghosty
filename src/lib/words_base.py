@@ -28,20 +28,20 @@ def manage_words(word, mode=None):
     """
     if mode == 'add':
         database.modify_data(
-            2,
+            'wordsDB',
             'INSERT INTO main_words_base VALUES (?)',
             word
         )
         warn_msg = f'Хей, я успешно добавил слово "{word}" себе в базу!'
     elif mode == 'del':
         if database.get_data(
-            2,
+            'wordsDB',
             True,
             'SELECT * FROM main_words_base WHERE words = ?',
             word
         ):
             database.modify_data(
-                2,
+                'wordsDB',
                 'DELETE FROM main_words_base WHERE words = ?',
                 word
             )
@@ -68,20 +68,20 @@ def manage_r_word(word, base, mode=None):
     """
     if mode == 'add':
         database.modify_data(
-            2,
+            'wordsDB',
             f'INSERT INTO roulette_{base}_words VALUES (?)',
             word
         )
         warn_msg = f'Хей, я успешно добавил слово "{word}" себе в базу!'
     elif mode == 'del':
         if database.get_data(
-            2,
+            'wordsDB',
             True,
             f'SELECT * FROM roulette_{base}_words WHERE words = ?',
             word
         ):
             database.modify_data(
-                2,
+                'wordsDB',
                 f'DELETE FROM roulette_{base}_words WHERE words = ?',
                 word
             )
@@ -95,13 +95,13 @@ def manage_r_word(word, base, mode=None):
     return warn_msg
 
 
-def restore_word_base(db_path, table, path, link):
+def restore_word_base(db_name, table, path, link):
     """Download and restore word base with link.
 
     This function allows to download .txt file and import it to database
 
     Parameters:
-        db_path (int): Path of database to edit data
+        db_name (str): Name of database to edit data
         table (str): Name of table in DB
         path (str): Path to local file of word base
         link (str): Link to latest word base
@@ -114,7 +114,7 @@ def restore_word_base(db_path, table, path, link):
     words_array = files.import_data(path)
     for element in words_array:
         database.modify_data(
-            db_path,
+            db_name,
             f'INSERT INTO {table} VALUES (?)',
             element
         )

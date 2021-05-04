@@ -28,14 +28,14 @@ def get_avatar_bytes():
         bytes: Bytes of PNG
     """
     curr_cooldown = database.get_data(
-        0,
+        'mainDB',
         True,
         'SELECT avatar_cooldown FROM variables',
     ) - int(time.time())
     if curr_cooldown > 0:
         return int(curr_cooldown)
     database.modify_data(
-        0,
+        'mainDB',
         'UPDATE variables SET avatar_cooldown = ?',
         int(time.time()) + CHANGE_COOLDOWN
     )

@@ -58,7 +58,7 @@ class RussianRoulette(commands.Cog):
                 return
             if args[0] == 'удалить':
                 bot_admin = database.get_data(
-                    0,
+                    'mainDB',
                     True,
                     'SELECT * FROM admin_list '
                     'WHERE admins_id = ?',
@@ -134,28 +134,28 @@ class RussianRoulette(commands.Cog):
         """
         if condition == 'win':
             WIN_WORDS_LIST = database.get_data(
-                2,
+                'wordsDB',
                 False,
                 'SELECT words FROM roulette_win_words'
             )
             random_word = random.choice(WIN_WORDS_LIST)
         elif condition == 'lose':
             LOSE_WORDS_LIST = database.get_data(
-                2,
+                'wordsDB',
                 False,
                 'SELECT words FROM roulette_lose_words'
             )
             random_word = random.choice(LOSE_WORDS_LIST)
         elif condition == 'zero':
             ZERO_WORDS_LIST = database.get_data(
-                2,
+                'wordsDB',
                 False,
                 'SELECT words FROM roulette_zero_words'
             )
             random_word = random.choice(ZERO_WORDS_LIST)
         elif condition == 'minus':
             MINUS_WORDS_LIST = database.get_data(
-                2,
+                'wordsDB',
                 False,
                 'SELECT words FROM roulette_minus_words'
             )

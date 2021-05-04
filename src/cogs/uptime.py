@@ -25,7 +25,7 @@ class Uptime(commands.Cog):
             ctx (commands.context.Context): Context object to execute functions
         """
         curr_uptime = int(time.time()) - database.get_data(
-            0,
+            'mainDB',
             True,
             'SELECT bot_uptime FROM variables',
         )

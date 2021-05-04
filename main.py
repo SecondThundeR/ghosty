@@ -20,8 +20,16 @@ import src.utils.general_scripts as general_scripts
 from discord.ext import commands
 
 
-TOKENS = database.get_data(1, False, 'SELECT bot_token FROM tokens')
-SELECTED_BOT = database.get_data(0, True, 'SELECT current_selected_bot FROM variables')
+TOKENS = database.get_data(
+    'confDB',
+    False,
+    'SELECT bot_token FROM tokens'
+)
+SELECTED_BOT = database.get_data(
+    'mainDB',
+    True,
+    'SELECT current_selected_bot FROM variables'
+)
 DELAY_TIME = 5
 client = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 
@@ -53,7 +61,7 @@ async def on_ready():
     else:
         await client.user.edit(avatar=avatar_data)
     database.modify_data(
-        0,
+        'mainDB',
         'UPDATE variables SET bot_uptime = ?',
         int(time.time())
     )

@@ -44,7 +44,11 @@ class RandomShip(commands.Cog):
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): List of arguments
         """
-        if database.get_data(0, True, 'SELECT ship_in_active FROM variables'):
+        if database.get_data(
+            'mainDB',
+            True,
+            'SELECT ship_in_active FROM variables'
+        ):
             return
         if len(args) == 1:
             if 'скип' in args:
@@ -93,7 +97,7 @@ class RandomShip(commands.Cog):
             ctx (commands.context.Context): Context object to execute functions
         """
         database.modify_data(
-            0,
+            'mainDB',
             'UPDATE variables SET ship_date = ?, ship_text_short = ?, '
             'ship_text_full = ?, ship_activated = ?',
             '',
@@ -157,11 +161,23 @@ class RandomShip(commands.Cog):
         """
         current_date = dt.datetime.now().date()
         next_date = (dt.datetime.now() + dt.timedelta(days=1)).date()
-        ship_date = database.get_data(0, True, 'SELECT ship_date FROM variables')
-        if (not database.get_data(0, True, 'SELECT ship_activated FROM variables') and
-                not database.get_data(0, True, 'SELECT ship_in_active FROM variables')):
+        ship_date = database.get_data(
+            'mainDB',
+            True,
+            'SELECT ship_date FROM variables'
+        )
+        if (not database.get_data(
+            'mainDB',
+            True,
+            'SELECT ship_activated FROM variables'
+            ) and not database.get_data(
+            'mainDB',
+            True,
+            'SELECT ship_in_active FROM variables'
+            )
+        ):
             database.modify_data(
-                0,
+                'mainDB',
                 'UPDATE variables SET ship_in_active = ?, ship_activated = ?',
                 1,
                 1
@@ -170,7 +186,7 @@ class RandomShip(commands.Cog):
                 users_info = await users.get_shipping_users(ctx.message)
             except UsersNotFound as warning:
                 database.modify_data(
-                    0,
+                    'mainDB',
                     'UPDATE variables SET ship_in_active = ?, ship_activated = ?',
                     0,
                     0
@@ -195,7 +211,7 @@ class RandomShip(commands.Cog):
             else:
                 await RandomShip.random_ship_messages(self, ctx, ship_text_short)
             database.modify_data(
-                0,
+                'mainDB',
                 'UPDATE variables SET ship_date = ?, ship_text_full = ?, '
                 'ship_text_short = ?, ship_in_active = ?',
                 next_date,
@@ -203,25 +219,51 @@ class RandomShip(commands.Cog):
                 ship_text_short,
                 0
             )
-        elif database.get_data(0, True, 'SELECT ship_in_active FROM variables'):
+        elif database.get_data(
+            'mainDB',
+            True,
+            'SELECT ship_in_active FROM variables'
+        ):
             pass
-        elif (database.get_data(0, True, 'SELECT ship_activated FROM variables') and
-                current_date < dt.datetime.strptime(ship_date, '%Y-%m-%d').date()):
+        elif (database.get_data(
+            'mainDB',
+            True,
+            'SELECT ship_activated FROM variables'
+            ) and current_date < dt.datetime.strptime(
+                ship_date,
+                '%Y-%m-%d'
+            ).date()
+        ):
             ship_text_full = database.get_data(
-                0,
+                'mainDB',
                 True,
                 'SELECT ship_text_full FROM variables'
             )
-            next_date = database.get_data(0, True, 'SELECT ship_date FROM variables')
+            next_date = database.get_data(
+                'mainDB',
+                True,
+                'SELECT ship_date FROM variables'
+            )
             next_date_string = self.weekday_dict[
                 dt.datetime.strptime(next_date, '%Y-%m-%d').weekday()
             ]
             await ctx.reply(f'**Парочка дня на сегодня:** {ship_text_full} '
                             ':two_hearts: \n\n*Следующий шиппинг будет доступен '
                             f'{next_date_string}*')
-        elif (database.get_data(0, True, 'SELECT ship_activated FROM variables') and
-                current_date >= dt.datetime.strptime(ship_date, '%Y-%m-%d').date()):
-            database.modify_data(0, 'UPDATE variables SET ship_activated = ?', 0)
+        elif (database.get_data(
+            'mainDB',
+            True,
+            'SELECT ship_activated FROM variables'
+            ) and current_date >= dt.datetime.strptime(
+                ship_date,
+                '%Y-%m-%d'
+            ).date()
+        ):
+            database.modify_data(
+                'mainDB',
+                'UPDATE variables SET ship_activated = ?',
+                0
+            )
             await RandomShip.random_ship(self, ctx)
         else:
             pass

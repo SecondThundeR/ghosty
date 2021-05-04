@@ -45,7 +45,11 @@ class ManageAdmins(commands.Cog):
         if users.is_user_admin(user_id):
             await ctx.reply('Данный пользователь уже админ')
         else:
-            database.modify_data(0, 'INSERT INTO admin_list VALUES (?)', user_id)
+            database.modify_data(
+                'mainDB',
+                'INSERT INTO admin_list VALUES (?)',
+                user_id
+            )
             await ctx.reply('Я успешно добавил такого админа')
 
     async def remove_admin(self, ctx, user_id):
@@ -64,7 +68,7 @@ class ManageAdmins(commands.Cog):
         """
         if int(user_id) == ctx.author.id and users.is_user_admin(user_id):
             if len(database.get_data(
-                0,
+                'mainDB',
                 False,
                 'SELECT admins_id FROM admin_list'
             )) == 1:
@@ -83,7 +87,7 @@ class ManageAdmins(commands.Cog):
                 else:
                     if wait_msg.content.lower() in ['да', 'ок', 'давай']:
                         database.modify_data(
-                            0,
+                            'mainDB',
                             'DELETE FROM admin_list WHERE admins_id = ?',
                             user_id
                         )
@@ -98,7 +102,7 @@ class ManageAdmins(commands.Cog):
                 await ctx.reply('Данный пользователь не является админом')
             else:
                 database.modify_data(
-                    0,
+                    'mainDB',
                     'DELETE FROM admin_list WHERE admins_id = ?',
                     user_id
                 )

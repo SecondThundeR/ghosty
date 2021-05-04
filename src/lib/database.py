@@ -29,13 +29,13 @@ class Database:
         disconnect_db: Closes connection with database
     """
 
-    def __init__(self, index):
+    def __init__(self, db_name):
         """Initialize all necessary variables for DB.
 
         This function get path to DB and connect with it
 
         Parameters:
-            path (str): Path to database
+            db_name (str): Name of selected database
         """
         self.db_path = [
             './src/db/mainDB.db',
@@ -44,12 +44,16 @@ class Database:
         ]
         self.conn = None
         self.cur = None
-        self.connect_db(index)
+        self.connect_db(db_name)
 
-    def connect_db(self, sel_path):
-        """Make connection with local database."""
+    def connect_db(self, selected_db):
+        """Make connection with local database.
+        
+        Parameters:
+            selected_db (str): Name of DB to connect to
+        """
         self.conn = sqlite3.connect(
-            self.db_path[sel_path],
+            f'./src/db/{selected_db}.db',
             check_same_thread=False
         )
         self.cur = self.conn.cursor()
@@ -65,12 +69,22 @@ def reset_tables():
     **Noteworthy:** This function is necessary for the internal work of the bot,
     when main script is executed
     """
-    modify_data(0,
-                'UPDATE variables SET poll_locked = ?, ship_in_active = ?,'
-                'rsp_game_active = ?',
-                0, 0, 0)
-    modify_data(0, 'DELETE FROM bots')
-    modify_data(0, 'DELETE FROM users')
+    modify_data(
+        'mainDB',
+        'UPDATE variables SET poll_locked = ?, ship_in_active = ?,'
+        'rsp_game_active = ?',
+        0,
+        0,
+        0
+    )
+    modify_data(
+        'mainDB',
+        'DELETE FROM bots'
+    )
+    modify_data(
+        'mainDB',
+        'DELETE FROM users'
+    )
 
 
 def get_data(path_num, is_single, command, *data):

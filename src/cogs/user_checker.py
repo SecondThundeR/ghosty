@@ -17,7 +17,6 @@ class UserChecker(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.delay_time = 5
-        self.loop_count = None
         self.count = None
         self.text = None
         self.user = None
@@ -54,7 +53,7 @@ class UserChecker(commands.Cog):
                 self.user = await ctx.guild.fetch_member(args[0][3:len(args[0]) - 1])
                 args.pop(0)
         self.text = ' '.join(args)
-        percent_data = UserChecker.get_test_percent(self, self.count)
+        percent_data = UserChecker.get_test_percent(self.count)
         if not self.text:
             await ctx.reply('Вы не передали текст для теста',
                             delete_after=self.delay_time)
@@ -68,7 +67,8 @@ class UserChecker(commands.Cog):
         )
         await ctx.send(final_msg)
 
-    def get_test_percent(self, amount):
+    @staticmethod
+    def get_test_percent(amount):
         if amount == 1:
             return random.randint(0, 100)
         perc_list = []

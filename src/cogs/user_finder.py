@@ -40,7 +40,7 @@ class UserFinder(commands.Cog):
             await ctx.send(f'Произошла ошибка: {warning}!')
             return
         i = 0
-        init_msg = await ctx.send(f'Система поиска активирована!')
+        init_msg = await ctx.send('Система поиска активирована!')
         await asyncio.sleep(self.delay_time)
         while i < 2:
             await ctx.send('*пип*')

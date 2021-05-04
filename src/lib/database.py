@@ -18,13 +18,6 @@ This file can also be imported as a module and contains the following functions:
 import sqlite3
 
 
-DB_PATH = [
-    './src/db/mainDB.db',
-    './src/db/confDB.db',
-    './src/db/wordsDB.db'
-]
-
-
 class Database:
     """A class to control database.
 
@@ -36,7 +29,7 @@ class Database:
         disconnect_db: Closes connection with database
     """
 
-    def __init__(self, path):
+    def __init__(self, index):
         """Initialize all necessary variables for DB.
 
         This function get path to DB and connect with it
@@ -44,14 +37,21 @@ class Database:
         Parameters:
             path (str): Path to database
         """
-        self.path = path
+        self.db_path = [
+            './src/db/mainDB.db',
+            './src/db/confDB.db',
+            './src/db/wordsDB.db'
+        ]
         self.conn = None
         self.cur = None
-        self.connect_db()
+        self.connect_db(index)
 
-    def connect_db(self):
+    def connect_db(self, sel_path):
         """Make connection with local database."""
-        self.conn = sqlite3.connect(self.path, check_same_thread=False)
+        self.conn = sqlite3.connect(
+            self.db_path[sel_path],
+            check_same_thread=False
+        )
         self.cur = self.conn.cursor()
 
     def disconnect_db(self):
@@ -90,7 +90,7 @@ def get_data(path_num, is_single, command, *data):
     """
     try:
         data_arr = []
-        database = Database(DB_PATH[path_num])
+        database = Database(path_num)
         if not tuple(data):
             database.cur.execute(command)
         else:
@@ -126,7 +126,7 @@ def modify_data(path_num, command, *data):
         Exception: Returns info about error
     """
     try:
-        database = Database(DB_PATH[path_num])
+        database = Database(path_num)
         if len(data) > 0:
             database.cur.execute(command, data)
         else:

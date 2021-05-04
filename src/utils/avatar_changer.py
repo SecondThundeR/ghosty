@@ -13,6 +13,7 @@ import time
 import pathlib
 import src.lib.database as database
 
+
 CHANGE_COOLDOWN = 900
 
 

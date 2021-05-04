@@ -72,14 +72,17 @@ class UserChecker(commands.Cog):
         if amount == 1:
             return random.randint(0, 100)
         perc_list = []
-        self.loop_count = 0
-        while self.loop_count < amount:
+        avg_percent = 0
+        i = 0
+        while i < amount:
             perc_list.append(random.randint(0, 100))
-            self.loop_count += 1
-        return perc_list
+            avg_percent += perc_list[i]
+            i += 1
+        avg_percent /= amount
+        return [perc_list, avg_percent]
 
     @staticmethod
-    def format_percent_to_message(percent, text, user):
+    def format_percent_to_message(percent_data, text, user):
         warn_msg = 'Вы превысили лимит Discord по длине сообщения!'
         user_name = None
         if isinstance(user, str):
@@ -88,9 +91,11 @@ class UserChecker(commands.Cog):
         if isinstance(user, discord.Member):
             user_name = users.get_members_name(user)
             user = user.mention
-        if isinstance(percent, list):
+        if isinstance(percent_data, list):
+            percent_list = percent_data[0]
+            avg_num = percent_data[1]
             msg = f'Журнал тестирования {user}\n\n'
-            for i, perc in enumerate(percent):
+            for i, perc in enumerate(percent_list):
                 if len(msg) > 2000:
                     msg = warn_msg
                     break
@@ -101,13 +106,14 @@ class UserChecker(commands.Cog):
                            f'**{user_name}** {text} на **{perc}%**\n'
                 else:
                     msg += f'*Тест {i + 1}.* **{user_name}** {text} на **{perc}%**\n'
+            msg += f'\nСреднее значение всех тестов - **{avg_num}%**'
             return msg
-        if percent == 0:
+        if percent_data == 0:
             return f'{user} сегодня не {text} :c'
-        if percent == 100:
+        if percent_data == 100:
             return f'Кто бы мог подумать то! {user}' \
-                   f'\n{text} на **{percent}%**'
-        return f'{user} {text} на **{percent}%**'
+                   f'\n{text} на **{percent_data}%**'
+        return f'{user} {text} на **{percent_data}%**'
 
 
 def setup(client):

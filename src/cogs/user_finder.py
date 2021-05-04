@@ -1,6 +1,6 @@
 """Search *insert any word or something else here*.
 
-This cog repeats the good old meme about search *p-word*
+This cog repeats the good old meme about search *any word*
 """
 
 
@@ -16,37 +16,37 @@ class UserFinder(commands.Cog):
         self.delay_time = 2
 
     @commands.command(aliases=['поиск'])
-    async def user_finder_hub(self, ctx, mode=None):
+    async def user_finder_hub(self, ctx, word=None):
         """Execute required finder mode depending on arguments.
 
         Parameters:
             ctx (commands.context.Context): Context object to execute functions
-            mode (str | None): Mode of user finder
+            word (str | None): Word for user finder
         """
-        if not mode:
+        if not word:
             return
-        if 'пидорасов' in mode:
-            await UserFinder.pidor_finder(self, ctx)
+        await UserFinder.user_finder_execute(self, ctx, word)
 
-    async def pidor_finder(self, ctx):
-        """Get random user and launch 'finder' of *p-word*.
+    async def user_finder_execute(self, ctx, word):
+        """Get random user and launch 'finder' of *any word*.
 
         Parameters:
             ctx (commands.context.Context): Context object to execute functions
+            word (str): Passed word to test out
         """
         try:
             random_user = await users.get_random_user(ctx.message)
         except UsersNotFound as warning:
             await ctx.send(f'Произошла ошибка: {warning}!')
             return
-        loop_count = 0
-        init_msg = await ctx.send('Система поиска пидорасов активирована!')
+        i = 0
+        init_msg = await ctx.send(f'Система поиска активирована!')
         await asyncio.sleep(self.delay_time)
-        while loop_count < 3:
+        while i < 2:
             await ctx.send('*пип*')
             await asyncio.sleep(self.delay_time)
-            loop_count += 1
-        await init_msg.reply('Пидорас найден. '
+            i += 1
+        await init_msg.reply(f'"{word.capitalize()}" найден. '
                              f'Им оказался - {random_user.mention}')
 
 

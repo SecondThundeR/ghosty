@@ -166,16 +166,17 @@ class RandomShip(commands.Cog):
             True,
             'SELECT ship_date FROM variables'
         )
-        if (not database.get_data(
-                'mainDB',
-                True,
-                'SELECT ship_activated FROM variables'
-            ) and not database.get_data(
-                    'mainDB',
-                    True,
-                    'SELECT ship_in_active FROM variables'
-                )
-            ):
+        ship_activated = database.get_data(
+            'mainDB',
+            True,
+            'SELECT ship_activated FROM variables'
+        )
+        ship_in_active = database.get_data(
+            'mainDB',
+            True,
+            'SELECT ship_in_active FROM variables'
+        )
+        if not ship_activated and not ship_in_active:
             database.modify_data(
                 'mainDB',
                 'UPDATE variables SET ship_in_active = ?, ship_activated = ?',

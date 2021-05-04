@@ -15,8 +15,7 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
-from sqlite3 import connect
-from sqlite3 import Error as DBError
+import sqlite3
 
 
 DB_PATH = [
@@ -52,7 +51,7 @@ class Database:
 
     def connect_db(self):
         """Make connection with local database."""
-        self.conn = connect(self.path, check_same_thread=False)
+        self.conn = sqlite3.connect(self.path, check_same_thread=False)
         self.cur = self.conn.cursor()
 
     def disconnect_db(self):
@@ -109,7 +108,7 @@ def get_data(path_num, is_single, command, *data):
             else:
                 data_arr.append(element[0])
         return data_arr
-    except DBError as err:
+    except sqlite3.Error as err:
         print('There is an error while working with DB.\n'
               f'Here are error details: {err}')
         raise Exception
@@ -134,7 +133,7 @@ def modify_data(path_num, command, *data):
             database.cur.execute(command)
         database.conn.commit()
         database.disconnect_db()
-    except DBError as err:
+    except sqlite3.Error as err:
         print('There is an error while working with DB.\n'
               f'Here are error details: {err}')
         raise Exception

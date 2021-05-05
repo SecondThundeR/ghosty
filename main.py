@@ -1,6 +1,6 @@
-"""Main script of Ghosty.
+"""Entry point of Ghosty bot.
 
-This is a Discord bot script that runs on the Discord.py library and
+This is a bot script that runs on the Discord.py library and
 allows you to execute functions using specific text commands
 
 There is the starting point of the bot control, from where it begin its
@@ -36,10 +36,12 @@ client = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 
 @aiocron.crontab('0 */3 * * *')
 async def update_avatar():
-    """Update avatar picture automatically every 3 hours.
+    """Update avatar picture periodically.
 
-    This function also checkes and updates the avatar_cooldown value
-    to prevent a sudden avatar change during cron update
+    This function changes the bot avatar every 3 hours using a cron job.
+    It also checks and updates the `avatar_cooldown` value
+    to lock manual avatar changing during/after updating by cron job,
+    which helps prevent getting a cooldown from the Discord API.
     """
     avatar_data = avatar_changer.get_avatar_bytes()
     if isinstance(avatar_data, int):
@@ -50,7 +52,12 @@ async def update_avatar():
 
 @client.event
 async def on_ready():
-    """Execute necessary functions on bot launch."""
+    """Execute necessary functions.
+
+    This function executes certain actions on bot's load, such as:
+    Resetting DB table, loading commands, updating table with users,
+    changing bot's status, changing bot's avatar, setting up new bot's uptime
+    """
     database.reset_tables()
     await general_scripts.load_commands(client)
     await general_scripts.update_member_list(client)
@@ -70,14 +77,18 @@ async def on_ready():
 
 @client.event
 async def on_command_error(ctx, error):
-    """Handle `CommandNotFound` exception and send message about it.
+    """Handle commands exceptions.
 
-    This function catches certain exception and sends message to user
-    that provided command isn't valid
+    This function catches certain exception and sends info message to the user
+    Currently, this commands handles `CommandNotFound` and `PrivateMessageOnly`
 
-    Parameters:
-        ctx (commands.context.Context): Context object to work with
-        error (commands.errors.CommandNotFound): Error class
+    :param ctx: The invocation context
+    :type ctx: discord.ext.commands.Context
+
+    :param error: The error that was raised
+    :type error: discord.ext.commands.CommandError
+
+    :raise: error if that isn't included in the handling
     """
     if isinstance(error, commands.CommandNotFound):
         await ctx.reply('Данной команды не существует. '
@@ -96,20 +107,27 @@ async def on_command_error(ctx, error):
 
 @client.event
 async def on_member_join(member):
-    """Add new server users to database while bot is running.
+    """Add new server users to database.
 
-    Parameters:
-        member (discord.member.Member): Information about the joined user
+    This function adds every new user to database, while bot is running.
+    This helps prevent new users from being ignored in commands
+    that use use a table of users.
+
+    :param member: Member object of the joined user
+    :type member: discord.member.Member
     """
     users.add_member_to_db(member)
 
 
 @client.event
 async def on_member_leave(member):
-    """Remove left server users from database while bot is running.
+    """Remove left server users from database.
 
-    Parameters:
-        member (discord.member.Member): Information about the left user
+    This function removes every left user from database, while bot is running.
+    This helps to prevent any problems with commands that use a table of users.
+
+    :param member: Member object of the left user
+    :type member: discord.member.Member
     """
     users.rem_member_from_db(member)
 

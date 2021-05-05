@@ -82,13 +82,13 @@ async def on_command_error(ctx, error):
     This function catches certain exception and sends info message to the user
     Currently, this commands handles `CommandNotFound` and `PrivateMessageOnly`
 
-    :param ctx: The invocation context
-    :type ctx: discord.ext.commands.Context
+    Args:
+        ctx (discord.ext.commands.Context): The invocation context
+        error (discord.ext.commands.CommandError): The error that was raised
 
-    :param error: The error that was raised
-    :type error: discord.ext.commands.CommandError
-
-    :raise: error if that isn't included in the handling
+    Raises:
+        discord.ext.commands.CommandError: It there is an error 
+            that isn't included in the handling
     """
     if isinstance(error, commands.CommandNotFound):
         await ctx.reply('Данной команды не существует. '
@@ -113,8 +113,8 @@ async def on_member_join(member):
     This helps prevent new users from being ignored in commands
     that use use a table of users.
 
-    :param member: Member object of the joined user
-    :type member: discord.member.Member
+    Args:
+        member (discord.member.Member): Data about joined user
     """
     users.add_member_to_db(member)
 
@@ -126,8 +126,8 @@ async def on_member_leave(member):
     This function removes every left user from database, while bot is running.
     This helps to prevent any problems with commands that use a table of users.
 
-    :param member: Member object of the left user
-    :type member: discord.member.Member
+    Args:
+        member (discord.member.Member): Data about left user
     """
     users.rem_member_from_db(member)
 

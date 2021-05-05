@@ -15,6 +15,7 @@ This file can also be imported as a module and contains the following functions:
 """
 
 
+import sys
 import sqlite3
 
 
@@ -94,7 +95,7 @@ def get_data(path_num, is_single, command, *data):
         path_num (int): Number of path in path list
         is_single (bool): Boolean for getting data w/o array
         command (str): Command to execute
-        *data: Variable length list of data
+        data (tuple): Variable length list of data
 
     Returns:
         list | str | int: Array with data or single data
@@ -105,10 +106,10 @@ def get_data(path_num, is_single, command, *data):
     try:
         data_arr = []
         database = Database(path_num)
-        if not tuple(data):
+        if not data:
             database.cur.execute(command)
         else:
-            database.cur.execute(command, tuple(data))
+            database.cur.execute(command, data)
         if is_single:
             received_data = database.cur.fetchone()
             database.disconnect_db()
@@ -123,9 +124,10 @@ def get_data(path_num, is_single, command, *data):
                 data_arr.append(element[0])
         return data_arr
     except sqlite3.Error as err:
-        print('There is an error while working with DB.\n'
+        print('\nThere is an error while working with DB '
+              '(Method: get_data).\n'
               f'Here are error details: {err}')
-        raise Exception
+        sys.exit()
 
 
 def modify_data(path_num, command, *data):
@@ -148,6 +150,7 @@ def modify_data(path_num, command, *data):
         database.conn.commit()
         database.disconnect_db()
     except sqlite3.Error as err:
-        print('There is an error while working with DB.\n'
+        print('\nThere is an error while working with DB '
+              '(Method: modify_data).\n'
               f'Here are error details: {err}')
-        raise Exception
+        sys.exit()

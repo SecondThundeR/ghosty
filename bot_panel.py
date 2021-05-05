@@ -243,7 +243,7 @@ def _check_for_bot_existence():
         if database.get_data(
             'confDB',
             True,
-            'SELECT bot_name FROM tokens',
+            'SELECT bot_name FROM tokens WHERE bot_name = ?',
             bot_name
         ):
             return bot_name
@@ -493,7 +493,7 @@ def _bot_setup():
           '\n4. Choose default bot on startup'
           '\n5. Edit words database'
           '\n6. Reset bot settings'
-          '\n0. Exit')
+          '\n0. Exit\n')
     while True:
         menu_input = _get_input('Enter the number of option:')
         if menu_input == '1':

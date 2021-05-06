@@ -35,7 +35,7 @@ class RandomWord(commands.Cog):
                 args.pop(0)
                 word_to_add = " ".join(args)
                 await ctx.reply(
-                    words_base.manage_words(word_to_add, 'add'),
+                    words_base.manage_words_table(word_to_add, 'add'),
                     delete_after=self.delay_time
                 )
                 await asyncio.sleep(self.delay_time)
@@ -51,7 +51,7 @@ class RandomWord(commands.Cog):
                     args.pop(0)
                     word_to_delete = " ".join(args)
                     await ctx.reply(
-                        words_base.manage_words(word_to_delete, 'del'),
+                        words_base.manage_words_table(word_to_delete, 'del'),
                         delete_after=self.delay_time
                     )
                     await asyncio.sleep(self.delay_time)

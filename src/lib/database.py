@@ -9,7 +9,8 @@ The module can accept commands as strings and list of data to add
 prevent the main script from making sudden errors
 
 This file can also be imported as a module and contains the following functions:
-    * clear_on_load - clears specific tables on load
+    * clear_tables - clears specific tables on load
+    * reset_bot_tables - clears specific tables on bot reset
     * get_data - returns list of data from table
     * modify_data - operates with data by executing SQL queries
 """
@@ -64,8 +65,8 @@ class Database:
         self.conn.close()
 
 
-def reset_tables():
-    """Clear specific tables in the database.
+def clear_tables():
+    """Clear specific tables on bot load.
 
     **Noteworthy:** This function is necessary for the internal work of the bot,
     when main script is executed
@@ -88,17 +89,54 @@ def reset_tables():
     )
 
 
+def reset_bot_tables():
+    """Clear specific tables on bot reset.
+
+    This function handles clearing some tables, when bot is resetted
+    in `bot_panel`
+    """
+    modify_data(
+        'mainDB',
+        'UPDATE variables SET poll_locked = ?, ship_date = ?,'
+        'ship_text_full = ?, ship_text_short = ?, ship_activated = ?,'
+        'ship_in_active = ?, is_setup_completed = ?,'
+        'current_selected_bot = ?, bot_uptime = ?, avatar_cooldown = ?,'
+        'rsp_game_active = ?',
+        0, 0, '', '', 0, 0, 0, 0, 0, 0, 0
+    )
+    modify_data(
+        'mainDB',
+        'DELETE FROM bots'
+    )
+    modify_data(
+        'mainDB',
+        'DELETE FROM users'
+    )
+    modify_data(
+        'mainDB',
+        'DELETE FROM admin_list'
+    )
+    modify_data(
+        'mainDB',
+        'DELETE FROM block_list'
+    )
+    modify_data(
+        'confDB',
+        'DELETE FROM tokens'
+    )
+
+
 def get_data(path_num, is_single, command, *data):
     """Retrieve data from a database and return it as an array.
 
-    Parameters:
+    Args:
         path_num (int): Number of path in path list
         is_single (bool): Boolean for getting data w/o array
         command (str): Command to execute
         data (tuple): Variable length list of data
 
     Returns:
-        list | str | int: Array with data or single data
+        Union[list, str, int, None]: Array with data, single data or None
 
     Raises:
         Exception: Returns info about error
@@ -110,12 +148,12 @@ def get_data(path_num, is_single, command, *data):
             database.cur.execute(command)
         else:
             database.cur.execute(command, data)
-        if is_single:
-            received_data = database.cur.fetchone()
-            database.disconnect_db()
-            return received_data[0]
         received_data = database.cur.fetchall()
         database.disconnect_db()
+        if is_single:
+            if not received_data:
+                return None
+            return received_data[0]
         for element in received_data:
             if len(element) > 1:
                 for item in element:

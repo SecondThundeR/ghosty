@@ -58,7 +58,7 @@ async def on_ready():
     Resetting DB table, loading commands, updating table with users,
     changing bot's status, changing bot's avatar, setting up new bot's uptime
     """
-    database.reset_tables()
+    database.clear_tables()
     await general_scripts.load_commands(client)
     await general_scripts.update_member_list(client)
     await client.change_presence(status=discord.Status.dnd)

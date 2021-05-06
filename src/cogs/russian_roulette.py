@@ -46,7 +46,7 @@ class RussianRoulette(commands.Cog):
                     args.pop(0)
                 WORD_TO_ADD = " ".join(args)
                 await ctx.reply(
-                    words_base.manage_r_word(
+                    words_base.manage_r_words_tables(
                         WORD_TO_ADD,
                         TABLE_TO_MODIFY,
                         'add'
@@ -70,7 +70,7 @@ class RussianRoulette(commands.Cog):
                         args.pop(0)
                     WORD_TO_DELETE = " ".join(args)
                     await ctx.reply(
-                        words_base.manage_r_word(
+                        words_base.manage_r_words_tables(
                             WORD_TO_DELETE,
                             TABLE_TO_MODIFY,
                             'del'

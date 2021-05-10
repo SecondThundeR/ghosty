@@ -153,8 +153,7 @@ def import_dev_base_option():
             'Seems like link to word base is incorrect, '
             'so you can open issue on GitHub'
         )
-    else:
-        print('The word base was imported successfully\n')
+    print('The word base was imported successfully\n')
 
 
 def clear_database_option():
@@ -187,7 +186,7 @@ def words_table_manager():
             clear_database_option()
         else:
             print('\nIt looks like you entered something wrong, '
-                'please try again')
+                  'please try again')
     else:
         print('\nOptions with word base:'
               '\n1. Import developer\'s word base'
@@ -203,9 +202,8 @@ def words_table_manager():
                     clear_database_option()
                 elif inputs[1] == 0:
                     return
-            else:
-                print('\nIt looks like you entered something wrong, '
-                      'please try again')
+            print('\nIt looks like you entered something wrong, '
+                  'please try again')
 
 
 def is_bot_in_database():
@@ -315,14 +313,13 @@ def manage_bot_settings():
             change_bot_name(bot_name)
             clear_console()
             break
-        elif menu_select == 2:
+        if menu_select == 2:
             change_bot_token(bot_name)
             clear_console()
             break
-        elif menu_select == 0:
+        if menu_select == 0:
             break
-        else:
-            print('You have chosen something wrong, please try again')
+        print('You have chosen something wrong, please try again')
 
 
 def change_bot_name(bot_name):

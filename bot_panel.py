@@ -21,13 +21,13 @@ def bot_menu():
     """
     while True:
         print('Main menu:'
-          '\n1. Change settings of bot'
-          '\n2. Add new bot in database'
-          '\n3. Remove bot from database'
-          '\n4. Choose default bot on startup'
-          '\n5. Edit words database'
-          '\n6. Reset bot settings'
-          '\n0. Exit\n')
+              '\n1. Change settings of bot'
+              '\n2. Add new bot in database'
+              '\n3. Remove bot from database'
+              '\n4. Choose default bot on startup'
+              '\n5. Edit words database'
+              '\n6. Reset bot settings'
+              '\n0. Exit\n')
         menu_input = panel_scripts.get_user_input(
             'Enter the number of option:'
         )

@@ -57,6 +57,12 @@ def manage_words_table(word, mode=None):
     Returns:
         str: Function completion message or warning
     """
+    requested_word = database.get_data(
+        'wordsDB',
+        True,
+        'SELECT * FROM main_words_base WHERE words = ?',
+        word
+    )
     if mode == 'add':
         database.modify_data(
             'wordsDB',
@@ -64,23 +70,16 @@ def manage_words_table(word, mode=None):
             word
         )
         return f'Хей, я успешно добавил слово "{word}" себе в базу!'
-    elif mode == 'del':
-        if database.get_data(
-            'wordsDB',
-            True,
-            'SELECT * FROM main_words_base WHERE words = ?',
-            word
-        ):
+    if mode == 'del':
+        if requested_word:
             database.modify_data(
                 'wordsDB',
                 'DELETE FROM main_words_base WHERE words = ?',
                 word
             )
             return f'Хей, я успешно удалил слово "{word}" из своей базы!'
-        else:
-            return WARNING_MESSAGES[0]
-    else:
-        return WARNING_MESSAGES[1]
+        return WARNING_MESSAGES[0]
+    return WARNING_MESSAGES[1]
 
 
 def manage_r_words_tables(word, table, mode=None):
@@ -107,7 +106,7 @@ def manage_r_words_tables(word, table, mode=None):
             word
         )
         return f'Хей, я успешно добавил слово "{word}" себе в базу!'
-    elif mode == 'del':
+    if mode == 'del':
         if requested_word:
             database.modify_data(
                 'wordsDB',
@@ -115,10 +114,8 @@ def manage_r_words_tables(word, table, mode=None):
                 word
             )
             return f'Хей, я успешно удалил слово "{word}" из своей базы!'
-        else:
-            return WARNING_MESSAGES[0]
-    else:
-        return WARNING_MESSAGES[1]
+        return WARNING_MESSAGES[0]
+    return WARNING_MESSAGES[1]
 
 
 def restore_dev_base():
@@ -138,8 +135,7 @@ def restore_dev_base():
         import_status = import_word_file(
             'wordsDB',
             table,
-            path,
-            f'{MASTER_LINK}{path}'
+            path
         )
         if not import_status:
             return False

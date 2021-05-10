@@ -87,8 +87,8 @@ async def on_command_error(ctx, error):
         error (discord.ext.commands.CommandError): The error that was raised
 
     Raises:
-        discord.ext.commands.CommandError: It there is an error 
-            that isn't included in the handling
+        discord.ext.commands.CommandError: It there is an error
+        that isn't included in the handling
     """
     if isinstance(error, commands.CommandNotFound):
         await ctx.reply('Данной команды не существует. '

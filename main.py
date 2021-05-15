@@ -11,12 +11,12 @@ fit your needs
 
 import time
 import aiocron
-import asyncio
 import discord
 import src.lib.database as database
 import src.lib.users as users
 import src.utils.avatar_changer as avatar_changer
 import src.utils.general_scripts as general_scripts
+import src.utils.markov_utils as markov_utils
 from discord.ext import commands
 
 
@@ -59,6 +59,7 @@ async def on_ready():
     changing bot's status, changing bot's avatar, setting up new bot's uptime
     """
     database.clear_tables()
+    markov_utils.markov_delay_handler('clear')
     await general_scripts.load_commands(client)
     await general_scripts.update_member_list(client)
     await client.change_presence(status=discord.Status.dnd)
@@ -126,9 +127,19 @@ async def on_member_leave(member):
     users.rem_member_from_db(member)
 
 
-@client.event
-async def on_message(message):
-    pass
+@client.listen('on_message')
+async def get_messages(message):
+    if message.author != client.user:
+        words = message.content.split()
+        counter_list = markov_utils.markov_delay_handler('get')
+        if counter_list[0] == counter_list[1]:
+            new_sentence = markov_utils.generate_new_sentence
+            if new_sentence:
+                message.channel.send(markov_utils.generate_new_sentence())
+            markov_utils.markov_delay_handler('clear')
+        else:
+            markov_utils.message_words_to_db(words)
+            markov_utils.markov_delay_handler('update')
 
 
 client.run(TOKENS[int(SELECTED_BOT)])

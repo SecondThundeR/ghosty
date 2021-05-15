@@ -30,7 +30,7 @@ SELECTED_BOT = database.get_data(
     True,
     'SELECT current_selected_bot FROM variables'
 )
-DELAY_TIME = 5
+DELAY_TIME = 3
 client = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 
 
@@ -91,16 +91,10 @@ async def on_command_error(ctx, error):
         that isn't included in the handling
     """
     if isinstance(error, commands.CommandNotFound):
-        await ctx.reply('Данной команды не существует. '
-                        'Попробуйте ввести что-то другое!',
-                        delete_after=DELAY_TIME)
-        await asyncio.sleep(DELAY_TIME)
-        await ctx.message.delete()
+        pass
     elif isinstance(error, commands.PrivateMessageOnly):
         await ctx.reply('Данной команда доступна только в личных сообщениях.',
                         delete_after=DELAY_TIME)
-        await asyncio.sleep(DELAY_TIME)
-        await ctx.message.delete()
     else:
         raise error
 
@@ -130,6 +124,11 @@ async def on_member_leave(member):
         member (discord.member.Member): Data about left user
     """
     users.rem_member_from_db(member)
+
+
+@client.event
+async def on_message(message):
+    pass
 
 
 client.run(TOKENS[int(SELECTED_BOT)])

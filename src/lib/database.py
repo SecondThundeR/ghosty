@@ -143,7 +143,7 @@ def get_data(table_name, is_single, command, *data):
             database.cur.execute(command)
         else:
             database.cur.execute(command, data)
-        received_data = database.cur.fetchall()
+        received_data = database.cur.fetchall()[0]
         database.disconnect_db()
         if is_single:
             if not received_data:

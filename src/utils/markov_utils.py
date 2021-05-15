@@ -42,18 +42,20 @@ def markov_delay_handler(mode):
     if mode == 'get':
         return [current_delay, msg_counter]
     if mode == 'update':
-        return database.modify_data(
+        database.modify_data(
             'mainDB',
             "UPDATE variables SET msg_counter = ?",
             msg_counter + 1
         )
+        return None
     if mode == 'clear':
-        return database.modify_data(
+        database.modify_data(
             'mainDB',
             "UPDATE variables SET markov_delay = ?, msg_counter = ?",
             random.randint(35, 75),
             0
         )
+        return None
 
 
 def generate_new_sentence():

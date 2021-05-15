@@ -134,7 +134,7 @@ async def get_messages(message):
         counter_list = markov_utils.markov_delay_handler('get')
         if counter_list[0] == counter_list[1]:
             new_sentence = markov_utils.generate_new_sentence
-            if new_sentence:
+            if new_sentence not in [False, None]:
                 message.channel.send(markov_utils.generate_new_sentence())
             markov_utils.markov_delay_handler('clear')
         else:

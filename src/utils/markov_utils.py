@@ -42,13 +42,13 @@ def markov_delay_handler(mode):
     if mode == 'get':
         return [current_delay, msg_counter]
     if mode == 'update':
-        database.modify_data(
+        return database.modify_data(
             'mainDB',
             "UPDATE variables SET msg_counter = ?",
             msg_counter + 1
         )
     if mode == 'clear':
-        database.modify_data(
+        return database.modify_data(
             'mainDB',
             "UPDATE variables SET markov_delay = ?, msg_counter = ?",
             random.randint(35, 75),
@@ -78,8 +78,8 @@ def generate_new_sentence():
         chain = [first_word]
         n_words = random.randint(20, 80)
         first_word = random.choice(database_words)
-        
-        for i in range(n_words):
+
+        for _ in range(n_words):
             try:
                 chain.append(random.choice(word_dict[chain[-1]]))
             except KeyError:

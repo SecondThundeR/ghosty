@@ -143,18 +143,17 @@ def get_data(table_name, is_single, command, *data):
             database.cur.execute(command)
         else:
             database.cur.execute(command, data)
-        received_data = database.cur.fetchall()[0]
+        received_data = database.cur.fetchall()
+        if not received_data:
+            return None
+        converted_data = [item for t in received_data for item in t]
         database.disconnect_db()
         if is_single:
-            if not received_data:
+            if not converted_data:
                 return None
-            return received_data[0]
-        for element in received_data:
-            if len(element) > 1:
-                for item in element:
-                    data_arr.append(item)
-            else:
-                data_arr.append(element[0])
+            return converted_data[0]
+        for element in converted_data:
+            data_arr.append(element)
         return data_arr
     except sqlite3.Error as err:
         print('\nThere is an error while working with DB '

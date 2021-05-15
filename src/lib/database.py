@@ -39,11 +39,6 @@ class Database:
         Parameters:
             db_name (str): Name of selected database
         """
-        self.db_path = [
-            './src/db/mainDB.db',
-            './src/db/confDB.db',
-            './src/db/wordsDB.db'
-        ]
         self.conn = None
         self.cur = None
         self.connect_db(db_name)
@@ -126,11 +121,11 @@ def reset_bot_tables():
     )
 
 
-def get_data(path_num, is_single, command, *data):
+def get_data(table_name, is_single, command, *data):
     """Retrieve data from a database and return it as an array.
 
     Args:
-        path_num (int): Number of path in path list
+        table_name (str): Name of table to get data from
         is_single (bool): Boolean for getting data w/o array
         command (str): Command to execute
         data (tuple): Variable length list of data
@@ -143,7 +138,7 @@ def get_data(path_num, is_single, command, *data):
     """
     try:
         data_arr = []
-        database = Database(path_num)
+        database = Database(table_name)
         if not data:
             database.cur.execute(command)
         else:
@@ -168,11 +163,11 @@ def get_data(path_num, is_single, command, *data):
         sys.exit()
 
 
-def modify_data(path_num, command, *data):
+def modify_data(table_name, command, *data):
     """Modify data in the DB.
 
     Parameters:
-        path_num (int): Number of path in path list
+        table_name (str): Name of table to modify data
         command (str): Command to execute
         data (tuple): List of data
 
@@ -180,7 +175,7 @@ def modify_data(path_num, command, *data):
         Exception: Returns info about error
     """
     try:
-        database = Database(path_num)
+        database = Database(table_name)
         if len(data) > 0:
             database.cur.execute(command, data)
         else:

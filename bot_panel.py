@@ -48,8 +48,12 @@ def bot_menu():
             elif menu_input == 0:
                 print('Hope you come back soon! See you later')
                 sys.exit()
+            else:
+                print('You have chosen wrong option, please try again')
+                time.sleep(0.5)
+                panel_scripts.clear_console()
         else:
-            print('\nYou have chosen something wrong, please try again')
+            print('You have passed something wrong, please try again')
             time.sleep(0.5)
             panel_scripts.clear_console()
 

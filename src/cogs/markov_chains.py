@@ -9,8 +9,8 @@ class MarkovCommand(commands.Cog):
         self.delay_time = 5
 
     @commands.command(aliases=['ген', 'марков'])
-    async def send_markov_sentence(self, ctx):
-        new_sentence = markov_utils.generate_new_sentence()
+    async def send_markov_sentence(self, ctx, number=None):
+        new_sentence = markov_utils.return_checked_sentence(number)
         if not new_sentence:
             await ctx.reply('Похоже, у меня недостаточно слов в базе данных :(',
                             delete_after=self.delay_time)

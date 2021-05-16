@@ -145,7 +145,7 @@ async def get_messages(message):
         if counter_list[0] == counter_list[1]:
             new_sentence = markov_utils.return_checked_sentence(None)
             if new_sentence:
-                message.channel.send(new_sentence)
+                await message.channel.send(new_sentence)
             markov_utils.markov_delay_handler('clear')
         else:
             markov_utils.message_words_to_db(words)

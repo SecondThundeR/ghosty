@@ -131,15 +131,9 @@ async def on_member_leave(member):
 async def get_messages(message):
     if not message.author.bot:
         message_body = message.content
-        if (message_body.startswith('<@')
-                or message_body.startswith('<:')
-                or message_body.startswith('.')
-                or message_body.startswith('!')
-                or message_body.startswith('-')
-                or message_body.startswith('/')):
-            return markov_utils.markov_delay_handler('update')
-        if '@everyone' in message_body or '@here' in message_body:
-            return markov_utils.markov_delay_handler('update')
+        msg_check = markov_utils.check_message_content(message_body)
+        if not msg_check:
+            return
         words = message_body.split()
         counter_list = markov_utils.markov_delay_handler('get')
         if counter_list[0] == counter_list[1]:

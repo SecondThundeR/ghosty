@@ -65,7 +65,7 @@ def make_pairs(words):
 
 
 def generate_sentence(data):
-    first_word = random.choice(data[0])
+    first_word = get_start_word(data[0])
     chain = [first_word]
     if len(data) == 3:
         n_words = data[2]
@@ -89,6 +89,13 @@ def generate_sentence(data):
             chain.append(random.choice(data[1][random_chain_key]))
             i += 1
     return chain
+
+
+def get_start_word(words):
+    first_word = random.choice(words)
+    while first_word.islower():
+        first_word = random.choice(words)
+    return first_word
 
 
 def return_checked_sentence(number):

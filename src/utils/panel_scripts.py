@@ -19,7 +19,8 @@ WIKI_LINK = 'https://github.com/SecondThundeR/ghosty/' \
 
 def clear_console():
     """Check current system and clear console."""
-    subprocess.run(['cls'] if os.name == 'nt' else ['clear'], shell = True)
+    check_mode = ['cls'] if os.name == 'nt' else ['clear']
+    subprocess.check_call(check_mode)
 
 
 def get_user_input(text=None):

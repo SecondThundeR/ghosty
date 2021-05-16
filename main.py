@@ -130,12 +130,21 @@ async def on_member_leave(member):
 @client.listen('on_message')
 async def get_messages(message):
     if not message.author.bot:
-        words = message.content.split()
+        message_body = message.content
+        if (message_body.startswith('<@')
+            or message_body.startswith('<:')
+            or message_body.startswith('.')
+            or message_body.startswith('!')
+            or message_body.startswith('-')):
+            return markov_utils.markov_delay_handler('update')
+        if '@everyone' in message_body or '@here' in message_body:
+            return markov_utils.markov_delay_handler('update')
+        words = message_body.split()
         counter_list = markov_utils.markov_delay_handler('get')
         if counter_list[0] == counter_list[1]:
-            new_sentence = markov_utils.generate_new_sentence
-            if new_sentence not in [False, None]:
-                message.channel.send(markov_utils.generate_new_sentence())
+            new_sentence = markov_utils.return_checked_sentence(None)
+            if new_sentence:
+                message.channel.send(new_sentence)
             markov_utils.markov_delay_handler('clear')
         else:
             markov_utils.message_words_to_db(words)

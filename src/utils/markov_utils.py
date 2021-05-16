@@ -10,6 +10,7 @@ def message_words_to_db(words):
             word
         )
 
+
 def markov_delay_handler(mode):
     current_delay = database.get_data(
         'mainDB',
@@ -36,6 +37,7 @@ def markov_delay_handler(mode):
         )
     elif mode == 'get':
         return [current_delay, msg_counter]
+    return None
 
 
 def prepare_markov_chains():

@@ -17,12 +17,6 @@ WIKI_LINK = 'https://github.com/SecondThundeR/ghosty/' \
             'wiki/FAQ#getting-a-bot-token'
 
 
-def clear_console():
-    """Check current system and clear console."""
-    check_mode = ['cls'] if os.name == 'nt' else ['clear']
-    subprocess.check_call(check_mode)
-
-
 def get_user_input(text=None):
     """Process input from user.
 
@@ -312,11 +306,9 @@ def manage_bot_settings():
         menu_select = int(get_user_input())
         if menu_select == 1:
             change_bot_name(bot_name)
-            clear_console()
             break
         if menu_select == 2:
             change_bot_token(bot_name)
-            clear_console()
             break
         if menu_select == 0:
             break

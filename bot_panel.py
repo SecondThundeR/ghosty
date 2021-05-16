@@ -51,11 +51,9 @@ def bot_menu():
             else:
                 print('You have chosen wrong option, please try again')
                 time.sleep(0.5)
-                panel_scripts.clear_console()
         else:
             print('You have passed something wrong, please try again')
             time.sleep(0.5)
-            panel_scripts.clear_console()
 
 
 def bot_panel_init():

@@ -3,7 +3,9 @@ import re
 import src.lib.database as database
 
 
-REGEX_RULE = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+REGEX_RULE = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)" \
+             r"(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+" \
+             r"|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
 
 
 def message_words_to_db(words):
@@ -16,7 +18,7 @@ def message_words_to_db(words):
 
 
 def check_message_content(message_content):
-    check = None
+    check = True
     if (message_content.startswith('<@')
             or message_content.startswith('<:')
             or message_content.startswith('.')
@@ -30,10 +32,8 @@ def check_message_content(message_content):
         check = False
     if not check:
         markov_delay_handler('update')
-        return check
     return check
 
-    
 
 def markov_delay_handler(mode):
     current_delay = database.get_data(

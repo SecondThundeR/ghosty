@@ -129,7 +129,7 @@ async def on_member_leave(member):
 
 @client.listen('on_message')
 async def get_messages(message):
-    if message.author != client.user:
+    if not message.author.bot:
         words = message.content.split()
         counter_list = markov_utils.markov_delay_handler('get')
         if counter_list[0] == counter_list[1]:

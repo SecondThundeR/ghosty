@@ -135,7 +135,8 @@ async def get_messages(message):
                 or message_body.startswith('<:')
                 or message_body.startswith('.')
                 or message_body.startswith('!')
-                or message_body.startswith('-')):
+                or message_body.startswith('-')
+                or message_body.startswith('/')):
             return markov_utils.markov_delay_handler('update')
         if '@everyone' in message_body or '@here' in message_body:
             return markov_utils.markov_delay_handler('update')

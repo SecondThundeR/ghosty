@@ -1,9 +1,3 @@
-"""
-This code was taken from https://habr.com/ru/post/510798/
-Very glad to see such articles on Habr!
-"""
-
-
 import asyncio
 import src.utils.markov_utils as markov_utils
 from discord.ext import commands

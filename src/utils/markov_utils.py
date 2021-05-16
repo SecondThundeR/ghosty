@@ -54,6 +54,10 @@ def markov_delay_handler(mode):
 
 
 def generate_new_sentence():
+    """
+    This code was taken from https://habr.com/ru/post/510798/
+    Very glad to see such articles on Habr!
+    """
     word_dict = {}
     database_words = database.get_data(
         'wordsDB',

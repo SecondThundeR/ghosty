@@ -17,7 +17,8 @@ def check_word(word):
     if (word.startswith('<@')
             or word.startswith('<:')
             or word.startswith('.')
-            or word.startswith('!')):
+            or word.startswith('!')
+            or word.startswith('-')):
         return None
     if '@everyone' in word or '@here' in word:
         return None

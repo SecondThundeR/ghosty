@@ -6,6 +6,7 @@ import src.lib.database as database
 REGEX_RULE = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)" \
              r"(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+" \
              r"|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+PREFIXES = ['<@', '<:', '.', '!', '-', '/', '`']
 
 
 def message_words_to_db(words):
@@ -19,12 +20,7 @@ def message_words_to_db(words):
 
 def check_message_content(message_content):
     check = True
-    if (message_content.startswith('<@')
-            or message_content.startswith('<:')
-            or message_content.startswith('.')
-            or message_content.startswith('!')
-            or message_content.startswith('-')
-            or message_content.startswith('/')):
+    if message_content.startswith(tuple(PREFIXES)):
         check = False
     if '@everyone' in message_content or '@here' in message_content:
         check = False

@@ -93,7 +93,7 @@ class UserChecker(commands.Cog):
             user = user.mention
         if isinstance(percent_data, list):
             percent_list = percent_data[0]
-            avg_num = float(percent_data[1], 2)
+            avg_num = round(float(percent_data[1]), 2)
             msg = f'Журнал тестирования {user}\n\n'
             for i, perc in enumerate(percent_list):
                 if len(msg) > 2000:

@@ -1,5 +1,6 @@
-import random
 import re
+import emoji
+import random
 import src.lib.database as database
 
 
@@ -21,6 +22,8 @@ def message_words_to_db(words):
 def check_message_content(message_content):
     check = True
     if message_content.startswith(tuple(PREFIXES)):
+        check = False
+    if emoji.emoji_count(message_content) > 0:
         check = False
     if '@everyone' in message_content or '@here' in message_content:
         check = False

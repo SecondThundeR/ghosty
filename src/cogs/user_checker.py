@@ -97,8 +97,7 @@ class UserChecker(commands.Cog):
             msg = f'Журнал тестирования {user}\n\n'
             for i, perc in enumerate(percent_list):
                 if len(msg) > 2000:
-                    msg = warn_msg
-                    break
+                    return warn_msg
                 if perc == 0:
                     msg += f'*Тест {i + 1}.* **{user_name}** сегодня не {text} :c\n'
                 elif perc == 100:

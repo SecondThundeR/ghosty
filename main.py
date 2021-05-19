@@ -45,7 +45,7 @@ async def update_avatar():
     """
     avatar_data = avatar_changer.get_avatar_bytes()
     if not isinstance(avatar_data, int):
-        await client.user.edit(avatar=avatar_data)        
+        await client.user.edit(avatar=avatar_data)
 
 
 @client.event
@@ -131,7 +131,7 @@ async def get_messages(message):
     """Listener for regular messages (Non-commands).
 
     This function is used to receive all regular messages used for Markov chains.
-    
+
     Args:
         message (discord.message.Message): User message to perform required functions
     """

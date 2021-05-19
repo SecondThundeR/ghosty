@@ -70,7 +70,7 @@ def markov_delay_handler(mode):
     - Get: Return delay and message counter
 
     If wrong mode provided or it isn't a 'get' mode, returns None
-    
+
     Args:
         mode (str): Mode of delay handler
 
@@ -108,7 +108,7 @@ def markov_delay_handler(mode):
 
 def prepare_markov_chains():
     """Prepare list of words and make dictionary.
-    
+
     This function gets current list of words and make pairs and chains
     to work with
 
@@ -156,10 +156,10 @@ def generate_sentence(data):
 
     **Note!** Current implementation is buggy and
     will be changed in future
-    
+
     Args:
         data (list): List of data to work with
-    
+
     Returns:
         chain (list): Generated sentence
         None: If generation failed
@@ -201,7 +201,7 @@ def get_start_word(words):
 
     Args:
         words (list): List of words
-    
+
     Returns:
         str: Randomly chosen word to start with
     """
@@ -220,7 +220,7 @@ def return_checked_sentence(number):
 
     This function gets all needed data and return joined
     sentence from chains list
-    
+
     Also, this function can get user's number of size to
     generate. By default, function generates sentence with size
     between 30 and 80 words

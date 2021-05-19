@@ -44,10 +44,8 @@ async def update_avatar():
     which helps prevent getting a cooldown from the Discord API.
     """
     avatar_data = avatar_changer.get_avatar_bytes()
-    if isinstance(avatar_data, int):
-        pass
-    else:
-        await client.user.edit(avatar=avatar_data)
+    if not isinstance(avatar_data, int):
+        await client.user.edit(avatar=avatar_data)        
 
 
 @client.event
@@ -55,8 +53,11 @@ async def on_ready():
     """Execute necessary functions.
 
     This function executes certain actions on bot's load, such as:
-    Resetting DB table, loading commands, updating table with users,
-    changing bot's status, changing bot's avatar, setting up new bot's uptime
+        - Resetting DB table and delay of randomly generated Markov message
+        - Loading commands
+        - Updating table with users
+        - Changing bot's status and avatar
+        - Setting up new bot's uptime
     """
     database.clear_tables()
     markov_utils.markov_delay_handler('clear')
@@ -64,9 +65,7 @@ async def on_ready():
     await general_scripts.update_member_list(client)
     await client.change_presence(status=discord.Status.dnd)
     avatar_data = avatar_changer.get_avatar_bytes()
-    if isinstance(avatar_data, int):
-        pass
-    else:
+    if not isinstance(avatar_data, int):
         await client.user.edit(avatar=avatar_data)
     database.modify_data(
         'mainDB',
@@ -129,6 +128,13 @@ async def on_member_leave(member):
 
 @client.listen('on_message')
 async def get_messages(message):
+    """Listener for regular messages (Non-commands).
+
+    This function is used to receive all regular messages used for Markov chains.
+    
+    Args:
+        message (discord.message.Message): User message to perform required functions
+    """
     if not message.author.bot:
         message_body = message.content
         msg_check = markov_utils.check_message_content(message_body)

@@ -115,8 +115,12 @@ def generate_sentence(data):
 
 
 def get_start_word(words):
+    failed_attempts = 0
     first_word = random.choice(words)
     while first_word.islower():
+        failed_attempts += 1
+        if failed_attempts > 10:
+            break
         first_word = random.choice(words)
     return first_word
 

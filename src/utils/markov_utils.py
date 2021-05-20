@@ -99,7 +99,7 @@ def markov_delay_handler(mode):
             'mainDB',
             "UPDATE variables SET markov_delay = ?, msg_counter = ?",
             random.randint(20, 45),
-            0
+            1
         )
     elif mode == 'get':
         return [current_delay, msg_counter]

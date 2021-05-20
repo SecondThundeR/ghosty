@@ -98,7 +98,7 @@ def markov_delay_handler(mode):
         database.modify_data(
             'mainDB',
             "UPDATE variables SET markov_delay = ?, msg_counter = ?",
-            random.randint(20, 45),
+            random.randint(60, 120),
             1
         )
     elif mode == 'get':

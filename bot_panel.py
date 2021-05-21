@@ -42,7 +42,7 @@ def bot_menu():
             elif menu_input == 4:
                 panel_scripts.select_bot_config()
             elif menu_input == 5:
-                panel_scripts.manage_words_base()
+                panel_scripts.words_table_manager()
             elif menu_input == 6:
                 panel_scripts.change_setup_status()
             elif menu_input == 0:

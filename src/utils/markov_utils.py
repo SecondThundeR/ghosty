@@ -1,3 +1,20 @@
+"""Utils for Markov chains (Beta).
+
+This utils contains all needed functions to handle
+operations with Markov chains generation and database things
+
+This file can also be imported as a module and contains the following functions:
+    * message_words_to_db - adds words from messages to database
+    * check_message_content - checks message for correct content
+    * markov_delay_handler - manages autogeneration delay of Markov chains
+    * prepare_chains_data - prepares needed data for Markov chains generation
+    * make_pairs - makes pairs of words from words list
+    * get_start_word - gets start word for Markov chains sentence
+    * generate_sentence - generates new Markov chains sentence
+    * return_checked_sentence - gets generated data and joins to string
+"""
+
+
 import re
 import emoji
 import random
@@ -106,7 +123,7 @@ def markov_delay_handler(mode):
     return None
 
 
-def prepare_markov_chains():
+def prepare_chains_data():
     """Prepare list of words and make dictionary.
 
     This function gets current list of words and make pairs and chains
@@ -146,6 +163,31 @@ def make_pairs(words):
     """
     for i in range(len(words) - 1):
         yield (words[i], words[i + 1])
+
+
+def get_start_word(words):
+    """Get word to start with.
+
+    **Note!** Because there is a chance that
+    function cannot find any non-lowercase word,
+    counter for failed attempts was introduces to break loop
+    and return any randomly chosen word
+    (Current limit of counter - 10 failed attempts)
+
+    Args:
+        words (list): List of words
+
+    Returns:
+        str: Randomly chosen word to start with
+    """
+    failed_attempts = 0
+    first_word = random.choice(words)
+    while first_word.islower():
+        failed_attempts += 1
+        if failed_attempts >= 10:
+            break
+        first_word = random.choice(words)
+    return first_word
 
 
 def generate_sentence(data):
@@ -190,31 +232,6 @@ def generate_sentence(data):
     return chain
 
 
-def get_start_word(words):
-    """Get word to start with.
-
-    **Note!** Because there is a chance that
-    function cannot find any non-lowercase word,
-    counter for failed attempts was introduces to break loop
-    and return any randomly chosen word
-    (Current limit of counter - 10 failed attempts)
-
-    Args:
-        words (list): List of words
-
-    Returns:
-        str: Randomly chosen word to start with
-    """
-    failed_attempts = 0
-    first_word = random.choice(words)
-    while first_word.islower():
-        failed_attempts += 1
-        if failed_attempts >= 10:
-            break
-        first_word = random.choice(words)
-    return first_word
-
-
 def return_checked_sentence(number):
     """Execute all functions to generate new sentence.
 
@@ -233,7 +250,7 @@ def return_checked_sentence(number):
     Returns:
         str: Joined sentence from chains list
     """
-    data = prepare_markov_chains()
+    data = prepare_chains_data()
     if isinstance(data, bool):
         return data
     if number and number.isnumeric():

@@ -1,5 +1,28 @@
-import os
+"""Scripts for bot_panel.py.
+
+There are all utils for working with bot_panel.py
+For now, all internal logic of configuring bot is handled here
+
+This file can also be imported as a module and contains the following functions:
+    * get_user_input - handles user input in console
+    * installed_modules_checker - checks and installs missing modules
+    * change_setup_status - changes status of setup
+    * import_dev_words - clears and imports dev's word base
+    * clear_db_tables - clears words tables in database
+    * words_table_manager - manages words table
+    * is_bot_in_database - checks if bot in database
+    * add_bot_config - adds new bot config to database
+    * remove_bot_config - removes current bot config from database
+    * manage_bot_settings - manages selected bot config
+    * change_bot_name - changes selected bot name
+    * change_bot_token - changes selected bot token
+    * select_bot_config - selects bot to run
+    * bot_setup - runs setup phases for bot
+"""
+
+
 import sys
+import time
 import pkg_resources
 import subprocess
 import src.lib.database as database
@@ -24,7 +47,8 @@ def get_user_input(text=None):
     This was done due to the strange behavior of KeyboardInterrupt on Windows.
 
     Args:
-        text (str): Text to print before input
+        text (str | None): Text to print before input
+        If nothing was provided, skips printing text
 
     Returns:
         str: User's input if all conditions were met
@@ -50,19 +74,6 @@ def get_user_input(text=None):
               'please try again')
 
 
-def bot_setup():
-    """Bot setup, initial phase.
-
-    This function launches 4 main functions: check for installed modules,
-    addition of bot to database, managing of words base
-    and changing setup status to 1 after successful completion
-    """
-    installed_modules_checker()
-    add_bot_config()
-    words_table_manager()
-    change_setup_status()
-
-
 def installed_modules_checker():
     """Check for currently installed modules and install missing ones.
 
@@ -72,7 +83,6 @@ def installed_modules_checker():
     by running the installation of requirements.txt
     """
     modules_counter = 0
-    print("\nChecking for installed modules...")
     pip_version = pkg_resources.get_distribution("pip").version
     packages = list(pkg_resources.working_set)
     for package in packages:
@@ -106,7 +116,6 @@ def installed_modules_checker():
                       'read blockquote under `How to use this bot` in the README')
                 break
             print('You have chosen something wrong, please try again\n')
-    print("All needed modules are present! Continuing setup...")
 
 
 def change_setup_status():
@@ -136,12 +145,14 @@ def change_setup_status():
     sys.exit()
 
 
-def import_dev_base_option():
-    print(
-        '\nClearing database and importing '
-        'latest master word base...'
-    )
-    words_base.clear_words_table()
+def import_dev_words():
+    """Import developer's word base.
+
+    This function handles clearing database and
+    importing latest developer's word base from GitHub
+    """
+    clear_db_tables()
+    print('Importing latest master word base...')
     if not words_base.restore_dev_base():
         raise WordsImportError(
             'Words has been imported with failure.\n'
@@ -151,10 +162,11 @@ def import_dev_base_option():
     print('The word base was imported successfully\n')
 
 
-def clear_database_option():
+def clear_db_tables():
+    """Clear words tables in database."""
     print('\nClearing database...')
     words_base.clear_words_table()
-    print('\nDatabase cleared successfully\n')
+    print('Database cleared successfully\n')
 
 
 def words_table_manager():
@@ -176,9 +188,9 @@ def words_table_manager():
             'or will use it from scratch? (y/N): '
         )
         if inputs[0].lower() == 'y':
-            import_dev_base_option()
+            import_dev_words()
         elif inputs[0].lower() in ['', 'n']:
-            clear_database_option()
+            clear_db_tables()
         else:
             print('\nIt looks like you entered something wrong, '
                   'please try again')
@@ -192,11 +204,16 @@ def words_table_manager():
             if inputs[1].isnumeric():
                 inputs[1] = int(inputs[1])
                 if inputs[1] == 1:
-                    import_dev_base_option()
+                    import_dev_words()
+                    time.sleep(0.5)
+                    break
                 elif inputs[1] == 2:
-                    clear_database_option()
+                    clear_db_tables()
+                    time.sleep(0.5)
+                    break 
                 elif inputs[1] == 0:
-                    return
+                    print('')
+                    break
             print('\nIt looks like you entered something wrong, '
                   'please try again')
 
@@ -250,7 +267,7 @@ def add_bot_config():
         if database.get_data(
             'confDB',
             True,
-            'SELECT bot_name FROM tokens',
+            'SELECT * FROM tokens WHERE bot_name = ?',
             bot_name
         ):
             print('A bot with the same name is already in the database!'
@@ -272,6 +289,7 @@ def add_bot_config():
     print(f'\nGreat, I added bot "{bot_name}" to the database!')
     if current_status:
         print('')
+    time.sleep(0.5)
 
 
 def remove_bot_config():
@@ -280,14 +298,37 @@ def remove_bot_config():
     This function handles bot removal from database and that's it.
     (Did you expect to see rocket launch codes here?)
     """
-    bot_name = is_bot_in_database()
-    database.modify_data(
+    bots_in_db = database.get_data(
         'confDB',
-        'DELETE FROM tokens WHERE bot_name = ?',
-        bot_name
+        False,
+        'SELECT bot_name FROM tokens'
     )
-    print(f'\nBot "{bot_name}" has been found and deleted from the database!\n')
-    # panel.bot_menu()
+    if not bots_in_db:
+        print("\nThere are no bots in database...\n")
+        time.sleep(0.5)
+        return
+    if len(bots_in_db) == 1:
+        print(
+            "\nThere is one bot in database.\n"
+            "Are you sure you want to remove last bot there? (y/N)"
+        )
+        while True:
+            confirmation = get_user_input().lower()
+            if confirmation in ['', 'n', 'y']:
+                break
+            print('You have chosen something wrong, please try again\n')
+    if confirmation == 'y':
+        if not (bot_name := is_bot_in_database()):
+            return
+        database.modify_data(
+            'confDB',
+            'DELETE FROM tokens WHERE bot_name = ?',
+            bot_name
+        )
+        print(f'\nBot "{bot_name}" has been found and deleted from the database!\n')
+    else:
+        print("\nSkipping deleting bot from database...\n")
+    time.sleep(0.5)
 
 
 def manage_bot_settings():
@@ -296,6 +337,15 @@ def manage_bot_settings():
     This function allows you to change the internal name
     of the bot in the database, as well as its token
     """
+    bots_in_db = database.get_data(
+        'confDB',
+        False,
+        'SELECT bot_name FROM tokens'
+    )
+    if bots_in_db == None:
+        print("\nThere are no bots in database...\n")
+        time.sleep(0.5)
+        return
     if not (bot_name := is_bot_in_database()):
         return
     print(f'\nOptions with "{bot_name}":'
@@ -311,14 +361,16 @@ def manage_bot_settings():
             change_bot_token(bot_name)
             break
         if menu_select == 0:
+            print('')
             break
         print('You have chosen something wrong, please try again')
+    time.sleep(0.5)
 
 
 def change_bot_name(bot_name):
     """Handle name changing of bot.
 
-    Parameters:
+    Args:
         bot_name (str): Current name of bot
     """
     new_bot_name = get_user_input('\nEnter new bot\'s name:')
@@ -335,13 +387,12 @@ def change_bot_name(bot_name):
         bot_info[1]
     )
     print(f'\nGreat, I changed name from "{bot_name}" to "{new_bot_name}"\n')
-    # panel.bot_menu()
 
 
 def change_bot_token(bot_name):
     """Handle token changing of bot.
 
-    Parameters:
+    Args:
         bot_name (str): Name of bot to modify
     """
     print('\nEnter new bot\'s token:')
@@ -359,7 +410,6 @@ def change_bot_token(bot_name):
         new_bot_token
     )
     print(f'\nGreat, I changed token of "{bot_name}" to a new one!\n')
-    # panel.bot_menu()
 
 
 def select_bot_config():
@@ -381,11 +431,9 @@ def select_bot_config():
     bots_count = 0
     if not list_of_bots:
         print('\nIt looks like there are no bots in my list, try adding a new one\n')
-        # panel.bot_menu()
     elif len(list_of_bots) == 1:
         print('\nSince you haven\'t added any more bots, '
               f'your only active bot is "{list_of_bots[curr_selected_bot]}"\n')
-        # panel.bot_menu()
     else:
         print('\nAt the moment, the selected bot is '
               f'"{list_of_bots[curr_selected_bot]}"')
@@ -395,25 +443,39 @@ def select_bot_config():
             print(f'{bots_count}. {bot_name}')
         print('0. Exit')
         while True:
-            select_bot = get_user_input('Enter the number of option:')
+            select_bot = get_user_input('\nEnter the number of option:')
             if select_bot == '0':
-                print('Exiting to main menu\n')
-                # panel.bot_menu()
+                print('\nExiting to main menu\n')
+                break
             else:
                 try:
                     index_of_bot = int(select_bot) - 1
                     selected_bot = list_of_bots[index_of_bot]
                     if index_of_bot in range(len(list_of_bots)):
-                        print('Great choice! '
-                              f'Selecting {selected_bot} as default...\n')
+                        print('\nGreat choice! '
+                              f'Selecting "{selected_bot}" as default...\n')
                         database.modify_data(
                             'mainDB',
                             'UPDATE variables SET current_selected_bot = ?',
                             index_of_bot
                         )
-                        # panel.bot_menu()
+                        break
                     else:
                         print('Invalid number of option. Please, try again')
                 except ValueError:
                     print('\nIt looks like you entered not a number. '
                           'Please, try again')
+    time.sleep(0.5)
+
+
+def bot_setup():
+    """Bot setup, initial phase.
+
+    This function launches 4 main functions: check for installed modules,
+    addition of bot to database, managing of words base
+    and changing setup status to 1 after successful completion
+    """
+    installed_modules_checker()
+    add_bot_config()
+    words_table_manager()
+    change_setup_status()

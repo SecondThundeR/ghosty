@@ -21,7 +21,7 @@ class ManageIgnoreList(commands.Cog):
         This function handles user checking and executing addition/deletion
         of user's ID to/from ignore list
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): List with selected mode and user's ID
         """
@@ -36,7 +36,7 @@ class ManageIgnoreList(commands.Cog):
 
         This function handles addition of user's ID to ignore list
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             user_id (str): User's ID to ban
         """
@@ -58,7 +58,7 @@ class ManageIgnoreList(commands.Cog):
 
         This function handles removal of user's ID from ignore list
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             user_id (str): User's ID to unban
         """

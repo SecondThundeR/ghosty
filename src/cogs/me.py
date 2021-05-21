@@ -16,7 +16,7 @@ class MeMessage(commands.Cog):
     async def send_me_message(self, ctx, *args):
         """Send a user message on behalf of a bot.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): Arguments to work with (Mode + Message)
         """

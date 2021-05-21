@@ -32,7 +32,7 @@ class RussianRoulette(commands.Cog):
         This function handles all russian roulette logic.
         Also, it has certain checks for any non-standard situation
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): List of arguments (Bullet count number)
         """
@@ -126,7 +126,7 @@ class RussianRoulette(commands.Cog):
         This function handles getting random word from DB
         depending on condition of game
 
-        Parameters:
+        Args:
             condition (str): Condition of game when executed
 
         Returns:

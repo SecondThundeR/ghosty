@@ -40,7 +40,7 @@ class RandomShip(commands.Cog):
         This function chooses another function to run, when
         certain statement is true
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): List of arguments
         """
@@ -70,7 +70,7 @@ class RandomShip(commands.Cog):
         This function gets username if user provided mention of someone,
         otherwise return argument without changes
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             user (str): Custom names for shipping
 
@@ -93,7 +93,7 @@ class RandomShip(commands.Cog):
         This function resets results of shipping to allow user execute
         new ship function
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
         """
         database.modify_data(
@@ -117,7 +117,7 @@ class RandomShip(commands.Cog):
         This function runs ship with two custom names from arguments,
         rather ship with random users
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             args (list): List of arguments (Custom names for ship)
         """
@@ -156,7 +156,7 @@ class RandomShip(commands.Cog):
         This function runs ship with random users,
         rather shipping two custom names from arguments
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
         """
         current_date = dt.datetime.now().date()
@@ -275,7 +275,7 @@ class RandomShip(commands.Cog):
         This function ships three pre-messages and final message with
         result of shipping
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             short_text (str): Ship's short text
         """

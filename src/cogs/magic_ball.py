@@ -28,7 +28,7 @@ class MagicBall(commands.Cog):
     async def ask_magic_ball(self, ctx, text=None):
         """Get random answer from list and send it.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             text (str | None): Question from user to answer
             (Used only to check for existence)

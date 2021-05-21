@@ -24,7 +24,7 @@ class SystemInfo(commands.Cog):
     async def send_system_info(self, ctx, mode=None):
         """Get system info and send it.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             mode (str | None): Mode of sended system info
         """

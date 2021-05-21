@@ -23,7 +23,7 @@ class RandomWord(commands.Cog):
     async def get_random_word(self, ctx, *args):
         """Get random word from list and send it.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): List of arguments (Custom name or mode of function)
         """

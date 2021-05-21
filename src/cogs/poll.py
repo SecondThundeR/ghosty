@@ -22,7 +22,7 @@ class Poll(commands.Cog):
     async def create_poll(self, ctx, *args):
         """Create poll and send message with it.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): List of arguments to work with
         """

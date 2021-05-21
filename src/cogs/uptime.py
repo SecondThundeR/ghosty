@@ -21,7 +21,7 @@ class Uptime(commands.Cog):
     async def send_uptime(self, ctx):
         """Calculate and send current uptime of bot.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
         """
         curr_uptime = int(time.time()) - database.get_data(

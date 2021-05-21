@@ -21,7 +21,7 @@ class AvatarSwitcher(commands.Cog):
     async def avatar_switch(self, ctx):
         """Change avatar of bot via command.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
         """
         avatar_data = avatar_changer.get_avatar_bytes()

@@ -10,7 +10,7 @@ This file can also be imported as a module and contains the following functions:
 def format_timedelta(td):
     """Format timedelta to hours:minutes:seconds.
 
-    Parameters:
+    Args:
         td (datetime.timedelta): Seconds in timedelta format
 
     Returns:

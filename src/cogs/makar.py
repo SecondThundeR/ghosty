@@ -20,7 +20,7 @@ class DedMakar(commands.Cog):
     async def send_makar_message(self, ctx, *, arg=None):
         """Send famous (maybe) sentence.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             arg (str | None): String with custom name or user mention
         """

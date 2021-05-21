@@ -21,7 +21,7 @@ import shutil
 def import_data(path):
     """Import data from local file and returning as variable.
 
-    Parameters:
+    Args:
         path (str): Path to local file
 
     Returns:
@@ -36,7 +36,7 @@ def import_data(path):
 def is_exist(path):
     """Check for the presence of a file or folder at the specified path.
 
-    Parameters:
+    Args:
         path (str): Path to local file or folder
 
     Returns:
@@ -48,7 +48,7 @@ def is_exist(path):
 def folder_status(path):
     """Check if folder is empty or not.
 
-    Parameters:
+    Args:
         path (str): Path to local folder
 
     Returns:
@@ -64,7 +64,7 @@ def folder_status(path):
 def create_folder(path):
     """Create folder at the specified path.
 
-    Parameters:
+    Args:
         path (str): Path to local folder
     """
     try:
@@ -80,7 +80,7 @@ def delete_file(path):
 
     If file exists, removes it. Otherwise do nothing
 
-    Parameters:
+    Args:
         path (str): Path to local file
     """
     if is_exist(path):
@@ -90,7 +90,7 @@ def delete_file(path):
 def delete_folder(path):
     """Delete folder at the specified path.
 
-    Parameters:
+    Args:
         path (str): Path to local folder
     """
     try:

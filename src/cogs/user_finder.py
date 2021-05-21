@@ -19,7 +19,7 @@ class UserFinder(commands.Cog):
     async def user_finder_hub(self, ctx, *, args):
         """Execute required finder mode depending on arguments.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): Arguments (Words) for user finder
         """
@@ -31,7 +31,7 @@ class UserFinder(commands.Cog):
     async def user_finder_execute(self, ctx, word):
         """Get random user and launch 'finder' of *any word*.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             word (str): Passed word to test out
         """

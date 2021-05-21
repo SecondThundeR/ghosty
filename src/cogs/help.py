@@ -40,7 +40,7 @@ class HelpMessage(commands.Cog):
     async def send_help_message(self, ctx):
         """Send message with all available commands of bot.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
         """
         if isinstance(ctx.channel, discord.channel.DMChannel):

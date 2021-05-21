@@ -22,7 +22,7 @@ from src.lib.exceptions import UsersNotFound
 async def get_random_user(msg):
     """Get a random user from an list and return it's info.
 
-    Parameters:
+    Args:
         msg (discord.message.Message): Info about guild from message
 
     Returns:
@@ -47,7 +47,7 @@ async def get_random_user(msg):
 async def get_shipping_users(msg):
     """Get two random users from an list and return their info.
 
-    Parameters:
+    Args:
         msg (discord.message.Message): Info about guild from message
 
     Returns:
@@ -74,7 +74,7 @@ async def get_shipping_users(msg):
 def get_members_name(member):
     """Check if member has a nickname on server.
 
-    Parameters:
+    Args:
         member (discord.member.Member): Info about member of guild
 
     Returns:
@@ -91,7 +91,7 @@ def add_member_to_db(member):
     Used for adding members on startup or when member is getting
     on the server
 
-    Parameters:
+    Args:
         member (discord.member.Member): Info about member of guild
     """
     if member.bot:
@@ -116,7 +116,7 @@ def rem_member_from_db(member):
     **Noteworthy:** This makes sense until the bot reboots. In future there are plans
     for adding ignore list for shipping and other commands
 
-    Parameters:
+    Args:
         member (discord.member.Member): Info about member of guild
     """
     if member.bot:
@@ -135,7 +135,7 @@ def rem_member_from_db(member):
 def is_user_admin(user_id):
     """Check if user is an admin of bot.
 
-    Parameters:
+    Args:
         user_id (str): ID of user to check
 
     Returns:
@@ -153,7 +153,7 @@ def is_user_admin(user_id):
 def is_user_blocked(user_id):
     """Check if user is in blacklist of bot.
 
-    Parameters:
+    Args:
         user_id (str): ID of user to check
 
     Returns:

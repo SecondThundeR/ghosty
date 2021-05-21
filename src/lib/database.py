@@ -23,7 +23,7 @@ import sqlite3
 class Database:
     """A class to control database.
 
-    Parameters:
+    Args:
         path (str): Path to database
 
     Methods:
@@ -36,7 +36,7 @@ class Database:
 
         This function get path to DB and connect with it
 
-        Parameters:
+        Args:
             db_name (str): Name of selected database
         """
         self.conn = None
@@ -46,7 +46,7 @@ class Database:
     def connect_db(self, selected_db):
         """Make connection with local database.
 
-        Parameters:
+        Args:
             selected_db (str): Name of DB to connect to
         """
         self.conn = sqlite3.connect(
@@ -165,7 +165,7 @@ def get_data(table_name, is_single, command, *data):
 def modify_data(table_name, command, *data):
     """Modify data in the DB.
 
-    Parameters:
+    Args:
         table_name (str): Name of table to modify data
         command (str): Command to execute
         data (tuple): List of data

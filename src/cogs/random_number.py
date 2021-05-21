@@ -23,7 +23,7 @@ class RandomNumbers(commands.Cog):
     async def get_random_number(self, ctx, *args):
         """Get random number and send it.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): List of arguments (Range numbers)
         """

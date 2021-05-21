@@ -23,7 +23,7 @@ class ManageAdmins(commands.Cog):
         This function handles user checking and executing addition/deletion
         of user's ID to/from admin list
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): List with selected mode and user's ID
         """
@@ -38,7 +38,7 @@ class ManageAdmins(commands.Cog):
 
         This function handles addition of user's ID to admin list.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             user_id (str): User's ID to add as an admin
         """
@@ -62,7 +62,7 @@ class ManageAdmins(commands.Cog):
         it cancels the deletion, if the admin wants to delete himself,
         he is asked to confirm the action
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             user_id (str): User's ID to remove from admins
         """

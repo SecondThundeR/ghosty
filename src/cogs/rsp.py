@@ -29,7 +29,7 @@ class RSPGame(commands.Cog):
         If arguments aren't provided, executes multiplayer game.
         Otherwise, executes game with bot
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): List of arguments (RSP variants, if playing with bot)
         """
@@ -50,7 +50,7 @@ class RSPGame(commands.Cog):
     def join_check(ctx):
         """Check for correct command to join.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
 
         Returns:
@@ -63,7 +63,7 @@ class RSPGame(commands.Cog):
     def choice_check(self, ctx):
         """Check for correct answer from user.
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
 
         Returns:
@@ -76,7 +76,7 @@ class RSPGame(commands.Cog):
     async def purge_messages(self, messages):
         """Delete all messages, that can distract users in channel.
 
-        Parameters:
+        Args:
             message (list): List with messages to delete
         """
         for message in messages:
@@ -88,7 +88,7 @@ class RSPGame(commands.Cog):
         This function handles check for winner of RSP
         If no one wins, throw 'Draw'
 
-        Parameters:
+        Args:
             first_var (str): First player choice
             second_var (str): Second player choice
             first_user_id (int): First player ID to mention
@@ -120,7 +120,7 @@ class RSPGame(commands.Cog):
         This function executes random choice of bot and comparing it with
         players choice
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
             user_choice (str): Player's move variant
         """
@@ -145,7 +145,7 @@ class RSPGame(commands.Cog):
         **Noteworthy:** When game is live, lock other games to be played,
         while current game isn't finished
 
-        Parameters:
+        Args:
             ctx (commands.context.Context): Context object to execute functions
         """
         database.modify_data(

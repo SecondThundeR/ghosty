@@ -30,7 +30,7 @@ This is repository of some random bot for Discord which was created just for fun
 
 ## Discussions
 
-This project has a [Github Discussions](https://github.com/SecondThundeR/ghosty/discussions) turned on. Feel free to ask about this project or give new ideas etc.
+This project has a [GitHub Discussions](https://github.com/SecondThundeR/ghosty/discussions) turned on. Feel free to ask about this project or give new ideas etc.
 
 ## Changelog
 

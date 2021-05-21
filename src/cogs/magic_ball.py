@@ -44,7 +44,7 @@ class MagicBall(commands.Cog):
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
-            text (str | None): Question from user to answer
+            text (Union[str, None]): Question from user to answer
             (Used only to check for existence)
         """
         if not text:

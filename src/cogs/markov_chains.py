@@ -37,7 +37,7 @@ class MarkovCommand(commands.Cog):
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
-            number (str | None): Amount of words to generate
+            number (Union[str, None]): Amount of words to generate
         """
         new_sentence = markov_utils.return_checked_sentence(number)
         if not new_sentence:

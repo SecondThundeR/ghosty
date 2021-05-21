@@ -129,9 +129,10 @@ class UserChecker(commands.Cog):
         If message hits discord limit, breaks loop and returns warning message
 
         Args:
-            percent_data (int | list): Data of current user's test
+            percent_data (Union[int, list]): Data of current user's test
             text (str): Text of current user's test
-            user (discord.member.Member | str): Users data which is being "tested"
+            user (Union[discord.member.Member, str]):
+            Users data which is being "tested"
 
         Returns:
             str: Conclusion of user's test or warning message

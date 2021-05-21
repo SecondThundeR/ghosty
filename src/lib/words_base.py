@@ -52,7 +52,7 @@ def manage_words_table(word, mode=None):
 
     Args:
         word (str): Word to add or remove
-        mode (str | None): Mode of action (addition/deletion)
+        mode (Union[str, None]): Mode of action (addition/deletion)
 
     Returns:
         str: Function completion message or warning
@@ -88,7 +88,7 @@ def manage_r_words_tables(word, table, mode=None):
     Args:
         word (str): Word to add or remove
         table (str): Table to modify
-        mode (str | None): Mode of action (addition/deletion)
+        mode (Union[str, None]): Mode of action (addition/deletion)
 
     Returns:
         str: Function completion message or warning

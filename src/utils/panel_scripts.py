@@ -47,7 +47,7 @@ def get_user_input(text=None):
     This was done due to the strange behavior of KeyboardInterrupt on Windows.
 
     Args:
-        text (str | None): Text to print before input
+        text (Union[str, None]): Text to print before input
         If nothing was provided, skips printing text
 
     Returns:

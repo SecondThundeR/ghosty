@@ -36,7 +36,7 @@ class DedMakar(commands.Cog):
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
-            arg (str | None): String with custom name or user mention
+            arg (Union[str, None]): String with custom name or user mention
         """
         if not arg:
             try:

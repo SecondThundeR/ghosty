@@ -40,7 +40,7 @@ class SystemInfo(commands.Cog):
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
-            mode (str | None): Mode of sended system info
+            mode (Union[str, None]): Mode of sended system info
         """
         if mode and 'фулл' in mode:
             if self.cpu != '':

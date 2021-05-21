@@ -307,7 +307,7 @@ class RandomShip(commands.Cog):
         for strings in self.strings_to_send:
             await ctx.channel.send(strings)
             await asyncio.sleep(self.delay_time)
-        await ctx.reply(f'**В ЛЮБОВНОЙ ПОЗЕ ЗАСТРЯЛИ** {short_text} :two_hearts:')
+        await ctx.send(f'**В ЛЮБОВНОЙ ПОЗЕ ЗАСТРЯЛИ** {short_text} :two_hearts:')
 
 
 def setup(client):

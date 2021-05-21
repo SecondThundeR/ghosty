@@ -207,11 +207,11 @@ def words_table_manager():
                     import_dev_words()
                     time.sleep(0.5)
                     break
-                elif inputs[1] == 2:
+                if inputs[1] == 2:
                     clear_db_tables()
                     time.sleep(0.5)
-                    break 
-                elif inputs[1] == 0:
+                    break
+                if inputs[1] == 0:
                     print('')
                     break
             print('\nIt looks like you entered something wrong, '
@@ -342,7 +342,7 @@ def manage_bot_settings():
         False,
         'SELECT bot_name FROM tokens'
     )
-    if bots_in_db == None:
+    if not bots_in_db:
         print("\nThere are no bots in database...\n")
         time.sleep(0.5)
         return
@@ -447,24 +447,22 @@ def select_bot_config():
             if select_bot == '0':
                 print('\nExiting to main menu\n')
                 break
-            else:
-                try:
-                    index_of_bot = int(select_bot) - 1
-                    selected_bot = list_of_bots[index_of_bot]
-                    if index_of_bot in range(len(list_of_bots)):
-                        print('\nGreat choice! '
-                              f'Selecting "{selected_bot}" as default...\n')
-                        database.modify_data(
-                            'mainDB',
-                            'UPDATE variables SET current_selected_bot = ?',
-                            index_of_bot
-                        )
-                        break
-                    else:
-                        print('Invalid number of option. Please, try again')
-                except ValueError:
-                    print('\nIt looks like you entered not a number. '
-                          'Please, try again')
+            try:
+                index_of_bot = int(select_bot) - 1
+                selected_bot = list_of_bots[index_of_bot]
+                if index_of_bot in range(len(list_of_bots)):
+                    print('\nGreat choice! '
+                          f'Selecting "{selected_bot}" as default...\n')
+                    database.modify_data(
+                        'mainDB',
+                        'UPDATE variables SET current_selected_bot = ?',
+                        index_of_bot
+                    )
+                    break
+                print('Invalid number of option. Please, try again')
+            except ValueError:
+                 print('\nIt looks like you entered not a number. '
+                       'Please, try again')
     time.sleep(0.5)
 
 

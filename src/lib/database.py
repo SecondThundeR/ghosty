@@ -121,11 +121,11 @@ def reset_bot_tables():
     )
 
 
-def get_data(table_name, is_single, command, *data):
+def get_data(db_name, is_single, command, *data):
     """Retrieve data from a database and return it as an array.
 
     Args:
-        table_name (str): Name of table to get data from
+        db_name (str): Name of database to get data from
         is_single (bool): Boolean for getting data w/o array
         command (str): Command to execute
         data (tuple): Variable length list of data
@@ -138,7 +138,7 @@ def get_data(table_name, is_single, command, *data):
     """
     try:
         data_arr = []
-        database = Database(table_name)
+        database = Database(db_name)
         if not data:
             database.cur.execute(command)
         else:
@@ -162,11 +162,11 @@ def get_data(table_name, is_single, command, *data):
         sys.exit()
 
 
-def modify_data(table_name, command, *data):
+def modify_data(db_name, command, *data):
     """Modify data in the DB.
 
     Args:
-        table_name (str): Name of table to modify data
+        db_name (str): Name of database to modify data
         command (str): Command to execute
         data (tuple): List of data
 
@@ -174,7 +174,7 @@ def modify_data(table_name, command, *data):
         Exception: Returns info about error
     """
     try:
-        database = Database(table_name)
+        database = Database(db_name)
         if len(data) > 0:
             database.cur.execute(command, data)
         else:

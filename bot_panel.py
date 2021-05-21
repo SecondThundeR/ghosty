@@ -1,4 +1,4 @@
-"""Ghosty Control Panel (Beta).
+"""Ghosty Control Panel.
 
 This script performs the first initial and further
 configuration of the bot through the console.

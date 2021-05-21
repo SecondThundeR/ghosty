@@ -1,4 +1,4 @@
-"""SQL Database Handler Library (Beta).
+"""SQL Database Handler Library.
 
 This script allows the user to work with a SQL database with basic functions
 that only require the necessary data from the user to work with
@@ -21,7 +21,7 @@ import sqlite3
 
 
 class Database:
-    """A class to control database.
+    """Class to control database.
 
     Args:
         path (str): Path to database

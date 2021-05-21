@@ -461,8 +461,8 @@ def select_bot_config():
                     break
                 print('Invalid number of option. Please, try again')
             except ValueError:
-                 print('\nIt looks like you entered not a number. '
-                       'Please, try again')
+                print('\nIt looks like you entered not a number. '
+                      'Please, try again')
     time.sleep(0.5)
 
 

@@ -13,11 +13,24 @@ from discord.ext import commands
 
 
 class Uptime(commands.Cog):
+    """Class to send message with uptime of bot.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        send_uptime: Gets current uptime of bot and sends it
+    """
     def __init__(self, client):
+        """Initialize variables for Uptime.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.delay_time = 5
 
-    @commands.command(aliases=['uptime'])
+    @commands.command(aliases=['аптайм'])
     async def send_uptime(self, ctx):
         """Calculate and send current uptime of bot.
 
@@ -43,4 +56,5 @@ class Uptime(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(Uptime(client))

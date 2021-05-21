@@ -11,7 +11,21 @@ from discord.ext import commands
 
 
 class RandomNumbers(commands.Cog):
+    """Class to send message with random number.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        get_random_number: Gets random number and sends it
+    """
+
     def __init__(self, client):
+        """Initialize variables for RandomNumbers.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.delay_time = 5
         self.range_number = None
@@ -87,4 +101,5 @@ class RandomNumbers(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(RandomNumbers(client))

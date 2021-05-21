@@ -10,30 +10,51 @@ from discord.ext import commands
 
 
 HELP_MESSAGE = 'Доступные команды бота: ' \
-               '\n\n**полл (время и текст | текст)** - запускает простое голосование' \
-               '\n**шар (текст)** - симулятор шара с ответами' \
-               '\n**макар** - возвращает предложение "Улыбок тебе ' \
-               'дед [перевёрнутая строка]"' \
-               '\n**хелп** - выводит информацию с командами' \
-               '\n**uptime** - выводит время работы бота' \
-               '\n**йа (ттс | анон | анонттс)** - аналог команды `/me`' \
-               '\n**рандом (число | два числа)** - получение рандомного числа' \
-               '\n**шип (два имени)** - шипперит двух рандомных пользователей' \
+               '\n\n**хелп** - выводит *(эту)* информацию с командами' \
+               '\n**шар** - симулятор шара с ответами' \
+               '\n**макар** - генерирует предложение "Улыбок тебе дед ...' \
+               '\n**ген** - генерирует предложение с помощью цепей Маркова' \
+               '\n**йа** - аналог команды `/me`' \
+               '\n**полл** - запускает простое голосование' \
+               '\n**рандом** - получение рандомного числа' \
+               '\n**шип** - шипперит двух рандомных пользователей' \
+               '\n**ху | who** - рандомный пользователь + рандомное предложение' \
                '\n**цуефа** - игра в "Камень Ножницы Бумага"' \
                '\n**рулетка** - запускает игру в русскую рулетку' \
                '\n**аватарка** - запускает смену текущей аватарки' \
-               '\n**система (фулл)** - показывает данные о системе' \
-               '\n**ху | who** - рандомный пользователь + рандомное предложение' \
+               '\n**система** - показывает данные о системе' \
+               '\n**аптайм** - выводит время работы бота' \
+               '\n**тест** - запускает динамическое тестирование' \
                '\n**поиск (пидорасов)** -  *поиск пидорасов активирован...*'
 
 
 class HelpMessage(commands.Cog):
+    """Class to send help message.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        on_ready: Removes built-in `help` command
+        send_help_message: Sends message with commands
+    """
+
     def __init__(self, client):
+        """Initialize variables for HelpMessage.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.delay_time = 5
 
     @commands.Cog.listener()
     async def on_ready(self):
+        """Listener for on_ready.
+
+        This listener is used to remove
+        built-in `help` command of `discord.ext`
+        """
         self.client.remove_command('help')
 
     @commands.command(aliases=['хелп'])
@@ -55,4 +76,5 @@ class HelpMessage(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(HelpMessage(client))

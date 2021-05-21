@@ -11,7 +11,22 @@ from discord.ext import commands
 
 
 class UserFinder(commands.Cog):
+    """Class to send message with "search" of *any word*.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        user_finder_hub: Executes required finder mode
+        user_finder_execute: Gets random user and launches "finder"
+    """
+
     def __init__(self, client):
+        """Initialize variables for UserFinder.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.delay_time = 2
 
@@ -52,4 +67,5 @@ class UserFinder(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(UserFinder(client))

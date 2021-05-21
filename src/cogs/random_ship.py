@@ -1,7 +1,7 @@
 """Ship randomly selected users.
 
 This cog allows user to ship two random people or two chosen by user.
-Cog returns halves of each name and adds a heart.
+Cog sends halves of each name and adds a heart.
 """
 
 
@@ -15,7 +15,26 @@ from discord.ext import commands
 
 
 class RandomShip(commands.Cog):
+    """Class to send message on behalf of a bot.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        ship_func_chooser: Selects correct ship mode
+        get_user_info: Gets info about two selected users
+        reset_ship: Reset all needed data in database
+        custom_ship: Execute shipping with custom arguments
+        random_ship: Execute shipping with random users
+        random_ship_messages: Sends "prepare" message of random shipping
+    """
+
     def __init__(self, client):
+        """Initialize variables for RandomShip.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.delay_time = 2
         self.delete_time = 5
@@ -43,6 +62,9 @@ class RandomShip(commands.Cog):
         Args:
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): List of arguments
+
+        Returns:
+            None: If there is an active shipping
         """
         if database.get_data(
             'mainDB',
@@ -158,6 +180,9 @@ class RandomShip(commands.Cog):
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
+
+        Returns:
+            None: If there is an error
         """
         current_date = dt.datetime.now().date()
         next_date = (dt.datetime.now() + dt.timedelta(days=1)).date()
@@ -286,4 +311,5 @@ class RandomShip(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(RandomShip(client))

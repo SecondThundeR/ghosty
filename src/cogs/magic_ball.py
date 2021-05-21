@@ -11,7 +11,21 @@ from discord.ext import commands
 
 
 class MagicBall(commands.Cog):
+    """Class to send `Magic Ball` message.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        ask_magic_ball: Gets random answer for list and sends it
+    """
+
     def __init__(self, client):
+        """Initialize variables for MagicBall.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.magic_ball_answers = [
             'Бесспорно', 'Предрешено', 'Никаких сомнений',
@@ -44,4 +58,5 @@ class MagicBall(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(MagicBall(client))

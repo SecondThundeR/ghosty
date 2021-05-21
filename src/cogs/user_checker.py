@@ -14,7 +14,23 @@ from discord.ext import commands
 
 
 class UserChecker(commands.Cog):
+    """Class to send message with user's test results.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        user_check_handler: Handles all operations with test data
+        get_test_percent: Gets percent of user's test
+        format_percent_to_message: Formats all passed data into final message
+    """
+
     def __init__(self, client):
+        """Initialize variables for UserChecker.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.delay_time = 5
         self.count = None
@@ -23,7 +39,19 @@ class UserChecker(commands.Cog):
         self.random_mode = False
 
     @commands.command(aliases=['тест'])
-    async def regular_user_checker(self, ctx, *args):
+    async def user_check_handler(self, ctx, *args):
+        """Handler of user checking.
+        
+        This function handles all passed data and getting needed data for final message
+        of test
+
+        Args:
+            ctx (commands.context.Context): Context object to execute functions
+            args (tuple): List of arguments (User's and test data)
+        
+        Returns:
+            None: If there is some errors
+        """
         if not args:
             await ctx.reply('Вы не передали никаких аргументов',
                             delete_after=self.delay_time)
@@ -69,6 +97,16 @@ class UserChecker(commands.Cog):
 
     @staticmethod
     def get_test_percent(amount):
+        """Get percent of user's test.
+
+        Args:
+            amount (int): Number of tests
+        
+        Retuns:
+            int: If there is one test to process
+            list: If there is many tests to process.
+            Returns all tests percents and average percent
+        """
         if amount == 1:
             return random.randint(0, 100)
         perc_list = []
@@ -83,6 +121,21 @@ class UserChecker(commands.Cog):
 
     @staticmethod
     def format_percent_to_message(percent_data, text, user):
+        """Format all data to final message.
+
+        **Some notes:**
+        If user is string, pass getting username from Member object.
+        If percent_data is list, runs loop for enumerating all tests to single message.
+        If message hits discord limit, breaks loop and returns warning message
+
+        Args:
+            percent_data (int | list): Data of current user's test
+            text (str): Text of current user's test
+            user (discord.member.Member | str): Users data which is being "tested"
+
+        Returns:
+            str: Conclusion of user's test or warning message
+        """
         warn_msg = 'Вы превысили лимит Discord по длине сообщения!'
         user_name = None
         if isinstance(user, str):
@@ -116,4 +169,5 @@ class UserChecker(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(UserChecker(client))

@@ -1,4 +1,4 @@
-"""Avatar switcher (Beta).
+"""Avatar switcher.
 
 This cog allows users to change avatar of bot while it's running
 with certain command.
@@ -13,13 +13,29 @@ from discord.ext import commands
 
 
 class AvatarSwitcher(commands.Cog):
+    """Class to trigger avatar change by command.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        avatar_switch: Triggers avatar change
+    """
+
     def __init__(self, client):
+        """Initialize variables for AvatarSwitcher.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.delay_time = 5
 
     @commands.command(aliases=['аватарка'])
     async def avatar_switch(self, ctx):
         """Change avatar of bot via command.
+
+        If function gets problems with delay, sends warning about it.
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
@@ -43,4 +59,5 @@ class AvatarSwitcher(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(AvatarSwitcher(client))

@@ -10,7 +10,23 @@ from discord.ext import commands
 
 
 class ManageIgnoreList(commands.Cog):
+    """Class to operate with ignore list.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        ignore_list_manager: Forwards to needed function
+        add_ignored: Adds new user to ignore list
+        remove_ignored: Removes existing user from ignore list
+    """
+
     def __init__(self, client):
+        """Initialize variables for ManageIgnoreList.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
 
     @commands.command(aliases=['чс'])
@@ -74,4 +90,5 @@ class ManageIgnoreList(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(ManageIgnoreList(client))

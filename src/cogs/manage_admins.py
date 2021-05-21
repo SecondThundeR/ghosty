@@ -11,7 +11,23 @@ from discord.ext import commands
 
 
 class ManageAdmins(commands.Cog):
+    """Class to operate with admins table.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        admin_manager: Forwards to needed function
+        add_admin: Adds new admin to database
+        remove_admin: Removes existing admin from database
+    """
+
     def __init__(self, client):
+        """Initialize variables for ManageAdmins.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.delete_time = 5
 
@@ -110,4 +126,5 @@ class ManageAdmins(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(ManageAdmins(client))

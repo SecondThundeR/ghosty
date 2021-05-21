@@ -12,7 +12,21 @@ from src.lib.exceptions import UsersNotFound
 
 
 class DedMakar(commands.Cog):
+    """Class to send Ded Makar sentence.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        send_makar_message: Generates and sends new sentence
+    """
+
     def __init__(self, client):
+        """Initialize variables for DedMakar.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.delay_time = 5
 
@@ -64,4 +78,5 @@ class DedMakar(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(DedMakar(client))

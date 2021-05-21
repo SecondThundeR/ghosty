@@ -11,7 +11,21 @@ from discord.ext import commands
 
 
 class SystemInfo(commands.Cog):
+    """Class to send message about host system.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        send_system_info: Gets and sends info about host system
+    """
+
     def __init__(self, client):
+        """Initialize variables for SystemInfo.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.delay_time = 5
         self.name = platform.system()
@@ -53,4 +67,5 @@ class SystemInfo(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(SystemInfo(client))

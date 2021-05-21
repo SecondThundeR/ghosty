@@ -1,6 +1,6 @@
-"""Text version of roulette game.
+"""Text version of Russian Roulette game.
 
-This cog handles game logic of russian roulette.
+This cog handles game logic of Russian Roulette.
 """
 
 
@@ -12,7 +12,22 @@ from discord.ext import commands
 
 
 class RussianRoulette(commands.Cog):
+    """Class to execute text version of Russian Roulette game.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        russian_roulette_handler: Handles logic of Russian Roulette
+        get_random_word: Gets random word from database for different scenarios
+    """
+
     def __init__(self, client):
+        """Initialize variables for RussianRoulette.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.tables_aliases = {
             'вин': 'win',
@@ -26,10 +41,10 @@ class RussianRoulette(commands.Cog):
         self.bullet_count = 0
 
     @commands.command(aliases=['рулетка'])
-    async def switch_avatar(self, ctx, *args):
+    async def russian_roulette_handler(self, ctx, *args):
         """Handle game logic and start game.
 
-        This function handles all russian roulette logic.
+        This function handles all Russian Roulette logic.
         Also, it has certain checks for any non-standard situation
 
         Args:
@@ -164,4 +179,5 @@ class RussianRoulette(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(RussianRoulette(client))

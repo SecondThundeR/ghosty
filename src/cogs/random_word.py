@@ -14,7 +14,21 @@ from discord.ext import commands
 
 
 class RandomWord(commands.Cog):
+    """Class to send random word from database.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        get_random_word: Gets random word from database and sends it.
+    """
+
     def __init__(self, client):
+        """Initialize variables for RandomWord.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.delay_time = 5
         self.curr_user = None
@@ -82,4 +96,5 @@ class RandomWord(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(RandomWord(client))

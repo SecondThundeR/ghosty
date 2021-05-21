@@ -12,7 +12,28 @@ from discord.ext import commands
 
 
 class RSPGame(commands.Cog):
+    """Class to execute text version of RSP game.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        rsp_mode: Selects needed RSP game mode
+        join_check: Checks for correct conditions of join command
+        choice_check: Checks for correct conditions of answer selection
+        purge_messages: Collects and purges all unreleated messages
+        rsp_game: Handles main part of RSP game logic (Defining outcome)
+        rsp_bot_game: Handles game with bot
+        rsp_multi_game: Handles game of two users
+
+    """
+
     def __init__(self, client):
+        """Initialize variables for RSPGame.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.fail_delay = 4
         self.success_delay = 1
@@ -48,7 +69,7 @@ class RSPGame(commands.Cog):
 
     @staticmethod
     def join_check(ctx):
-        """Check for correct command to join.
+        """Check for correct conditions of join command.
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
@@ -61,20 +82,20 @@ class RSPGame(commands.Cog):
         return bool(test_string == 'играть' and not test_channel)
 
     def choice_check(self, ctx):
-        """Check for correct answer from user.
+        """Check for correct conditions of answer selection.
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
 
         Returns:
-            True, if all conditions are met
+            bool: True, if all conditions are met, False otherwise
         """
         test_string = ctx.message.content.lower()
         test_channel = isinstance(ctx.message.channel, discord.channel.DMChannel)
         return bool(test_string in self.win_variants and test_channel)
 
     async def purge_messages(self, messages):
-        """Delete all messages, that can distract users in channel.
+        """Collect and delete all messages, that can distract users in channel.
 
         Args:
             message (list): List with messages to delete
@@ -96,6 +117,7 @@ class RSPGame(commands.Cog):
 
         Returns:
             str: Outcome of the game
+            None: If there are some errors
         """
         f_user_mention = f'<@{first_user_id}>'
         s_user_mention = f'<@{second_user_id}>'
@@ -253,4 +275,5 @@ class RSPGame(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(RSPGame(client))

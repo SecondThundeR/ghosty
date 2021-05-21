@@ -10,7 +10,21 @@ from discord.ext import commands
 
 
 class Poll(commands.Cog):
+    """Class to create, send and work with poll.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        create_poll: Creates and sends new poll
+    """
+
     def __init__(self, client):
+        """Initialize variables for Poll.
+        
+        Args:
+            client (discord.client.Client): Current client object
+        """
         self.client = client
         self.time = 60
         self.text = None
@@ -78,4 +92,5 @@ class Poll(commands.Cog):
 
 
 def setup(client):
+    """Entry point for loading extension."""
     client.add_cog(Poll(client))

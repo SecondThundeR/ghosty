@@ -22,7 +22,7 @@ class RandomNumbers(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for RandomNumbers.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

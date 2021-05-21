@@ -21,7 +21,7 @@ class Poll(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for Poll.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

@@ -23,7 +23,7 @@ class UserFinder(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for UserFinder.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

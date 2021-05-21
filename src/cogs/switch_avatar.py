@@ -24,7 +24,7 @@ class AvatarSwitcher(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for AvatarSwitcher.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

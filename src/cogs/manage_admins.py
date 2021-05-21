@@ -24,7 +24,7 @@ class ManageAdmins(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for ManageAdmins.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

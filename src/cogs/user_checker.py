@@ -27,7 +27,7 @@ class UserChecker(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for UserChecker.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """
@@ -41,14 +41,14 @@ class UserChecker(commands.Cog):
     @commands.command(aliases=['тест'])
     async def user_check_handler(self, ctx, *args):
         """Handler of user checking.
-        
+
         This function handles all passed data and getting needed data for final message
         of test
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): List of arguments (User's and test data)
-        
+
         Returns:
             None: If there is some errors
         """
@@ -101,7 +101,7 @@ class UserChecker(commands.Cog):
 
         Args:
             amount (int): Number of tests
-        
+
         Retuns:
             int: If there is one test to process
             list: If there is many tests to process.

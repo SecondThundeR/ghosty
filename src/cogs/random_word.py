@@ -25,7 +25,7 @@ class RandomWord(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for RandomWord.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

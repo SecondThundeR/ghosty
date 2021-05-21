@@ -22,7 +22,7 @@ class SystemInfo(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for SystemInfo.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

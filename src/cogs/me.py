@@ -20,7 +20,7 @@ class MeMessage(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for MeMessage.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

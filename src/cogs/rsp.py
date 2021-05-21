@@ -30,7 +30,7 @@ class RSPGame(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for RSPGame.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

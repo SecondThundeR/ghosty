@@ -21,9 +21,10 @@ class Uptime(commands.Cog):
     Methods:
         send_uptime: Gets current uptime of bot and sends it
     """
+
     def __init__(self, client):
         """Initialize variables for Uptime.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

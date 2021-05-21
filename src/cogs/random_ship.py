@@ -31,7 +31,7 @@ class RandomShip(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for RandomShip.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

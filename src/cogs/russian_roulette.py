@@ -24,7 +24,7 @@ class RussianRoulette(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for RussianRoulette.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

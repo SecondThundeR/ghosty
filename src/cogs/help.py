@@ -41,7 +41,7 @@ class HelpMessage(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for HelpMessage.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

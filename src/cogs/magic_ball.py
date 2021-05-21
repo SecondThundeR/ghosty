@@ -22,7 +22,7 @@ class MagicBall(commands.Cog):
 
     def __init__(self, client):
         """Initialize variables for MagicBall.
-        
+
         Args:
             client (discord.client.Client): Current client object
         """

@@ -93,10 +93,12 @@ def manage_r_words_tables(word, table, mode=None):
     Returns:
         str: Function completion message or warning
     """
+    formed_select_query = 'SELECT * FROM ' \
+                          f'roulette_{table}_words WHERE words = ?'
     requested_word = database.get_data(
         'wordsDB',
         True,
-        f'SELECT * FROM roulette_{table}_words WHERE words = ?',
+        formed_select_query,
         word
     )
     if mode == 'add':
@@ -107,10 +109,12 @@ def manage_r_words_tables(word, table, mode=None):
         )
         return f'Хей, я успешно добавил слово "{word}" себе в базу!'
     if mode == 'del':
+        formed_delete_query = 'DELETE FROM ' \
+                              f'roulette_{table}_words WHERE words = ?'
         if requested_word:
             database.modify_data(
                 'wordsDB',
-                f'DELETE FROM roulette_{table}_words WHERE words = ?',
+                formed_delete_query,
                 word
             )
             return f'Хей, я успешно удалил слово "{word}" из своей базы!'
@@ -196,7 +200,8 @@ def clear_words_table():
     of selected words tables in the database
     """
     for table in WORDS_TABLES:
+        formed_delete_query = f'DELETE FROM {table}'
         database.modify_data(
             'wordsDB',
-            f'DELETE FROM {table}'
+            formed_delete_query
         )

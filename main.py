@@ -1,6 +1,6 @@
-"""secondthunder-py-bot.
+"""Entry point of Ghosty bot.
 
-This is a Discord bot script that runs on the Discord.py library and
+This is a bot script that runs on the Discord.py library and
 allows you to execute functions using specific text commands
 
 There is the starting point of the bot control, from where it begin its
@@ -10,118 +10,146 @@ fit your needs
 
 
 import time
+import aiocron
 import discord
-from src.libs.database_handler import clear_data_on_execution
-from src.libs.database_handler import edit_data_in_database
-from src.libs.database_handler import get_data_from_database
-from src.libs.database_handler import add_data_to_database
-from src.commands.create_poll import create_poll
-from src.commands.ded_makar import send_makar_message
-from src.commands.get_help import send_help_message
-from src.commands.get_uptime import get_uptime_message
-from src.commands.manage_admins import admin_manager
-from src.commands.manage_ignored import ignored_manager
-from src.commands.me_message import send_me_message
-from src.commands.random_number import get_random_number
-from src.commands.random_ship import ship_func_chooser
-from src.commands.random_word import get_random_word
-from src.commands.rsp_game import rsp_mode
-from src.commands.russian_roulette import start_roulette
-from src.commands.system_info import get_system_info
-from src.commands.user_checker import who_is_user
-from src.commands.user_finder import user_finder_mode
+import src.lib.database as database
+import src.lib.users as users
+import src.utils.avatar_changer as avatar_changer
+import src.utils.general_scripts as general_scripts
+import src.utils.markov_utils as markov_utils
+from discord.ext import commands
 
 
-TOKENS = get_data_from_database(1, 'tokens', 'bot_token')
-SELECTED_BOT = get_data_from_database(0, 'variables', 'current_selected_bot')[0]
-ACTIVITY_NAME = 'Helltaker'
-intents = discord.Intents.default()
-intents.members = True
-client = discord.Client(intents=intents)
+TOKENS = database.get_data(
+    'confDB',
+    False,
+    'SELECT bot_token FROM tokens'
+)
+SELECTED_BOT = database.get_data(
+    'mainDB',
+    True,
+    'SELECT current_selected_bot FROM variables'
+)
+DELAY_TIME = 3
+client = commands.Bot(command_prefix=".", intents=discord.Intents.all())
+
+
+@aiocron.crontab('0 */3 * * *')
+async def update_avatar():
+    """Update avatar picture periodically.
+
+    This function changes the bot avatar every 3 hours using a cron job.
+    It also checks and updates the `avatar_cooldown` value
+    to lock manual avatar changing during/after updating by cron job,
+    which helps prevent getting a cooldown from the Discord API.
+    """
+    avatar_data = avatar_changer.get_avatar_bytes()
+    if not isinstance(avatar_data, int):
+        await client.user.edit(avatar=avatar_data)
 
 
 @client.event
 async def on_ready():
-    """Execute necessary functions during the bot launch."""
-    clear_data_on_execution()
-    for guild in client.guilds:
-        async for member in guild.fetch_members(limit=None):
-            if member.bot:
-                add_data_to_database(0, 'bots', 'bots_id', member.id)
-            else:
-                add_data_to_database(0, 'users', 'users_id', member.id)
-    await client.change_presence(status=discord.Status.dnd,
-                                 activity=discord.Game(name=ACTIVITY_NAME))
+    """Execute necessary functions.
+
+    This function executes certain actions on bot's load, such as:
+        - Resetting DB table and delay of randomly generated Markov message
+        - Loading commands
+        - Updating table with users
+        - Changing bot's status and avatar
+        - Setting up new bot's uptime
+    """
+    database.clear_tables()
+    markov_utils.markov_delay_handler('clear')
+    await general_scripts.load_commands(client)
+    await general_scripts.update_member_list(client)
+    await client.change_presence(status=discord.Status.dnd)
+    avatar_data = avatar_changer.get_avatar_bytes()
+    if not isinstance(avatar_data, int):
+        await client.user.edit(avatar=avatar_data)
+    database.modify_data(
+        'mainDB',
+        'UPDATE variables SET bot_uptime = ?',
+        int(time.time())
+    )
     print(f'Successfully logged in as {client.user}!')
-    edit_data_in_database(0, 'variables', 'bot_uptime', int(time.time()))
+
+
+@client.event
+async def on_command_error(ctx, error):
+    """Handle commands exceptions.
+
+    This function catches certain exception and sends info message to the user
+    Currently, this commands handles `CommandNotFound` and `PrivateMessageOnly`
+
+    Args:
+        ctx (discord.ext.commands.Context): The invocation context
+        error (discord.ext.commands.CommandError): The error that was raised
+
+    Raises:
+        discord.ext.commands.CommandError: It there is an error
+        that isn't included in the handling
+    """
+    if isinstance(error, commands.CommandNotFound):
+        pass
+    elif isinstance(error, commands.PrivateMessageOnly):
+        await ctx.reply('Данной команда доступна только в личных сообщениях.',
+                        delete_after=DELAY_TIME)
+    else:
+        raise error
 
 
 @client.event
 async def on_member_join(member):
-    """Add new server users to the database while the bot is running.
+    """Add new server users to database.
 
-    Parameters:
-        member (discord.member.Member): Information about the user who joined the server
+    This function adds every new user to database, while bot is running.
+    This helps prevent new users from being ignored in commands
+    that use use a table of users.
+
+    Args:
+        member (discord.member.Member): Data about joined user
     """
-    if member.bot:
-        add_data_to_database(0, 'bots', 'bots_id', member.id)
-    else:
-        add_data_to_database(0, 'users', 'users_id', member.id)
+    users.add_member_to_db(member)
 
 
 @client.event
-async def on_message(message):
-    """Check for message and execute the function if the conditions are met.
+async def on_member_leave(member):
+    """Remove left server users from database.
 
-    **Noteworthy:** If a bot receives a message from another bot or from itself, or does
-    not receive the required command from the user, it does nothing
+    This function removes every left user from database, while bot is running.
+    This helps to prevent any problems with commands that use a table of users.
 
-    Parameters:
+    Args:
+        member (discord.member.Member): Data about left user
+    """
+    users.rem_member_from_db(member)
+
+
+@client.listen('on_message')
+async def get_messages(message):
+    """Listener for regular messages (Non-commands).
+
+    This function is used to receive all regular messages used for Markov chains.
+
+    Args:
         message (discord.message.Message): User message to perform required functions
     """
-    if message.author == client.user or message.author.id in get_data_from_database(
-        0,
-        'block_list',
-        'blocked_id'
-    ):
-        return
-
-    full_message = message.content.split(' ')
-    args = message.content.split(' ')
-    command = args.pop(0).lower()
-
-    if command == 'полл':
-        await create_poll(message, args)
-    elif command == 'макар':
-        await send_makar_message(message, args)
-    elif command == 'хелп':
-        await send_help_message(message)
-    elif command == 'uptime':
-        await get_uptime_message(message)
-    elif command in 'админ':
-        await admin_manager(client, message, args)
-    elif command in 'чс':
-        await ignored_manager(message, args)
-    elif command == 'йа':
-        await send_me_message(message, args)
-    elif command == 'рандом':
-        await get_random_number(message, args)
-    elif command == 'шип':
-        await ship_func_chooser(message, args)
-    elif command == 'цуефа':
-        await rsp_mode(client, message, args)
-    elif command == 'рулетка':
-        await start_roulette(message, args)
-    elif command == 'система':
-        await get_system_info(message)
-    elif command in ('ху', 'who'):
-        await get_random_word(message, args)
-    elif command == 'поиск':
-        await user_finder_mode(message, args)
-    else:
-        if ('тест' in full_message and full_message.index('тест') != 0
-                or 'рандом' in full_message and full_message.index('рандом') != 0):
-            await who_is_user(message, full_message)
+    if not message.author.bot:
+        message_body = message.content
+        msg_check = markov_utils.check_message_content(message_body)
+        if not msg_check:
+            return
+        words = message_body.split()
+        counter_list = markov_utils.markov_delay_handler('get')
+        if counter_list[0] <= counter_list[1]:
+            new_sentence = markov_utils.return_checked_sentence(None)
+            if new_sentence:
+                await message.channel.send(new_sentence)
+            markov_utils.markov_delay_handler('clear')
+        else:
+            markov_utils.message_words_to_db(words)
+            markov_utils.markov_delay_handler('update')
 
 
 client.run(TOKENS[int(SELECTED_BOT)])

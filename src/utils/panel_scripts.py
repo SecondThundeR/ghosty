@@ -250,7 +250,7 @@ def is_bot_in_database():
 
 def check_bots_database():
     """Check for elements in bot's database.
-    
+
     Returns:
         int: Size of list if there is any elements
         None: If table is empty

@@ -7,6 +7,7 @@ This file can also be imported as a module and contains the following functions:
     * manage_words_table - adds/removes word to/from main words table
     * manage_r_words_tables - adds/removes word to/from
     one of four roulette game words base
+    * return_query_result - generates SQL query for Russian Roulette DB
     * restore_dev_base - downloads and restores dev's word base
     * import_word_file - downloads file and restores it
     * download_words_file - imports data from URL request to .txt file
@@ -20,6 +21,8 @@ import src.lib.files as files
 
 
 WARNING_MESSAGES = [
+    'Данное слово уже есть в базе данных, '
+    'попробуйте добавить другое',
     'Ой, я не смог найти это слово. '
     'Вы уверены, что вы правильно его написали?',
     'Похоже что-то пошло не так, '
@@ -64,12 +67,14 @@ def manage_words_table(word, mode=None):
         word
     )
     if mode == 'add':
-        database.modify_data(
-            'wordsDB',
-            'INSERT INTO main_words_base VALUES (?)',
-            word
-        )
-        return f'Хей, я успешно добавил слово "{word}" себе в базу!'
+        if not requested_word:
+            database.modify_data(
+                'wordsDB',
+                'INSERT INTO main_words_base VALUES (?)',
+                word
+            )
+            return f'Хей, я успешно добавил слово "{word}" себе в базу!'
+        return WARNING_MESSAGES[0]
     if mode == 'del':
         if requested_word:
             database.modify_data(
@@ -78,8 +83,8 @@ def manage_words_table(word, mode=None):
                 word
             )
             return f'Хей, я успешно удалил слово "{word}" из своей базы!'
-        return WARNING_MESSAGES[0]
-    return WARNING_MESSAGES[1]
+        return WARNING_MESSAGES[1]
+    return WARNING_MESSAGES[2]
 
 
 def manage_r_words_tables(word, table, mode=None):
@@ -93,29 +98,71 @@ def manage_r_words_tables(word, table, mode=None):
     Returns:
         str: Function completion message or warning
     """
+    query = return_query_result(table, 'req')
     requested_word = database.get_data(
         'wordsDB',
         True,
-        f'SELECT * FROM roulette_{table}_words WHERE words = ?',
+        query,
         word
     )
     if mode == 'add':
-        database.modify_data(
-            'wordsDB',
-            f'INSERT INTO roulette_{table}_words VALUES (?)',
-            word
-        )
-        return f'Хей, я успешно добавил слово "{word}" себе в базу!'
-    if mode == 'del':
-        if requested_word:
+        if not requested_word:
+            query = return_query_result(table, mode)
             database.modify_data(
                 'wordsDB',
-                f'DELETE FROM roulette_{table}_words WHERE words = ?',
+                query,
+                word
+            )
+            return f'Хей, я успешно добавил слово "{word}" себе в базу!'
+        return WARNING_MESSAGES[0]
+    if mode == 'del':
+        if requested_word:
+            query = return_query_result(table, mode)
+            database.modify_data(
+                'wordsDB',
+                query,
                 word
             )
             return f'Хей, я успешно удалил слово "{word}" из своей базы!'
-        return WARNING_MESSAGES[0]
-    return WARNING_MESSAGES[1]
+        return WARNING_MESSAGES[1]
+    return WARNING_MESSAGES[2]
+
+
+def return_query_result(table_name, mode=None):
+    """Generate SQL query for Russian Roulette DB.
+
+    Args:
+        table_name (str): Name of table to modify
+        mode (Union[str, None]): Mode for full SQL query
+
+    Returns:
+        str: Generated SQL query
+        None: If there are some errors
+    """
+    table_name = None
+    full_query = None
+
+    if table_name == 'win':
+        table_query = 'roulette_win_words'
+    elif table_name == 'lose':
+        table_query = 'roulette_lose_words'
+    elif table_name == 'minus':
+        table_query = 'roulette_minus_words'
+    elif table_name == 'zero':
+        table_query = 'roulette_zero_words'
+    elif not table_name:
+        return None
+    
+    if mode == 'req':
+        full_query = f'SELECT * FROM {table_query} WHERE words = ?'
+    elif mode == 'add':
+        full_query = f'INSERT INTO {table_query} VALUES (?)'
+    elif mode == 'del':
+        full_query = f'DELETE FROM {table_query} WHERE words = ?'
+    
+    if not full_query:
+        return None
+    return full_query
 
 
 def restore_dev_base():
@@ -194,9 +241,27 @@ def clear_words_table():
 
     This function handles deleting all data
     of selected words tables in the database
+
+    Because of possible SQL injection, loop for tables list
+    was removed
     """
-    for table in WORDS_TABLES:
-        database.modify_data(
-            'wordsDB',
-            f'DELETE FROM {table}'
-        )
+    database.modify_data(
+        'wordsDB',
+        'DELETE FROM main_words_base'
+    )
+    database.modify_data(
+        'wordsDB',
+        'DELETE FROM roulette_lose_words'
+    )
+    database.modify_data(
+        'wordsDB',
+        'DELETE FROM roulette_minus_words'
+    )
+    database.modify_data(
+        'wordsDB',
+        'DELETE FROM roulette_win_words'
+    )
+    database.modify_data(
+        'wordsDB',
+        'DELETE FROM roulette_zero_words'
+    )

@@ -4,6 +4,111 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and starting with changes from 29.11.2020, this bot will have a correct [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 22.05.2021
+
+## Added
+- `general`:
+  - Implemented checks for custom exceptions
+  - Implemented `discord.ext.commands`
+  - added more docstrings
+  - Changed imports style
+  - Switched from `ctx.send` to `ctx.reply` *(In some moments)*
+  - Maybe something else where I didn't follow the changelogs...
+- `release`: Added `.zip` with cleaned up sources, which are only needed to run the bot
+- `avatars`: Added initial 16 avatars for changing them "on the fly"
+- `requirements`: Added new requirement - **aiocron**
+- `exceptions`: Added initial custom exceptions
+- `main`:
+  - Checks for cogs specific errors
+  - Removal of users from database, if they leave from server
+  - Listener for non-commands messages *(Used for Markov chains)*
+- `magic_ball`: Initial addition
+- `me`: Added tts mode for regular, non-anon, mode
+- `russian_roulette`: Added certain variable for message deletion delay
+- `markov_chains`: Initial addition *(Beta)*
+- `switch_avatars`: Initial addition
+- `system`: Added filter for getting full system info *(By default returns reduced info)*
+- `uptime`: Added import of `timedelta_formatter` util
+- `database`: Added main database class, Added printing error details on database fail
+- `files`: Added shutil for full folder removal, Added function for checking folder status *(is empty or not)*, Added display of an error when switching to an exception
+- `users`: Added addition/removal of member to/from database, added new function for shipping, Added check for admin/block status of user
+- `words_base`:
+  - Added missing file closing after writing data
+  - Add new warning message for word duplicate, when adding one
+- `utils`: Initial addition of file utils:
+  - `avatar_changer`
+  - `general_scripts`
+  - `markov_utils` *(Beta)*
+  - `panel_scripts`
+  - `timedelta_formatter`
+  
+## Changed
+- `project`: New logo and new name! This project is now called **Ghosty**
+- `general`: Changed names of folders and commands files *(For the transition to `discord.ext.commands`)*
+- `main`: 
+  - Changed imports, docstrings
+  - Refactored code
+  - Added new commands
+  - Limited some functions only for DM
+  - Removed `Playing in...` activity
+  - Added cron job to change avatar
+- `setup`: Renamed to `bot_setup`
+- `bot_panel`: Main revamp
+  - Move all internal logic to it's own utils
+  - Refactored code, updated modules to check
+  - Rephrased tip at the end
+  - Removed some legacy code for the old database library
+- `help`: Updated help message and slightly updated docstrings
+- `manage_ignored`: Renamed to `manage_ignore_list`
+- `random_ship`:
+   - Now returning `ship_text_short` in fast mode
+   - Arguments checking was slightly improved
+   - Moved data extraction from DB to variables *(Also changed checks with them)*
+- `uptime`: Changed alias name of command
+- `user_checker`: Switched from some crap in `main` to nice dynamic testing in cog *(Now supports more options!)*
+- `DB's`: Updated some tables *(For new commands and features)*
+- `database`: 
+  - Changed way of interacting with databases with simple query commands, instead of weird parameters
+  - Switched from "dynamic" queries to raw ones
+  - Switched from database numbers to database names, when executing command
+- `files`:
+  - Slightly updated code
+  - Changed some checks with returning value of `bool()`, simplified functions names
+- `users`: Slightly updated code and fixed docstrings
+- `words_base`:
+  - Simplified functions names
+  - Words synced with last changes
+  - Added more functions and constants *(Moved from bot_panel.py)*
+- `avatar_changer`: Slightly updated code
+- `panel_scripts`: Moved check for elements in bot's DB to own function
+
+## Removed
+- `general`: Removed 'Beta' from some docstings
+- `.gitmodules`: Removed `Webhook-Notifier` submodule
+- `main`: Removed `update_member_list()` *(Moved to `main_scripts`)*
+- `manage_ignored` and `manage_admins`: Removed local check for DM
+- `random_word`: Removed spam check and `modify_data` import
+- `rsp`: Removed debug message for purge function
+- `uptime`: Removed local `_format_timedelta` function
+- `database`: Removed outdated columns to clear, removed unnecessary functions
+
+## Fixed
+- `general`: Fixed many things, reported by DeepSource and CodeFactor
+- `Changelog`: Fix old link for repository
+- `README`: Fixed needed info for bot working and fixed fourth item in `How to use this bot` *(Also fix old link for repo)*
+- `LICENSE`: fix year
+- `random_ship`:
+  - Fixed slicing part of the second username and ship reset
+  - Fixed a bug where ship results could not be reset on the next day
+- `random_word`: Fixed words updating on database update and function typo
+- `russian_roulette`: Fixed wrong function name
+- `database`:
+  - Fixed checks for data tuple and code for `modify_data` part
+  - Fixed wrong table to clear on load
+  - Fixed problems with getting single data or multiple from database
+  - Fixed *(temporary)* issue of DeepSource - BAN-B608
+- `users`: Fixed crash on getting random user from database
+
 ## [2.0.1] - 28.02.2021
 
 ## Added
@@ -200,6 +305,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Multiple commands and functions was deleted due to move to Heroku *(Some of commands will present in additional branches)*
 - Commented code was deleted from main branch
 
+[2.1.0]: https://github.com/SecondThundeR/ghosty/compare/v2.0.1...v2.1.0
 [2.0.1]: https://github.com/SecondThundeR/ghosty/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/SecondThundeR/ghosty/compare/v1.1.4...v2.0.0
 [1.1.4]: https://github.com/SecondThundeR/ghosty/compare/v1.1.3...v1.1.4

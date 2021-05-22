@@ -99,6 +99,8 @@ def manage_r_words_tables(word, table, mode=None):
         str: Function completion message or warning
     """
     query = return_query_result(table, 'req')
+    if not query:
+        return WARNING_MESSAGES[2]
     requested_word = database.get_data(
         'wordsDB',
         True,
@@ -108,6 +110,8 @@ def manage_r_words_tables(word, table, mode=None):
     if mode == 'add':
         if not requested_word:
             query = return_query_result(table, mode)
+            if not query:
+                return WARNING_MESSAGES[2]
             database.modify_data(
                 'wordsDB',
                 query,
@@ -118,6 +122,8 @@ def manage_r_words_tables(word, table, mode=None):
     if mode == 'del':
         if requested_word:
             query = return_query_result(table, mode)
+            if not query:
+                return WARNING_MESSAGES[2]
             database.modify_data(
                 'wordsDB',
                 query,
@@ -131,6 +137,16 @@ def manage_r_words_tables(word, table, mode=None):
 def return_query_result(table_name, mode=None):
     """Generate SQL query for Russian Roulette DB.
 
+    Because of annoying BAN-B608 issue of DeepSource
+    > Desc: "Risk of possible SQL injection
+    vector through string-based query construction"
+    It was decided to remove the use of f-strings during the generation
+    of the SQL query
+
+    Unfortunately, because of this issue,
+    this function is not looking good because of numbers of if's/elif's
+
+
     Args:
         table_name (str): Name of table to modify
         mode (Union[str, None]): Mode for full SQL query
@@ -139,29 +155,39 @@ def return_query_result(table_name, mode=None):
         str: Generated SQL query
         None: If there are some errors
     """
-    table_name = None
-    full_query = None
+    if not table_name or table_name not in ['win', 'lose', 'minus', 'zero']:
+        return None
+    if not mode or mode not in ['req', 'add', 'del']:
+        return None
 
-    if table_name == 'win':
-        table_query = 'roulette_win_words'
-    elif table_name == 'lose':
-        table_query = 'roulette_lose_words'
-    elif table_name == 'minus':
-        table_query = 'roulette_minus_words'
-    elif table_name == 'zero':
-        table_query = 'roulette_zero_words'
-    elif not table_name:
-        return None
-    
     if mode == 'req':
-        full_query = f'SELECT * FROM {table_query} WHERE words = ?'
+        if table_name == 'win':
+            full_query = 'SELECT * FROM roulette_win_words WHERE words = ?'
+        elif table_name == 'lose':
+            full_query = 'SELECT * FROM roulette_lose_words WHERE words = ?'
+        elif table_name == 'minus':
+            full_query = 'SELECT * FROM roulette_minus_words WHERE words = ?'
+        elif table_name == 'zero':
+            full_query = 'SELECT * FROM roulette_zero_words WHERE words = ?'
     elif mode == 'add':
-        full_query = f'INSERT INTO {table_query} VALUES (?)'
+        if table_name == 'win':
+            full_query = 'INSERT INTO roulette_win_words VALUES (?)'
+        elif table_name == 'lose':
+            full_query = 'INSERT INTO roulette_lose_words VALUES (?)'
+        elif table_name == 'minus':
+            full_query = 'INSERT INTO roulette_minus_words VALUES (?)'
+        elif table_name == 'zero':
+            full_query = 'INSERT INTO roulette_zero_words VALUES (?)'
     elif mode == 'del':
-        full_query = f'DELETE FROM {table_query} WHERE words = ?'
-    
-    if not full_query:
-        return None
+        if table_name == 'win':
+            full_query = 'DELETE FROM roulette_win_words WHERE words = ?'
+        elif table_name == 'lose':
+            full_query = 'DELETE FROM roulette_lose_words WHERE words = ?'
+        elif table_name == 'minus':
+            full_query = 'DELETE FROM roulette_minus_words WHERE words = ?'
+        elif table_name == 'zero':
+            full_query = 'DELETE FROM roulette_zero_words WHERE words = ?'
+
     return full_query
 
 

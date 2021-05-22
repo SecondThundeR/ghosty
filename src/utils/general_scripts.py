@@ -16,7 +16,7 @@ async def update_member_list(client):
     """Update users database on load.
 
     Args:
-        client (discord.Client): Used to fetch members of server
+        client (discord.Client): Client object to fetch members of server
     """
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):

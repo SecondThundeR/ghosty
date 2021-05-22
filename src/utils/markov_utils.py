@@ -92,8 +92,8 @@ def markov_delay_handler(mode):
         mode (str): Mode of delay handler
 
     Returns:
-        list: List of current delay and message counter
-        None: If wrong mode/'update' or 'clear' mode were provided
+        Union[list, None]: List of current delay and message counter.
+        If wrong mode/'update' or 'clear' mode were provided, returns None
     """
     current_delay = database.get_data(
         'mainDB',
@@ -132,8 +132,8 @@ def prepare_chains_data():
     Also it checks if current database is smaller than 80 words
 
     Returns:
-        list: List of words array and words dictionary
-        bool: False if current size of words database is small
+        Union[list, bool]: List of words array and words dictionary.
+        If current size of words database is small, returns False
     """
     word_dict = {}
     database_words = database.get_data(
@@ -160,6 +160,9 @@ def make_pairs(words):
 
     Args:
         words (list): List of current words
+
+    Yields:
+        Generator: Pairs of words
     """
     for i in range(len(words) - 1):
         yield (words[i], words[i + 1])

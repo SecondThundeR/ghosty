@@ -24,8 +24,7 @@ def get_avatar_bytes():
     avatar change cooldown
 
     Returns:
-        int: Cooldown time
-        bytes: Bytes of PNG
+        Union[int, bytes]: Cooldown time or bytes of PNG
     """
     curr_cooldown = database.get_data(
         'mainDB',

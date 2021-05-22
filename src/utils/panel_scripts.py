@@ -11,6 +11,7 @@ This file can also be imported as a module and contains the following functions:
     * clear_db_tables - clears words tables in database
     * words_table_manager - manages words table
     * is_bot_in_database - checks if bot in database
+    * check_bots_database - checks for elements in bot's database
     * add_bot_config - adds new bot config to database
     * remove_bot_config - removes current bot config from database
     * manage_bot_settings - manages selected bot config
@@ -247,6 +248,21 @@ def is_bot_in_database():
         failed_attempts += 1
 
 
+def check_bots_database():
+    """Check for elements in bot's database.
+    
+    Returns:
+        int: Size of list if there is any elements
+        None: If table is empty
+    """
+    db_status = database.get_data(
+        'confDB',
+        False,
+        'SELECT bot_name FROM tokens'
+    )
+    return None if not db_status else len(db_status)
+
+
 def add_bot_config():
     """Add bot configuration into the database.
 
@@ -298,16 +314,15 @@ def remove_bot_config():
     This function handles bot removal from database and that's it.
     (Did you expect to see rocket launch codes here?)
     """
-    bots_in_db = database.get_data(
-        'confDB',
-        False,
-        'SELECT bot_name FROM tokens'
-    )
-    if not bots_in_db:
-        print("\nThere are no bots in database...\n")
+    bots_db_status = check_bots_database()
+    if not bots_db_status:
+        print(
+            "\nThere are no bots in database. "
+            "Aborting removing process...\n"
+        )
         time.sleep(0.5)
         return
-    if len(bots_in_db) == 1:
+    if bots_db_status == 1:
         print(
             "\nThere is one bot in database.\n"
             "Are you sure you want to remove last bot there? (y/N)"
@@ -337,13 +352,11 @@ def manage_bot_settings():
     This function allows you to change the internal name
     of the bot in the database, as well as its token
     """
-    bots_in_db = database.get_data(
-        'confDB',
-        False,
-        'SELECT bot_name FROM tokens'
-    )
-    if not bots_in_db:
-        print("\nThere are no bots in database...\n")
+    if not check_bots_database():
+        print(
+            "\nThere are no bots in database. "
+            "Exiting...\n"
+        )
         time.sleep(0.5)
         return
     if not (bot_name := is_bot_in_database()):

@@ -14,10 +14,10 @@ This is repository of some random bot for Discord which was created just for fun
 
 ## How to use this bot
 
-0. Install necessary tools *(Python, Any IDE or Code Editor, etc.)*
-1. Clone this repository *(If you want to clone with Webhook-Notifier, use* `git clone --recurse-submodules`*)*
-2. Create a Discord Bot on [Discord Developers](https://discord.com/developers/applications) page
-3. Go to `Bot` section to grab a token of your bot and enable all `Privileged Gateway Intents`
+0. Install Python *(3.8 or higher)* and/or Git
+1. Create a Discord Bot on [Discord Developers](https://discord.com/developers/applications) page
+2. Go to `Bot` section to grab a token of your bot and enable all `Privileged Gateway Intents`
+3. Clone this repository *(`git clone https://github.com/SecondThundeR/ghosty.git`)*
 4. Run `python bot_panel.py` in a main directory and set up your bot
 5. Run `python main.py` to run bot
 6. After getting a log that bot was logged in, you are good to go

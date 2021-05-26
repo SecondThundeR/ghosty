@@ -136,7 +136,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Error of loop with two arrays
 - Wrong bold formatting of word
 - Typos in README and Changelog files
--
 
 ## [2.0.0] - 07.02.2021
 

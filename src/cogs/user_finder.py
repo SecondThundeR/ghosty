@@ -41,7 +41,7 @@ class UserFinder(commands.Cog):
         if not args:
             return
         words_list = args.split()
-        words_list[0] = words_list[0].capitilize()
+        words_list[0] = words_list[0].capitalize()
         formatted_word = " ".join(words_list)
         await UserFinder.user_finder_execute(self, ctx, formatted_word)
 

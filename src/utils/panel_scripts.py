@@ -5,6 +5,7 @@ For now, all internal logic of configuring bot is handled here
 
 This file can also be imported as a module and contains the following functions:
     * get_user_input - handles user input in console
+    * get_curr_setup_status - returns current setup status
     * installed_modules_checker - checks and installs missing modules
     * change_setup_status - changes status of setup
     * import_dev_words - clears and imports dev's word base
@@ -54,11 +55,7 @@ def get_user_input(text=None):
     Returns:
         str: User's input if all conditions were met
     """
-    current_status = database.get_data(
-        'mainDB',
-        True,
-        'SELECT is_setup_completed FROM variables'
-    )
+    current_status = get_curr_setup_status()
 
     if text:
         print(text)
@@ -73,6 +70,20 @@ def get_user_input(text=None):
             break
         print('\nIt looks like you haven\'t entered anything, '
               'please try again')
+
+
+def get_curr_setup_status():
+    """Get current setup status from database.
+
+    Returns:
+        int: Current setup status value
+    """
+    current_status = database.get_data(
+        'mainDB',
+        True,
+        'SELECT is_setup_completed FROM variables'
+    )
+    return current_status
 
 
 def installed_modules_checker():
@@ -125,11 +136,7 @@ def change_setup_status():
     This function changes setup status to 0, when it needs to be reset
     or set to 1, when initial setup was completed
     """
-    current_status = database.get_data(
-        'mainDB',
-        True,
-        'SELECT is_setup_completed FROM variables'
-    )
+    current_status = get_curr_setup_status()
     database.modify_data(
         'mainDB',
         'UPDATE variables SET is_setup_completed = ?',
@@ -176,11 +183,7 @@ def words_table_manager():
     This function allows user to import developer word base
     or clearing words table
     """
-    current_status = database.get_data(
-        'mainDB',
-        True,
-        'SELECT is_setup_completed FROM variables'
-    )
+    current_status = get_curr_setup_status()
     inputs = ['', '']
     if not current_status:
         inputs[0] = get_user_input(
@@ -269,11 +272,7 @@ def add_bot_config():
     This function require bot's name and token to add this to the database.
     If initial setup was completed, also redirects to main menu of setup only
     """
-    current_status = database.get_data(
-        'mainDB',
-        True,
-        'SELECT is_setup_completed FROM variables'
-    )
+    current_status = get_curr_setup_status()
     bot_name = get_user_input('\nEnter name of your Discord bot: ')
     if not current_status:
         print('\nEnter your Discord bot token\n'

@@ -24,7 +24,8 @@ import src.lib.database as database
 REGEX_RULE = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)" \
              r"(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+" \
              r"|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
-PREFIXES = ['<@&', '<@!', '<:', '.', '!', '-', '/', '`']
+PREFIXES = ['@', '.', '!', '-', '/', '`']
+BAN_WORDS = ['<:', '<@&', '<@!', '<@']
 
 
 def message_words_to_db(words):
@@ -60,7 +61,11 @@ def check_message_content(message_content):
     """
     check = True
     for word in PREFIXES:
-        if word in message_content:
+        if message_content.startswith(word):
+            check = False
+            break
+    for word in BAN_WORDS:
+        if message_content.find(word) >= 0:
             check = False
             break
     if emoji.emoji_count(message_content) > 0:

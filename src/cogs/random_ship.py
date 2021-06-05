@@ -77,6 +77,9 @@ class RandomShip(commands.Cog):
                 await RandomShip.reset_ship(self, ctx)
             elif 'фаст' in args:
                 await RandomShip.random_ship(self, ctx, True)
+            elif 'реролл' in args:
+                await RandomShip.reset_ship(self, ctx, False)
+                await RandomShip.random_ship(self, ctx)
             else:
                 await ctx.reply('Я не могу шипперить одного человека. '
                                 'Добавьте ещё кого-то, чтобы я смог '
@@ -109,7 +112,7 @@ class RandomShip(commands.Cog):
             user_length = int(len(user_name) / 2)
         return [user_name, user_length]
 
-    async def reset_ship(self, ctx):
+    async def reset_ship(self, ctx, notif=True):
         """Reset latest ship results to start over.
 
         This function resets results of shipping to allow user execute
@@ -127,11 +130,12 @@ class RandomShip(commands.Cog):
             '',
             0
         )
-        await ctx.reply('Результаты шиппинга сброшены! '
-                        '*(Вы разлучили, возможно, великолепную парочку!)*',
-                        delete_after=self.delete_time)
-        await asyncio.sleep(self.delete_time)
-        await ctx.message.delete()
+        if notif:
+            await ctx.reply('Результаты шиппинга сброшены! '
+                            '*(Вы разлучили, возможно, великолепную парочку!)*',
+                            delete_after=self.delete_time)
+            await asyncio.sleep(self.delete_time)
+            await ctx.message.delete()
 
     async def custom_ship(self, ctx, args):
         """Ship with two custom names from user.

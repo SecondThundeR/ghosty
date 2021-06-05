@@ -120,6 +120,7 @@ class RandomShip(commands.Cog):
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
+            notif (bool): Controls sending message about resetting results
         """
         database.modify_data(
             'mainDB',

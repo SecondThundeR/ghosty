@@ -5,6 +5,7 @@ There are several flags that changes sending behavior
 """
 
 
+import src.lib.users as users
 from discord.ext import commands
 
 
@@ -46,7 +47,7 @@ class MeMessage(commands.Cog):
                 me_data['message'] = " ".join(args[1:])
                 me_data['tts'] = True
             elif args[0] == 'ттс':
-                me_data['message'] = f'{ctx.author.mention} ' \
+                me_data['message'] = f'{users.get_members_name(ctx.author)}: ' \
                                      f'{" ".join(args[1:])}'
                 me_data['tts'] = True
             else:

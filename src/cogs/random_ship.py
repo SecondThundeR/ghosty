@@ -234,7 +234,7 @@ class RandomShip(commands.Cog):
             first_sliced_username = first_username[:first_user_length]
             second_sliced_username = second_username[second_user_length:]
             final_username = first_sliced_username + second_sliced_username
-            ship_text_short = f'{users_info[0].mention} + {users_info[1].mention}'
+            ship_text_short = f'{users_info[0].mention} + {users_info[1].mention}, #' + final_username
             ship_text_full = f'{first_username} + {second_username}, #' + final_username
             if fast_mode:
                 await ctx.reply(f'**Парочка дня на сегодня:** {ship_text_short} '

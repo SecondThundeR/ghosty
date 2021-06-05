@@ -74,4 +74,5 @@ def bot_panel_init():
     bot_menu()
 
 
-bot_panel_init()
+if __name__ == '__main__':
+    bot_panel_init()

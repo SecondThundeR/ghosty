@@ -185,10 +185,19 @@ class RandomShip(commands.Cog):
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
+            fast_mode (bool): Skip 'prelude' part before results
 
         Returns:
             None: If there is an error
         """
+        try:
+            users_info = await users.get_shipping_users(ctx.message)
+        except UsersNotFound as warning:
+            await ctx.reply(f'Произошла ошибка: {warning}!',
+                            delete_after=self.delete_time)
+            await asyncio.sleep(self.delete_time)
+            await ctx.message.delete()
+            return
         current_date = dt.datetime.now().date()
         next_date = (dt.datetime.now() + dt.timedelta(days=1)).date()
         ship_date = database.get_data(
@@ -206,6 +215,8 @@ class RandomShip(commands.Cog):
             True,
             'SELECT ship_in_active FROM variables'
         )
+        if ship_in_active:
+            return
         if not ship_activated and not ship_in_active:
             database.modify_data(
                 'mainDB',
@@ -213,20 +224,6 @@ class RandomShip(commands.Cog):
                 1,
                 1
             )
-            try:
-                users_info = await users.get_shipping_users(ctx.message)
-            except UsersNotFound as warning:
-                database.modify_data(
-                    'mainDB',
-                    'UPDATE variables SET ship_in_active = ?, ship_activated = ?',
-                    0,
-                    0
-                )
-                await ctx.reply(f'Произошла ошибка: {warning}!',
-                                delete_after=self.delete_time)
-                await asyncio.sleep(self.delete_time)
-                await ctx.message.delete()
-                return
             first_username = users.get_members_name(users_info[0])
             first_user_length = int(len(first_username) / 2)
             second_username = users.get_members_name(users_info[1])
@@ -251,21 +248,10 @@ class RandomShip(commands.Cog):
                 ship_text_short,
                 0
             )
-        elif database.get_data(
-            'mainDB',
-            True,
-            'SELECT ship_in_active FROM variables'
-        ):
-            pass
-        elif (database.get_data(
-            'mainDB',
-            True,
-            'SELECT ship_activated FROM variables'
-            ) and current_date < dt.datetime.strptime(
-                ship_date,
-                '%Y-%m-%d'
-            ).date()
-        ):
+        elif ship_activated and current_date < dt.datetime.strptime(
+            ship_date,
+            '%Y-%m-%d'
+        ).date():
             ship_text_full = database.get_data(
                 'mainDB',
                 True,
@@ -282,23 +268,16 @@ class RandomShip(commands.Cog):
             await ctx.reply(f'**Парочка дня на сегодня:** {ship_text_full} '
                             ':two_hearts: \n\n*Следующий шиппинг будет доступен '
                             f'{next_date_string}*')
-        elif (database.get_data(
-            'mainDB',
-            True,
-            'SELECT ship_activated FROM variables'
-            ) and current_date >= dt.datetime.strptime(
-                ship_date,
-                '%Y-%m-%d'
-            ).date()
-        ):
+        elif ship_activated and current_date >= dt.datetime.strptime(
+            ship_date,
+            '%Y-%m-%d'
+        ).date():
             database.modify_data(
                 'mainDB',
                 'UPDATE variables SET ship_activated = ?',
                 0
             )
             await RandomShip.random_ship(self, ctx)
-        else:
-            pass
 
     async def random_ship_messages(self, ctx, short_text):
         """Send pre-messages and result of shipping.

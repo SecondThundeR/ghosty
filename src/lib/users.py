@@ -61,14 +61,13 @@ async def get_shipping_users(msg):
         False,
         'SELECT users_id FROM users'
     )
-    try:
+    if len(users) > 2:
         first_member = await msg.guild.fetch_member(random.choice(users))
         second_member = await msg.guild.fetch_member(random.choice(users))
         while second_member == first_member:
             second_member = await msg.guild.fetch_member(random.choice(users))
         return [first_member, second_member]
-    except IndexError:
-        raise UsersNotFound("В базе данных нет пользователей")
+    raise UsersNotFound("В базе данных недостаточно пользователей для шиппинга")
 
 
 def get_members_name(member):

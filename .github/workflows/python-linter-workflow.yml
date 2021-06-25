@@ -14,7 +14,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install mypy
       - name: Run Mypy tests
-        run: mypy . --ignore-missing-imports
+        run: mypy . --ignore-missing-imports --install-types --non-interactive
   flake8:
     runs-on: ubuntu-latest
     steps:

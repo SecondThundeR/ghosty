@@ -39,7 +39,10 @@ class MarkovCommand(commands.Cog):
             ctx (commands.context.Context): Context object to execute functions
             number (Union[str, None]): Amount of words to generate
         """
-        new_sentence = markov_utils.return_checked_sentence(number)
+        if number and number.isnumeric():
+            new_sentence = markov_utils.return_checked_sentence(number)
+        else:
+            new_sentence = markov_utils.return_checked_sentence()
         if not new_sentence:
             await ctx.reply('Похоже, у меня недостаточно слов в базе данных :(',
                             delete_after=self.delay_time)

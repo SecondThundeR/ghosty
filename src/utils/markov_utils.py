@@ -240,7 +240,7 @@ def generate_sentence(data):
     return chain
 
 
-def return_checked_sentence(number):
+def return_checked_sentence(number=None):
     """Execute all functions to generate new sentence.
 
     This function gets all needed data and return joined
@@ -253,7 +253,7 @@ def return_checked_sentence(number):
     re-run generation without custom size)
 
     Args:
-        number (str): Number of words to generate
+        number (int): Number of words to generate
 
     Returns:
         str: Joined sentence from chains list
@@ -261,8 +261,7 @@ def return_checked_sentence(number):
     data = prepare_chains_data()
     if isinstance(data, bool):
         return data
-    if number and number.isnumeric():
-        data.append(int(number))
+    data.append(number)
     new_sentence = generate_sentence(data)
     while not new_sentence:
         if len(data) == 3:

@@ -60,13 +60,13 @@ class ManageAdmins(commands.Cog):
         """
         if users.is_user_admin(user_id):
             await ctx.reply('Данный пользователь уже админ')
-        else:
-            database.modify_data(
-                'mainDB',
-                'INSERT INTO admin_list VALUES (?)',
-                user_id
-            )
-            await ctx.reply('Я успешно добавил такого админа')
+            return
+        database.modify_data(
+            'mainDB',
+            'INSERT INTO admin_list VALUES (?)',
+            user_id
+        )
+        await ctx.reply('Я успешно добавил такого админа')
 
     async def remove_admin(self, ctx, user_id):
         """Remove user's ID from admin list.

@@ -17,11 +17,13 @@ class SystemInfo(commands.Cog):
         commands.Cog: Base class that all cogs must inherit from
 
     Methods:
-        send_system_info: Gets and sends info about host system
+        send_system_info: Sends info about host system
     """
 
     def __init__(self, client):
         """Initialize variables for SystemInfo.
+
+        Also on initial load, it's getting all information about the host system
 
         Args:
             client (discord.client.Client): Current client object
@@ -36,34 +38,45 @@ class SystemInfo(commands.Cog):
 
     @commands.command(aliases=['система'])
     async def send_system_info(self, ctx, mode=None):
-        """Get system info and send it.
+        """Send formatted info about host system.
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
-            mode (Union[str, None]): Mode of sended system info
+            mode (Union[str, None]): Mode for format of system info
         """
-        if mode and 'фулл' in mode:
-            if self.cpu != '':
-                await ctx.reply('Я работаю на '
-                                f'**{self.name} {self.release}** '
-                                f'*({self.version})*, '
-                                f'у которого процессор *({self.cpu})* '
-                                f'имеет архитектуру - **{self.arch}**',
-                                delete_after=self.delay_time)
-            else:
-                await ctx.reply('Я работаю на '
-                                f'**{self.name} {self.release}** '
-                                f'*({self.version})*, '
-                                'у которого процессор имеет архитектуру - '
-                                f'**{self.arch}**',
-                                delete_after=self.delay_time)
-        else:
-            await ctx.reply('Я работаю на '
-                            f'**{self.name} {self.release}** '
-                            f'*({self.version})*, ',
-                            delete_after=self.delay_time)
+        await ctx.reply(self.format_system_info(mode))
         await asyncio.sleep(self.delay_time)
         await ctx.message.delete()
+
+    def format_system_info(self, mode):
+        """Format system info and return it
+
+        This function checks for several variants of system info outputs and
+        returns needed one
+
+        Args:
+            mode (Union[str, None]): Mode for format of system info
+
+        Returns:
+            str: Formatted system info
+        """
+        if mode and mode == 'фулл':
+            if self.cpu:
+                return 'Я работаю на ' \
+                        f'**{self.name} {self.release}** ' \
+                        f'*({self.version})*, ' \
+                        f'у которого процессор *({self.cpu})* ' \
+                        f'имеет архитектуру - **{self.arch}**'
+            else:
+                return 'Я работаю на ' \
+                       f'**{self.name} {self.release}** ' \
+                       f'*({self.version})*, ' \
+                       'у которого процессор имеет архитектуру - ' \
+                       f'**{self.arch}**'
+        else:
+            return 'Я работаю на ' \
+                    f'**{self.name} {self.release}** ' \
+                    f'*({self.version})*, '
 
 
 def setup(client):

@@ -17,7 +17,7 @@ import src.lib.database as database
 CHANGE_COOLDOWN = 900
 
 
-def get_avatar_bytes(avatar_cooldown):
+def get_avatar_bytes(avatar_cooldown=None):
     """Get bytes from avatar picture.
 
     This function has built-in check for

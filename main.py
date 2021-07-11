@@ -44,8 +44,8 @@ async def update_avatar():
     which helps prevent getting a cooldown from the Discord API.
     """
     avatar_data = avatar_changer.get_avatar_bytes()
-    if not isinstance(avatar_data, int):
-        await client.user.edit(avatar=avatar_data)
+    if avatar_data['avatar_bytes']:
+        await client.user.edit(avatar=avatar_data['avatar_bytes'])
 
 
 @client.event
@@ -62,9 +62,7 @@ async def on_ready():
     database.clear_tables()
     markov_utils.markov_delay_handler('clear')
     await client.change_presence(status=discord.Status.dnd)
-    avatar_data = avatar_changer.get_avatar_bytes()
-    if not isinstance(avatar_data, int):
-        await client.user.edit(avatar=avatar_data)
+    await update_avatar()
     await general_scripts.load_commands(client)
     await general_scripts.update_member_list(client)
     database.modify_data(

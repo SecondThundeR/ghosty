@@ -67,16 +67,14 @@ class SystemInfo(commands.Cog):
                         f'*({self.version})*, ' \
                         f'у которого процессор *({self.cpu})* ' \
                         f'имеет архитектуру - **{self.arch}**'
-            else:
-                return 'Я работаю на ' \
-                       f'**{self.name} {self.release}** ' \
-                       f'*({self.version})*, ' \
-                       'у которого процессор имеет архитектуру - ' \
-                       f'**{self.arch}**'
-        else:
             return 'Я работаю на ' \
                     f'**{self.name} {self.release}** ' \
-                    f'*({self.version})*, '
+                    f'*({self.version})*, ' \
+                    'у которого процессор имеет архитектуру - ' \
+                    f'**{self.arch}**'
+        return 'Я работаю на ' \
+                f'**{self.name} {self.release}** ' \
+                f'*({self.version})*, '
 
 
 def setup(client):

@@ -90,7 +90,7 @@ class UserChecker(commands.Cog):
                 test_data['user'] = await users.get_random_user(ctx.message)
             except UsersNotFound as warning:
                 await ctx.reply(f'Произошла ошибка: {warning}!',
-                            delete_after=self.delay_time)
+                                delete_after=self.delay_time)
                 await asyncio.sleep(self.delay_time)
                 await ctx.message.delete()
                 return None
@@ -98,7 +98,9 @@ class UserChecker(commands.Cog):
             test_args.pop(0)
         if not random_user_mode:
             if test_args[0].startswith('<@!'):
-                test_data['user'] = await ctx.guild.fetch_member(test_args[0][3:len(test_args[0]) - 1])
+                test_data['user'] = await ctx.guild.fetch_member(
+                    test_args[0][3:len(test_args[0]) - 1]
+                )
                 test_args.pop(0)
             if test_args[0].startswith('--'):
                 test_data['user'] = test_args[0][2:]

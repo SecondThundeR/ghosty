@@ -63,18 +63,18 @@ class SystemInfo(commands.Cog):
         if mode and mode == 'фулл':
             if self.cpu:
                 return 'Я работаю на ' \
-                        f'**{self.name} {self.release}** ' \
-                        f'*({self.version})*, ' \
-                        f'у которого процессор *({self.cpu})* ' \
-                        f'имеет архитектуру - **{self.arch}**'
+                       f'**{self.name} {self.release}** ' \
+                       f'*({self.version})*, ' \
+                       f'у которого процессор *({self.cpu})* ' \
+                       f'имеет архитектуру - **{self.arch}**'
             return 'Я работаю на ' \
-                    f'**{self.name} {self.release}** ' \
-                    f'*({self.version})*, ' \
-                    'у которого процессор имеет архитектуру - ' \
-                    f'**{self.arch}**'
+                   f'**{self.name} {self.release}** ' \
+                   f'*({self.version})*, ' \
+                   'у которого процессор имеет архитектуру - ' \
+                   f'**{self.arch}**'
         return 'Я работаю на ' \
-                f'**{self.name} {self.release}** ' \
-                f'*({self.version})*, '
+               f'**{self.name} {self.release}** ' \
+               f'*({self.version})*, '
 
 
 def setup(client):

@@ -61,12 +61,12 @@ async def on_ready():
     """
     database.clear_tables()
     markov_utils.markov_delay_handler('clear')
-    await general_scripts.load_commands(client)
-    await general_scripts.update_member_list(client)
     await client.change_presence(status=discord.Status.dnd)
     avatar_data = avatar_changer.get_avatar_bytes()
     if not isinstance(avatar_data, int):
         await client.user.edit(avatar=avatar_data)
+    await general_scripts.load_commands(client)
+    await general_scripts.update_member_list(client)
     database.modify_data(
         'mainDB',
         'UPDATE variables SET bot_uptime = ?',

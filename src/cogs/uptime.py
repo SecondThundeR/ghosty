@@ -30,19 +30,25 @@ class Uptime(commands.Cog):
         """
         self.client = client
         self.delay_time = 5
+        self.start_time = None
 
     @commands.command(aliases=['аптайм'])
     async def send_uptime(self, ctx):
         """Calculate and send current uptime of bot.
 
+        Also, it's stores bot start time in order to prevent
+        from constant calls to database on each uptime request
+
         Args:
             ctx (commands.context.Context): Context object to execute functions
         """
-        curr_uptime = int(time.time()) - database.get_data(
-            'mainDB',
-            True,
-            'SELECT bot_uptime FROM variables',
-        )
+        if not self.start_time:
+            self.start_time = database.get_data(
+                'mainDB',
+                True,
+                'SELECT bot_uptime FROM variables'
+            )
+        curr_uptime = int(time.time()) - self.start_time
         time_string = td_format.format_timedelta(
             datetime.timedelta(seconds=curr_uptime)
         )

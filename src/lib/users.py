@@ -63,9 +63,8 @@ async def get_shipping_users(msg):
     )
     if len(users) > 2:
         first_member = await msg.guild.fetch_member(random.choice(users))
+        users.remove(first_member)
         second_member = await msg.guild.fetch_member(random.choice(users))
-        while second_member == first_member:
-            second_member = await msg.guild.fetch_member(random.choice(users))
         return [first_member, second_member]
     raise UsersNotFound("В базе данных недостаточно пользователей для шиппинга")
 

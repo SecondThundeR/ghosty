@@ -33,10 +33,6 @@ class UserChecker(commands.Cog):
         """
         self.client = client
         self.delay_time = 5
-        self.count = None
-        self.text = None
-        self.user = None
-        self.random_mode = False
 
     @commands.command(aliases=['тест'])
     async def user_check_handler(self, ctx, *args):
@@ -59,45 +55,69 @@ class UserChecker(commands.Cog):
             await ctx.message.delete()
             return
         args = list(args)
-        self.user = ctx.author
-        self.count = 1
-        self.random_mode = False
-        if args[0].isnumeric():
-            self.count = int(args[0])
-            args.pop(0)
-        elif args[0] == 'рандом':
+        test_data = self.parse_test_data(ctx, list(args))
+        if test_data is None:
+            return
+        final_msg = UserChecker.format_percent_to_message(
+            test_data['percent'],
+            test_data['text'],
+            test_data['user']
+        )
+        await ctx.send(final_msg)
+
+    async def parse_test_data(self, ctx, test_args):
+        """Parse arguments and return dictionary.
+
+        Args:
+            ctx (commands.context.Context): Context object to execute functions
+            test_args (list): Arguments of command
+
+        Returns:
+            dict: Dictionary with data, or empty, if there was an error
+        """
+        test_data = {
+            "user": ctx.author,
+            "text": "",
+            "percent": None,
+        }
+        tests_count = 1
+        random_user_mode = False
+        if test_args[0].isnumeric():
+            tests_count = int(test_args[0])
+            test_args.pop(0)
+        if test_args[0] == 'рандом':
             try:
-                self.user = await users.get_random_user(ctx.message)
+                test_data['user'] = await users.get_random_user(ctx.message)
             except UsersNotFound as warning:
-                await ctx.reply(f'Произошла ошибка: {warning}!')
-                return
-            self.random_mode = True
-            args.pop(0)
-        elif not self.random_mode:
-            if args[0].startswith('<@!'):
-                self.user = await ctx.guild.fetch_member(args[0][3:len(args[0]) - 1])
-                args.pop(0)
-            elif args[0].startswith('--'):
-                self.user = args[0][2:]
-                args.pop(0)
-        self.text = ' '.join(args)
-        percent_data = UserChecker.get_test_percent(self.count)
-        if not self.text:
+                await ctx.reply(f'Произошла ошибка: {warning}!',
+                            delete_after=self.delay_time)
+                await asyncio.sleep(self.delay_time)
+                await ctx.message.delete()
+                return None
+            random_user_mode = True
+            test_args.pop(0)
+        if not random_user_mode:
+            if test_args[0].startswith('<@!'):
+                test_data['user'] = await ctx.guild.fetch_member(test_args[0][3:len(test_args[0]) - 1])
+                test_args.pop(0)
+            if test_args[0].startswith('--'):
+                test_data['user'] = test_args[0][2:]
+                test_args.pop(0)
+        test_data['text'] = ' '.join(test_args)
+        if not test_data['text']:
             await ctx.reply('Вы не передали текст для теста',
                             delete_after=self.delay_time)
             await asyncio.sleep(self.delay_time)
             await ctx.message.delete()
-            return
-        final_msg = UserChecker.format_percent_to_message(
-            percent_data,
-            self.text,
-            self.user
-        )
-        await ctx.send(final_msg)
+            return None
+        test_data['percent'] = UserChecker.get_test_percent(tests_count)
+        return test_data
 
     @staticmethod
     def get_test_percent(amount):
         """Get percent of user's test.
+
+        Process and returns all tests percents and average percent
 
         Args:
             amount (int): Number of tests
@@ -105,17 +125,15 @@ class UserChecker(commands.Cog):
         Retuns:
             int: If there is one test to process
             list: If there is many tests to process.
-            Returns all tests percents and average percent
         """
         if amount == 1:
             return random.randint(0, 100)
         perc_list = []
         avg_percent = 0
         i = 0
-        while i < amount:
+        for i in range(amount):
             perc_list.append(random.randint(0, 100))
             avg_percent += perc_list[i]
-            i += 1
         avg_percent /= amount
         return [perc_list, avg_percent]
 

@@ -30,6 +30,7 @@ class AvatarSwitcher(commands.Cog):
         """
         self.client = client
         self.delay_time = 5
+        self.avatar_cooldown = None
 
     @commands.command(aliases=['аватарка'])
     async def avatar_switch(self, ctx):
@@ -40,22 +41,25 @@ class AvatarSwitcher(commands.Cog):
         Args:
             ctx (commands.context.Context): Context object to execute functions
         """
-        avatar_data = avatar_changer.get_avatar_bytes()
-        if isinstance(avatar_data, int):
+        avatar_data = avatar_changer.get_avatar_bytes(self.avatar_cooldown)
+        if avatar_data['avatar_bytes'] is None:
+            if self.avatar_cooldown is None:
+                self.avatar_cooldown = avatar_data['avatar_cooldown']
             time_string = td_format.format_timedelta(
-                datetime.timedelta(seconds=avatar_data)
+                datetime.timedelta(seconds=avatar_data['curr_cooldown'])
             )
             await ctx.reply('Пока что нельзя сменить аватарку. '
                             f'Попробуйте через **{time_string}**',
                             delete_after=self.delay_time)
             await asyncio.sleep(self.delay_time)
             await ctx.message.delete()
-        else:
-            await self.client.user.edit(avatar=avatar_data)
-            await ctx.reply('Аватарка успешно изменена!',
-                            delete_after=self.delay_time)
-            await asyncio.sleep(self.delay_time)
-            await ctx.message.delete()
+            return
+        self.avatar_cooldown = avatar_data['avatar_cooldown']
+        await self.client.user.edit(avatar=avatar_data['avatar_bytes'])
+        await ctx.reply('Аватарка успешно изменена!',
+                        delete_after=self.delay_time)
+        await asyncio.sleep(self.delay_time)
+        await ctx.message.delete()
 
 
 def setup(client):

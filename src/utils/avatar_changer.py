@@ -17,30 +17,46 @@ import src.lib.database as database
 CHANGE_COOLDOWN = 900
 
 
-def get_avatar_bytes():
+def get_avatar_bytes(avatar_cooldown):
     """Get bytes from avatar picture.
 
     This function has built-in check for
     avatar change cooldown
 
+    Args:
+        avatar_cooldown (Union[int, None]): Cooldown for setting new avatar
+
     Returns:
-        Union[int, bytes]: Cooldown time or bytes of PNG
+        Union[int, list[bytes, int]]:
+        Current cooldown time or bytes of PNG w/ new cooldown time
     """
-    curr_cooldown = database.get_data(
-        'mainDB',
-        True,
-        'SELECT avatar_cooldown FROM variables',
-    ) - int(time.time())
+    if not avatar_cooldown:
+        avatar_cooldown = database.get_data(
+            'mainDB',
+            True,
+            'SELECT avatar_cooldown FROM variables',
+        )
+    curr_time = int(time.time())
+    curr_cooldown = avatar_cooldown - curr_time
     if curr_cooldown > 0:
-        return int(curr_cooldown)
+        return {
+            "avatar_cooldown": avatar_cooldown,
+            "curr_cooldown": int(curr_cooldown),
+            "avatar_bytes": None
+        }
+    new_avatar_cooldown = curr_time + avatar_cooldown
     database.modify_data(
         'mainDB',
         'UPDATE variables SET avatar_cooldown = ?',
-        int(time.time()) + CHANGE_COOLDOWN
+        new_avatar_cooldown
     )
     avatar_path = f"{pathlib.Path().absolute()}/src/avatars/" \
                   f"Avatar_{random.randint(1, 16)}.png"
     with open(avatar_path, 'rb') as f:
         avatar_bytes = f.read()
     f.close()
-    return avatar_bytes
+    return {
+        "avatar_cooldown": new_avatar_cooldown,
+        "curr_cooldown": None,
+        "avatar_bytes": avatar_bytes
+    }

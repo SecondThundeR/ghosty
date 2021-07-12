@@ -94,7 +94,7 @@ def add_member_to_db(member):
     """
     return database.modify_data(
         'mainDB',
-        f'INSERT INTO users VALUES (?)',
+        'INSERT INTO users VALUES (?)',
         member.id
     )
 
@@ -110,7 +110,7 @@ def add_bot_to_db(bot):
     """
     return database.modify_data(
         'mainDB',
-        f'INSERT INTO bots VALUES (?)',
+        'INSERT INTO bots VALUES (?)',
         bot.id
     )
 
@@ -129,7 +129,7 @@ def rem_member_from_db(member):
     """
     return database.modify_data(
         'mainDB',
-        f'DELETE FROM users WHERE users_id = ?',
+        'DELETE FROM users WHERE users_id = ?',
         member.id
     )
 
@@ -147,7 +147,7 @@ def rem_member_from_db(member):
 #     """
 #     return database.modify_data(
 #         'mainDB',
-#         f'DELETE FROM bots WHERE bots_id = ?',
+#         'DELETE FROM bots WHERE bots_id = ?',
 #         bot.id
 #     )
 

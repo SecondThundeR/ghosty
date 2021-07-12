@@ -8,6 +8,7 @@ This file can also be imported as a module and contains the following functions:
     * get_shipping_users - returns info of two randomly chosen users
     * get_members_name - returns nickname or name of member as a string
     * add_member_to_db - adds member to database
+    * add_bot_to_db - adds bot to database
     * rem_member_from_db - removes member from database
     * is_user_admin - returns True, if user is admin of bot
     * is_user_blocked - returns True, if user is in blacklist of bot
@@ -91,11 +92,26 @@ def add_member_to_db(member):
     Args:
         member (discord.member.Member): Info about member of guild
     """
-    db_table = 'users' if not member.bot else 'bots'
     return database.modify_data(
         'mainDB',
-        f'INSERT INTO {db_table} VALUES (?)',
+        f'INSERT INTO users VALUES (?)',
         member.id
+    )
+
+
+def add_bot_to_db(bot):
+    """Add bot to database.
+
+    Used for adding bots on startup or when member is getting
+    on the server (For some ignore purposes)
+
+    Args:
+        bot (discord.member.Member): Info about bot of guild
+    """
+    return database.modify_data(
+        'mainDB',
+        f'INSERT INTO bots VALUES (?)',
+        bot.id
     )
 
 
@@ -111,15 +127,29 @@ def rem_member_from_db(member):
     Args:
         member (discord.member.Member): Info about member of guild
     """
-    if not member.bot:
-        db_table, db_column = 'users', 'users_id'
-    else:
-        db_table, db_column = 'bots', 'bots_id'
     return database.modify_data(
         'mainDB',
-        f'DELETE FROM {db_table} WHERE {db_column} = ?',
+        f'DELETE FROM users WHERE users_id = ?',
         member.id
     )
+
+
+# def rem_bot_from_db(bot):
+#     """Remove bot from database.
+
+#     Used for removing bot from database in certain cases
+
+#     **Noteworthy:** This makes sense until the bot reboots. In future there are plans
+#     for adding ignore list for shipping and other commands
+
+#     Args:
+#         bot (discord.member.Member): Info about bot of guild
+#     """
+#     return database.modify_data(
+#         'mainDB',
+#         f'DELETE FROM bots WHERE bots_id = ?',
+#         bot.id
+#     )
 
 
 def is_user_admin(user_id):

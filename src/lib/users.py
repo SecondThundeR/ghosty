@@ -37,11 +37,10 @@ async def get_random_user(msg):
         False,
         'SELECT users_id FROM users'
     )
-    try:
+    if users:
         member = await msg.guild.fetch_member(random.choice(users))
         return member
-    except IndexError:
-        raise UsersNotFound("В базе данных нет пользователей")
+    raise UsersNotFound("В базе данных нет пользователей")
 
 
 async def get_shipping_users(msg):
@@ -80,9 +79,7 @@ def get_members_name(member):
     Returns:
         str: User's name, if user doesn't have a nickname and otherwise
     """
-    if member.nick is None:
-        return member.name
-    return member.nick
+    return member.name if not member.nick else member.nick
 
 
 def add_member_to_db(member):
@@ -94,15 +91,10 @@ def add_member_to_db(member):
     Args:
         member (discord.member.Member): Info about member of guild
     """
-    if member.bot:
-        return database.modify_data(
-            'mainDB',
-            'INSERT INTO bots VALUES (?)',
-            member.id
-        )
+    db_table = 'users' if not member.bot else 'bots'
     return database.modify_data(
         'mainDB',
-        'INSERT INTO users VALUES (?)',
+        f'INSERT INTO {db_table} VALUES (?)',
         member.id
     )
 
@@ -119,15 +111,10 @@ def rem_member_from_db(member):
     Args:
         member (discord.member.Member): Info about member of guild
     """
-    if member.bot:
-        return database.modify_data(
-            'mainDB',
-            'DELETE FROM bots WHERE bots_id = ?',
-            member.id
-        )
+    db_info = ['users', 'users_id'] if not member.bot else ['bots', 'bots_id']
     return database.modify_data(
         'mainDB',
-        'DELETE FROM users WHERE users_id = ?',
+        f'DELETE FROM {db_info[0]} WHERE {db_info[1]} = ?',
         member.id
     )
 

@@ -15,12 +15,16 @@ import src.lib.users as users
 async def update_member_list(client):
     """Update users database on load.
 
+    **Noteworthy:** Currently adding bot to multiple server can cause
+    some DB issues. This will be fixed/implemented in future releases.
+
     Args:
         client (discord.Client): Client object to fetch members of server
     """
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
-            users.add_member_to_db(member)
+            if not member.bot:
+                users.add_member_to_db(member)
 
 
 async def load_commands(client):

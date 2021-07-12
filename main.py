@@ -101,14 +101,16 @@ async def on_command_error(ctx, error):
 async def on_member_join(member):
     """Add new server users to database.
 
-    This function adds every new user to database, while bot is running.
+    This function adds every new user/bot to database, while bot is running.
     This helps prevent new users from being ignored in commands
-    that use use a table of users.
+    that use use a table of users (And helps to ignore any bot in commands)
 
     Args:
-        member (discord.member.Member): Data about joined user
+        member (discord.member.Member): Data about joined user/bot
     """
-    users.add_member_to_db(member)
+    if not member.bot:
+        users.add_member_to_db(member)
+    users.add_bot_to_db(member)
 
 
 @client.event
@@ -121,7 +123,8 @@ async def on_member_leave(member):
     Args:
         member (discord.member.Member): Data about left user
     """
-    users.rem_member_from_db(member)
+    if not member.bot:
+        users.rem_member_from_db(member)
 
 
 @client.listen('on_message')

@@ -111,10 +111,13 @@ def rem_member_from_db(member):
     Args:
         member (discord.member.Member): Info about member of guild
     """
-    db_info = ['users', 'users_id'] if not member.bot else ['bots', 'bots_id']
+    if not member.bot:
+        db_table, db_column = 'users', 'users_id'
+    else:
+        db_table, db_column = 'bots', 'bots_id'
     return database.modify_data(
         'mainDB',
-        f'DELETE FROM {db_info[0]} WHERE {db_info[1]} = ?',
+        f'DELETE FROM {db_table} WHERE {db_column} = ?',
         member.id
     )
 

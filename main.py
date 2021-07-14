@@ -110,6 +110,7 @@ async def on_member_join(member):
     """
     if not member.bot:
         users.add_member_to_db(member)
+        return
     users.add_bot_to_db(member)
 
 

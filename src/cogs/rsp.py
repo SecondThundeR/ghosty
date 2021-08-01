@@ -10,6 +10,12 @@ import asyncio
 import src.lib.database as database
 from discord.ext import commands
 
+WIN_VARIANTS = {
+    'камень': 'ножницы',
+    'бумага': 'камень',
+    'ножницы': 'бумага'
+}
+
 
 class RSPGame(commands.Cog):
     """Class to execute text version of RSP game.
@@ -37,11 +43,6 @@ class RSPGame(commands.Cog):
         self.client = client
         self.fail_delay = 4
         self.success_delay = 1
-        self.win_variants = {
-            'камень': 'ножницы',
-            'бумага': 'камень',
-            'ножницы': 'бумага'
-        }
 
     @commands.command(aliases=['цуефа'])
     async def rsp_mode(self, ctx, *args):
@@ -77,11 +78,12 @@ class RSPGame(commands.Cog):
         Returns:
             bool: True if all conditions are met, False otherwise
         """
-        test_string = ctx.message.content.lower()
-        test_channel = isinstance(ctx.message.channel, discord.channel.DMChannel)
+        test_string = ctx.content.lower()
+        test_channel = isinstance(ctx.channel, discord.channel.DMChannel)
         return bool(test_string == 'играть' and not test_channel)
 
-    def choice_check(self, ctx):
+    @staticmethod
+    def choice_check(ctx):
         """Check for correct conditions of answer selection.
 
         Args:
@@ -90,9 +92,9 @@ class RSPGame(commands.Cog):
         Returns:
             bool: True, if all conditions are met, False otherwise
         """
-        test_string = ctx.message.content.lower()
-        test_channel = isinstance(ctx.message.channel, discord.channel.DMChannel)
-        return bool(test_string in self.win_variants and test_channel)
+        test_string = ctx.content.lower()
+        test_channel = isinstance(ctx.channel, discord.channel.DMChannel)
+        return bool(test_string in WIN_VARIANTS and test_channel)
 
     async def purge_messages(self, messages):
         """Collect and delete all messages, that can distract users in channel.
@@ -125,10 +127,10 @@ class RSPGame(commands.Cog):
                    f'{f_user_mention} и {s_user_mention} ' \
                    'окончена!**\n'
         outcome_text = ''
-        if first_var == self.win_variants[second_var]:
+        if first_var == WIN_VARIANTS[second_var]:
             outcome_text = f'**Результаты:** {second_var}  🤜  {first_var}\n' \
                         f'{s_user_mention} победил!'
-        elif second_var == self.win_variants[first_var]:
+        elif second_var == WIN_VARIANTS[first_var]:
             outcome_text = f'**Результаты:** {first_var}  🤜  {second_var}\n' \
                         f'{f_user_mention} победил!'
         else:
@@ -146,10 +148,10 @@ class RSPGame(commands.Cog):
             ctx (commands.context.Context): Context object to execute functions
             user_choice (str): Player's move variant
         """
-        if user_choice not in self.win_variants:
+        if user_choice not in WIN_VARIANTS:
             await ctx.reply('Похоже вы выбрали что-то не то...')
         else:
-            bot_choice = random.choice(list(self.win_variants))
+            bot_choice = random.choice(list(WIN_VARIANTS))
             await ctx.send(RSPGame.rsp_game(
                 self, user_choice, bot_choice,
                 ctx.author.id, self.client.user.id
@@ -179,7 +181,6 @@ class RSPGame(commands.Cog):
         first_user = ctx.author
         users_choice = []
         messages_to_purge = []
-        await ctx.message.delete()
         init_msg = await ctx.reply('Вы запустили игру! '
                                    'Второй игрок, напишите "Играть"\n'
                                    '*До автоотмены - 1 минута*')
@@ -197,9 +198,10 @@ class RSPGame(commands.Cog):
                 'UPDATE variables SET rsp_game_active = ?',
                 0
             )
-            game_fail = ctx.reply('Похоже никто не решил сыграть с вами. '
-                                  'Пока что я отменил данную игру')
-            messages_to_purge.append(game_fail)
+            await init_msg.edit(
+                content='Похоже никто не решил сыграть с вами. '
+                'Пока что я отменил данную игру'
+            )
             await asyncio.sleep(self.fail_delay)
             await RSPGame.purge_messages(self, messages_to_purge)
             return

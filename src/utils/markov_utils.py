@@ -217,7 +217,7 @@ def generate_sentence(data):
     first_word = get_start_word(data[0])
     chain = [first_word]
     if len(data) == 3:
-        n_words = data[2]
+        n_words = int(data[2])
     else:
         n_words = random.randint(30, 80)
     i = 1

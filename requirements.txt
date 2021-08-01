@@ -2,3 +2,4 @@ discord
 requests
 emoji
 aiocron
+asyncio

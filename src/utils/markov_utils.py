@@ -217,7 +217,7 @@ def generate_sentence(data):
     first_word = get_start_word(data[0])
     chain = [first_word]
     if len(data) == 3:
-        n_words = int(data[2])
+        n_words = data[2]
     else:
         n_words = random.randint(30, 80)
     i = 1
@@ -261,7 +261,8 @@ def return_checked_sentence(number=None):
     data = prepare_chains_data()
     if isinstance(data, bool):
         return data
-    data.append(number)
+    if number is not None:
+        data.append(int(number))
     new_sentence = generate_sentence(data)
     while not new_sentence:
         if len(data) == 3:

@@ -62,7 +62,9 @@ async def on_ready():
     database.clear_tables()
     markov_utils.markov_delay_handler('clear')
     await client.change_presence(status=discord.Status.dnd)
-    await update_avatar()
+    avatar_data = avatar_changer.get_avatar_bytes()
+    if avatar_data['avatar_bytes']:
+        await client.user.edit(avatar=avatar_data['avatar_bytes'])
     await general_scripts.load_commands(client)
     await general_scripts.update_member_list(client)
     database.modify_data(

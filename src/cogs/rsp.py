@@ -105,7 +105,8 @@ class RSPGame(commands.Cog):
         for message in messages:
             await message.delete()
 
-    def rsp_game(self, first_var, second_var, first_user_id, second_user_id):
+    @staticmethod
+    def rsp_game(first_var, second_var, first_user_id, second_user_id):
         """Get the outcome of the game and return its result.
 
         This function handles check for winner of RSP

@@ -55,7 +55,7 @@ class UserChecker(commands.Cog):
             await ctx.message.delete()
             return
         args = list(args)
-        test_data = self.parse_test_data(ctx, list(args))
+        test_data = await self.parse_test_data(ctx, list(args))
         if test_data is None:
             return
         final_msg = UserChecker.format_percent_to_message(

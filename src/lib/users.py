@@ -20,6 +20,53 @@ import src.lib.database as database
 from src.lib.exceptions import UsersNotFound
 
 
+def _get_users_list():
+    """Get and return list of users ids.
+
+    Returns:
+        list: Array of users ids from DB
+    """
+    return database.get_data(
+        'mainDB',
+        False,
+        'SELECT users_id FROM users'
+    )
+
+
+def _get_admin_status(user_id):
+    """Get user_id and compares with one in DB.
+
+    Args:
+        user_id (str): ID of user to check
+
+    Returns:
+        bool: True, if compare successful. False otherwise
+    """
+    return database.get_data(
+        'mainDB',
+        False,
+        'SELECT admins_id FROM admin_list WHERE admins_id = ?',
+        user_id
+    ) == int(user_id)
+
+
+def _get_block_status(user_id):
+    """Get user_id and compares with one in DB.
+
+    Args:
+        user_id (str): ID of user to check
+
+    Returns:
+        bool: True, if compare successful. False otherwise
+    """
+    return database.get_data(
+        'mainDB',
+        False,
+        'SELECT blocked_id FROM block_list WHERE blocked_id = ?',
+        user_id
+    ) == int(user_id)
+
+
 async def get_random_user(msg):
     """Get a random user from an list and return it's info.
 
@@ -33,11 +80,7 @@ async def get_random_user(msg):
     Raises:
         UsersNotFound: If list of users is empty
     """
-    users = database.get_data(
-        'mainDB',
-        False,
-        'SELECT users_id FROM users'
-    )
+    users = _get_users_list()
     if users:
         member = await msg.guild.fetch_member(random.choice(users))
         return member
@@ -56,11 +99,7 @@ async def get_shipping_users(msg):
     Raises:
         UsersNotFound: If list of users is empty
     """
-    users = database.get_data(
-        'mainDB',
-        False,
-        'SELECT users_id FROM users'
-    )
+    users = _get_users_list()
     if len(users) > 2:
         first_member = await msg.guild.fetch_member(
             first_member_id := random.choice(users)
@@ -134,24 +173,6 @@ def rem_member_from_db(member):
     )
 
 
-# def rem_bot_from_db(bot):
-#     """Remove bot from database.
-
-#     Used for removing bot from database in certain cases
-
-#     **Noteworthy:** This makes sense until the bot reboots. In future there are plans
-#     for adding ignore list for shipping and other commands
-
-#     Args:
-#         bot (discord.member.Member): Info about bot of guild
-#     """
-#     return database.modify_data(
-#         'mainDB',
-#         'DELETE FROM bots WHERE bots_id = ?',
-#         bot.id
-#     )
-
-
 def is_user_admin(user_id):
     """Check if user is an admin of bot.
 
@@ -161,13 +182,7 @@ def is_user_admin(user_id):
     Returns:
         bool: True, if user is admin of bot. False otherwise
     """
-    db_id = database.get_data(
-        'mainDB',
-        False,
-        'SELECT admins_id FROM admin_list WHERE admins_id = ?',
-        user_id
-    )
-    return int(user_id) in db_id
+    return _get_admin_status(user_id)
 
 
 def is_user_blocked(user_id):
@@ -179,10 +194,4 @@ def is_user_blocked(user_id):
     Returns:
         bool: True, if user is banned. False otherwise
     """
-    db_id = database.get_data(
-        'mainDB',
-        False,
-        'SELECT blocked_id FROM block_list WHERE blocked_id = ?',
-        user_id
-    )
-    return int(user_id) in db_id
+    return _get_block_status(user_id)

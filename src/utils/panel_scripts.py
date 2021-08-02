@@ -94,14 +94,18 @@ def installed_modules_checker():
     If not, it suggests installing the missing ones
     by running the installation of requirements.txt
     """
-    modules_counter = 0
+    found_packages = []
     pip_version = pkg_resources.get_distribution("pip").version
     packages = list(pkg_resources.working_set)
     for package in packages:
         if package.key in MODULES_TO_CHECK:
-            modules_counter += 1
-    if modules_counter < 4:
-        print('\nYou are missing some required modules.\n'
+            found_packages.append(package.key)
+    if len(found_packages) != len(MODULES_TO_CHECK):
+        print(found_packages, MODULES_TO_CHECK)
+        packages_to_install = ' '.join(
+            [pkg for pkg in MODULES_TO_CHECK if pkg not in found_packages]
+        )
+        print(f'\nYou are missing some required modules: {packages_to_install}\n'
               'Do you want to install missing modules for correct work of bot? (Y/n)')
         while True:
             user_input = get_user_input()

@@ -33,7 +33,7 @@ from src.lib.exceptions import WordsImportError
 
 
 MODULES_TO_CHECK = [
-    'discord.py',
+    'discord',
     'requests',
     'emoji',
     'aiocron'

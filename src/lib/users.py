@@ -128,39 +128,39 @@ def get_members_name(member):
     return member.name if not member.nick else member.nick
 
 
-def add_member_to_db(member):
+def add_member_to_db(member_id):
     """Add member to database.
 
     Used for adding members on startup or when member is getting
     on the server
 
     Args:
-        member (discord.member.Member): Info about member of guild
+        member_id (int): ID of member to add
     """
     return database.modify_data(
         'mainDB',
         'INSERT INTO users VALUES (?)',
-        member.id
+        member_id
     )
 
 
-def add_bot_to_db(bot):
+def add_bot_to_db(bot_id):
     """Add bot to database.
 
     Used for adding bots on startup or when member is getting
     on the server (For some ignore purposes)
 
     Args:
-        bot (discord.member.Member): Info about bot of guild
+        bot_id (int): ID of bot to add
     """
     return database.modify_data(
         'mainDB',
         'INSERT INTO bots VALUES (?)',
-        bot.id
+        bot_id
     )
 
 
-def rem_member_from_db(member):
+def rem_member_from_db(member_id):
     """Remove member from database.
 
     Used for removing members from database in certain cases
@@ -170,12 +170,12 @@ def rem_member_from_db(member):
     for adding ignore list for shipping and other commands
 
     Args:
-        member (discord.member.Member): Info about member of guild
+        member_id (int): ID of member to remove
     """
     return database.modify_data(
         'mainDB',
         'DELETE FROM users WHERE users_id = ?',
-        member.id
+        member_id
     )
 
 

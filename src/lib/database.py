@@ -76,11 +76,7 @@ def clear_tables():
     )
     modify_data(
         'mainDB',
-        'DELETE FROM bots'
-    )
-    modify_data(
-        'mainDB',
-        'DELETE FROM users'
+        'DELETE FROM bots; DELETE FROM users'
     )
 
 
@@ -101,18 +97,7 @@ def reset_bot_tables():
     )
     modify_data(
         'mainDB',
-        'DELETE FROM bots'
-    )
-    modify_data(
-        'mainDB',
-        'DELETE FROM users'
-    )
-    modify_data(
-        'mainDB',
-        'DELETE FROM admin_list'
-    )
-    modify_data(
-        'mainDB',
+        'DELETE FROM bots; DELETE FROM users; DELETE FROM admin_list; '
         'DELETE FROM block_list'
     )
     modify_data(

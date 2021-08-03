@@ -111,9 +111,9 @@ async def on_member_join(member):
         member (discord.member.Member): Data about joined user/bot
     """
     if not member.bot:
-        users.add_member_to_db(member)
+        users.add_member_to_db(member.id)
         return
-    users.add_bot_to_db(member)
+    users.add_bot_to_db(member.id)
 
 
 @client.event
@@ -127,7 +127,7 @@ async def on_member_leave(member):
         member (discord.member.Member): Data about left user
     """
     if not member.bot:
-        users.rem_member_from_db(member)
+        users.rem_member_from_db(member.id)
 
 
 @client.listen('on_message')

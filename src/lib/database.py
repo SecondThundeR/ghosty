@@ -150,6 +150,9 @@ def get_data(db_name, is_single, command, *data):
 def modify_data(db_name, command, *data):
     """Modify data in the DB.
 
+    If command contains multiple querys, then
+    function will use executescript instead.
+
     Args:
         db_name (str): Name of database to modify data
         command (str): Command to execute
@@ -160,10 +163,14 @@ def modify_data(db_name, command, *data):
     """
     try:
         database = Database(db_name)
-        if len(data) > 0:
-            database.cur.execute(command, data)
+        # Currently `executescript` with data is not supported
+        if command.find(';') != -1:
+            database.cur.executescript(command)
         else:
-            database.cur.execute(command)
+            if len(data) > 0:
+                database.cur.execute(command, data)
+            else:
+                database.cur.execute(command)
         database.conn.commit()
         database.disconnect_db()
     except sqlite3.Error as err:

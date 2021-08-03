@@ -114,11 +114,17 @@ def get_members_name(member):
     """Check if member has a nickname on server.
 
     Args:
-        member (discord.member.Member): Info about member of guild
+        member (Union[discord.member.Member, list]): Info about member of guild
 
     Returns:
         str: User's name, if user doesn't have a nickname and otherwise
+        list: List of names of user's nicknames
     """
+    if type(member) == list:
+        members_data = []
+        for m in member:
+            members_data.append(m.name if not m.nick else m.nick)
+        return members_data
     return member.name if not member.nick else member.nick
 
 

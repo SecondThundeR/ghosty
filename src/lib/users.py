@@ -120,7 +120,7 @@ def get_members_name(member):
         str: User's name, if user doesn't have a nickname and otherwise
         list: List of names of user's nicknames
     """
-    if type(member) == list:
+    if type(member) is list:
         members_data = []
         for m in member:
             members_data.append(m.name if not m.nick else m.nick)

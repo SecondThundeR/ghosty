@@ -10,6 +10,7 @@ import asyncio
 import datetime as dt
 import src.lib.database as database
 import src.lib.users as users
+import src.utils.shipping_utils as shipping_utils
 from src.lib.exceptions import UsersNotFound
 from discord.ext import commands
 
@@ -36,7 +37,7 @@ class RandomShip(commands.Cog):
             client (discord.client.Client): Current client object
         """
         self.client = client
-        self.delay_time = 2
+        self.delay_time = 1
         self.delete_time = 5
         self.strings_to_send = [
             '*чтож...*', '**МОРЕ ВОЛНУЕТСЯ РАЗ**',
@@ -200,56 +201,28 @@ class RandomShip(commands.Cog):
             return
         current_date = dt.datetime.now().date()
         next_date = (dt.datetime.now() + dt.timedelta(days=1)).date()
-        ship_date = database.get_data(
-            'mainDB',
-            True,
-            'SELECT ship_date FROM variables'
-        )
-        ship_activated = database.get_data(
-            'mainDB',
-            True,
-            'SELECT ship_activated FROM variables'
-        )
-        ship_in_active = database.get_data(
-            'mainDB',
-            True,
-            'SELECT ship_in_active FROM variables'
-        )
-        if ship_in_active:
+        ship_data = shipping_utils.get_ship_data()
+        if ship_data['ship_in_active']:
             return
-        if not ship_activated and not ship_in_active:
-            database.modify_data(
-                'mainDB',
-                'UPDATE variables SET ship_in_active = ?, ship_activated = ?',
-                1,
-                1
-            )
-            first_username = users.get_members_name(users_info[0])
-            first_user_length = int(len(first_username) / 2)
-            second_username = users.get_members_name(users_info[1])
-            second_user_length = int(len(second_username) / 2)
-            first_sliced_username = first_username[:first_user_length]
-            second_sliced_username = second_username[second_user_length:]
-            final_username = first_sliced_username + second_sliced_username
-            ship_text_short = f'{users_info[0].mention} + {users_info[1].mention},' \
-                              ' #' + final_username
-            ship_text_full = f'{first_username} + {second_username}, #' + final_username
+        if not ship_data['ship_activated'] and not ship_data['ship_in_active']:
+            await shipping_utils.lock_shipping()
+            formatted_data = await shipping_utils.format_usernames(users_info)
             if fast_mode:
-                await ctx.reply(f'**Парочка дня на сегодня:** {ship_text_short} '
+                await ctx.reply(f'**Парочка дня на сегодня:** {formatted_data[0]} '
                                 ':two_hearts:')
             else:
-                await RandomShip.random_ship_messages(self, ctx, ship_text_short)
+                await RandomShip.random_ship_messages(self, ctx, formatted_data[0])
             database.modify_data(
                 'mainDB',
                 'UPDATE variables SET ship_date = ?, ship_text_full = ?, '
                 'ship_text_short = ?, ship_in_active = ?',
                 next_date,
-                ship_text_full,
-                ship_text_short,
+                formatted_data[1],
+                formatted_data[0],
                 0
             )
-        elif ship_activated and current_date < dt.datetime.strptime(
-            ship_date,
+        elif ship_data['ship_activated'] and current_date < dt.datetime.strptime(
+            ship_data['ship_date'],
             '%Y-%m-%d'
         ).date():
             ship_text_full = database.get_data(
@@ -268,8 +241,8 @@ class RandomShip(commands.Cog):
             await ctx.reply(f'**Парочка дня на сегодня:** {ship_text_full} '
                             ':two_hearts: \n\n*Следующий шиппинг будет доступен '
                             f'{next_date_string}*')
-        elif ship_activated and current_date >= dt.datetime.strptime(
-            ship_date,
+        elif ship_data['ship_activated'] and current_date >= dt.datetime.strptime(
+            ship_data['ship_date'],
             '%Y-%m-%d'
         ).date():
             database.modify_data(

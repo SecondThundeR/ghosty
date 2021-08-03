@@ -24,7 +24,7 @@ async def update_member_list(client):
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
             if not member.bot:
-                users.add_member_to_db(member)
+                users.add_member_to_db(member.id)
 
 
 async def load_commands(client):

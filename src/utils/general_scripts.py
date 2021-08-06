@@ -27,6 +27,8 @@ async def update_member_list(client):
         False,
         "SELECT * FROM ignored_users"
     )
+    if ignored_users_id is None:
+        ignored_users_id = []
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
             if not member.bot and member.id not in ignored_users_id:

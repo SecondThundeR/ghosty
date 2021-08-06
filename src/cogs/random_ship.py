@@ -109,7 +109,7 @@ class RandomShip(commands.Cog):
             'SELECT * FROM ignored_users WHERE users_id = ?',
             user_id
         )
-        if mode == 'выход':
+        if mode == 'выйти':
             if user_state is None:
                 database.modify_data(
                     "mainDB",

@@ -98,7 +98,7 @@ def reset_bot_tables():
     modify_data(
         'mainDB',
         'DELETE FROM bots; DELETE FROM users; DELETE FROM admin_list; '
-        'DELETE FROM block_list'
+        'DELETE FROM block_list; DELETE FROM ignored_users'
     )
     modify_data(
         'confDB',
@@ -106,7 +106,7 @@ def reset_bot_tables():
     )
     modify_data(
         'wordsDB',
-        'DELETE FROM main_words_base; DELETE FROM markov_chains; '
+        'DELETE FROM main_words_base; DELETE FROM markov_words; '
         'DELETE FROM roulette_lose_words; DELETE FROM roulette_minus_words;'
         'DELETE FROM roulette_win_words; DELETE FROM roulette_zero_words;'
     )

@@ -57,7 +57,7 @@ class MeMessage(commands.Cog):
             }
         return {
             'message': f'{ctx.author.mention} ' \
-                       f'{" ".join(args)}',
+                       f'{"".join(args)}',
             'tts': False
         }
 

@@ -44,7 +44,7 @@ class SystemInfo(commands.Cog):
             ctx (commands.context.Context): Context object to execute functions
             mode (Union[str, None]): Mode for format of system info
         """
-        await ctx.reply(self.format_system_info(mode))
+        await ctx.reply(self.format_system_info(mode), delete_after=self.delay_time)
         await asyncio.sleep(self.delay_time)
         await ctx.message.delete()
 

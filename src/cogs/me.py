@@ -5,7 +5,6 @@ There are several flags that changes sending behavior
 """
 
 
-from asyncio.windows_events import NULL
 import src.lib.users as users
 from discord.ext import commands
 
@@ -51,12 +50,12 @@ class MeMessage(commands.Cog):
             }
         if args[0] == 'ттс':
             return {
-                'message': f'{users.get_members_name(ctx.author)}: ' \
+                'message': f'{users.get_members_name(ctx.author)}: '
                            f'{" ".join(args[1:])}',
                 'tts': True
             }
         return {
-            'message': f'{ctx.author.mention} ' \
+            'message': f'{ctx.author.mention} '
                        f'{"".join(args)}',
             'tts': False
         }

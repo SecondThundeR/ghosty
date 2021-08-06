@@ -136,7 +136,7 @@ def get_data(db_name, is_single, command, *data):
             database.cur.execute(command, data)
         received_data = database.cur.fetchall()
         if not received_data:
-            return []
+            return None
         converted_data = [item for t in received_data for item in t]
         database.disconnect_db()
         if is_single:

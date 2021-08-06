@@ -81,9 +81,9 @@ def clear_tables():
 
 
 def reset_bot_tables():
-    """Clear specific tables on bot reset.
+    """Clear all tables on bot reset.
 
-    This function handles clearing some tables, when bot is resetted
+    This function handles clearing all tables, when bot is resetted
     in `bot_panel`
     """
     modify_data(
@@ -103,6 +103,12 @@ def reset_bot_tables():
     modify_data(
         'confDB',
         'DELETE FROM tokens'
+    )
+    modify_data(
+        'wordsDB',
+        'DELETE FROM main_words_base; DELETE FROM markov_chains; '
+        'DELETE FROM roulette_lose_words; DELETE FROM roulette_minus_words;'
+        'DELETE FROM roulette_win_words; DELETE FROM roulette_zero_words;'
     )
 
 

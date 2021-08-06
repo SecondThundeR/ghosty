@@ -70,8 +70,8 @@ class MeMessage(commands.Cog):
             args (tuple): Arguments to work with (Mode + Message)
         """
         if args:
-            await ctx.message.delete()
             me_data = self.parse_me_args(ctx, args)
+            await ctx.message.delete()
             await ctx.send(me_data['message'], tts=me_data['tts'])
 
 

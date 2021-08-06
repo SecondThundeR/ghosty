@@ -81,7 +81,7 @@ class RandomShip(commands.Cog):
             elif 'реролл' in args:
                 await RandomShip.reset_ship(self, ctx, False)
                 await RandomShip.random_ship(self, ctx)
-            elif 'выход' in args or 'войти' in args:
+            elif 'выйти' in args or 'войти' in args:
                 await RandomShip.manage_ship_ignore(self, ctx, ctx.author.id, args[0])
             else:
                 await ctx.reply('Я не могу шипперить одного человека. '

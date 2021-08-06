@@ -10,6 +10,7 @@ This file can also be imported as a module and contains the following functions:
 
 import os
 import src.lib.users as users
+import src.lib.database as database
 
 
 async def update_member_list(client):
@@ -21,9 +22,14 @@ async def update_member_list(client):
     Args:
         client (discord.Client): Client object to fetch members of server
     """
+    ignored_users_id = database.get_data(
+        "mainDB",
+        False,
+        "SELECT * FROM ignored_users"
+    )
     for guild in client.guilds:
         async for member in guild.fetch_members(limit=None):
-            if not member.bot:
+            if not member.bot and member.id not in ignored_users_id:
                 users.add_member_to_db(member.id)
 
 

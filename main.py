@@ -110,7 +110,12 @@ async def on_member_join(member):
     Args:
         member (discord.member.Member): Data about joined user/bot
     """
-    if not member.bot:
+    if not member.bot and database.get_data(
+        'mainDB',
+        True,
+        'SELECT * FROM ignored_users WHERE users_id = ?',
+        member.id
+    ) is not None:
         users.add_member_to_db(member.id)
         return
     users.add_bot_to_db(member.id)
@@ -126,7 +131,12 @@ async def on_member_leave(member):
     Args:
         member (discord.member.Member): Data about left user
     """
-    if not member.bot:
+    if not member.bot and database.get_data(
+        'mainDB',
+        True,
+        'SELECT * FROM users WHERE users_id = ?',
+        member.id
+    ) is not None:
         users.rem_member_from_db(member.id)
 
 

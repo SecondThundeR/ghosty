@@ -100,7 +100,7 @@ async def get_shipping_users(msg):
         UsersNotFound: If list of users is empty
     """
     users = _get_users_list()
-    if len(users) > 2:
+    if len(users) >= 2:
         first_member = await msg.guild.fetch_member(
             first_member_id := random.choice(users)
         )

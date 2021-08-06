@@ -74,7 +74,7 @@ class SystemInfo(commands.Cog):
                    f'**{self.arch}**'
         return 'Я работаю на ' \
                f'**{self.name} {self.release}** ' \
-               f'*({self.version})*, '
+               f'*({self.version})*'
 
 
 def setup(client):

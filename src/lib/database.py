@@ -161,7 +161,7 @@ def modify_data(db_name, command, *data):
     try:
         database = Database(db_name)
         if len(data) > 0:
-            _modify_with_data(database, command, data)
+            database.cur.execute(command, data)
         else:
             _modify_without_data(database, command)
         database.conn.commit()
@@ -171,23 +171,6 @@ def modify_data(db_name, command, *data):
               '(Method: modify_data).\n'
               f'Here are error details: {err}')
         sys.exit()
-
-
-def _modify_with_data(db_instance, command, data):
-    """Make SQL querys with data tuple.
-
-    If command contains multiple querys, then
-    function will use executescript instead.
-
-    Args:
-        db_instance (Database): Database instance
-        command (str): Command to execute
-        data (tuple): List of data
-    """
-    if command.find(';') != -1:
-        db_instance.cur.executescript(command, data)
-        return
-    db_instance.cur.execute(command, data)
 
 
 def _modify_without_data(db_instance, command):

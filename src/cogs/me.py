@@ -5,6 +5,7 @@ There are several flags that changes sending behavior
 """
 
 
+from asyncio.windows_events import NULL
 import src.lib.users as users
 from discord.ext import commands
 
@@ -27,6 +28,39 @@ class MeMessage(commands.Cog):
         """
         self.client = client
 
+    @staticmethod
+    def parse_me_args(ctx, args):
+        """Send a user message on behalf of a bot.
+
+        Args:
+            ctx (commands.context.Context): Context object to execute functions
+            args (tuple): Arguments for parsing into dictionary
+
+        Returns:
+            dict: Dictionary with message data and TTS mode
+        """
+        if args[0] == 'анон':
+            return {
+                'message': ' '.join(args[1:]),
+                'tts': False
+            }
+        if args[0] == 'анонттс':
+            return {
+                'message': ' '.join(args[1:]),
+                'tts': True
+            }
+        if args[0] == 'ттс':
+            return {
+                'message': f'{users.get_members_name(ctx.author)}: ' \
+                           f'{" ".join(args[1:])}',
+                'tts': True
+            }
+        return {
+            'message': f'{ctx.author.mention} ' \
+                       f'{" ".join(args)}',
+            'tts': False
+        }
+
     @commands.command(aliases=['йа'])
     async def send_me_message(self, ctx, *args):
         """Send a user message on behalf of a bot.
@@ -35,24 +69,9 @@ class MeMessage(commands.Cog):
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): Arguments to work with (Mode + Message)
         """
-        me_data = {
-            'message': '',
-            'tts': False
-        }
         if args:
             await ctx.message.delete()
-            if args[0] == 'анон':
-                me_data['message'] = " ".join(args[1:])
-            elif args[0] == 'анонттс':
-                me_data['message'] = " ".join(args[1:])
-                me_data['tts'] = True
-            elif args[0] == 'ттс':
-                me_data['message'] = f'{users.get_members_name(ctx.author)}: ' \
-                                     f'{" ".join(args[1:])}'
-                me_data['tts'] = True
-            else:
-                me_data['message'] = f'{ctx.author.mention} ' \
-                                     f'{" ".join(args)}'
+            me_data = self.parse_me_args(ctx, args)
             await ctx.send(me_data['message'], tts=me_data['tts'])
 
 

@@ -36,7 +36,7 @@ This project has a [GitHub Discussions](https://github.com/SecondThundeR/ghosty/
 
 Since 2.1.1 release, all releases will include changelogs in it, so dedicated Changelog.md is no longer needed.
 
-> Note: All previous changes has been moved to Release section
+> Note: All previous releases now have their own changelog
 
 Also, you can track changes of new versions [here](https://github.com/SecondThundeR/ghosty/projects)
 

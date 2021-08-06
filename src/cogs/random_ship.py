@@ -82,7 +82,7 @@ class RandomShip(commands.Cog):
                 await RandomShip.reset_ship(self, ctx, False)
                 await RandomShip.random_ship(self, ctx)
             elif 'выход' in args or 'войти' in args:
-                await RandomShip.manage_ship_ignore(self, ctx, ctx.author.id)
+                await RandomShip.manage_ship_ignore(self, ctx, ctx.author.id, args[0])
             else:
                 await ctx.reply('Я не могу шипперить одного человека. '
                                 'Добавьте ещё кого-то, чтобы я смог '
@@ -92,7 +92,7 @@ class RandomShip(commands.Cog):
         else:
             await RandomShip.random_ship(self, ctx)
 
-    async def manage_ship_ignore(self, ctx, user_id):
+    async def manage_ship_ignore(self, ctx, user_id, mode):
         """Manage ignore list of shipping users.
 
         This function helps users to opt out of shipping or
@@ -101,6 +101,7 @@ class RandomShip(commands.Cog):
         Args:
             ctx (commands.context.Context): Context object to execute functions
             user_id (int): ID of user to ignore/add
+            mode (str): Mode of operation with ignore list
         """
         user_state = database.get_data(
             'mainDB',
@@ -108,33 +109,45 @@ class RandomShip(commands.Cog):
             'SELECT * FROM ignored_users WHERE users_id = ?',
             user_id
         )
-        if user_state is None:
-            database.modify_data(
-                "mainDB",
-                "INSERT INTO ignored_users VALUES (?)",
-                user_id
-            )
-            database.modify_data(
-                "mainDB",
-                "DELETE FROM users WHERE users_id = ?",
-                user_id
-            )
-            await ctx.reply("Вы были убраны из списка участников шиппинга!",
+        if mode == 'выход':
+            if user_state is None:
+                database.modify_data(
+                    "mainDB",
+                    "INSERT INTO ignored_users VALUES (?)",
+                    user_id
+                )
+                database.modify_data(
+                    "mainDB",
+                    "DELETE FROM users WHERE users_id = ?",
+                    user_id
+                )
+                await ctx.reply('Вы были убраны из списка участников шиппинга!',
+                                delete_after=self.delete_time)
+                await asyncio.sleep(self.delete_time)
+                await ctx.message.delete()
+                return
+            await ctx.reply('Вы не учавствуете в шиппинге!',
                             delete_after=self.delete_time)
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
             return
-        database.modify_data(
-            "mainDB",
-            "DELETE FROM ignored_users WHERE users_id = ?",
-            user_id
-        )
-        database.modify_data(
-            "mainDB",
-            "INSERT INTO users VALUES (?)",
-            user_id
-        )
-        await ctx.reply("Вы были добавлены в список участников шиппинга!",
+        if user_state is not None:
+            database.modify_data(
+                "mainDB",
+                "DELETE FROM ignored_users WHERE users_id = ?",
+                user_id
+            )
+            database.modify_data(
+                "mainDB",
+                "INSERT INTO users VALUES (?)",
+                user_id
+            )
+            await ctx.reply("Вы были добавлены в список участников шиппинга!",
+                            delete_after=self.delete_time)
+            await asyncio.sleep(self.delete_time)
+            await ctx.message.delete()
+            return
+        await ctx.reply("Вы уже учавствуете в шиппинге!",
                         delete_after=self.delete_time)
         await asyncio.sleep(self.delete_time)
         await ctx.message.delete()

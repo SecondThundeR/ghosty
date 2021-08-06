@@ -230,7 +230,8 @@ def import_word_file(db_name, table, path):
     Returns:
         bool: True if word base was imported successfully, False otherwise
     """
-    if not download_words_file(path):
+    words_download_status = download_words_file(path)
+    if not words_download_status:
         return False
     words_array = files.import_data(path)
     for element in words_array:
@@ -273,21 +274,7 @@ def clear_words_table():
     """
     database.modify_data(
         'wordsDB',
-        'DELETE FROM main_words_base'
-    )
-    database.modify_data(
-        'wordsDB',
-        'DELETE FROM roulette_lose_words'
-    )
-    database.modify_data(
-        'wordsDB',
-        'DELETE FROM roulette_minus_words'
-    )
-    database.modify_data(
-        'wordsDB',
-        'DELETE FROM roulette_win_words'
-    )
-    database.modify_data(
-        'wordsDB',
+        'DELETE FROM main_words_base; DELETE FROM roulette_lose_words; '
+        'DELETE FROM roulette_minus_words; DELETE FROM roulette_win_words; '
         'DELETE FROM roulette_zero_words'
     )

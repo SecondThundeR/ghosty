@@ -49,11 +49,11 @@ def bot_menu():
                 print('Hope you come back soon! See you later')
                 sys.exit()
             else:
-                print('You have chosen wrong option, please try again')
-                time.sleep(0.5)
+                print('You have chosen wrong option, press any button to try again')
+                input()
         else:
-            print('You have passed something wrong, please try again')
-            time.sleep(0.5)
+            print('You have passed something wrong, press any button to try again')
+            input()
 
 
 def bot_panel_init():

@@ -93,7 +93,7 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         pass
     elif isinstance(error, commands.PrivateMessageOnly):
-        await ctx.reply('Данной команда доступна только в личных сообщениях.',
+        await ctx.reply('Данная команда доступна только в личных сообщениях.',
                         delete_after=DELAY_TIME)
     else:
         raise error

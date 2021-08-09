@@ -104,6 +104,7 @@ class HelpMessage(commands.Cog):
         except KeyError:
             return self.error_text
 
+
 def setup(client):
     """Entry point for loading extension."""
     client.add_cog(HelpMessage(client))

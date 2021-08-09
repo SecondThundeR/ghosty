@@ -33,7 +33,7 @@ class RandomWord(commands.Cog):
         self.delay_time = 5
         self.curr_user = None
 
-    @commands.command(aliases=['ху', 'who'])
+    @commands.command(aliases=['ху'])
     async def get_random_word(self, ctx, *args):
         """Get random word from list and send it.
 

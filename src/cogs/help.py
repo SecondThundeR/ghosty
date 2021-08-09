@@ -47,7 +47,7 @@ class HelpMessage(commands.Cog):
             'поиск': '*поиск "кого-то" активирован...*'
         }
         self.faq_link = 'https://github.com/SecondThundeR/ghosty' \
-                        '/wiki/Commands-Description'
+                        '/wiki/Commands-Description#'
         self.error_text = 'Данная команда не была найдена!'
 
     @commands.Cog.listener()
@@ -93,7 +93,7 @@ class HelpMessage(commands.Cog):
             for item in self.help_dict:
                 help_msg += f'\n**{item}** - {self.help_dict[item]}'
             help_msg += '\n\nПолучить подробную информацию о командах можно здесь - ' \
-                        f'<{self.faq_link}>'
+                        f'<{self.faq_link[:-1]}>'
             return help_msg
         try:
             cmd_help = 'Короткая информация о команде:\n' \

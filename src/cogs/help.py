@@ -28,23 +28,27 @@ class HelpMessage(commands.Cog):
         """
         self.client = client
         self.delay_time = 5
-        self.help_msg = 'Доступные команды бота: ' \
-                        '\n\n**хелп** - выводит *(эту)* информацию с командами' \
-                        '\n**шар** - симулятор шара с ответами' \
-                        '\n**макар** - генерирует предложение "Улыбок тебе дед ...' \
-                        '\n**ген** - генерирует предложение с помощью цепей Маркова' \
-                        '\n**йа** - аналог команды `/me`' \
-                        '\n**полл** - запускает простое голосование' \
-                        '\n**рандом** - получение рандомного числа' \
-                        '\n**шип** - шипперит двух рандомных пользователей' \
-                        '\n**ху (who)** - рандомный пользователь + предложение' \
-                        '\n**цуефа** - игра в "Камень Ножницы Бумага"' \
-                        '\n**рулетка** - запускает игру в русскую рулетку' \
-                        '\n**аватарка** - запускает смену текущей аватарки' \
-                        '\n**система** - показывает данные о системе' \
-                        '\n**аптайм** - выводит время работы бота' \
-                        '\n**тест** - запускает динамическое тестирование' \
-                        '\n**поиск (пидорасов)** -  *поиск пидорасов активирован...*'
+        self.help_dict = {
+            'хелп': 'выводит эту информацию с командами',
+            'шар': 'симулятор шара с ответами',
+            'макар': 'генерирует предложение "Улыбок тебе дед ..."',
+            'ген': 'генерирует предложение с помощью цепей Маркова',
+            'йа': 'аналог команды `/me`',
+            'полл': 'запускает простое голосование',
+            'рандом': 'получение рандомного числа',
+            'шип': 'шипперит двух рандомных пользователей',
+            'ху': 'рандомный пользователь + предложение',
+            'цуефа': 'игра в "Камень Ножницы Бумага"',
+            'рулетка': 'запускает игру в русскую рулетку',
+            'аватарка': 'запускает смену текущей аватарки',
+            'система': 'показывает данные о системе',
+            'аптайм': 'выводит время работы бота',
+            'тест': 'запускает динамическое тестирование',
+            'поиск': '*поиск "кого-то" активирован...*'
+        }
+        self.faq_link = 'https://github.com/SecondThundeR/ghosty' \
+                        '/wiki/Commands-Description'
+        self.error_text = 'Данная команда не была найдена!'
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -56,22 +60,49 @@ class HelpMessage(commands.Cog):
         self.client.remove_command('help')
 
     @commands.command(aliases=['хелп'])
-    async def send_help_message(self, ctx):
+    async def send_help_message(self, ctx, command=None):
         """Send message with all available commands of bot.
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
+            command (str | None): Command to get help message for
         """
         if isinstance(ctx.channel, discord.channel.DMChannel):
-            await ctx.send(self.help_msg)
-        else:
-            await ctx.author.send(self.help_msg)
-            await ctx.reply('Хей, проверь личку! '
-                            'Я отправил тебе помощь по командам',
-                            delete_after=self.delay_time)
-            await asyncio.sleep(self.delay_time)
-            await ctx.message.delete()
+            await ctx.send(self.get_help_list(command))
+            return
+        await ctx.author.send(self.get_help_list(command))
+        await ctx.reply('Хей, проверь личку, я отправил тебе информацию об этом!',
+                        delete_after=self.delay_time)
+        await asyncio.sleep(self.delay_time)
+        await ctx.message.delete()
 
+    def get_help_list(self, command):
+        """Return help list of commands or info about certain command.
+
+        This function returns full help list of commands
+        or just description of certain command with link to FAQ on Github.
+
+        Args:
+            command (str): Command to get help message for
+
+        Returns:
+            str: String with all commands
+        """
+        if command is None:
+            help_msg = 'Доступные команды бота:\n'
+            for item in self.help_dict:
+                help_msg += f'\n**{item}** - {self.help_dict[item]}'
+            help_msg += '\n\nПолучить подробную информацию о командах можно здесь - ' \
+                        f'<{self.faq_link}>'
+            return help_msg
+        try:
+            cmd_help = 'Короткая информация о команде:\n' \
+                       f'**{command}** - {self.help_dict[command]}\n\n' \
+                       'Получить больше информации об этой команде можно здесь - ' \
+                       f'<{self.faq_link}{command}>'
+            return cmd_help
+        except KeyError:
+            return self.error_text
 
 def setup(client):
     """Entry point for loading extension."""

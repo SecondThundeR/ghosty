@@ -8,7 +8,6 @@ configuration of the bot through the console.
 
 
 import sys
-import time
 import src.lib.database as database
 import src.utils.panel_scripts as panel_scripts
 

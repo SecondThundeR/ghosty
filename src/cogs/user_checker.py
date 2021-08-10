@@ -58,7 +58,7 @@ class UserChecker(commands.Cog):
         test_data = await self.parse_test_data(ctx, list(args))
         if test_data is None:
             return
-        final_msg = UserChecker.format_percent_to_message(
+        final_msg = self.format_percent_to_message(
             test_data['percent'],
             test_data['text'],
             test_data['user']
@@ -112,7 +112,7 @@ class UserChecker(commands.Cog):
             await asyncio.sleep(self.delay_time)
             await ctx.message.delete()
             return None
-        test_data['percent'] = UserChecker.get_test_percent(tests_count)
+        test_data['percent'] = self.get_test_percent(tests_count)
         return test_data
 
     @staticmethod

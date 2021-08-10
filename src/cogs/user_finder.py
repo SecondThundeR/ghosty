@@ -43,7 +43,7 @@ class UserFinder(commands.Cog):
         words_list = args.split()
         words_list[0] = words_list[0].capitalize()
         formatted_word = " ".join(words_list)
-        await UserFinder.user_finder_execute(self, ctx, formatted_word)
+        await self.user_finder_execute(self, ctx, formatted_word)
 
     async def user_finder_execute(self, ctx, word):
         """Get random user and launch 'finder' of *any word*.

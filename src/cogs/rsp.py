@@ -64,9 +64,9 @@ class RSPGame(commands.Cog):
                 await ctx.reply('Сессия игры уже запущена, '
                                 'чтобы начать новую игру, закончите старую')
             else:
-                await RSPGame.rsp_multi_game(self, ctx)
+                await self.rsp_multi_game(self, ctx)
         else:
-            await RSPGame.rsp_bot_game(self, ctx, args[0])
+            await self.rsp_bot_game(self, ctx, args[0])
 
     @staticmethod
     def join_check(ctx):
@@ -153,7 +153,7 @@ class RSPGame(commands.Cog):
             await ctx.reply('Похоже вы выбрали что-то не то...')
         else:
             bot_choice = random.choice(list(WIN_VARIANTS))
-            await ctx.send(RSPGame.rsp_game(
+            await ctx.send(self.rsp_game(
                 self, user_choice, bot_choice,
                 ctx.author.id, self.client.user.id
             ))
@@ -190,7 +190,7 @@ class RSPGame(commands.Cog):
             s_user_wait = await self.client.wait_for(
                 'message',
                 timeout=60,
-                check=RSPGame.join_check
+                check=self.join_check
             )
             second_user = s_user_wait.author
         except asyncio.TimeoutError:
@@ -204,7 +204,7 @@ class RSPGame(commands.Cog):
                 'Пока что я отменил данную игру'
             )
             await asyncio.sleep(self.fail_delay)
-            await RSPGame.purge_messages(self, messages_to_purge)
+            await self.purge_messages(self, messages_to_purge)
             return
         else:
             if s_user_wait.author.id == first_user.id:
@@ -218,7 +218,7 @@ class RSPGame(commands.Cog):
                 messages_to_purge.append(s_user_wait)
                 messages_to_purge.append(f_user_join)
                 await asyncio.sleep(self.fail_delay)
-                await RSPGame.purge_messages(self, messages_to_purge)
+                await self.purge_messages(self, messages_to_purge)
                 return
         await s_user_wait.delete()
         await init_msg.edit(content='Сейчас идёт игра между '
@@ -228,7 +228,7 @@ class RSPGame(commands.Cog):
             first_response = await self.client.wait_for(
                 'message',
                 timeout=30,
-                check=RSPGame.choice_check
+                check=self.choice_check
             )
             users_choice.append(first_response.content.lower())
         except asyncio.TimeoutError:
@@ -242,14 +242,14 @@ class RSPGame(commands.Cog):
                                                      'Игра отменена')
             messages_to_purge.append(f_move_fail)
             await asyncio.sleep(self.fail_delay)
-            await RSPGame.purge_messages(self, messages_to_purge)
+            await self.purge_messages(self, messages_to_purge)
             return
         try:
             await second_user.send('Ваш вариант *(На ответ 1 минута)*:')
             second_response = await self.client.wait_for(
                 'message',
                 timeout=30,
-                check=RSPGame.choice_check
+                check=self.choice_check
             )
             users_choice.append(second_response.content.lower())
         except asyncio.TimeoutError:
@@ -263,18 +263,18 @@ class RSPGame(commands.Cog):
                                                      'Игра отменена')
             messages_to_purge.append(s_move_fail)
             await asyncio.sleep(self.fail_delay)
-            await RSPGame.purge_messages(self, messages_to_purge)
+            await self.purge_messages(self, messages_to_purge)
             return
         database.modify_data(
             'mainDB',
             'UPDATE variables SET rsp_game_active = ?',
             0
         )
-        await current_channel.send(RSPGame.rsp_game(
+        await current_channel.send(self.rsp_game(
             self, users_choice[0], users_choice[1],
             first_user.id, second_user.id
         ))
-        await RSPGame.purge_messages(self, messages_to_purge)
+        await self.purge_messages(self, messages_to_purge)
 
 
 def setup(client):

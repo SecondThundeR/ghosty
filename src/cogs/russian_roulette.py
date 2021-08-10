@@ -103,9 +103,9 @@ class RussianRoulette(commands.Cog):
                                 'но уже с правильными данными')
                 return
         if self.bullet_count == 0:
-            await ctx.reply(self.get_random_word("zero"))
+            await ctx.reply(self.__get_random_word("zero"))
         elif self.bullet_count < 0:
-            await ctx.reply(self.get_random_word("minus"))
+            await ctx.reply(self.__get_random_word("minus"))
         elif self.bullet_count == 6:
             await ctx.reply('Поздравляю! Вы гуль!')
         elif self.bullet_count > 6:
@@ -125,17 +125,17 @@ class RussianRoulette(commands.Cog):
                 result_msg = await ctx.reply('**БАХ**')
                 await asyncio.sleep(self.delay_time)
                 await result_msg.edit(
-                    content=self.get_random_word("lose")
+                    content=self.__get_random_word("lose")
                 )
             else:
                 result_msg = await ctx.reply('*тишина*')
                 await asyncio.sleep(self.delay_time)
                 await result_msg.edit(
-                    content=self.get_random_word("win")
+                    content=self.__get_random_word("win")
                 )
 
     @staticmethod
-    def get_random_word(condition):
+    def __get_random_word(condition):
         """Get random word from database.
 
         This function handles getting random word from DB

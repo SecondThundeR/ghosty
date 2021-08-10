@@ -23,6 +23,7 @@ class RandomShip(commands.Cog):
 
     Methods:
         ship_func_chooser: Selects correct ship mode
+        manage_ship_ignore: Manages ignore list of shipping users
         get_user_info: Gets info about two selected users
         reset_ship: Reset all needed data in database
         custom_ship: Execute shipping with custom arguments
@@ -75,24 +76,24 @@ class RandomShip(commands.Cog):
             return
         if len(args) == 1:
             if 'скип' in args:
-                await self.reset_ship(self, ctx)
+                await self.__reset_ship(self, ctx)
             elif 'фаст' in args:
-                await self.random_ship(self, ctx, True)
+                await self.__random_ship(self, ctx, True)
             elif 'реролл' in args:
-                await self.reset_ship(self, ctx, False)
-                await self.random_ship(self, ctx)
+                await self.__reset_ship(self, ctx, False)
+                await self.__random_ship(self, ctx)
             elif 'выйти' in args or 'войти' in args:
-                await self.manage_ship_ignore(self, ctx, ctx.author.id, args[0])
+                await self.__manage_ship_ignore(self, ctx, ctx.author.id, args[0])
             else:
                 await ctx.reply('Я не могу шипперить одного человека. '
                                 'Добавьте ещё кого-то, чтобы я смог '
                                 'сделать "магию"')
         elif len(args) == 2:
-            await self.custom_ship(self, ctx, list(args))
+            await self.__custom_ship(self, ctx, list(args))
         else:
-            await self.random_ship(self, ctx)
+            await self.__random_ship(self, ctx)
 
-    async def manage_ship_ignore(self, ctx, user_id, mode):
+    async def __manage_ship_ignore(self, ctx, user_id, mode):
         """Manage ignore list of shipping users.
 
         This function helps users to opt out of shipping or
@@ -152,7 +153,7 @@ class RandomShip(commands.Cog):
         await asyncio.sleep(self.delete_time)
         await ctx.message.delete()
 
-    async def get_user_info(self, ctx, user):
+    async def __get_user_info(self, ctx, user):
         """Get names of users from arguments.
 
         This function gets username if user provided mention of someone,
@@ -175,7 +176,7 @@ class RandomShip(commands.Cog):
             user_length = int(len(user_name) / 2)
         return [user_name, user_length]
 
-    async def reset_ship(self, ctx, notif=True):
+    async def __reset_ship(self, ctx, notif=True):
         """Reset latest ship results to start over.
 
         This function resets results of shipping to allow user execute
@@ -201,7 +202,7 @@ class RandomShip(commands.Cog):
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
 
-    async def custom_ship(self, ctx, args):
+    async def __custom_ship(self, ctx, args):
         """Ship with two custom names from user.
 
         This function runs ship with two custom names from arguments,
@@ -233,14 +234,14 @@ class RandomShip(commands.Cog):
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
         else:
-            first_user_info = await self.get_user_info(self, ctx, args[0])
-            second_user_info = await self.get_user_info(self, ctx, args[1])
+            first_user_info = await self.__get_user_info(self, ctx, args[0])
+            second_user_info = await self.__get_user_info(self, ctx, args[1])
             first_username_part = first_user_info[0][:first_user_info[1]]
             second_username_part = second_user_info[0][second_user_info[1]:]
             final_name = first_username_part + second_username_part
             await ctx.reply(f'Данная парочка смело бы называлась - **{final_name}**')
 
-    async def random_ship(self, ctx, fast_mode=False):
+    async def __random_ship(self, ctx, fast_mode=False):
         """Ship with two randomly chosen names.
 
         This function runs ship with random users,
@@ -273,7 +274,7 @@ class RandomShip(commands.Cog):
                 await ctx.reply(f'**Парочка дня на сегодня:** {formatted_data[0]} '
                                 ':two_hearts:')
             else:
-                await self.random_ship_messages(self, ctx, formatted_data[0])
+                await self.__random_ship_messages(self, ctx, formatted_data[0])
             database.modify_data(
                 'mainDB',
                 'UPDATE variables SET ship_date = ?, ship_text_full = ?, '
@@ -314,7 +315,7 @@ class RandomShip(commands.Cog):
             )
             await self.random_ship(self, ctx)
 
-    async def random_ship_messages(self, ctx, short_text):
+    async def __random_ship_messages(self, ctx, short_text):
         """Send pre-messages and result of shipping.
 
         This function ships three pre-messages and final message with

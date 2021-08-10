@@ -18,6 +18,7 @@ class HelpMessage(commands.Cog):
     Methods:
         on_ready: Removes built-in `help` command
         send_help_message: Sends message with commands
+        get_help_list: Returns a list of commands
     """
 
     def __init__(self, client):
@@ -68,15 +69,15 @@ class HelpMessage(commands.Cog):
             command (str | None): Command to get help message for
         """
         if isinstance(ctx.channel, discord.channel.DMChannel):
-            await ctx.send(self.get_help_list(command))
+            await ctx.send(self.__get_help_list(command))
             return
-        await ctx.author.send(self.get_help_list(command))
+        await ctx.author.send(self.__get_help_list(command))
         await ctx.reply('Хей, проверь личку, я отправил тебе информацию об этом!',
                         delete_after=self.delay_time)
         await asyncio.sleep(self.delay_time)
         await ctx.message.delete()
 
-    def get_help_list(self, command):
+    def __get_help_list(self, command):
         """Return help list of commands or info about certain command.
 
         This function returns full help list of commands

@@ -21,6 +21,7 @@ class UserChecker(commands.Cog):
 
     Methods:
         user_check_handler: Handles all operations with test data
+        parse_test_data: Parses test data to dictionary
         get_test_percent: Gets percent of user's test
         format_percent_to_message: Formats all passed data into final message
     """
@@ -55,17 +56,17 @@ class UserChecker(commands.Cog):
             await ctx.message.delete()
             return
         args = list(args)
-        test_data = await self.parse_test_data(ctx, list(args))
+        test_data = await self.__parse_test_data(ctx, list(args))
         if test_data is None:
             return
-        final_msg = self.format_percent_to_message(
+        final_msg = self.__format_percent_to_message(
             test_data['percent'],
             test_data['text'],
             test_data['user']
         )
         await ctx.send(final_msg)
 
-    async def parse_test_data(self, ctx, test_args):
+    async def __parse_test_data(self, ctx, test_args):
         """Parse arguments and return dictionary.
 
         Args:
@@ -112,11 +113,11 @@ class UserChecker(commands.Cog):
             await asyncio.sleep(self.delay_time)
             await ctx.message.delete()
             return None
-        test_data['percent'] = self.get_test_percent(tests_count)
+        test_data['percent'] = self.__get_test_percent(tests_count)
         return test_data
 
     @staticmethod
-    def get_test_percent(amount):
+    def __get_test_percent(amount):
         """Get percent of user's test.
 
         Process and returns all tests percents and average percent
@@ -140,7 +141,7 @@ class UserChecker(commands.Cog):
         return [perc_list, avg_percent]
 
     @staticmethod
-    def format_percent_to_message(percent_data, text, user):
+    def __format_percent_to_message(percent_data, text, user):
         """Format all data to final message.
 
         **Some notes:**

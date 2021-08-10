@@ -18,6 +18,7 @@ class SystemInfo(commands.Cog):
 
     Methods:
         send_system_info: Sends info about host system
+        format_system_info: Formats system info and return it
     """
 
     def __init__(self, client):
@@ -44,11 +45,11 @@ class SystemInfo(commands.Cog):
             ctx (commands.context.Context): Context object to execute functions
             mode (Union[str, None]): Mode for format of system info
         """
-        await ctx.reply(self.format_system_info(mode), delete_after=self.delay_time)
+        await ctx.reply(self.__format_system_info(mode), delete_after=self.delay_time)
         await asyncio.sleep(self.delay_time)
         await ctx.message.delete()
 
-    def format_system_info(self, mode):
+    def __format_system_info(self, mode):
         """Format system info and return it
 
         This function checks for several variants of system info outputs and

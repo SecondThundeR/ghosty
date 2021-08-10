@@ -17,6 +17,7 @@ class MeMessage(commands.Cog):
 
     Methods:
         send_me_message: Sends message on behalf of a bot
+        parse_me_args: Parse message arguments to dictionary
     """
 
     def __init__(self, client):
@@ -27,8 +28,21 @@ class MeMessage(commands.Cog):
         """
         self.client = client
 
+    @commands.command(aliases=['йа'])
+    async def send_me_message(self, ctx, *args):
+        """Send a user message on behalf of a bot.
+
+        Args:
+            ctx (commands.context.Context): Context object to execute functions
+            args (tuple): Arguments to work with (Mode + Message)
+        """
+        if args:
+            me_data = self.__parse_me_args(ctx, args)
+            await ctx.message.delete()
+            await ctx.send(me_data['message'], tts=me_data['tts'])
+
     @staticmethod
-    def parse_me_args(ctx, args):
+    def __parse_me_args(ctx, args):
         """Send a user message on behalf of a bot.
 
         Args:
@@ -59,19 +73,6 @@ class MeMessage(commands.Cog):
                        f'{"".join(args)}',
             'tts': False
         }
-
-    @commands.command(aliases=['йа'])
-    async def send_me_message(self, ctx, *args):
-        """Send a user message on behalf of a bot.
-
-        Args:
-            ctx (commands.context.Context): Context object to execute functions
-            args (tuple): Arguments to work with (Mode + Message)
-        """
-        if args:
-            me_data = self.parse_me_args(ctx, args)
-            await ctx.message.delete()
-            await ctx.send(me_data['message'], tts=me_data['tts'])
 
 
 def setup(client):

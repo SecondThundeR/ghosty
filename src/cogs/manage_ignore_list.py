@@ -43,11 +43,11 @@ class ManageIgnoreList(commands.Cog):
         """
         if len(args) == 2 and users.is_user_admin(ctx.author.id):
             if args[0] == 'добавить':
-                await self.add_ignored(self, ctx, args[1])
+                await self.__add_ignored(self, ctx, args[1])
             elif args[0] == 'удалить':
-                await self.remove_ignored(self, ctx, args[1])
+                await self.__remove_ignored(self, ctx, args[1])
 
-    async def add_ignored(self, ctx, user_id):
+    async def __add_ignored(self, ctx, user_id):
         """Add user's ID to blacklist.
 
         This function handles addition of user's ID to ignore list
@@ -69,7 +69,7 @@ class ManageIgnoreList(commands.Cog):
                 )
                 await ctx.reply('Я успешно заблокировал этого юзера')
 
-    async def remove_ignored(self, ctx, user_id):
+    async def __remove_ignored(self, ctx, user_id):
         """Remove user's ID from ignore list.
 
         This function handles removal of user's ID from ignore list

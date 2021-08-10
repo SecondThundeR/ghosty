@@ -45,11 +45,11 @@ class ManageAdmins(commands.Cog):
         """
         if len(args) == 2 and users.is_user_admin(ctx.author.id):
             if args[0] == 'добавить':
-                await self.add_admin(self, ctx, args[1])
+                await self.__add_admin(self, ctx, args[1])
             elif args[0] == 'удалить':
-                await self.remove_admin(self, ctx, args[1])
+                await self.__remove_admin(self, ctx, args[1])
 
-    async def add_admin(self, ctx, user_id):
+    async def __add_admin(self, ctx, user_id):
         """Add user's ID to admin list.
 
         This function handles addition of user's ID to admin list.
@@ -68,7 +68,7 @@ class ManageAdmins(commands.Cog):
         )
         await ctx.reply('Я успешно добавил такого админа')
 
-    async def remove_admin(self, ctx, user_id):
+    async def __remove_admin(self, ctx, user_id):
         """Remove user's ID from admin list.
 
         This function handles removal of user's ID from admin list.

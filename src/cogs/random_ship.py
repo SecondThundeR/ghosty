@@ -313,7 +313,7 @@ class RandomShip(commands.Cog):
                 'UPDATE variables SET ship_activated = ?',
                 0
             )
-            await self.random_ship(self, ctx, fast_mode)
+            await self.__random_ship(self, ctx, fast_mode)
 
     async def __random_ship_messages(self, ctx, short_text):
         """Send pre-messages and result of shipping.

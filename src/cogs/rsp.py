@@ -263,7 +263,7 @@ class RSPGame(commands.Cog):
                                                      'Игра отменена')
             messages_to_purge.append(s_move_fail)
             await asyncio.sleep(self.fail_delay)
-            await self.purge_messages(self, messages_to_purge)
+            await self.purge_messages(messages_to_purge)
             return
         database.modify_data(
             'mainDB',

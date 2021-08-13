@@ -64,9 +64,9 @@ class RSPGame(commands.Cog):
                 await ctx.reply('Сессия игры уже запущена, '
                                 'чтобы начать новую игру, закончите старую')
             else:
-                await self.rsp_multi_game(self, ctx)
+                await self.rsp_multi_game(ctx)
         else:
-            await self.rsp_bot_game(self, ctx, args[0])
+            await self.rsp_bot_game(ctx, args[0])
 
     @staticmethod
     def join_check(ctx):
@@ -154,7 +154,7 @@ class RSPGame(commands.Cog):
         else:
             bot_choice = random.choice(list(WIN_VARIANTS))
             await ctx.send(self.rsp_game(
-                self, user_choice, bot_choice,
+                user_choice, bot_choice,
                 ctx.author.id, self.client.user.id
             ))
 
@@ -204,7 +204,7 @@ class RSPGame(commands.Cog):
                 'Пока что я отменил данную игру'
             )
             await asyncio.sleep(self.fail_delay)
-            await self.purge_messages(self, messages_to_purge)
+            await self.purge_messages(messages_to_purge)
             return
         else:
             if s_user_wait.author.id == first_user.id:
@@ -218,7 +218,7 @@ class RSPGame(commands.Cog):
                 messages_to_purge.append(s_user_wait)
                 messages_to_purge.append(f_user_join)
                 await asyncio.sleep(self.fail_delay)
-                await self.purge_messages(self, messages_to_purge)
+                await self.purge_messages(messages_to_purge)
                 return
         await s_user_wait.delete()
         await init_msg.edit(content='Сейчас идёт игра между '
@@ -242,7 +242,7 @@ class RSPGame(commands.Cog):
                                                      'Игра отменена')
             messages_to_purge.append(f_move_fail)
             await asyncio.sleep(self.fail_delay)
-            await self.purge_messages(self, messages_to_purge)
+            await self.purge_messages(messages_to_purge)
             return
         try:
             await second_user.send('Ваш вариант *(На ответ 1 минута)*:')
@@ -271,10 +271,10 @@ class RSPGame(commands.Cog):
             0
         )
         await current_channel.send(self.rsp_game(
-            self, users_choice[0], users_choice[1],
+            users_choice[0], users_choice[1],
             first_user.id, second_user.id
         ))
-        await self.purge_messages(self, messages_to_purge)
+        await self.purge_messages(messages_to_purge)
 
 
 def setup(client):

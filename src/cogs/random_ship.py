@@ -76,22 +76,22 @@ class RandomShip(commands.Cog):
             return
         if len(args) == 1:
             if 'скип' in args:
-                await self.__reset_ship(self, ctx)
+                await self.__reset_ship(ctx)
             elif 'фаст' in args:
-                await self.__random_ship(self, ctx, True)
+                await self.__random_ship(ctx, True)
             elif 'реролл' in args:
-                await self.__reset_ship(self, ctx, False)
-                await self.__random_ship(self, ctx)
+                await self.__reset_ship(ctx, False)
+                await self.__random_ship(ctx)
             elif 'выйти' in args or 'войти' in args:
-                await self.__manage_ship_ignore(self, ctx, ctx.author.id, args[0])
+                await self.__manage_ship_ignore(ctx, ctx.author.id, args[0])
             else:
                 await ctx.reply('Я не могу шипперить одного человека. '
                                 'Добавьте ещё кого-то, чтобы я смог '
                                 'сделать "магию"')
         elif len(args) == 2:
-            await self.__custom_ship(self, ctx, list(args))
+            await self.__custom_ship(ctx, list(args))
         else:
-            await self.__random_ship(self, ctx)
+            await self.__random_ship(ctx)
 
     async def __manage_ship_ignore(self, ctx, user_id, mode):
         """Manage ignore list of shipping users.
@@ -234,8 +234,8 @@ class RandomShip(commands.Cog):
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
         else:
-            first_user_info = await self.__get_user_info(self, ctx, args[0])
-            second_user_info = await self.__get_user_info(self, ctx, args[1])
+            first_user_info = await self.__get_user_info(ctx, args[0])
+            second_user_info = await self.__get_user_info(ctx, args[1])
             first_username_part = first_user_info[0][:first_user_info[1]]
             second_username_part = second_user_info[0][second_user_info[1]:]
             final_name = first_username_part + second_username_part
@@ -274,7 +274,7 @@ class RandomShip(commands.Cog):
                 await ctx.reply(f'**Парочка дня на сегодня:** {formatted_data[0]} '
                                 ':two_hearts:')
             else:
-                await self.__random_ship_messages(self, ctx, formatted_data[0])
+                await self.__random_ship_messages(ctx, formatted_data[0])
             database.modify_data(
                 'mainDB',
                 'UPDATE variables SET ship_date = ?, ship_text_full = ?, '
@@ -313,7 +313,7 @@ class RandomShip(commands.Cog):
                 'UPDATE variables SET ship_activated = ?',
                 0
             )
-            await self.__random_ship(self, ctx, fast_mode)
+            await self.__random_ship(ctx, fast_mode)
 
     async def __random_ship_messages(self, ctx, short_text):
         """Send pre-messages and result of shipping.

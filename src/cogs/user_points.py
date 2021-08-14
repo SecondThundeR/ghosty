@@ -119,7 +119,7 @@ class UserPoints(commands.Cog):
         await answer_msg.delete()
         receiver_member = await ctx.message.guild.fetch_member(receiver_id)
         reciever_status = economy_utils.check_account(receiver_id)
-        if reciever_status == False:
+        if reciever_status is False:
             await ask_msg.edit(
                 content=f'{receiver_member.mention} не имеет аккаунта в базе данных!'
             )

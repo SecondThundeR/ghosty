@@ -1,9 +1,32 @@
+"""Manage points accounts in a user-friendly way.
+
+This cog helps to manage points accounts
+(adding/removing account, checking balance, etc)
+in a user-friendly way.
+"""
+
 import asyncio
 import src.utils.economy_utils as economy_utils
 from discord.ext import commands
 
 
 class UserPoints(commands.Cog):
+    """Class to manage points accounts.
+
+    Args:
+        commands.Cog: Base class that all cogs must inherit from
+
+    Methods:
+        points_hub: Redirects to certain functions
+        __create_account: Creates account for user
+        __delete_account: Removes account for user
+        __send_account_details: Returns account balance
+        __transfer_points_to_user: Transfer points to user
+        __purge_messages: Purges service messages to clear channel
+        __num_check: Check if user input is number
+        __user_check: Check if message contains user ID
+    """
+
     def __init__(self, client):
         """Initialize variables for UserPoints.
 
@@ -14,19 +37,34 @@ class UserPoints(commands.Cog):
         self.delete_time = 3
 
     @commands.command(aliases=['очки'])
-    async def points_hub(self, ctx, command=None):
-        if command == 'создать':
+    async def points_hub(self, ctx, arg=None):
+        """Redirect to certain function based on command argument.
+
+        Args:
+            ctx (discord.ext.commands.Context): Context object
+            arg (Union[str | None]): Command argument
+        """
+        if arg == 'создать':
             await self.__create_account(ctx, ctx.author.id)
-        elif command == 'удалить':
+        elif arg == 'удалить':
             await self.__delete_account(ctx, ctx.author.id)
-        elif command == 'баланс':
+        elif arg == 'баланс':
             await self.__send_account_details(ctx, ctx.author.id)
-        elif command == 'перевод':
+        elif arg == 'перевод':
             await self.__transfer_points_to_user(ctx, ctx.author.id)
         else:
-            pass
+            return
 
     async def __create_account(self, ctx, user_id):
+        """Create points account for user.
+
+        This function checks if user already has account, if not,
+        creates new account and returns account start balance.
+
+        Args:
+            ctx (discord.ext.commands.Context): Context object
+            user_id (str): ID of user
+        """
         create_status = economy_utils.add_new_account(user_id)
         if create_status:
             await ctx.reply(
@@ -45,6 +83,15 @@ class UserPoints(commands.Cog):
         await ctx.message.delete()
 
     async def __delete_account(self, ctx, user_id):
+        """Remove points account of user.
+
+        This function checks if user has account, if yes,
+        removes account, otherwise warn that account isn't created.
+
+        Args:
+            ctx (discord.ext.commands.Context): Context object
+            user_id (str): ID of user
+        """
         delete_status = economy_utils.delete_account(user_id)
         if delete_status:
             await ctx.reply(
@@ -62,6 +109,15 @@ class UserPoints(commands.Cog):
         await ctx.message.delete()
 
     async def __send_account_details(self, ctx, user_id):
+        """Return points account details.
+
+        This function checks for user account, if exists,
+        returns account balance.
+
+        Args:
+            ctx (discord.ext.commands.Context): Context object
+            user_id (str): ID of user
+        """
         account_balance = economy_utils.get_account_balance(user_id)
         if account_balance is None:
             await ctx.reply(
@@ -79,6 +135,18 @@ class UserPoints(commands.Cog):
         await ctx.message.delete()
 
     async def __transfer_points_to_user(self, ctx, sender_id):
+        """Transfer points from sender to reciever.
+
+        This function helps to transfer points from sender to reciever.
+        By using help questions and waiting for user input, it can
+        get reciever ID and amount of points to transfer.
+
+        Also it handles some errors and exceptions and warns about them.
+
+        Args:
+            ctx (discord.ext.commands.Context): Context object
+            sender_id (str): ID of sender
+        """
         sender_balance = economy_utils.get_account_balance(sender_id)
         if sender_balance is None:
             await ctx.reply(
@@ -145,9 +213,18 @@ class UserPoints(commands.Cog):
             return
         points_to_send = int(answer_msg.content)
         await answer_msg.delete()
-        economy_utils.transfer_points(
+        transfer_status = economy_utils.transfer_points(
             sender_id, receiver_id, points_to_send
         )
+        if transfer_status is False:
+            await ask_msg.edit(
+                content=f'Перевод не удался! К сожелению, на аккаунте отправителя '
+                        'недостаточно очков для перевода'
+                        f'пользователю {receiver_member.mention}'
+            )
+            await asyncio.sleep(self.delete_time)
+            await self.__purge_messages(messages_to_purge)
+            return
         await ask_msg.edit(
             content=f'Успешно переведено **{points_to_send}** очков '
                     f'пользователю {receiver_member.mention}'
@@ -166,13 +243,13 @@ class UserPoints(commands.Cog):
 
     @staticmethod
     def __num_check(ctx):
+        """Check, if message is a number."""
         return ctx.content.isnumeric()
 
     @staticmethod
     def __user_check(ctx):
-        if ctx.content.startswith('<@!'):
-            return True
-        return False
+        """Check, if message contains user ID."""
+        return True if ctx.content.startswith('<@!') else False
 
 
 def setup(client):

@@ -249,7 +249,7 @@ class UserPoints(commands.Cog):
     @staticmethod
     def __user_check(ctx):
         """Check, if message contains user ID."""
-        return True if ctx.content.startswith('<@!') else False
+        return bool(ctx.content.startswith('<@!'))
 
 
 def setup(client):

@@ -8,6 +8,7 @@ import random
 import asyncio
 import src.lib.database as database
 import src.lib.words_base as words_base
+import src.utils.economy_utils as economy_utils
 from discord.ext import commands
 
 
@@ -19,7 +20,9 @@ class RussianRoulette(commands.Cog):
 
     Methods:
         russian_roulette_handler: Handles logic of Russian Roulette
-        get_random_word: Gets random word from database for different scenarios
+        __get_random_word: Gets random word from database for different scenarios
+        __add_new_word: Adds new word to Russian Roulette DB
+        __delete_exist_word: Deletes existing word from Russian Roulette DB
     """
 
     def __init__(self, client):
@@ -35,10 +38,15 @@ class RussianRoulette(commands.Cog):
             'ноль': 'zero',
             'минус': 'minus'
         }
+        self.points_multiplier = {
+            1: 2,
+            2: 2.5,
+            3: 3,
+            4: 3.5,
+            5: 4,
+        }
         self.delete_time = 5
         self.delay_time = 2
-        self.bullet_list = []
-        self.bullet_count = 0
 
     @commands.command(aliases=['рулетка'])
     async def russian_roulette_handler(self, ctx, *args):
@@ -52,87 +60,89 @@ class RussianRoulette(commands.Cog):
             args (tuple): List of arguments (Bullet count number)
         """
         if not args:
-            self.bullet_count = 1
+            bullet_count = 1
+            game_points = None
         else:
-            args = list(args)
-            if args[0] == 'добавить' and args[1] in self.tables_aliases:
-                TABLE_TO_MODIFY = self.tables_aliases[args[1]]
-                for i in range(2):
-                    args.pop(0)
-                WORD_TO_ADD = " ".join(args)
-                await ctx.reply(
-                    words_base.manage_r_words_tables(
-                        WORD_TO_ADD,
-                        TABLE_TO_MODIFY,
-                        'add'
-                    ),
-                    delete_after=self.delete_time
-                )
-                await asyncio.sleep(self.delete_time)
-                await ctx.message.delete()
+            if args[0] == 'добавить':
+                self.__add_new_word(ctx, args)
                 return
             if args[0] == 'удалить':
-                bot_admin = database.get_data(
-                    'mainDB',
-                    True,
-                    'SELECT * FROM admin_list '
-                    'WHERE admins_id = ?',
-                    ctx.author.id
-                )
-                if bot_admin and args[1] in self.tables_aliases:
-                    TABLE_TO_MODIFY = self.tables_aliases[args[1]]
-                    for i in range(2):
-                        args.pop(0)
-                    WORD_TO_DELETE = " ".join(args)
-                    await ctx.reply(
-                        words_base.manage_r_words_tables(
-                            WORD_TO_DELETE,
-                            TABLE_TO_MODIFY,
-                            'del'
-                        ),
-                        delete_after=self.delete_time
-                    )
-                    await asyncio.sleep(self.delete_time)
-                    await ctx.message.delete()
-                    return
-            try:
-                self.bullet_count = int(args[0])
-            except ValueError:
-                await ctx.reply('Похоже вы передали не число.'
-                                '\nПопробуйте ещё раз, '
-                                'но уже с правильными данными')
+                self.__delete_exist_word(ctx, args)
                 return
-        if self.bullet_count == 0:
+        if args[0].isnumeric():
+            bullet_count = int(args[0])
+        else:
+            await ctx.reply('Похоже вы передали не число.'
+                            '\nПопробуйте ещё раз, '
+                            'но уже с правильными данными')
+            return
+        if bullet_count == 0:
             await ctx.reply(self.__get_random_word("zero"))
-        elif self.bullet_count < 0:
+            return
+        if bullet_count < 0:
             await ctx.reply(self.__get_random_word("minus"))
-        elif self.bullet_count == 6:
+            return
+        if bullet_count == 6:
             await ctx.reply('Поздравляю! Вы гуль!')
-        elif self.bullet_count > 6:
+            return
+        if bullet_count > 6:
             await ctx.reply('Может стоит напомнить, '
                             'что по правилам русской рулетки, '
                             'можно брать только до 6 патронов, не?')
-        else:
-            self.bullet_list = []
-            for i in range(self.bullet_count):
-                CHARGED_SECTION = random.randint(1, 6)
-                if CHARGED_SECTION in self.bullet_list:
-                    i -= 1
-                else:
-                    self.bullet_list.append(CHARGED_SECTION)
-            deadly_bullet = random.randint(1, 6)
-            if deadly_bullet in self.bullet_list:
-                result_msg = await ctx.reply('**БАХ**')
-                await asyncio.sleep(self.delay_time)
+            return
+        try:
+            game_points = int(args[1])
+            sub_status = economy_utils.subtract_points(ctx.author.id, game_points)
+            if not sub_status:
+                await ctx.reply('Похоже у вас нет активного аккаунта '
+                                'или недостаточно средств для игры со ставкой!',
+                                delete_after=self.delete_time)
+                await asyncio.sleep(self.delete_time)
+                await ctx.message.delete()
+                return
+        except IndexError:
+            game_points = None
+        bullet_list = []
+        for _ in range(bullet_count):
+            charged_section = random.randint(1, 6)
+            while charged_section in bullet_list:
+                charged_section = random.randint(1, 6)
+            bullet_list.append(charged_section)
+        deadly_bullet = random.randint(1, 6)
+        if deadly_bullet in bullet_list:
+            result_msg = await ctx.reply('**БАХ**')
+            await asyncio.sleep(self.delay_time)
+            if game_points is not None:
                 await result_msg.edit(
-                    content=self.__get_random_word("lose")
+                    content=f'{self.__get_random_word("lose")}\n\n'
+                            f'Вы проиграли **{game_points}** очков!\n'
+                            'Ваш баланс составляет: '
+                            f'**{economy_utils.get_account_balance(ctx.author.id)}** '
+                            'очков'
                 )
-            else:
-                result_msg = await ctx.reply('*тишина*')
-                await asyncio.sleep(self.delay_time)
-                await result_msg.edit(
-                    content=self.__get_random_word("win")
-                )
+                return
+            await result_msg.edit(
+                content=self.__get_random_word("lose")
+            )
+            return
+        result_msg = await ctx.reply('*тишина*')
+        await asyncio.sleep(self.delay_time)
+        if game_points is not None:
+            won_points = game_points * self.points_multiplier[bullet_count]
+            new_points = game_points + won_points
+            economy_utils.add_points(ctx.author.id, new_points)
+            await result_msg.edit(
+                content=f'{self.__get_random_word("win")}\n\n'
+                        f'Вы выйграли **{int(won_points)}** очков!\n'
+                        'Ваш баланс составляет: '
+                        f'**{economy_utils.get_account_balance(ctx.author.id)}** '
+                        'очков'
+            )
+            return
+        await result_msg.edit(
+            content=self.__get_random_word("win")
+        )
+        return
 
     @staticmethod
     def __get_random_word(condition):
@@ -147,35 +157,120 @@ class RussianRoulette(commands.Cog):
         Returns:
             str: Random chosen word depending on condition
         """
-        if condition == 'win':
-            WIN_WORDS_LIST = database.get_data(
-                'wordsDB',
-                False,
-                'SELECT words FROM roulette_win_words'
+        words_list = database.get_data(
+            'wordsDB',
+            False,
+            f'SELECT words FROM roulette_{condition}_words'
+        )
+        return random.choice(words_list)
+
+    async def __add_new_word(self, ctx, args):
+        """Add new word to Russian Roulette DB.
+
+        This function controls adding new word to DB,
+        as well as simplifiying main code base.
+
+        Also, there are checks for any non-standard situation,
+        like if arguments tuple having less than 2 elements or
+        user wrote wrong table alias.
+
+        Args:
+            ctx (commands.context.Context): Context object to execute functions
+            args (tuple): List of arguments (Bullet count number)
+        """
+        if len(args) == 1:
+            await ctx.reply(
+                'Вы не передали никаких дополнительных аргументов!',
+                delete_after=self.delete_time
             )
-            random_word = random.choice(WIN_WORDS_LIST)
-        elif condition == 'lose':
-            LOSE_WORDS_LIST = database.get_data(
-                'wordsDB',
-                False,
-                'SELECT words FROM roulette_lose_words'
+            await asyncio.sleep(self.delete_time)
+            await ctx.message.delete()
+            return
+        if args[1] not in self.tables_aliases:
+            await ctx.reply(
+                'Вы указали неверное название таблицы. '
+                'Доступные названия: '
+                f'{", ".join(key for key in self.tables_aliases.keys())}',
+                delete_after=self.delete_time
             )
-            random_word = random.choice(LOSE_WORDS_LIST)
-        elif condition == 'zero':
-            ZERO_WORDS_LIST = database.get_data(
-                'wordsDB',
-                False,
-                'SELECT words FROM roulette_zero_words'
+            await asyncio.sleep(self.delete_time)
+            await ctx.message.delete()
+            return
+        table_to_modify = self.tables_aliases[args[1]]
+        word_to_add = " ".join(args[2:])
+        await ctx.reply(
+            words_base.manage_r_words_tables(
+                word_to_add,
+                table_to_modify,
+                delete_mode=False
+            ),
+            delete_after=self.delete_time
+        )
+        await asyncio.sleep(self.delete_time)
+        await ctx.message.delete()
+        return
+
+    async def __delete_exist_word(self, ctx, args):
+        """Delete existing word from Russian Roulette DB.
+
+        This function controls deleting word from DB,
+        as well as simplifiying main code base.
+
+        Also, there are checks for any non-standard situation,
+        like if arguments tuple having less than 2 elements,
+        user wrote wrong table alias or user isn't bot admin.
+
+        Args:
+            ctx (commands.context.Context): Context object to execute functions
+            args (tuple): List of arguments (Bullet count number)
+        """
+        if len(args) == 1:
+            await ctx.reply(
+                'Вы не передали никаких дополнительных аргументов!',
+                delete_after=self.delete_time
             )
-            random_word = random.choice(ZERO_WORDS_LIST)
-        elif condition == 'minus':
-            MINUS_WORDS_LIST = database.get_data(
-                'wordsDB',
-                False,
-                'SELECT words FROM roulette_minus_words'
+            await asyncio.sleep(self.delete_time)
+            await ctx.message.delete()
+            return
+        if args[1] not in self.tables_aliases:
+            await ctx.reply(
+                'Вы указали неверное название таблицы. '
+                'Доступные названия: '
+                f'{", ".join(key for key in self.tables_aliases.keys())}',
+                delete_after=self.delete_time
             )
-            random_word = random.choice(MINUS_WORDS_LIST)
-        return random_word
+            await asyncio.sleep(self.delete_time)
+            await ctx.message.delete()
+            return
+        bot_admin = database.get_data(
+            'mainDB',
+            True,
+            'SELECT * FROM admin_list '
+            'WHERE admins_id = ?',
+            ctx.author.id
+         )
+        if bot_admin is None:
+            await ctx.reply(
+                'Вы не имеете необходимых прав для удаления слов. '
+                'Удаление слов доступно администраторам бота',
+                delete_after=self.delete_time
+            )
+            await asyncio.sleep(self.delete_time)
+            await ctx.message.delete()
+            return
+        table_to_modify = self.tables_aliases[args[1]]
+        word_to_delete = " ".join(args[2:])
+        await ctx.reply(
+            words_base.manage_r_words_tables(
+                word_to_delete,
+                table_to_modify,
+                delete_mode=True
+            ),
+            delete_after=self.delete_time
+        )
+        await asyncio.sleep(self.delete_time)
+        await ctx.message.delete()
+        return
 
 
 def setup(client):

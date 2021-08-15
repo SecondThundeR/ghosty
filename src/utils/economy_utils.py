@@ -9,6 +9,8 @@ This file can also be imported as a module and contains the following functions:
     * delete_account - deletes active points acccount from DB
     * get_account_balance - returns balance of a user account
     * tranfer_points - transfers points between two points accounts
+    * add_points - adds points to a user points account
+    * subtract_points - subtracts points from a user points account
 """
 
 import src.lib.database as database
@@ -17,6 +19,11 @@ import src.lib.database as database
 # Initial values for points accounts
 # Can be changed later on
 DEFAULT_BALANCE = 1000
+# Set, if account was deleted previously
+# This will prevent abusing the system
+# by getting infinite points (1000 on each account creation)
+# Check for deleted account will be implemented later
+ZERO_BALANCE = 0
 
 
 def check_account(user_id):
@@ -52,7 +59,7 @@ def add_new_account(user_id):
     database.modify_data(
         'pointsDB',
         'INSERT INTO points VALUES (?, ?)',
-        user_id, DEFAULT_BALANCE
+        user_id, DEFAULT_BALANCE  # Need to add check for deleted account
     )
     return True
 
@@ -110,14 +117,44 @@ def transfer_points(sender_id, reciever_id, points):
     sender_balance = get_account_balance(sender_id)
     if sender_balance - points <= 0:
         return False
-    database.modify_data(
-        'pointsDB',
-        'UPDATE points SET points_balance = points_balance - ? WHERE user_id = ?',
-        points, sender_id
-    )
+    subtract_points(sender_id, points)
+    add_points(reciever_id, points)
+    return True
+
+
+def add_points(user_id, points):
+    """Add points to user points account.
+
+    Args:
+        user_id (int): The ID of the user
+        points (int): The amount of points to add
+    """
+    account_status = check_account(user_id)
+    if not account_status:
+        return False
     database.modify_data(
         'pointsDB',
         'UPDATE points SET points_balance = points_balance + ? WHERE user_id = ?',
-        points, reciever_id
+        points, user_id
+    )
+    return True
+
+def subtract_points(user_id, points):
+    """Subtract points from user points account.
+
+    Args:
+        user_id (int): The ID of the user
+        points (int): The amount of points to subtract
+    """
+    account_status = check_account(user_id)
+    if not account_status:
+        return False
+    account_balance = get_account_balance(user_id)
+    if account_balance == 0 or account_balance < points:
+        return False
+    database.modify_data(
+        'pointsDB',
+        'UPDATE points SET points_balance = points_balance - ? WHERE user_id = ?',
+        points, user_id
     )
     return True

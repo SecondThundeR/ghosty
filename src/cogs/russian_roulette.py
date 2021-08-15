@@ -190,7 +190,7 @@ class RussianRoulette(commands.Cog):
             await ctx.reply(
                 'Вы указали неверное название таблицы. '
                 'Доступные названия: '
-                f'{", ".join(key for key in self.tables_aliases.keys())}',
+                f'{", ".join(key for key in self.tables_aliases)}',
                 delete_after=self.delete_time
             )
             await asyncio.sleep(self.delete_time)
@@ -236,7 +236,7 @@ class RussianRoulette(commands.Cog):
             await ctx.reply(
                 'Вы указали неверное название таблицы. '
                 'Доступные названия: '
-                f'{", ".join(key for key in self.tables_aliases.keys())}',
+                f'{", ".join(key for key in self.tables_aliases)}',
                 delete_after=self.delete_time
             )
             await asyncio.sleep(self.delete_time)

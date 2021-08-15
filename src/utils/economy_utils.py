@@ -139,6 +139,7 @@ def add_points(user_id, points):
     )
     return True
 
+
 def subtract_points(user_id, points):
     """Subtract points from user points account.
 

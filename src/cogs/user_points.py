@@ -187,7 +187,7 @@ class UserPoints(commands.Cog):
         await answer_msg.delete()
         receiver_member = await ctx.message.guild.fetch_member(receiver_id)
         reciever_status = economy_utils.check_account(receiver_id)
-        if reciever_status is False:
+        if not reciever_status:
             await ask_msg.edit(
                 content=f'{receiver_member.mention} не имеет аккаунта в базе данных!'
             )
@@ -216,7 +216,7 @@ class UserPoints(commands.Cog):
         transfer_status = economy_utils.transfer_points(
             sender_id, receiver_id, points_to_send
         )
-        if transfer_status is False:
+        if not transfer_status:
             await ask_msg.edit(
                 content=f'Перевод не удался! К сожелению, на аккаунте отправителя '
                         'недостаточно очков для перевода'

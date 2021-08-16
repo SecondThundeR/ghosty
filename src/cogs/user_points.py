@@ -272,7 +272,7 @@ class UserPoints(commands.Cog):
             user_id (str): ID of user
         """
         daily_bonus_points = economy_utils.daily_points_manager(user_id)
-        if daily_bonus_points is None:
+        if daily_bonus_points is False:
             await ctx.reply(
                 'У вас нет активного аккаунта с очками!',
                 delete_after=self.delete_time
@@ -280,7 +280,7 @@ class UserPoints(commands.Cog):
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
             return
-        if daily_bonus_points is False:
+        if daily_bonus_points is None:
             await ctx.reply(
                 'Похоже вы уже получали бонусные очки за сегодня!',
                 delete_after=self.delete_time

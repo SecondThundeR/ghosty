@@ -22,6 +22,7 @@ class UserPoints(commands.Cog):
         __delete_account: Removes account for user
         __send_account_details: Returns account balance
         __transfer_points_to_user: Transfer points to user
+        __daily_bonus_points: Manages giving daily bonus points
         __purge_messages: Purges service messages to clear channel
         __num_check: Check if user input is number
         __user_check: Check if message contains user ID
@@ -52,6 +53,8 @@ class UserPoints(commands.Cog):
             await self.__send_account_details(ctx, ctx.author.id)
         elif arg == 'перевод':
             await self.__transfer_points_to_user(ctx, ctx.author.id)
+        elif arg == 'бонус':
+            await self.__daily_bonus_points(ctx, ctx.author.id)
         else:
             return
 
@@ -253,6 +256,39 @@ class UserPoints(commands.Cog):
         )
         await asyncio.sleep(self.delete_time)
         await self.__purge_messages(messages_to_purge)
+
+    async def __daily_bonus_points(self, ctx, user_id):
+        """Manage getting daily bonus points.
+
+        Args:
+            ctx (discord.ext.commands.Context): Context object
+            user_id (str): ID of user
+        """
+        daily_bonus_points = economy_utils.daily_points_manager(user_id)
+        if daily_bonus_points is None:
+            await ctx.reply(
+                'У вас нет активного аккаунта с очками!',
+                delete_after=self.delete_time
+            )
+            await asyncio.sleep(self.delete_time)
+            await ctx.message.delete()
+            return
+        if daily_bonus_points is False:
+            await ctx.reply(
+                'Похоже вы уже получали бонусные очки за сегодня!',
+                delete_after=self.delete_time
+            )
+            await asyncio.sleep(self.delete_time)
+            await ctx.message.delete()
+            return
+        await ctx.reply(
+            f'Поздравляем! Вы получили **{daily_bonus_points} очков**!\n'
+            'Ваш баланс теперь равен '
+            f'**{economy_utils.get_account_balance(user_id)} очков**',
+            delete_after=self.delete_time
+        )
+        await asyncio.sleep(self.delete_time)
+        await ctx.message.delete()
 
     async def __purge_messages(self, messages):
         """Collect and delete all messages, that can distract users in channel.

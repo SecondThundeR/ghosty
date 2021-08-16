@@ -106,7 +106,7 @@ class UserPoints(commands.Cog):
                 answer_msg = await self.client.wait_for(
                     'message',
                     timeout=60,
-                    check=self.__user_check
+                    check=self.__delete_check
                 )
             except asyncio.TimeoutError:
                 await ask_msg.edit(

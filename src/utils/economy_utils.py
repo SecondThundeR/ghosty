@@ -206,16 +206,17 @@ def daily_points_manager(user_id):
         'SELECT daily_points_date FROM points_accounts WHERE user_id = ?',
         user_id
     )
+    if not daily_points_date:
+        random_points = random.randrange(100, 2000, 100)
+        add_points(user_id, random_points, skip_check=True)
+        database.modify_data(
+            'pointsDB',
+            'UPDATE points_accounts SET daily_points_date = ? '
+            'WHERE user_id = ?',
+            next_date, user_id
+        )
+        return random_points
     if current_date < dt.datetime.strptime(
         daily_points_date, '%Y-%m-%d'
     ).date():
         return False
-    random_points = random.randrange(100, 2000, 100)
-    add_points(user_id, random_points, skip_check=True)
-    database.modify_data(
-        'pointsDB',
-        'UPDATE points_accounts SET daily_points_date = ? '
-        'WHERE user_id = ?',
-        next_date, user_id
-    )
-    return random_points

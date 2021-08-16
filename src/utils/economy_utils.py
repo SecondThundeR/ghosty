@@ -11,8 +11,11 @@ This file can also be imported as a module and contains the following functions:
     * tranfer_points - transfers points between two points accounts
     * add_points - adds points to a user points account
     * subtract_points - subtracts points from a user points account
+    * daily_points_manager - manages getting and giving daily points
 """
 
+import random
+import datetime as dt
 import src.lib.database as database
 
 
@@ -130,21 +133,23 @@ def transfer_points(sender_id, reciever_id, points):
     sender_balance = get_account_balance(sender_id)
     if sender_balance - points <= 0:
         return False
-    subtract_points(sender_id, points)
-    add_points(reciever_id, points)
+    subtract_points(sender_id, points, skip_check=True)
+    add_points(reciever_id, points, skip_check=True)
     return True
 
 
-def add_points(user_id, points):
+def add_points(user_id, points, skip_check=False):
     """Add points to user points account.
 
     Args:
         user_id (int): The ID of the user
         points (int): The amount of points to add
+        skip_check (bool): Skip checking if check was already done
     """
-    account_status = check_account(user_id)
-    if not account_status:
-        return False
+    if not skip_check:
+        account_status = check_account(user_id)
+        if not account_status:
+            return False
     database.modify_data(
         'pointsDB',
         'UPDATE points_accounts '
@@ -154,16 +159,18 @@ def add_points(user_id, points):
     return True
 
 
-def subtract_points(user_id, points):
+def subtract_points(user_id, points, skip_check=False):
     """Subtract points from user points account.
 
     Args:
         user_id (int): The ID of the user
         points (int): The amount of points to subtract
+        skip_check (bool): Skip checking if check was already done
     """
-    account_status = check_account(user_id)
-    if not account_status:
-        return False
+    if not skip_check:
+        account_status = check_account(user_id)
+        if not account_status:
+            return False
     account_balance = get_account_balance(user_id)
     if account_balance == 0 or account_balance < points:
         return False
@@ -174,3 +181,40 @@ def subtract_points(user_id, points):
         points, user_id
     )
     return True
+
+
+def daily_points_manager(user_id):
+    """Manage daily points rewarding.
+
+    Args:
+        user_id (int): The ID of the user
+
+    Returns:
+        int: The amount of bouns points
+        bool: False if user already got daily points
+        None: If account does not exist
+    """
+    account_status = check_account(user_id)
+    if not account_status:
+        return None
+    current_date = dt.datetime.now().date()
+    next_date = (dt.datetime.now() + dt.timedelta(days=1)).date()
+    daily_points_date = database.get_data(
+        'pointsDB',
+        True,
+        'SELECT daily_points_date FROM points_accounts WHERE user_id = ?',
+        user_id
+    )
+    if current_date < dt.datetime.strptime(
+        daily_points_date, '%Y-%m-%d'
+    ).date():
+        return False
+    random_points = random.randrange(100, 2000, 100)
+    add_points(user_id, random_points, skip_check=True)
+    database.modify_data(
+        'pointsDB',
+        'UPDATE points_accounts SET daily_points_date = ? '
+        'WHERE user_id = ?',
+        next_date, user_id
+    )
+    return random_points

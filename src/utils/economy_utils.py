@@ -64,7 +64,7 @@ def add_new_account(user_id):
     if account_status is None:
         database.modify_data(
             'pointsDB',
-            'INSERT INTO points_accounts VALUES (?, ?, 0)',
+            'INSERT INTO points_accounts VALUES (?, ?, 0, 0)',
             user_id, DEFAULT_BALANCE
         )
     else:

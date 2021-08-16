@@ -33,15 +33,20 @@ def check_account(user_id):
         user_id (int): The ID of ther user
 
     Returns:
-        bool: True if account exists, False otherwise.
+        None: If account does not exist
+        bool: True if account exists, False if account deleted.
     """
     account_status = database.get_data(
         'pointsDB',
         True,
-        'SELECT * FROM points WHERE user_id = ?',
+        'SELECT is_deleted FROM points_accounts WHERE user_id = ?',
         user_id
     )
-    return bool(account_status)
+    if account_status is None:
+        return None
+    if account_status == 1:
+        return False
+    return True
 
 
 def add_new_account(user_id):
@@ -51,16 +56,23 @@ def add_new_account(user_id):
         user_id (int): The ID of the user
 
     Returns:
-        bool: True if account was added, False if account is already added
+        bool: True if account was added/restored, False if account is already added
     """
     account_status = check_account(user_id)
     if account_status:
         return False
-    database.modify_data(
-        'pointsDB',
-        'INSERT INTO points VALUES (?, ?)',
-        user_id, DEFAULT_BALANCE  # Need to add check for deleted account
-    )
+    if account_status is None:
+        database.modify_data(
+            'pointsDB',
+            'INSERT INTO points_accounts VALUES (?, ?, 0)',
+            user_id, DEFAULT_BALANCE
+        )
+    else:
+        database.modify_data(
+            'pointsDB',
+            'UPDATE points_accounts SET is_deleted = 0 WHERE user_id = ?',
+            user_id
+        )
     return True
 
 
@@ -78,8 +90,9 @@ def delete_account(user_id):
         return False
     database.modify_data(
         'pointsDB',
-        'DELETE FROM points WHERE user_id = ?',
-        user_id
+        'UPDATE points_accounts SET points_balance = ?, '
+        'is_deleted = 1 WHERE user_id = ?',
+        ZERO_BALANCE, user_id
     )
     return True
 
@@ -100,7 +113,7 @@ def get_account_balance(user_id):
     user_account = database.get_data(
         'pointsDB',
         True,
-        'SELECT points_balance FROM points WHERE user_id = ?',
+        'SELECT points_balance FROM points_accounts WHERE user_id = ?',
         user_id
     )
     return user_account
@@ -134,7 +147,7 @@ def add_points(user_id, points):
         return False
     database.modify_data(
         'pointsDB',
-        'UPDATE points SET points_balance = points_balance + ? WHERE user_id = ?',
+        'UPDATE points_accounts SET points_balance = points_balance + ? WHERE user_id = ?',
         points, user_id
     )
     return True
@@ -155,7 +168,7 @@ def subtract_points(user_id, points):
         return False
     database.modify_data(
         'pointsDB',
-        'UPDATE points SET points_balance = points_balance - ? WHERE user_id = ?',
+        'UPDATE points_accounts SET points_balance = points_balance - ? WHERE user_id = ?',
         points, user_id
     )
     return True

@@ -36,7 +36,11 @@ class RussianRoulette(commands.Cog):
             'вин': 'win',
             'луз': 'lose',
             'ноль': 'zero',
-            'минус': 'minus'
+        }
+        self.backup_words = {
+            'win': 'Вы победили!',
+            'lose': 'Вы проиграли!',
+            'zero': 'Нельзя играть с 0 пулями!'
         }
         self.points_multiplier = {
             1: 2,
@@ -78,9 +82,6 @@ class RussianRoulette(commands.Cog):
             return
         if bullet_count == 0:
             await ctx.reply(self.__get_random_word("zero"))
-            return
-        if bullet_count < 0:
-            await ctx.reply(self.__get_random_word("minus"))
             return
         if bullet_count == 6:
             await ctx.reply('Поздравляю! Вы гуль!')
@@ -144,8 +145,7 @@ class RussianRoulette(commands.Cog):
         )
         return
 
-    @staticmethod
-    def __get_random_word(condition):
+    def __get_random_word(self, condition):
         """Get random word from database.
 
         This function handles getting random word from DB
@@ -162,6 +162,8 @@ class RussianRoulette(commands.Cog):
             False,
             f'SELECT words FROM roulette_{condition}_words'
         )
+        if words_list is None:
+            return self.backup_words[condition]
         return random.choice(words_list)
 
     async def __add_new_word(self, ctx, args):

@@ -147,7 +147,8 @@ def add_points(user_id, points):
         return False
     database.modify_data(
         'pointsDB',
-        'UPDATE points_accounts SET points_balance = points_balance + ? WHERE user_id = ?',
+        'UPDATE points_accounts '
+        'SET points_balance = points_balance + ? WHERE user_id = ?',
         points, user_id
     )
     return True
@@ -168,7 +169,8 @@ def subtract_points(user_id, points):
         return False
     database.modify_data(
         'pointsDB',
-        'UPDATE points_accounts SET points_balance = points_balance - ? WHERE user_id = ?',
+        'UPDATE points_accounts '
+        'SET points_balance = points_balance - ? WHERE user_id = ?',
         points, user_id
     )
     return True

@@ -22,7 +22,6 @@ import src.lib.files as files
 WORDS_TABLES = [
     'main_words_base',
     'roulette_lose_words',
-    'roulette_minus_words',
     'roulette_win_words',
     'roulette_zero_words'
 ]
@@ -33,7 +32,6 @@ FOLDER_PATHS = [
 WORDS_FILENAMES = [
     f'{FOLDER_PATHS[0]}words.txt',
     f'{FOLDER_PATHS[1]}roulette_lose.txt',
-    f'{FOLDER_PATHS[1]}roulette_minus.txt',
     f'{FOLDER_PATHS[1]}roulette_win.txt',
     f'{FOLDER_PATHS[1]}roulette_zero.txt'
 ]
@@ -200,6 +198,5 @@ def clear_words_table():
     database.modify_data(
         'wordsDB',
         'DELETE FROM main_words_base; DELETE FROM roulette_lose_words; '
-        'DELETE FROM roulette_minus_words; DELETE FROM roulette_win_words; '
-        'DELETE FROM roulette_zero_words'
+        'DELETE FROM roulette_win_words; DELETE FROM roulette_zero_words'
     )

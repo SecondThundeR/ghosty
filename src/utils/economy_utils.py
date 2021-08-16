@@ -59,7 +59,8 @@ def add_new_account(user_id):
         user_id (int): The ID of the user
 
     Returns:
-        bool: True if account was added/restored, False if account is already added
+        None: If account wasn't created previously
+        bool: True if account was restored, False if account is already added
     """
     account_status = check_account(user_id)
     if account_status:
@@ -70,12 +71,12 @@ def add_new_account(user_id):
             'INSERT INTO points_accounts VALUES (?, ?, 0, "")',
             user_id, DEFAULT_BALANCE
         )
-    else:
-        database.modify_data(
-            'pointsDB',
-            'UPDATE points_accounts SET is_deleted = 0 WHERE user_id = ?',
-            user_id
-        )
+        return None
+    database.modify_data(
+        'pointsDB',
+        'UPDATE points_accounts SET is_deleted = 0 WHERE user_id = ?',
+        user_id
+    )
     return True
 
 

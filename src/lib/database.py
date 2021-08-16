@@ -107,8 +107,8 @@ def reset_bot_tables():
     modify_data(
         'wordsDB',
         'DELETE FROM main_words_base; DELETE FROM markov_words; '
-        'DELETE FROM roulette_lose_words; DELETE FROM roulette_minus_words;'
-        'DELETE FROM roulette_win_words; DELETE FROM roulette_zero_words;'
+        'DELETE FROM roulette_lose_words; DELETE FROM roulette_win_words; '
+        'DELETE FROM roulette_zero_words;'
     )
 
 

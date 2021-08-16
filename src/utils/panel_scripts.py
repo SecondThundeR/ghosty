@@ -148,7 +148,6 @@ def change_setup_status():
     )
     if current_status:
         database.reset_bot_tables()
-        words_base.clear_words_table()
         print('\nThe bot\'s settings have been reset. '
               'Restart the script for initial setup')
         sys.exit()

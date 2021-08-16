@@ -94,12 +94,34 @@ class UserPoints(commands.Cog):
         """
         delete_status = economy_utils.delete_account(user_id)
         if delete_status:
-            await ctx.reply(
-                'Успешно удалён платежный аккаунт!',
-                delete_after=self.delete_time
+            messages_to_purge = []
+            ask_msg = await ctx.reply(
+                "Вы уверены что хотите удалить свой аккаунт с очками? "
+                "(Учтите, что при следующем создании, ваш баланс будет равен нулю)\n"
+                "Чтобы продолжить, напишите **'Да'**",
+            )
+            messages_to_purge.append(ctx.message)
+            messages_to_purge.append(ask_msg)
+            try:
+                answer_msg = await self.client.wait_for(
+                    'message',
+                    timeout=60,
+                    check=self.__user_check
+                )
+            except asyncio.TimeoutError:
+                await ask_msg.edit(
+                    content='Вы достигли таймаута! '
+                    'Отменяю удаление акканута'
+                )
+                await asyncio.sleep(self.delete_time)
+                await self.__purge_messages(messages_to_purge)
+                return
+            await answer_msg.delete()
+            await ask_msg.edit(
+                content='Я успешно удалил ваш аккаунт с очками!'
             )
             await asyncio.sleep(self.delete_time)
-            await ctx.message.delete()
+            await self.__purge_messages(messages_to_purge)
             return
         await ctx.reply(
             'У вас нет активного аккаунта в базе данных!',
@@ -250,6 +272,11 @@ class UserPoints(commands.Cog):
     def __user_check(ctx):
         """Check, if message contains user ID."""
         return bool(ctx.content.startswith('<@!'))
+
+    @staticmethod
+    def __delete_check(ctx):
+        """Check, if user confirmed the deletion of the account"""
+        return ctx.content.lower() == 'да'
 
 
 def setup(client):

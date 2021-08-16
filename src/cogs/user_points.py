@@ -69,19 +69,26 @@ class UserPoints(commands.Cog):
             user_id (str): ID of user
         """
         create_status = economy_utils.add_new_account(user_id)
-        if create_status:
+        if create_status is False:
             await ctx.reply(
-                'Успешно создан платежный аккаунт! '
-                f'Ваш стартовый баланс равен **{economy_utils.DEFAULT_BALANCE}** очков',
+                'У вас уже есть аккаунт в базе данных!',
                 delete_after=self.delete_time
             )
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
             return
-        await ctx.reply(
-            'У вас уже есть аккаунт в базе данных!',
-            delete_after=self.delete_time
-        )
+        if create_status is None:
+            await ctx.reply(
+                'Успешно создан платежный аккаунт! '
+                f'Ваш стартовый баланс равен **{economy_utils.DEFAULT_BALANCE}** очков',
+                delete_after=self.delete_time
+            )
+        elif create_status is True:
+            await ctx.reply(
+                'Успешно восстановлен платежный аккаунт! '
+                f'Ваш баланс был сброшен до **{economy_utils.ZERO_BALANCE}** очков',
+                delete_after=self.delete_time
+            )
         await asyncio.sleep(self.delete_time)
         await ctx.message.delete()
 

@@ -192,12 +192,12 @@ def daily_points_manager(user_id):
 
     Returns:
         int: The amount of bouns points
-        bool: False if user already got daily points
-        None: If account does not exist
+        bool: False if points accounts does not exist
+        None: If user alredy got daily points
     """
     account_status = check_account(user_id)
     if not account_status:
-        return None
+        return False
     current_date = dt.datetime.now().date()
     next_date = (dt.datetime.now() + dt.timedelta(days=1)).date()
     daily_points_date = database.get_data(
@@ -206,7 +206,9 @@ def daily_points_manager(user_id):
         'SELECT daily_points_date FROM points_accounts WHERE user_id = ?',
         user_id
     )
-    if not daily_points_date:
+    if not daily_points_date or current_date >= dt.datetime.strptime(
+        daily_points_date, '%Y-%m-%d'
+    ).date():
         random_points = random.randrange(100, 2000, 100)
         add_points(user_id, random_points, skip_check=True)
         database.modify_data(
@@ -216,7 +218,5 @@ def daily_points_manager(user_id):
             next_date, user_id
         )
         return random_points
-    if current_date < dt.datetime.strptime(
-        daily_points_date, '%Y-%m-%d'
-    ).date():
-        return False
+    if current_date < dt.datetime.strptime(daily_points_date, '%Y-%m-%d').date():
+        return None

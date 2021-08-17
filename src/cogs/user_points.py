@@ -215,7 +215,7 @@ class UserPoints(commands.Cog):
             await asyncio.sleep(self.delete_time)
             await self.__purge_messages(messages_to_purge)
             return
-        receiver_id = answer_msg.content[3:len(answer_msg.content) - 1]
+        receiver_id = answer_msg.mentions[0].id
         await answer_msg.delete()
         receiver_member = await ctx.message.guild.fetch_member(receiver_id)
         reciever_status = economy_utils.check_account(receiver_id)
@@ -314,7 +314,7 @@ class UserPoints(commands.Cog):
     @staticmethod
     def __user_check(ctx):
         """Check, if message contains user ID."""
-        return bool(ctx.content.startswith('<@!'))
+        return bool(ctx.mentions[0].id != ctx.author.id)
 
     @staticmethod
     def __delete_check(ctx):

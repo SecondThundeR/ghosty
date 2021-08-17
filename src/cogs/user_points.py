@@ -23,6 +23,7 @@ class UserPoints(commands.Cog):
         __send_account_details: Returns account balance
         __transfer_points_to_user: Transfer points to user
         __daily_bonus_points: Manages giving daily bonus points
+        __users_leaderboard: Returns users top 10 leaderboard
         __purge_messages: Purges service messages to clear channel
         __num_check: Check if user input is number
         __user_check: Check if message contains user ID
@@ -56,6 +57,8 @@ class UserPoints(commands.Cog):
             await self.__transfer_points_to_user(ctx, ctx.author.id)
         elif arg == 'бонус':
             await self.__daily_bonus_points(ctx, ctx.author.id)
+        elif arg == 'таблица':
+            await self.__users_leaderboard(ctx)
         else:
             return
 
@@ -293,6 +296,39 @@ class UserPoints(commands.Cog):
             f'Поздравляем! Вы получили **{daily_bonus_points} очков**!\n'
             'Ваш баланс теперь равен '
             f'**{economy_utils.get_account_balance(user_id)} очков**',
+            delete_after=self.delete_time
+        )
+        await asyncio.sleep(self.delete_time)
+        await ctx.message.delete()
+
+    async def __users_leaderboard(self, ctx):
+        """Manage getting users leaderboard.
+
+        This function gets data of 10 users with the most points
+        and sends formatted leaderboard to chat.
+
+        Args:
+            ctx (discord.ext.commands.Context): Context object
+        """
+        leaders_dict = economy_utils.parsed_accounts_data(limit=10)
+        if leaders_dict is None:
+            await ctx.reply(
+                'Похоже в базе данных нет аккаунтов с очками!',
+                delete_after=self.delete_time
+            )
+            await asyncio.sleep(self.delete_time)
+            await ctx.message.delete()
+            return
+        leaderboard_msg = f'Список **{len(leaders_dict)}** пользователей ' \
+                          'с крупными счетами на балансе:\n'
+        place = 1
+        for key, item in leaders_dict.items():
+            member_data = await ctx.message.guild.fetch_member(key)
+            leaderboard_msg += f'{place}. {member_data.mention} ' \
+                               f'- **{item} очков**\n'
+            place += 1
+        await ctx.reply(
+            leaderboard_msg,
             delete_after=self.delete_time
         )
         await asyncio.sleep(self.delete_time)

@@ -92,15 +92,18 @@ class RussianRoulette(commands.Cog):
                             'можно брать только до 6 патронов, не?')
             return
         try:
-            game_points = int(args[1])
-            sub_status = economy_utils.subtract_points(ctx.author.id, game_points)
-            if not sub_status:
-                await ctx.reply('Похоже у вас нет активного аккаунта '
-                                'или недостаточно средств для игры со ставкой!',
-                                delete_after=self.delete_time)
-                await asyncio.sleep(self.delete_time)
-                await ctx.message.delete()
-                return
+            if args[1].isnumeric():
+                game_points = int(args[1])
+                sub_status = economy_utils.subtract_points(ctx.author.id, game_points)
+                if not sub_status:
+                    await ctx.reply('Похоже у вас нет активного аккаунта '
+                                    'или недостаточно средств для игры со ставкой!',
+                                    delete_after=self.delete_time)
+                    await asyncio.sleep(self.delete_time)
+                    await ctx.message.delete()
+                    return
+            else:
+                game_points = None
         except IndexError:
             game_points = None
         bullet_list = []

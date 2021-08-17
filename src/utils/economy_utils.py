@@ -12,6 +12,7 @@ This file can also be imported as a module and contains the following functions:
     * add_points - adds points to a user points account
     * subtract_points - subtracts points from a user points account
     * daily_points_manager - manages getting and giving daily points
+    * parsed_accounts_data - returns parsed accounts data from DB
 """
 
 import random
@@ -217,3 +218,42 @@ def daily_points_manager(user_id):
         return random_points
     if current_date < dt.datetime.strptime(daily_points_date, '%Y-%m-%d').date():
         return None
+
+
+def parsed_accounts_data(limit=None):
+    """Get parsed accounts data into dictionaries.
+
+    This function is used to get needed accounts data, or some of them,
+    from the database and return it as a list of dictionaries.
+
+    Note: The data is returned in descending order of the balance
+    and all deleted accounts are ignored
+
+    Args:
+        limit (int): The amount of accounts to return
+
+    Returns:
+        dict: Dictionary containing needed accounts data (ID's, balance)
+    """
+    user_ids = database.get_data(
+        'pointsDB',
+        False,
+        'SELECT user_id FROM points_accounts WHERE is_deleted = 0 '
+        'ORDER BY points_balance DESC'
+    )
+    accounts_balance = database.get_data(
+        'pointsDB',
+        False,
+        'SELECT points_balance FROM points_accounts WHERE is_deleted = 0 '
+        'ORDER BY points_balance DESC'
+    )
+    if user_ids is None or accounts_balance is None:
+        return None
+    if limit is None:
+        return dict(zip(user_ids, accounts_balance))
+    accounts_dict = {}
+    if len(user_ids) < limit:
+        limit = len(user_ids)
+    for i in range(limit):
+        accounts_dict[user_ids[i]] = accounts_balance[i]
+    return accounts_dict

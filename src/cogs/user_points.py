@@ -26,6 +26,7 @@ class UserPoints(commands.Cog):
         __purge_messages: Purges service messages to clear channel
         __num_check: Check if user input is number
         __user_check: Check if message contains user ID
+        __delete_check: Check if user confirmed account deletion
     """
 
     def __init__(self, client):

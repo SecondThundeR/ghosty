@@ -43,7 +43,7 @@ class RussianRoulette(commands.Cog):
             'zero': 'Нельзя играть с 0 пулями!'
         }
         self.points_multiplier = {
-            1: 0.5,
+            1: 1,
             2: 1.5,
             3: 2,
             4: 2.5,
@@ -130,8 +130,7 @@ class RussianRoulette(commands.Cog):
         await asyncio.sleep(self.delay_time)
         if game_points is not None:
             won_points = game_points * self.points_multiplier[bullet_count]
-            new_points = game_points + won_points
-            economy_utils.add_points(ctx.author.id, new_points)
+            economy_utils.add_points(ctx.author.id, won_points)
             await result_msg.edit(
                 content=f'{self.__get_random_word("win")}\n\n'
                         f'Вы выйграли **{int(won_points)}** очков!'

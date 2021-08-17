@@ -116,10 +116,7 @@ class RussianRoulette(commands.Cog):
             if game_points is not None:
                 await result_msg.edit(
                     content=f'{self.__get_random_word("lose")}\n\n'
-                            f'Вы проиграли **{game_points}** очков!\n'
-                            'Ваш баланс составляет: '
-                            f'**{economy_utils.get_account_balance(ctx.author.id)}** '
-                            'очков'
+                            f'Вы проиграли **{game_points}** очков!'
                 )
                 return
             await result_msg.edit(
@@ -134,10 +131,7 @@ class RussianRoulette(commands.Cog):
             economy_utils.add_points(ctx.author.id, new_points)
             await result_msg.edit(
                 content=f'{self.__get_random_word("win")}\n\n'
-                        f'Вы выйграли **{int(won_points)}** очков!\n'
-                        'Ваш баланс составляет: '
-                        f'**{economy_utils.get_account_balance(ctx.author.id)}** '
-                        'очков'
+                        f'Вы выйграли **{int(won_points)}** очков!'
             )
             return
         await result_msg.edit(

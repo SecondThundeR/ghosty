@@ -43,7 +43,7 @@ class RussianRoulette(commands.Cog):
             'zero': 'Нельзя играть с 0 пулями!'
         }
         self.points_multiplier = {
-            1: 1,
+            1: 1.25,
             2: 1.5,
             3: 2,
             4: 2.5,

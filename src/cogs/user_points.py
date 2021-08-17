@@ -250,8 +250,8 @@ class UserPoints(commands.Cog):
         )
         if not transfer_status:
             await ask_msg.edit(
-                content=f'Перевод не удался! К сожелению, на аккаунте отправителя '
-                        'недостаточно очков для перевода'
+                content=f'Перевод не удался! К сожелению, на вашем аккаунте '
+                        'недостаточно очков для перевода '
                         f'пользователю {receiver_member.mention}'
             )
             await asyncio.sleep(self.delete_time)

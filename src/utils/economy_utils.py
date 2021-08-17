@@ -131,9 +131,6 @@ def transfer_points(sender_id, reciever_id, points):
         reciever_id (int): The ID of the reciever
         points (int): The amount of points to transfer
     """
-    sender_balance = get_account_balance(sender_id)
-    if sender_balance - points <= 0:
-        return False
     subtract_points(sender_id, points, skip_check=True)
     add_points(reciever_id, points, skip_check=True)
     return True

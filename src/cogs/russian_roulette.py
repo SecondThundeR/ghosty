@@ -133,7 +133,7 @@ class RussianRoulette(commands.Cog):
             economy_utils.add_points(ctx.author.id, won_points)
             await result_msg.edit(
                 content=f'{self.__get_random_word("win")}\n\n'
-                        f'Вы выйграли **{int(won_points)}** очков!'
+                        f'Вы выйграли **{won_points}** очков!'
             )
             return
         await result_msg.edit(

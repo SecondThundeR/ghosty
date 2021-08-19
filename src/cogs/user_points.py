@@ -7,6 +7,7 @@ in a user-friendly way.
 
 import asyncio
 import src.utils.economy_utils as economy_utils
+import time
 from discord.ext import commands
 
 
@@ -310,6 +311,7 @@ class UserPoints(commands.Cog):
         Args:
             ctx (discord.ext.commands.Context): Context object
         """
+        start_time = time.perf_counter()
         leaders_dict = economy_utils.parsed_accounts_data(limit=10)
         if leaders_dict is None:
             await ctx.reply(
@@ -327,6 +329,9 @@ class UserPoints(commands.Cog):
             leaderboard_msg += f'{place}. {member_data.mention} ' \
                                f'- **{item} очков**\n'
             place += 1
+        stop_time = time.perf_counter()
+        final_time = stop_time - start_time
+        leaderboard_msg += f'*Сообщение сгенерировано за {final_time} секунд*'
         await ctx.reply(
             leaderboard_msg,
             delete_after=self.delete_time

@@ -4,11 +4,11 @@ This cog handles game logic of Russian Roulette.
 """
 
 
+import random
 import asyncio
 import src.lib.database as database
 import src.lib.words_base as words_base
 import src.utils.economy_utils as economy_utils
-from random import SystemRandom
 from discord.ext import commands
 
 
@@ -108,11 +108,11 @@ class RussianRoulette(commands.Cog):
             game_points = None
         bullet_list = []
         for _ in range(bullet_count):
-            charged_section = SystemRandom().randint(1, 6)
+            charged_section = random.randint(1, 6)
             while charged_section in bullet_list:
-                charged_section = SystemRandom().randint(1, 6)
+                charged_section = random.randint(1, 6)
             bullet_list.append(charged_section)
-        deadly_bullet = SystemRandom().randint(1, 6)
+        deadly_bullet = random.randint(1, 6)
         if deadly_bullet in bullet_list:
             result_msg = await ctx.reply('**БАХ**')
             await asyncio.sleep(self.delay_time)
@@ -160,7 +160,7 @@ class RussianRoulette(commands.Cog):
         )
         if words_list is None:
             return self.backup_words[condition]
-        return SystemRandom().choice(words_list)
+        return random.choice(words_list)
 
     async def __add_new_word(self, ctx, args):
         """Add new word to Russian Roulette DB.

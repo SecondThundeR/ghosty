@@ -65,7 +65,7 @@ class RussianRoulette(commands.Cog):
             args (tuple): List of arguments (Bullet count number)
         """
         parsed_args = await self.__parse_args(ctx, args)
-        if parsed_args is None:
+        if parsed_args is None or parsed_args["game_status"] == 1:
             return
         if parsed_args["bullet_count"] == 0:
             await ctx.reply(self.__get_random_word("zero"))
@@ -78,6 +78,8 @@ class RussianRoulette(commands.Cog):
                             'что по правилам русской рулетки, '
                             'можно брать только до 6 патронов, не?')
             return
+        if parsed_args["game_points"] is not None:
+            self.__change_game_status(ctx, 1)
         bullet_list = []
         for _ in range(parsed_args["bullet_count"]):
             charged_section = random.randint(1, 6)
@@ -96,6 +98,7 @@ class RussianRoulette(commands.Cog):
                     content=f'{self.__get_random_word("lose")}\n\n'
                             f'Вы проиграли **{parsed_args["game_points"]}** очков!'
                 )
+                self.__change_game_status(ctx, 0)
                 return
             await result_msg.edit(
                 content=self.__get_random_word("lose")
@@ -112,11 +115,19 @@ class RussianRoulette(commands.Cog):
                 content=f'{self.__get_random_word("win")}\n\n'
                         f'Вы выйграли **{won_points}** очков!'
             )
+            self.__change_game_status(ctx, 0)
             return
         await result_msg.edit(
             content=self.__get_random_word("win")
         )
         return
+
+    def __change_game_status(self, ctx, game_status):
+        database.modify_data(
+            'pointsDB',
+            'UPDATE points_accounts SET active_roulette = ? WHERE user_id = ?',
+            game_status, ctx.author.id
+        )
 
     async def __parse_args(self, ctx, args):
         """Parse arguments and return dictionary with data.
@@ -132,7 +143,8 @@ class RussianRoulette(commands.Cog):
         if not args:
             return {
                 "bullet_count": 1,
-                "game_points": None
+                "game_points": None,
+                "game_status": None
             }
         if len(args) == 1:
             if args[0] == 'добавить':
@@ -144,7 +156,8 @@ class RussianRoulette(commands.Cog):
             if args[0].isnumeric():
                 return {
                     "bullet_count": int(args[0]),
-                    "game_points": None
+                    "game_points": None,
+                    "game_status": None
                 }
             await ctx.reply('Похоже вы передали неправильный аргумент.'
                             '\nПопробуйте ещё раз, '
@@ -153,6 +166,7 @@ class RussianRoulette(commands.Cog):
         if len(args) == 2:
             bullet_count = 1
             game_points = None
+            game_status = None
             if args[0].isnumeric():
                 bullet_count = int(args[0])
             if args[1].isnumeric():
@@ -173,9 +187,17 @@ class RussianRoulette(commands.Cog):
                     await asyncio.sleep(self.delete_time)
                     await ctx.message.delete()
                     return
+                game_status = database.get_data(
+                    'pointsDB',
+                    True,
+                    "SELECT active_roulette FROM points_accounts "
+                    "WHERE user_id = ?",
+                    ctx.author.id
+                )
             return {
                 "bullet_count": bullet_count,
-                "game_points": game_points
+                "game_points": game_points,
+                "game_status": game_status
             }
 
     def __get_random_word(self, condition):

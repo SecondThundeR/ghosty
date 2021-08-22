@@ -3,13 +3,14 @@
 This cog handles game logic of Russian Roulette.
 """
 
-
-import random
 import asyncio
+import random
+
+from discord.ext import commands
+
 import src.lib.database as database
 import src.lib.words_base as words_base
 import src.utils.economy_utils as economy_utils
-from discord.ext import commands
 
 
 class RussianRoulette(commands.Cog):
@@ -35,14 +36,14 @@ class RussianRoulette(commands.Cog):
         """
         self.client = client
         self.tables_aliases = {
-            'вин': 'win',
-            'луз': 'lose',
-            'ноль': 'zero',
+            "вин": "win",
+            "луз": "lose",
+            "ноль": "zero",
         }
         self.backup_words = {
-            'win': 'Вы победили!',
-            'lose': 'Вы проиграли!',
-            'zero': 'Нельзя играть с 0 пулями!'
+            "win": "Вы победили!",
+            "lose": "Вы проиграли!",
+            "zero": "Нельзя играть с 0 пулями!",
         }
         self.points_multiplier = {
             1: 1.25,
@@ -54,7 +55,7 @@ class RussianRoulette(commands.Cog):
         self.delete_time = 5
         self.delay_time = 2
 
-    @commands.command(aliases=['рулетка'])
+    @commands.command(aliases=["рулетка"])
     async def russian_roulette_handler(self, ctx, *args):
         """Handle game logic and start game.
 
@@ -72,12 +73,12 @@ class RussianRoulette(commands.Cog):
             await ctx.reply(self.__get_random_word("zero"))
             return
         if parsed_args["bullet_count"] == 6:
-            await ctx.reply('Поздравляю! Вы гуль!')
+            await ctx.reply("Поздравляю! Вы гуль!")
             return
         if parsed_args["bullet_count"] > 6:
-            await ctx.reply('Может стоит напомнить, '
-                            'что по правилам русской рулетки, '
-                            'можно брать только до 6 патронов, не?')
+            await ctx.reply("Может стоит напомнить, "
+                            "что по правилам русской рулетки, "
+                            "можно брать только до 6 патронов, не?")
             return
         if parsed_args["game_points"] is not None:
             self.__change_game_status(ctx, 1)
@@ -89,38 +90,30 @@ class RussianRoulette(commands.Cog):
             bullet_list.append(charged_section)
         deadly_bullet = random.randint(1, 6)
         if deadly_bullet in bullet_list:
-            result_msg = await ctx.reply('**БАХ**')
+            result_msg = await ctx.reply("**БАХ**")
             await asyncio.sleep(self.delay_time)
             if parsed_args["game_points"] is not None:
-                economy_utils.subtract_points(
-                    ctx.author.id, parsed_args["game_points"]
-                )
+                economy_utils.subtract_points(ctx.author.id,
+                                              parsed_args["game_points"])
                 await result_msg.edit(
                     content=f'{self.__get_random_word("lose")}\n\n'
-                            f'Вы проиграли **{parsed_args["game_points"]}** очков!'
-                )
+                    f'Вы проиграли **{parsed_args["game_points"]}** очков!')
                 self.__change_game_status(ctx, 0)
                 return
-            await result_msg.edit(
-                content=self.__get_random_word("lose")
-            )
+            await result_msg.edit(content=self.__get_random_word("lose"))
             return
-        result_msg = await ctx.reply('*тишина*')
+        result_msg = await ctx.reply("*тишина*")
         await asyncio.sleep(self.delay_time)
         if parsed_args["game_points"] is not None:
-            won_points = parsed_args["game_points"] * self.points_multiplier[
-                parsed_args["bullet_count"]
-            ]
+            won_points = (parsed_args["game_points"] *
+                          self.points_multiplier[parsed_args["bullet_count"]])
             economy_utils.add_points(ctx.author.id, won_points)
             await result_msg.edit(
                 content=f'{self.__get_random_word("win")}\n\n'
-                        f'Вы выйграли **{won_points}** очков!'
-            )
+                f"Вы выйграли **{won_points}** очков!")
             self.__change_game_status(ctx, 0)
             return
-        await result_msg.edit(
-            content=self.__get_random_word("win")
-        )
+        await result_msg.edit(content=self.__get_random_word("win"))
         return
 
     async def __parse_args(self, ctx, args):
@@ -141,21 +134,21 @@ class RussianRoulette(commands.Cog):
                 "game_status": None
             }
         if len(args) == 1:
-            if args[0] == 'добавить':
+            if args[0] == "добавить":
                 self.__add_new_word(ctx, args)
                 return
-            if args[0] == 'удалить':
+            if args[0] == "удалить":
                 self.__delete_exist_word(ctx, args)
                 return
             if args[0].isnumeric():
                 return {
                     "bullet_count": int(args[0]),
                     "game_points": None,
-                    "game_status": None
+                    "game_status": None,
                 }
-            await ctx.reply('Похоже вы передали неправильный аргумент.'
-                            '\nПопробуйте ещё раз, '
-                            'но уже с правильными данными')
+            await ctx.reply("Похоже вы передали неправильный аргумент."
+                            "\nПопробуйте ещё раз, "
+                            "но уже с правильными данными")
             return
         if len(args) == 2:
             bullet_count = 1
@@ -168,30 +161,34 @@ class RussianRoulette(commands.Cog):
             if game_points is not None:
                 acc_balance = economy_utils.get_account_balance(ctx.author.id)
                 if acc_balance is None:
-                    await ctx.reply('Похоже у вас нет активного аккаунта '
-                                    'для игры со ставкой!',
-                                    delete_after=self.delete_time)
+                    await ctx.reply(
+                        "Похоже у вас нет активного аккаунта "
+                        "для игры со ставкой!",
+                        delete_after=self.delete_time,
+                    )
                     await asyncio.sleep(self.delete_time)
                     await ctx.message.delete()
                     return
                 if acc_balance < game_points:
-                    await ctx.reply('Похоже у вас недостаточно средств '
-                                    'для игры со ставкой!',
-                                    delete_after=self.delete_time)
+                    await ctx.reply(
+                        "Похоже у вас недостаточно средств "
+                        "для игры со ставкой!",
+                        delete_after=self.delete_time,
+                    )
                     await asyncio.sleep(self.delete_time)
                     await ctx.message.delete()
                     return
                 game_status = database.get_data(
-                    'pointsDB',
+                    "pointsDB",
                     True,
                     "SELECT active_roulette FROM points_accounts "
                     "WHERE user_id = ?",
-                    ctx.author.id
+                    ctx.author.id,
                 )
             return {
                 "bullet_count": bullet_count,
                 "game_points": game_points,
-                "game_status": game_status
+                "game_status": game_status,
             }
 
     @staticmethod
@@ -203,9 +200,10 @@ class RussianRoulette(commands.Cog):
             game_status (int): New game status value
         """
         database.modify_data(
-            'pointsDB',
-            'UPDATE points_accounts SET active_roulette = ? WHERE user_id = ?',
-            game_status, ctx.author.id
+            "pointsDB",
+            "UPDATE points_accounts SET active_roulette = ? WHERE user_id = ?",
+            game_status,
+            ctx.author.id,
         )
 
     def __get_random_word(self, condition):
@@ -221,10 +219,7 @@ class RussianRoulette(commands.Cog):
             str: Random chosen word depending on condition
         """
         words_list = database.get_data(
-            'wordsDB',
-            False,
-            f'SELECT words FROM roulette_{condition}_words'
-        )
+            "wordsDB", False, f"SELECT words FROM roulette_{condition}_words")
         if words_list is None:
             return self.backup_words[condition]
         return random.choice(words_list)
@@ -245,18 +240,18 @@ class RussianRoulette(commands.Cog):
         """
         if len(args) == 1:
             await ctx.reply(
-                'Вы не передали никаких дополнительных аргументов!',
-                delete_after=self.delete_time
+                "Вы не передали никаких дополнительных аргументов!",
+                delete_after=self.delete_time,
             )
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
             return
         if args[1] not in self.tables_aliases:
             await ctx.reply(
-                'Вы указали неверное название таблицы. '
-                'Доступные названия: '
+                "Вы указали неверное название таблицы. "
+                "Доступные названия: "
                 f'{", ".join(key for key in self.tables_aliases)}',
-                delete_after=self.delete_time
+                delete_after=self.delete_time,
             )
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
@@ -264,12 +259,10 @@ class RussianRoulette(commands.Cog):
         table_to_modify = self.tables_aliases[args[1]]
         word_to_add = " ".join(args[2:])
         await ctx.reply(
-            words_base.manage_r_words_tables(
-                word_to_add,
-                table_to_modify,
-                delete_mode=False
-            ),
-            delete_after=self.delete_time
+            words_base.manage_r_words_tables(word_to_add,
+                                             table_to_modify,
+                                             delete_mode=False),
+            delete_after=self.delete_time,
         )
         await asyncio.sleep(self.delete_time)
         await ctx.message.delete()
@@ -291,34 +284,34 @@ class RussianRoulette(commands.Cog):
         """
         if len(args) == 1:
             await ctx.reply(
-                'Вы не передали никаких дополнительных аргументов!',
-                delete_after=self.delete_time
+                "Вы не передали никаких дополнительных аргументов!",
+                delete_after=self.delete_time,
             )
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
             return
         if args[1] not in self.tables_aliases:
             await ctx.reply(
-                'Вы указали неверное название таблицы. '
-                'Доступные названия: '
+                "Вы указали неверное название таблицы. "
+                "Доступные названия: "
                 f'{", ".join(key for key in self.tables_aliases)}',
-                delete_after=self.delete_time
+                delete_after=self.delete_time,
             )
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
             return
         bot_admin = database.get_data(
-            'mainDB',
+            "mainDB",
             True,
-            'SELECT * FROM admin_list '
-            'WHERE admins_id = ?',
-            ctx.author.id
-         )
+            "SELECT * FROM admin_list "
+            "WHERE admins_id = ?",
+            ctx.author.id,
+        )
         if bot_admin is None:
             await ctx.reply(
-                'Вы не имеете необходимых прав для удаления слов. '
-                'Удаление слов доступно администраторам бота',
-                delete_after=self.delete_time
+                "Вы не имеете необходимых прав для удаления слов. "
+                "Удаление слов доступно администраторам бота",
+                delete_after=self.delete_time,
             )
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
@@ -326,12 +319,10 @@ class RussianRoulette(commands.Cog):
         table_to_modify = self.tables_aliases[args[1]]
         word_to_delete = " ".join(args[2:])
         await ctx.reply(
-            words_base.manage_r_words_tables(
-                word_to_delete,
-                table_to_modify,
-                delete_mode=True
-            ),
-            delete_after=self.delete_time
+            words_base.manage_r_words_tables(word_to_delete,
+                                             table_to_modify,
+                                             delete_mode=True),
+            delete_after=self.delete_time,
         )
         await asyncio.sleep(self.delete_time)
         await ctx.message.delete()

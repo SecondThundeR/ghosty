@@ -13,30 +13,25 @@ This file can also be imported as a module and contains the following functions:
     * clear_words_table - clears selected words tables in database
 """
 
-
 import requests
+
 import src.lib.database as database
 import src.lib.files as files
 
-
 WORDS_TABLES = [
-    'main_words_base',
-    'roulette_lose_words',
-    'roulette_win_words',
-    'roulette_zero_words'
+    "main_words_base",
+    "roulette_lose_words",
+    "roulette_win_words",
+    "roulette_zero_words",
 ]
-FOLDER_PATHS = [
-    'src/words_base/',
-    'src/words_base/roulette_words/'
-]
+FOLDER_PATHS = ["src/words_base/", "src/words_base/roulette_words/"]
 WORDS_FILENAMES = [
-    f'{FOLDER_PATHS[0]}words.txt',
-    f'{FOLDER_PATHS[1]}roulette_lose.txt',
-    f'{FOLDER_PATHS[1]}roulette_win.txt',
-    f'{FOLDER_PATHS[1]}roulette_zero.txt'
+    f"{FOLDER_PATHS[0]}words.txt",
+    f"{FOLDER_PATHS[1]}roulette_lose.txt",
+    f"{FOLDER_PATHS[1]}roulette_win.txt",
+    f"{FOLDER_PATHS[1]}roulette_zero.txt",
 ]
-MASTER_LINK = 'https://raw.githubusercontent.com/SecondThundeR/' \
-              'ghosty/master/'
+MASTER_LINK = "https://raw.githubusercontent.com/SecondThundeR/" "ghosty/master/"
 
 
 def manage_words_table(word, delete_mode=False):
@@ -52,28 +47,20 @@ def manage_words_table(word, delete_mode=False):
         str: Function completion message or warning
     """
     requested_word = database.get_data(
-        'wordsDB',
-        True,
-        'SELECT * FROM main_words_base WHERE words = ?',
-        word
-    )
+        "wordsDB", True, "SELECT * FROM main_words_base WHERE words = ?", word)
     if not delete_mode:
         if not requested_word:
-            database.modify_data(
-                'wordsDB',
-                'INSERT INTO main_words_base VALUES (?)',
-                word
-            )
+            database.modify_data("wordsDB",
+                                 "INSERT INTO main_words_base VALUES (?)",
+                                 word)
             return f'Хей, я успешно добавил слово "{word}" себе в базу!'
-        return 'Данное слово уже есть в базе данных, попробуйте добавить другое'
+        return "Данное слово уже есть в базе данных, попробуйте добавить другое"
     if requested_word:
-        database.modify_data(
-            'wordsDB',
-            'DELETE FROM main_words_base WHERE words = ?',
-            word
-        )
+        database.modify_data("wordsDB",
+                             "DELETE FROM main_words_base WHERE words = ?",
+                             word)
         return f'Хей, я успешно удалил слово "{word}" из своей базы!'
-    return 'Ой, я не смог найти это слово. Убедитесь в правильности написания!'
+    return "Ой, я не смог найти это слово. Убедитесь в правильности написания!"
 
 
 def manage_r_words_tables(word, table, delete_mode=False):
@@ -90,28 +77,21 @@ def manage_r_words_tables(word, table, delete_mode=False):
         str: Function completion message or warning
     """
     requested_word = database.get_data(
-        'wordsDB',
-        True,
-        f'SELECT * FROM roulette_{table}_words WHERE words = ?',
-        word
-    )
+        "wordsDB", True,
+        f"SELECT * FROM roulette_{table}_words WHERE words = ?", word)
     if not delete_mode:
         if not requested_word:
             database.modify_data(
-                'wordsDB',
-                f'INSERT INTO roulette_{table}_words VALUES (?)',
-                word
-            )
+                "wordsDB", f"INSERT INTO roulette_{table}_words VALUES (?)",
+                word)
             return f'Хей, я успешно добавил слово "{word}" себе в базу!'
-        return 'Данное слово уже есть в базе данных, попробуйте добавить другое'
+        return "Данное слово уже есть в базе данных, попробуйте добавить другое"
     if requested_word:
         database.modify_data(
-            'wordsDB',
-            f'DELETE FROM roulette_{table}_words WHERE words = ?',
-            word
-        )
+            "wordsDB", f"DELETE FROM roulette_{table}_words WHERE words = ?",
+            word)
         return f'Хей, я успешно удалил слово "{word}" из своей базы!'
-    return 'Ой, я не смог найти это слово. Убедитесь в правильности написания!'
+    return "Ой, я не смог найти это слово. Убедитесь в правильности написания!"
 
 
 def restore_dev_base():
@@ -128,11 +108,7 @@ def restore_dev_base():
     for path in FOLDER_PATHS:
         files.create_folder(path)
     for table, path in zip(WORDS_TABLES, WORDS_FILENAMES):
-        import_status = import_word_file(
-            'wordsDB',
-            table,
-            path
-        )
+        import_status = import_word_file("wordsDB", table, path)
         if not import_status:
             return False
     files.delete_folder(FOLDER_PATHS[0])
@@ -158,11 +134,8 @@ def import_word_file(db_name, table, path):
         return False
     words_array = files.import_data(path)
     for element in words_array:
-        database.modify_data(
-            db_name,
-            f'INSERT INTO {table} VALUES (?)',
-            element
-        )
+        database.modify_data(db_name, f"INSERT INTO {table} VALUES (?)",
+                             element)
     return True
 
 
@@ -177,9 +150,9 @@ def download_words_file(path):
     Returns:
         bool: True if status code was 200, False if met other status codes
     """
-    r = requests.get(f'{MASTER_LINK}{path}')
+    r = requests.get(f"{MASTER_LINK}{path}")
     if r.status_code == 200:
-        with open(path, 'wb') as f:
+        with open(path, "wb") as f:
             f.write(r.content)
         f.close()
         return True
@@ -196,7 +169,7 @@ def clear_words_table():
     was removed
     """
     database.modify_data(
-        'wordsDB',
-        'DELETE FROM main_words_base; DELETE FROM roulette_lose_words; '
-        'DELETE FROM roulette_win_words; DELETE FROM roulette_zero_words'
+        "wordsDB",
+        "DELETE FROM main_words_base; DELETE FROM roulette_lose_words; "
+        "DELETE FROM roulette_win_words; DELETE FROM roulette_zero_words",
     )

@@ -4,9 +4,9 @@ This cog gets question from user and randomly selects
 answer from list with answers
 """
 
-
-import random
 import asyncio
+import random
+
 from discord.ext import commands
 
 
@@ -28,17 +28,30 @@ class MagicBall(commands.Cog):
         """
         self.client = client
         self.magic_ball_answers = [
-            'Бесспорно', 'Предрешено', 'Никаких сомнений',
-            'Определённо да', 'Можешь быть уверен в этом', 'Мне кажется — «да»',
-            'Вероятнее всего', 'Хорошие перспективы', 'Знаки говорят — «да»', 'Да',
-            'Пока не ясно, попробуй снова', 'Спроси позже', 'Лучше не рассказывать',
-            'Сейчас нельзя предсказать', 'Сконцентрируйся и спроси опять',
-            'Даже не думай', 'Мой ответ — «нет»', 'По моим данным — «нет»',
-            'Перспективы не очень хорошие', 'Весьма сомнительно'
+            "Бесспорно",
+            "Предрешено",
+            "Никаких сомнений",
+            "Определённо да",
+            "Можешь быть уверен в этом",
+            "Мне кажется — «да»",
+            "Вероятнее всего",
+            "Хорошие перспективы",
+            "Знаки говорят — «да»",
+            "Да",
+            "Пока не ясно, попробуй снова",
+            "Спроси позже",
+            "Лучше не рассказывать",
+            "Сейчас нельзя предсказать",
+            "Сконцентрируйся и спроси опять",
+            "Даже не думай",
+            "Мой ответ — «нет»",
+            "По моим данным — «нет»",
+            "Перспективы не очень хорошие",
+            "Весьма сомнительно",
         ]
         self.delay_time = 3
 
-    @commands.command(aliases=['шар'])
+    @commands.command(aliases=["шар"])
     async def ask_magic_ball(self, ctx, text=None):
         """Get random answer from list and send it.
 
@@ -48,9 +61,11 @@ class MagicBall(commands.Cog):
             (Used only to check for existence)
         """
         if not text:
-            await ctx.reply('Вы не дали мне вопроса, '
-                            'чтобы я на него ответил',
-                            delete_after=self.delay_time)
+            await ctx.reply(
+                "Вы не дали мне вопроса, "
+                "чтобы я на него ответил",
+                delete_after=self.delay_time,
+            )
             await asyncio.sleep(self.delay_time)
             await ctx.message.delete()
         else:

@@ -18,4 +18,4 @@ def format_timedelta(td):
     """
     minutes, seconds = divmod(td.seconds + td.days * 86400, 60)
     hours, minutes = divmod(minutes, 60)
-    return '{:d}:{:02d}:{:02d}'.format(hours, minutes, seconds)
+    return "{:d}:{:02d}:{:02d}".format(hours, minutes, seconds)

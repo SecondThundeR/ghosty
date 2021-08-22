@@ -4,13 +4,14 @@ Also, this cog allows to pass many options to execute
 certain test outputs
 """
 
-
-import discord
 import asyncio
 import random
+
+import discord
+from discord.ext import commands
+
 import src.lib.users as users
 from src.lib.exceptions import UsersNotFound
-from discord.ext import commands
 
 
 class UserChecker(commands.Cog):
@@ -35,7 +36,7 @@ class UserChecker(commands.Cog):
         self.client = client
         self.delay_time = 5
 
-    @commands.command(aliases=['тест'])
+    @commands.command(aliases=["тест"])
     async def user_check_handler(self, ctx, *args):
         """Handler of user checking.
 
@@ -50,7 +51,7 @@ class UserChecker(commands.Cog):
             None: If there is some errors
         """
         if not args:
-            await ctx.reply('Вы не передали никаких аргументов',
+            await ctx.reply("Вы не передали никаких аргументов",
                             delete_after=self.delay_time)
             await asyncio.sleep(self.delay_time)
             await ctx.message.delete()
@@ -59,11 +60,9 @@ class UserChecker(commands.Cog):
         test_data = await self.__parse_test_data(ctx, list(args))
         if test_data is None:
             return
-        final_msg = self.__format_percent_to_message(
-            test_data['percent'],
-            test_data['text'],
-            test_data['user']
-        )
+        final_msg = self.__format_percent_to_message(test_data["percent"],
+                                                     test_data["text"],
+                                                     test_data["user"])
         await ctx.send(final_msg)
 
     async def __parse_test_data(self, ctx, test_args):
@@ -86,11 +85,11 @@ class UserChecker(commands.Cog):
         if test_args[0].isnumeric():
             tests_count = int(test_args[0])
             test_args.pop(0)
-        if test_args[0] == 'рандом':
+        if test_args[0] == "рандом":
             try:
-                test_data['user'] = await users.get_random_user(ctx.message)
+                test_data["user"] = await users.get_random_user(ctx.message)
             except UsersNotFound as warning:
-                await ctx.reply(f'Произошла ошибка: {warning}!',
+                await ctx.reply(f"Произошла ошибка: {warning}!",
                                 delete_after=self.delay_time)
                 await asyncio.sleep(self.delay_time)
                 await ctx.message.delete()
@@ -98,22 +97,21 @@ class UserChecker(commands.Cog):
             random_user_mode = True
             test_args.pop(0)
         if not random_user_mode:
-            if test_args[0].startswith('<@!'):
-                test_data['user'] = await ctx.guild.fetch_member(
-                    test_args[0][3:len(test_args[0]) - 1]
-                )
+            if test_args[0].startswith("<@!"):
+                test_data["user"] = await ctx.guild.fetch_member(
+                    test_args[0][3:len(test_args[0]) - 1])
                 test_args.pop(0)
-            if test_args[0].startswith('--'):
-                test_data['user'] = test_args[0][2:]
+            if test_args[0].startswith("--"):
+                test_data["user"] = test_args[0][2:]
                 test_args.pop(0)
-        test_data['text'] = ' '.join(test_args)
-        if not test_data['text']:
-            await ctx.reply('Вы не передали текст для теста',
+        test_data["text"] = " ".join(test_args)
+        if not test_data["text"]:
+            await ctx.reply("Вы не передали текст для теста",
                             delete_after=self.delay_time)
             await asyncio.sleep(self.delay_time)
             await ctx.message.delete()
             return None
-        test_data['percent'] = self.__get_test_percent(tests_count)
+        test_data["percent"] = self.__get_test_percent(tests_count)
         return test_data
 
     @staticmethod
@@ -158,10 +156,10 @@ class UserChecker(commands.Cog):
         Returns:
             str: Conclusion of user's test or warning message
         """
-        warn_msg = 'Вы превысили лимит Discord по длине сообщения!'
+        warn_msg = "Вы превысили лимит Discord по длине сообщения!"
         user_name = None
         if isinstance(user, str):
-            user = f'**{user}**'
+            user = f"**{user}**"
             user_name = user
         if isinstance(user, discord.Member):
             user_name = users.get_members_name(user)
@@ -169,25 +167,24 @@ class UserChecker(commands.Cog):
         if isinstance(percent_data, list):
             percent_list = percent_data[0]
             avg_num = round(float(percent_data[1]), 2)
-            msg = f'Журнал тестирования {user}\n\n'
+            msg = f"Журнал тестирования {user}\n\n"
             for i, perc in enumerate(percent_list):
                 if len(msg) > 2000:
                     return warn_msg
                 if perc == 0:
-                    msg += f'*Тест {i + 1}.* **{user_name}** сегодня не {text} :c\n'
+                    msg += f"*Тест {i + 1}.* **{user_name}** сегодня не {text} :c\n"
                 elif perc == 100:
-                    msg += f'*Тест {i + 1}.* Кто бы мог подумать то!\n' \
-                           f'**{user_name}** {text} на **{perc}%**\n'
+                    msg += (f"*Тест {i + 1}.* Кто бы мог подумать то!\n"
+                            f"**{user_name}** {text} на **{perc}%**\n")
                 else:
-                    msg += f'*Тест {i + 1}.* **{user_name}** {text} на **{perc}%**\n'
-            msg += f'\nСреднее значение всех тестов - **{avg_num}%**'
+                    msg += f"*Тест {i + 1}.* **{user_name}** {text} на **{perc}%**\n"
+            msg += f"\nСреднее значение всех тестов - **{avg_num}%**"
             return msg
         if percent_data == 0:
-            return f'{user} сегодня не {text} :c'
+            return f"{user} сегодня не {text} :c"
         if percent_data == 100:
-            return f'Кто бы мог подумать то! {user}' \
-                   f'\n{text} на **{percent_data}%**'
-        return f'{user} {text} на **{percent_data}%**'
+            return f"Кто бы мог подумать то! {user}" f"\n{text} на **{percent_data}%**"
+        return f"{user} {text} на **{percent_data}%**"
 
 
 def setup(client):

@@ -3,18 +3,15 @@
 This cog handles game logic of rock scissors paper.
 """
 
+import asyncio
+import random
 
 import discord
-import random
-import asyncio
-import src.lib.database as database
 from discord.ext import commands
 
-WIN_VARIANTS = {
-    'камень': 'ножницы',
-    'бумага': 'камень',
-    'ножницы': 'бумага'
-}
+import src.lib.database as database
+
+WIN_VARIANTS = {"камень": "ножницы", "бумага": "камень", "ножницы": "бумага"}
 
 
 class RSPGame(commands.Cog):
@@ -44,7 +41,7 @@ class RSPGame(commands.Cog):
         self.fail_delay = 4
         self.success_delay = 1
 
-    @commands.command(aliases=['цуефа'])
+    @commands.command(aliases=["цуефа"])
     async def rsp_mode(self, ctx, *args):
         """Execute correct mode of game depending on arguments.
 
@@ -56,13 +53,10 @@ class RSPGame(commands.Cog):
             args (tuple): List of arguments (RSP variants, if playing with bot)
         """
         if not args:
-            if database.get_data(
-                'mainDB',
-                True,
-                'SELECT rsp_game_active FROM variables'
-            ):
-                await ctx.reply('Сессия игры уже запущена, '
-                                'чтобы начать новую игру, закончите старую')
+            if database.get_data("mainDB", True,
+                                 "SELECT rsp_game_active FROM variables"):
+                await ctx.reply("Сессия игры уже запущена, "
+                                "чтобы начать новую игру, закончите старую")
             else:
                 await self.rsp_multi_game(ctx)
         else:
@@ -80,7 +74,7 @@ class RSPGame(commands.Cog):
         """
         test_string = ctx.content.lower()
         test_channel = isinstance(ctx.channel, discord.channel.DMChannel)
-        return bool(test_string == 'играть' and not test_channel)
+        return bool(test_string == "играть" and not test_channel)
 
     @staticmethod
     def choice_check(ctx):
@@ -122,21 +116,21 @@ class RSPGame(commands.Cog):
             str: Outcome of the game
             None: If there are some errors
         """
-        f_user_mention = f'<@{first_user_id}>'
-        s_user_mention = f'<@{second_user_id}>'
-        end_text = '**Игра между ' \
-                   f'{f_user_mention} и {s_user_mention} ' \
-                   'окончена!**\n'
-        outcome_text = ''
+        f_user_mention = f"<@{first_user_id}>"
+        s_user_mention = f"<@{second_user_id}>"
+        end_text = ("**Игра между "
+                    f"{f_user_mention} и {s_user_mention} "
+                    "окончена!**\n")
+        outcome_text = ""
         if first_var == WIN_VARIANTS[second_var]:
-            outcome_text = f'**Результаты:** {second_var}  🤜  {first_var}\n' \
-                        f'{s_user_mention} победил!'
+            outcome_text = (f"**Результаты:** {second_var}  🤜  {first_var}\n"
+                            f"{s_user_mention} победил!")
         elif second_var == WIN_VARIANTS[first_var]:
-            outcome_text = f'**Результаты:** {first_var}  🤜  {second_var}\n' \
-                        f'{f_user_mention} победил!'
+            outcome_text = (f"**Результаты:** {first_var}  🤜  {second_var}\n"
+                            f"{f_user_mention} победил!")
         else:
-            outcome_text = f'**Результаты:** {first_var}  🙏  {second_var}\n' \
-                        'И у нас ничья!'
+            outcome_text = (f"**Результаты:** {first_var}  🙏  {second_var}\n"
+                            "И у нас ничья!")
         return end_text + outcome_text
 
     async def rsp_bot_game(self, ctx, user_choice):
@@ -150,13 +144,12 @@ class RSPGame(commands.Cog):
             user_choice (str): Player's move variant
         """
         if user_choice not in WIN_VARIANTS:
-            await ctx.reply('Похоже вы выбрали что-то не то...')
+            await ctx.reply("Похоже вы выбрали что-то не то...")
         else:
             bot_choice = random.choice(list(WIN_VARIANTS))
-            await ctx.send(self.rsp_game(
-                user_choice, bot_choice,
-                ctx.author.id, self.client.user.id
-            ))
+            await ctx.send(
+                self.rsp_game(user_choice, bot_choice, ctx.author.id,
+                              self.client.user.id))
 
     async def rsp_multi_game(self, ctx):
         """Game with other users of server.
@@ -173,107 +166,81 @@ class RSPGame(commands.Cog):
         Args:
             ctx (commands.context.Context): Context object to execute functions
         """
-        database.modify_data(
-            'mainDB',
-            'UPDATE variables SET rsp_game_active = ?',
-            1
-        )
+        database.modify_data("mainDB",
+                             "UPDATE variables SET rsp_game_active = ?", 1)
         current_channel = ctx.message.channel
         first_user = ctx.author
         users_choice = []
         messages_to_purge = []
-        init_msg = await ctx.reply('Вы запустили игру! '
+        init_msg = await ctx.reply("Вы запустили игру! "
                                    'Второй игрок, напишите "Играть"\n'
-                                   '*До автоотмены - 1 минута*')
+                                   "*До автоотмены - 1 минута*")
         messages_to_purge.append(init_msg)
         try:
-            s_user_wait = await self.client.wait_for(
-                'message',
-                timeout=60,
-                check=self.join_check
-            )
+            s_user_wait = await self.client.wait_for("message",
+                                                     timeout=60,
+                                                     check=self.join_check)
             second_user = s_user_wait.author
         except asyncio.TimeoutError:
-            database.modify_data(
-                'mainDB',
-                'UPDATE variables SET rsp_game_active = ?',
-                0
-            )
+            database.modify_data("mainDB",
+                                 "UPDATE variables SET rsp_game_active = ?", 0)
             await init_msg.edit(
-                content='Похоже никто не решил сыграть с вами. '
-                'Пока что я отменил данную игру'
-            )
+                content="Похоже никто не решил сыграть с вами. "
+                "Пока что я отменил данную игру")
             await asyncio.sleep(self.fail_delay)
             await self.purge_messages(messages_to_purge)
             return
         else:
             if s_user_wait.author.id == first_user.id:
                 database.modify_data(
-                    'mainDB',
-                    'UPDATE variables SET rsp_game_active = ?',
-                    0
-                )
-                f_user_join = await ctx.reply('Вы решили поиграть сам собой, '
-                                              'я отменяю данную игру')
+                    "mainDB", "UPDATE variables SET rsp_game_active = ?", 0)
+                f_user_join = await ctx.reply("Вы решили поиграть сам собой, "
+                                              "я отменяю данную игру")
                 messages_to_purge.append(s_user_wait)
                 messages_to_purge.append(f_user_join)
                 await asyncio.sleep(self.fail_delay)
                 await self.purge_messages(messages_to_purge)
                 return
         await s_user_wait.delete()
-        await init_msg.edit(content='Сейчас идёт игра между '
-                                    f'{first_user.mention} и {second_user.mention}')
+        await init_msg.edit(content="Сейчас идёт игра между "
+                            f"{first_user.mention} и {second_user.mention}")
         try:
-            await first_user.send('Ваш вариант *(На ответ 1 минута)*:')
+            await first_user.send("Ваш вариант *(На ответ 1 минута)*:")
             first_response = await self.client.wait_for(
-                'message',
-                timeout=30,
-                check=self.choice_check
-            )
+                "message", timeout=30, check=self.choice_check)
             users_choice.append(first_response.content.lower())
         except asyncio.TimeoutError:
-            database.modify_data(
-                'mainDB',
-                'UPDATE variables SET rsp_game_active = ?',
-                0
-            )
-            f_move_fail = await current_channel.send(f'{first_user.mention} '
-                                                     'не успел ответить вовремя. '
-                                                     'Игра отменена')
+            database.modify_data("mainDB",
+                                 "UPDATE variables SET rsp_game_active = ?", 0)
+            f_move_fail = await current_channel.send(
+                f"{first_user.mention} "
+                "не успел ответить вовремя. "
+                "Игра отменена")
             messages_to_purge.append(f_move_fail)
             await asyncio.sleep(self.fail_delay)
             await self.purge_messages(messages_to_purge)
             return
         try:
-            await second_user.send('Ваш вариант *(На ответ 1 минута)*:')
+            await second_user.send("Ваш вариант *(На ответ 1 минута)*:")
             second_response = await self.client.wait_for(
-                'message',
-                timeout=30,
-                check=self.choice_check
-            )
+                "message", timeout=30, check=self.choice_check)
             users_choice.append(second_response.content.lower())
         except asyncio.TimeoutError:
-            database.modify_data(
-                'mainDB',
-                'UPDATE variables SET rsp_game_active = ?',
-                0
-            )
-            s_move_fail = await current_channel.send(f'{second_user.mention} '
-                                                     'не успел ответить вовремя. '
-                                                     'Игра отменена')
+            database.modify_data("mainDB",
+                                 "UPDATE variables SET rsp_game_active = ?", 0)
+            s_move_fail = await current_channel.send(
+                f"{second_user.mention} "
+                "не успел ответить вовремя. "
+                "Игра отменена")
             messages_to_purge.append(s_move_fail)
             await asyncio.sleep(self.fail_delay)
             await self.purge_messages(messages_to_purge)
             return
-        database.modify_data(
-            'mainDB',
-            'UPDATE variables SET rsp_game_active = ?',
-            0
-        )
-        await current_channel.send(self.rsp_game(
-            users_choice[0], users_choice[1],
-            first_user.id, second_user.id
-        ))
+        database.modify_data("mainDB",
+                             "UPDATE variables SET rsp_game_active = ?", 0)
+        await current_channel.send(
+            self.rsp_game(users_choice[0], users_choice[1], first_user.id,
+                          second_user.id))
         await self.purge_messages(messages_to_purge)
 
 

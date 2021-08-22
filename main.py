@@ -8,33 +8,26 @@ work. Here you can change the entire logic of the bot and adjust it to
 fit your needs
 """
 
-
 import time
+
 import aiocron
 import discord
+from discord.ext import commands
+
 import src.lib.database as database
 import src.lib.users as users
 import src.utils.avatar_changer as avatar_changer
 import src.utils.general_scripts as general_scripts
 import src.utils.markov_utils as markov_utils
-from discord.ext import commands
 
-
-TOKENS = database.get_data(
-    'confDB',
-    False,
-    'SELECT bot_token FROM tokens'
-)
-SELECTED_BOT = database.get_data(
-    'mainDB',
-    True,
-    'SELECT current_selected_bot FROM variables'
-)
+TOKENS = database.get_data("confDB", False, "SELECT bot_token FROM tokens")
+SELECTED_BOT = database.get_data("mainDB", True,
+                                 "SELECT current_selected_bot FROM variables")
 DELAY_TIME = 3
 client = commands.Bot(command_prefix=".", intents=discord.Intents.all())
 
 
-@aiocron.crontab('0 */3 * * *')
+@aiocron.crontab("0 */3 * * *")
 async def update_avatar():
     """Update avatar picture periodically.
 
@@ -44,8 +37,8 @@ async def update_avatar():
     which helps prevent getting a cooldown from the Discord API.
     """
     avatar_data = avatar_changer.get_avatar_bytes()
-    if avatar_data['avatar_bytes']:
-        await client.user.edit(avatar=avatar_data['avatar_bytes'])
+    if avatar_data["avatar_bytes"]:
+        await client.user.edit(avatar=avatar_data["avatar_bytes"])
 
 
 @client.event
@@ -60,19 +53,16 @@ async def on_ready():
         - Setting up new bot's uptime
     """
     database.clear_tables()
-    markov_utils.markov_delay_handler('clear')
+    markov_utils.markov_delay_handler("clear")
     await client.change_presence(status=discord.Status.dnd)
     avatar_data = avatar_changer.get_avatar_bytes()
-    if avatar_data['avatar_bytes']:
-        await client.user.edit(avatar=avatar_data['avatar_bytes'])
+    if avatar_data["avatar_bytes"]:
+        await client.user.edit(avatar=avatar_data["avatar_bytes"])
     await general_scripts.load_commands(client)
     await general_scripts.update_member_list(client)
-    database.modify_data(
-        'mainDB',
-        'UPDATE variables SET bot_uptime = ?',
-        int(time.time())
-    )
-    print(f'Successfully logged in as {client.user}!')
+    database.modify_data("mainDB", "UPDATE variables SET bot_uptime = ?",
+                         int(time.time()))
+    print(f"Successfully logged in as {client.user}!")
 
 
 @client.event
@@ -93,8 +83,10 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         pass
     elif isinstance(error, commands.PrivateMessageOnly):
-        await ctx.reply('Данная команда доступна только в личных сообщениях.',
-                        delete_after=DELAY_TIME)
+        await ctx.reply(
+            "Данная команда доступна только в личных сообщениях.",
+            delete_after=DELAY_TIME,
+        )
     else:
         raise error
 
@@ -110,12 +102,10 @@ async def on_member_join(member):
     Args:
         member (discord.member.Member): Data about joined user/bot
     """
-    if not member.bot and database.get_data(
-        'mainDB',
-        True,
-        'SELECT * FROM ignored_users WHERE users_id = ?',
-        member.id
-    ) is not None:
+    member_status = database.get_data(
+        "mainDB", True, "SELECT * FROM ignored_users WHERE users_id = ?",
+        member.id)
+    if not member.bot and member_status is not None:
         users.add_member_to_db(member.id)
         return
     users.add_bot_to_db(member.id)
@@ -131,16 +121,13 @@ async def on_member_leave(member):
     Args:
         member (discord.member.Member): Data about left user
     """
-    if not member.bot and database.get_data(
-        'mainDB',
-        True,
-        'SELECT * FROM users WHERE users_id = ?',
-        member.id
-    ) is not None:
+    member_status = database.get_data(
+        "mainDB", True, "SELECT * FROM users WHERE users_id = ?", member.id)
+    if not member.bot and member_status is not None:
         users.rem_member_from_db(member.id)
 
 
-@client.listen('on_message')
+@client.listen("on_message")
 async def get_messages(message):
     """Listener for regular messages (Non-commands).
 
@@ -155,15 +142,15 @@ async def get_messages(message):
         if not msg_check:
             return
         words = message_body.split()
-        counter_list = markov_utils.markov_delay_handler('get')
+        counter_list = markov_utils.markov_delay_handler("get")
         if counter_list[0] <= counter_list[1]:
             new_sentence = markov_utils.return_checked_sentence()
             if new_sentence:
                 await message.channel.send(new_sentence)
-            markov_utils.markov_delay_handler('clear')
+            markov_utils.markov_delay_handler("clear")
         else:
             markov_utils.message_words_to_db(words)
-            markov_utils.markov_delay_handler('update')
+            markov_utils.markov_delay_handler("update")
 
 
 client.run(TOKENS[int(SELECTED_BOT)])

@@ -6,8 +6,8 @@ configuration of the bot through the console.
 **Noteworthy:** This script not meant to be imported as a module.
 """
 
-
 import sys
+
 import src.lib.database as database
 import src.utils.panel_scripts as panel_scripts
 
@@ -19,17 +19,16 @@ def bot_menu():
     for configuring the bot and the database
     """
     while True:
-        print('Main menu:'
-              '\n1. Change settings of bot'
-              '\n2. Add new bot in database'
-              '\n3. Remove bot from database'
-              '\n4. Choose default bot on startup'
-              '\n5. Edit words database'
-              '\n6. Reset bot settings'
-              '\n0. Exit\n')
+        print("Main menu:"
+              "\n1. Change settings of bot"
+              "\n2. Add new bot in database"
+              "\n3. Remove bot from database"
+              "\n4. Choose default bot on startup"
+              "\n5. Edit words database"
+              "\n6. Reset bot settings"
+              "\n0. Exit\n")
         menu_input = panel_scripts.get_user_input(
-            'Enter the number of option:'
-        )
+            "Enter the number of option:")
         if menu_input.isnumeric():
             menu_input = int(menu_input)
             if menu_input == 1:
@@ -45,13 +44,17 @@ def bot_menu():
             elif menu_input == 6:
                 panel_scripts.change_setup_status()
             elif menu_input == 0:
-                print('Hope you come back soon! See you later')
+                print("Hope you come back soon! See you later")
                 sys.exit()
             else:
-                print('You have chosen wrong option, press any button to try again')
+                print(
+                    "You have chosen wrong option, press any button to try again"
+                )
                 input()
         else:
-            print('You have passed something wrong, press any button to try again')
+            print(
+                "You have passed something wrong, press any button to try again"
+            )
             input()
 
 
@@ -64,14 +67,11 @@ def bot_panel_init():
     otherwise - main menu
     """
     current_status = database.get_data(
-        'mainDB',
-        True,
-        'SELECT is_setup_completed FROM variables'
-    )
+        "mainDB", True, "SELECT is_setup_completed FROM variables")
     if not current_status:
         panel_scripts.bot_setup()
     bot_menu()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     bot_panel_init()

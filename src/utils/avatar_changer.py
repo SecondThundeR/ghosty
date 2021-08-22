@@ -7,12 +7,11 @@ This file can also be imported as a module and contains the following functions:
     * get_avatar_bytes - gets bytes from avatar picture
 """
 
-
+import pathlib
 import random
 import time
-import pathlib
-import src.lib.database as database
 
+import src.lib.database as database
 
 CHANGE_COOLDOWN = 900
 
@@ -32,9 +31,9 @@ def get_avatar_bytes(avatar_cooldown=None):
     """
     if not avatar_cooldown:
         avatar_cooldown = database.get_data(
-            'mainDB',
+            "mainDB",
             True,
-            'SELECT avatar_cooldown FROM variables',
+            "SELECT avatar_cooldown FROM variables",
         )
     curr_time = int(time.time())
     curr_cooldown = avatar_cooldown - curr_time
@@ -42,21 +41,18 @@ def get_avatar_bytes(avatar_cooldown=None):
         return {
             "avatar_cooldown": avatar_cooldown,
             "curr_cooldown": int(curr_cooldown),
-            "avatar_bytes": None
+            "avatar_bytes": None,
         }
     new_avatar_cooldown = curr_time + avatar_cooldown
-    database.modify_data(
-        'mainDB',
-        'UPDATE variables SET avatar_cooldown = ?',
-        new_avatar_cooldown
-    )
-    avatar_path = f"{pathlib.Path().absolute()}/src/avatars/" \
-                  f"Avatar_{random.randint(1, 16)}.png"
-    with open(avatar_path, 'rb') as f:
+    database.modify_data("mainDB", "UPDATE variables SET avatar_cooldown = ?",
+                         new_avatar_cooldown)
+    avatar_path = (f"{pathlib.Path().absolute()}/src/avatars/"
+                   f"Avatar_{random.randint(1, 16)}.png")
+    with open(avatar_path, "rb") as f:
         avatar_bytes = f.read()
     f.close()
     return {
         "avatar_cooldown": new_avatar_cooldown,
         "curr_cooldown": None,
-        "avatar_bytes": avatar_bytes
+        "avatar_bytes": avatar_bytes,
     }

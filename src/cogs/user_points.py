@@ -6,8 +6,10 @@ in a user-friendly way.
 """
 
 import asyncio
-import src.utils.economy_utils as economy_utils
+
 from discord.ext import commands
+
+import src.utils.economy_utils as economy_utils
 
 
 class UserPoints(commands.Cog):
@@ -39,7 +41,7 @@ class UserPoints(commands.Cog):
         self.client = client
         self.delete_time = 3
 
-    @commands.command(aliases=['очки'])
+    @commands.command(aliases=["очки"])
     async def points_hub(self, ctx, arg=None):
         """Redirect to certain function based on command argument.
 
@@ -47,17 +49,17 @@ class UserPoints(commands.Cog):
             ctx (discord.ext.commands.Context): Context object
             arg (Union[str | None]): Command argument
         """
-        if arg == 'создать':
+        if arg == "создать":
             await self.__create_account(ctx, ctx.author.id)
-        elif arg == 'удалить':
+        elif arg == "удалить":
             await self.__delete_account(ctx, ctx.author.id)
-        elif arg == 'баланс':
+        elif arg == "баланс":
             await self.__send_account_details(ctx, ctx.author.id)
-        elif arg == 'перевод':
+        elif arg == "перевод":
             await self.__transfer_points_to_user(ctx, ctx.author.id)
-        elif arg == 'бонус':
+        elif arg == "бонус":
             await self.__daily_bonus_points(ctx, ctx.author.id)
-        elif arg == 'таблица':
+        elif arg == "таблица":
             await self.__users_leaderboard(ctx)
         else:
             return
@@ -74,24 +76,22 @@ class UserPoints(commands.Cog):
         """
         create_status = economy_utils.add_new_account(user_id)
         if create_status is False:
-            await ctx.reply(
-                'У вас уже есть аккаунт в базе данных!',
-                delete_after=self.delete_time
-            )
+            await ctx.reply("У вас уже есть аккаунт в базе данных!",
+                            delete_after=self.delete_time)
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
             return
         if create_status is None:
             await ctx.reply(
-                'Успешно создан платежный аккаунт! '
-                f'Ваш стартовый баланс равен **{economy_utils.DEFAULT_BALANCE}** очков',
-                delete_after=self.delete_time
+                "Успешно создан платежный аккаунт! "
+                f"Ваш стартовый баланс равен **{economy_utils.DEFAULT_BALANCE}** очков",
+                delete_after=self.delete_time,
             )
         elif create_status is True:
             await ctx.reply(
-                'Успешно восстановлен платежный аккаунт! '
-                f'Ваш баланс был сброшен до **{economy_utils.ZERO_BALANCE}** очков',
-                delete_after=self.delete_time
+                "Успешно восстановлен платежный аккаунт! "
+                f"Ваш баланс был сброшен до **{economy_utils.ZERO_BALANCE}** очков",
+                delete_after=self.delete_time,
             )
         await asyncio.sleep(self.delete_time)
         await ctx.message.delete()
@@ -112,35 +112,26 @@ class UserPoints(commands.Cog):
             ask_msg = await ctx.reply(
                 "Вы уверены что хотите удалить свой аккаунт с очками? "
                 "(Учтите, что при следующем создании, ваш баланс будет равен нулю)\n"
-                "Чтобы продолжить, напишите **'Да'**",
-            )
+                "Чтобы продолжить, напишите **'Да'**", )
             messages_to_purge.append(ctx.message)
             messages_to_purge.append(ask_msg)
             try:
                 answer_msg = await self.client.wait_for(
-                    'message',
-                    timeout=60,
-                    check=self.__delete_check
-                )
+                    "message", timeout=60, check=self.__delete_check)
             except asyncio.TimeoutError:
-                await ask_msg.edit(
-                    content='Вы достигли таймаута! '
-                    'Отменяю удаление акканута'
-                )
+                await ask_msg.edit(content="Вы достигли таймаута! "
+                                   "Отменяю удаление акканута")
                 await asyncio.sleep(self.delete_time)
                 await self.__purge_messages(messages_to_purge)
                 return
             await answer_msg.delete()
-            await ask_msg.edit(
-                content='Я успешно удалил ваш аккаунт с очками!'
-            )
+            await ask_msg.edit(content="Я успешно удалил ваш аккаунт с очками!"
+                               )
             await asyncio.sleep(self.delete_time)
             await self.__purge_messages(messages_to_purge)
             return
-        await ctx.reply(
-            'У вас нет активного аккаунта в базе данных!',
-            delete_after=self.delete_time
-        )
+        await ctx.reply("У вас нет активного аккаунта в базе данных!",
+                        delete_after=self.delete_time)
         await asyncio.sleep(self.delete_time)
         await ctx.message.delete()
 
@@ -157,15 +148,15 @@ class UserPoints(commands.Cog):
         account_balance = economy_utils.get_account_balance(user_id)
         if account_balance is None:
             await ctx.reply(
-                'У вас нет активного аккаунта в базе данных!',
-                delete_after=self.delete_time
+                "У вас нет активного аккаунта в базе данных!",
+                delete_after=self.delete_time,
             )
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
             return
         await ctx.reply(
-            f'Ваш баланс равен: **{account_balance}** очков',
-            delete_after=self.delete_time
+            f"Ваш баланс равен: **{account_balance}** очков",
+            delete_after=self.delete_time,
         )
         await asyncio.sleep(self.delete_time)
         await ctx.message.delete()
@@ -186,17 +177,17 @@ class UserPoints(commands.Cog):
         sender_balance = economy_utils.get_account_balance(sender_id)
         if sender_balance is None:
             await ctx.reply(
-                'У вас нет активного аккаунта в базе данных!',
-                delete_after=self.delete_time
+                "У вас нет активного аккаунта в базе данных!",
+                delete_after=self.delete_time,
             )
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
             return
         if sender_balance <= 0:
             await ctx.reply(
-                'У вас недостаточно денег для перевода! '
-                f'Ваш баланс равен: {sender_balance}',
-                delete_after=self.delete_time
+                "У вас недостаточно денег для перевода! "
+                f"Ваш баланс равен: {sender_balance}",
+                delete_after=self.delete_time,
             )
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
@@ -206,16 +197,12 @@ class UserPoints(commands.Cog):
         messages_to_purge.append(ctx.message)
         messages_to_purge.append(ask_msg)
         try:
-            answer_msg = await self.client.wait_for(
-                'message',
-                timeout=60,
-                check=self.__user_check
-            )
+            answer_msg = await self.client.wait_for("message",
+                                                    timeout=60,
+                                                    check=self.__user_check)
         except asyncio.TimeoutError:
-            await ask_msg.edit(
-                content='Вы достигли таймаута! '
-                'Отменяю активный перевод'
-            )
+            await ask_msg.edit(content="Вы достигли таймаута! "
+                               "Отменяю активный перевод")
             await asyncio.sleep(self.delete_time)
             await self.__purge_messages(messages_to_purge)
             return
@@ -225,46 +212,38 @@ class UserPoints(commands.Cog):
         reciever_status = economy_utils.check_account(receiver_id)
         if not reciever_status:
             await ask_msg.edit(
-                content=f'{receiver_member.mention} не имеет аккаунта в базе данных!'
-            )
+                content=f"{receiver_member.mention} не имеет аккаунта в базе данных!")
             await asyncio.sleep(self.delete_time)
             await self.__purge_messages(messages_to_purge)
             return
         await ask_msg.edit(
-            content=f'Сколько вы хотите перевести очков для {receiver_member.mention}?'
+            content=f"Сколько вы хотите перевести очков для {receiver_member.mention}?"
         )
         try:
-            answer_msg = await self.client.wait_for(
-                'message',
-                timeout=60,
-                check=self.__num_check
-            )
+            answer_msg = await self.client.wait_for("message",
+                                                    timeout=60,
+                                                    check=self.__num_check)
         except asyncio.TimeoutError:
-            await ask_msg.edit(
-                content='Вы достигли таймаута! '
-                'Отменяю активный перевод'
-            )
+            await ask_msg.edit(content="Вы достигли таймаута! "
+                               "Отменяю активный перевод")
             await asyncio.sleep(self.delete_time)
             await self.__purge_messages(messages_to_purge)
             return
         points_to_send = int(answer_msg.content)
         await answer_msg.delete()
         transfer_status = economy_utils.transfer_points(
-            sender_id, receiver_id, points_to_send
-        )
+            sender_id, receiver_id, points_to_send)
         if not transfer_status:
             await ask_msg.edit(
-                content=f'Перевод не удался! К сожелению, на вашем аккаунте '
-                        'недостаточно очков для перевода '
-                        f'пользователю {receiver_member.mention}'
-            )
+                content=f"Перевод не удался! К сожелению, на вашем аккаунте "
+                "недостаточно очков для перевода "
+                f"пользователю {receiver_member.mention}")
             await asyncio.sleep(self.delete_time)
             await self.__purge_messages(messages_to_purge)
             return
         await ask_msg.edit(
-            content=f'Успешно переведено **{points_to_send}** очков '
-                    f'пользователю {receiver_member.mention}'
-        )
+            content=f"Успешно переведено **{points_to_send}** очков "
+            f"пользователю {receiver_member.mention}")
         await asyncio.sleep(self.delete_time)
         await self.__purge_messages(messages_to_purge)
 
@@ -277,26 +256,24 @@ class UserPoints(commands.Cog):
         """
         daily_bonus_points = economy_utils.daily_points_manager(user_id)
         if daily_bonus_points is False:
-            await ctx.reply(
-                'У вас нет активного аккаунта с очками!',
-                delete_after=self.delete_time
-            )
+            await ctx.reply("У вас нет активного аккаунта с очками!",
+                            delete_after=self.delete_time)
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
             return
         if daily_bonus_points is None:
             await ctx.reply(
-                'Похоже вы уже получали бонусные очки за сегодня!',
-                delete_after=self.delete_time
+                "Похоже вы уже получали бонусные очки за сегодня!",
+                delete_after=self.delete_time,
             )
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
             return
         await ctx.reply(
-            f'Поздравляем! Вы получили **{daily_bonus_points} очков**!\n'
-            'Ваш баланс теперь равен '
-            f'**{economy_utils.get_account_balance(user_id)} очков**',
-            delete_after=self.delete_time
+            f"Поздравляем! Вы получили **{daily_bonus_points} очков**!\n"
+            "Ваш баланс теперь равен "
+            f"**{economy_utils.get_account_balance(user_id)} очков**",
+            delete_after=self.delete_time,
         )
         await asyncio.sleep(self.delete_time)
         await ctx.message.delete()
@@ -313,24 +290,21 @@ class UserPoints(commands.Cog):
         leaders_dict = economy_utils.parsed_accounts_data(limit=10)
         if leaders_dict is None:
             await ctx.reply(
-                'Похоже в базе данных нет аккаунтов с очками!',
-                delete_after=self.delete_time
+                "Похоже в базе данных нет аккаунтов с очками!",
+                delete_after=self.delete_time,
             )
             await asyncio.sleep(self.delete_time)
             await ctx.message.delete()
             return
-        leaderboard_msg = f'Список **{len(leaders_dict)}** пользователей ' \
-                          'с крупными счетами на балансе:\n'
+        leaderboard_msg = (f"Список **{len(leaders_dict)}** пользователей "
+                           "с крупными счетами на балансе:\n")
         place = 1
         for key, item in leaders_dict.items():
             member_data = await ctx.message.guild.fetch_member(key)
-            leaderboard_msg += f'{place}. {member_data.mention} ' \
-                               f'- **{item} очков**\n'
+            leaderboard_msg += (f"{place}. {member_data.mention} "
+                                f"- **{item} очков**\n")
             place += 1
-        await ctx.reply(
-            leaderboard_msg,
-            delete_after=self.delete_time
-        )
+        await ctx.reply(leaderboard_msg, delete_after=self.delete_time)
         await asyncio.sleep(self.delete_time)
         await ctx.message.delete()
 
@@ -356,7 +330,7 @@ class UserPoints(commands.Cog):
     @staticmethod
     def __delete_check(ctx):
         """Check, if user confirmed the deletion of the account"""
-        return ctx.content.lower() == 'да'
+        return ctx.content.lower() == "да"
 
 
 def setup(client):

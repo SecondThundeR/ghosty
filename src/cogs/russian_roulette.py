@@ -89,12 +89,12 @@ class RussianRoulette(commands.Cog):
             bullet_list.append(charged_section)
         deadly_bullet = random.randint(1, 6)
         if deadly_bullet in bullet_list:
-            economy_utils.subtract_points(
-                ctx.author.id, parsed_args["game_points"]
-            )
             result_msg = await ctx.reply('**БАХ**')
             await asyncio.sleep(self.delay_time)
             if parsed_args["game_points"] is not None:
+                economy_utils.subtract_points(
+                    ctx.author.id, parsed_args["game_points"]
+                )
                 await result_msg.edit(
                     content=f'{self.__get_random_word("lose")}\n\n'
                             f'Вы проиграли **{parsed_args["game_points"]}** очков!'

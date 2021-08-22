@@ -21,6 +21,7 @@ class RussianRoulette(commands.Cog):
     Methods:
         russian_roulette_handler: Handles logic of Russian Roulette
         __parse_args: Parses arguments and returns dictionary with data
+        __change_game_status: Changes game status in DB for bet games
         __get_random_word: Gets random word from database for different scenarios
         __add_new_word: Adds new word to Russian Roulette DB
         __delete_exist_word: Deletes existing word from Russian Roulette DB
@@ -122,13 +123,6 @@ class RussianRoulette(commands.Cog):
         )
         return
 
-    def __change_game_status(self, ctx, game_status):
-        database.modify_data(
-            'pointsDB',
-            'UPDATE points_accounts SET active_roulette = ? WHERE user_id = ?',
-            game_status, ctx.author.id
-        )
-
     async def __parse_args(self, ctx, args):
         """Parse arguments and return dictionary with data.
 
@@ -199,6 +193,20 @@ class RussianRoulette(commands.Cog):
                 "game_points": game_points,
                 "game_status": game_status
             }
+
+    @staticmethod
+    def __change_game_status(ctx, game_status):
+        """Change game status value in DB.
+
+        Args:
+            ctx (commands.context.Context): Context object to execute functions
+            game_status (int): New game status value
+        """
+        database.modify_data(
+            'pointsDB',
+            'UPDATE points_accounts SET active_roulette = ? WHERE user_id = ?',
+            game_status, ctx.author.id
+        )
 
     def __get_random_word(self, condition):
         """Get random word from database.

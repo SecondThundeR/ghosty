@@ -120,9 +120,9 @@ async def on_member_leave(member):
     Args:
         member (discord.member.Member): Data about left user
     """
-    if (not member.bot and database.get_data(
-            "mainDB", True, "SELECT * FROM users WHERE users_id = ?",
-            member.id) is not None):
+    member_status = database.get_data(
+        "mainDB", True, "SELECT * FROM users WHERE users_id = ?", member.id)
+    if not member.bot and member_status is not None:
         users.rem_member_from_db(member.id)
 
 

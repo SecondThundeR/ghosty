@@ -15,10 +15,10 @@ This file can also be imported as a module and contains the following functions:
     * parsed_accounts_data - returns parsed accounts data from DB
 """
 
-import random
 import datetime as dt
-import src.lib.database as database
+import random
 
+import src.lib.database as database
 
 # Initial values for points accounts
 # Can be changed later on
@@ -41,10 +41,10 @@ def check_account(user_id):
         bool: True if account exists, False if account deleted.
     """
     account_status = database.get_data(
-        'pointsDB',
+        "pointsDB",
         True,
-        'SELECT is_deleted FROM points_accounts WHERE user_id = ?',
-        user_id
+        "SELECT is_deleted FROM points_accounts WHERE user_id = ?",
+        user_id,
     )
     if account_status is None:
         return None
@@ -68,15 +68,16 @@ def add_new_account(user_id):
         return False
     if account_status is None:
         database.modify_data(
-            'pointsDB',
+            "pointsDB",
             'INSERT INTO points_accounts VALUES (?, ?, 0, "", 0)',
-            user_id, DEFAULT_BALANCE
+            user_id,
+            DEFAULT_BALANCE,
         )
         return None
     database.modify_data(
-        'pointsDB',
-        'UPDATE points_accounts SET is_deleted = 0 WHERE user_id = ?',
-        user_id
+        "pointsDB",
+        "UPDATE points_accounts SET is_deleted = 0 WHERE user_id = ?",
+        user_id,
     )
     return True
 
@@ -94,10 +95,11 @@ def delete_account(user_id):
     if not account_status:
         return False
     database.modify_data(
-        'pointsDB',
-        'UPDATE points_accounts SET points_balance = ?, '
-        'is_deleted = 1 WHERE user_id = ?',
-        ZERO_BALANCE, user_id
+        "pointsDB",
+        "UPDATE points_accounts SET points_balance = ?, "
+        "is_deleted = 1 WHERE user_id = ?",
+        ZERO_BALANCE,
+        user_id,
     )
     return True
 
@@ -116,10 +118,10 @@ def get_account_balance(user_id):
     if not account_status:
         return None
     user_account = database.get_data(
-        'pointsDB',
+        "pointsDB",
         True,
-        'SELECT points_balance FROM points_accounts WHERE user_id = ?',
-        user_id
+        "SELECT points_balance FROM points_accounts WHERE user_id = ?",
+        user_id,
     )
     return user_account
 
@@ -150,10 +152,11 @@ def add_points(user_id, points, skip_check=False):
         if not account_status:
             return False
     database.modify_data(
-        'pointsDB',
-        'UPDATE points_accounts '
-        'SET points_balance = points_balance + ? WHERE user_id = ?',
-        points, user_id
+        "pointsDB",
+        "UPDATE points_accounts "
+        "SET points_balance = points_balance + ? WHERE user_id = ?",
+        points,
+        user_id,
     )
     return True
 
@@ -174,10 +177,11 @@ def subtract_points(user_id, points, skip_check=False):
     if account_balance == 0 or account_balance < points:
         return False
     database.modify_data(
-        'pointsDB',
-        'UPDATE points_accounts '
-        'SET points_balance = points_balance - ? WHERE user_id = ?',
-        points, user_id
+        "pointsDB",
+        "UPDATE points_accounts "
+        "SET points_balance = points_balance - ? WHERE user_id = ?",
+        points,
+        user_id,
     )
     return True
 
@@ -199,24 +203,25 @@ def daily_points_manager(user_id):
     current_date = dt.datetime.now().date()
     next_date = (dt.datetime.now() + dt.timedelta(days=1)).date()
     daily_points_date = database.get_data(
-        'pointsDB',
+        "pointsDB",
         True,
-        'SELECT daily_points_date FROM points_accounts WHERE user_id = ?',
-        user_id
+        "SELECT daily_points_date FROM points_accounts WHERE user_id = ?",
+        user_id,
     )
-    if not daily_points_date or current_date >= dt.datetime.strptime(
-        daily_points_date, '%Y-%m-%d'
-    ).date():
+    if (not daily_points_date or current_date >= dt.datetime.strptime(
+            daily_points_date, "%Y-%m-%d").date()):
         random_points = random.randrange(100, 2000, 100)
         add_points(user_id, random_points, skip_check=True)
         database.modify_data(
-            'pointsDB',
-            'UPDATE points_accounts SET daily_points_date = ? '
-            'WHERE user_id = ?',
-            next_date, user_id
+            "pointsDB",
+            "UPDATE points_accounts SET daily_points_date = ? "
+            "WHERE user_id = ?",
+            next_date,
+            user_id,
         )
         return random_points
-    if current_date < dt.datetime.strptime(daily_points_date, '%Y-%m-%d').date():
+    if current_date < dt.datetime.strptime(daily_points_date,
+                                           "%Y-%m-%d").date():
         return None
 
 
@@ -236,16 +241,16 @@ def parsed_accounts_data(limit=None):
         dict: Dictionary containing needed accounts data (ID's, balance)
     """
     user_ids = database.get_data(
-        'pointsDB',
+        "pointsDB",
         False,
-        'SELECT user_id FROM points_accounts WHERE is_deleted = 0 '
-        'ORDER BY points_balance DESC'
+        "SELECT user_id FROM points_accounts WHERE is_deleted = 0 "
+        "ORDER BY points_balance DESC",
     )
     accounts_balance = database.get_data(
-        'pointsDB',
+        "pointsDB",
         False,
-        'SELECT points_balance FROM points_accounts WHERE is_deleted = 0 '
-        'ORDER BY points_balance DESC'
+        "SELECT points_balance FROM points_accounts WHERE is_deleted = 0 "
+        "ORDER BY points_balance DESC",
     )
     if user_ids is None or accounts_balance is None:
         return None

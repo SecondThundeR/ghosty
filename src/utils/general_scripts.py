@@ -7,10 +7,10 @@ This file can also be imported as a module and contains the following functions:
     * load_commands - prepares extensions on load
 """
 
-
 import os
-import src.lib.users as users
+
 import src.lib.database as database
+import src.lib.users as users
 
 
 async def update_member_list(client):
@@ -22,11 +22,8 @@ async def update_member_list(client):
     Args:
         client (discord.Client): Client object to fetch members of server
     """
-    ignored_users_id = database.get_data(
-        "mainDB",
-        False,
-        "SELECT * FROM ignored_users"
-    )
+    ignored_users_id = database.get_data("mainDB", False,
+                                         "SELECT * FROM ignored_users")
     if ignored_users_id is None:
         ignored_users_id = []
     for guild in client.guilds:
@@ -41,6 +38,6 @@ async def load_commands(client):
     Args:
         client (discord.Client): Client object to load extension
     """
-    for filename in os.listdir('./src/cogs'):
-        if filename.endswith('.py'):
-            client.load_extension(f'src.cogs.{filename[:-3]}')
+    for filename in os.listdir("./src/cogs"):
+        if filename.endswith(".py"):
+            client.load_extension(f"src.cogs.{filename[:-3]}")

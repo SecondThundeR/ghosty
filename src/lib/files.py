@@ -13,7 +13,6 @@ This file can also be imported as a module and contains the following functions:
     * delete_folder - returns a bool when deleting a local folder
 """
 
-
 import os
 import shutil
 
@@ -27,7 +26,7 @@ def import_data(path):
     Returns:
         str: Read data from local file
     """
-    with open(path, 'r', encoding='utf-8') as file:
+    with open(path, "r", encoding="utf-8") as file:
         file_data = file.read().splitlines()
     file.close()
     return file_data
@@ -57,8 +56,8 @@ def folder_status(path):
     try:
         return bool(os.listdir(path))
     except OSError as err:
-        print('There is an error while checking folder.\n'
-              f'Here are error details: {err}')
+        print("There is an error while checking folder.\n"
+              f"Here are error details: {err}")
 
 
 def create_folder(path):
@@ -71,8 +70,8 @@ def create_folder(path):
         if not is_exist(path):
             os.mkdir(path)
     except OSError as err:
-        print('There is an error while creating folder.\n'
-              f'Here are error details: {err}')
+        print("There is an error while creating folder.\n"
+              f"Here are error details: {err}")
 
 
 def delete_file(path):
@@ -97,5 +96,5 @@ def delete_folder(path):
         if is_exist(path):
             shutil.rmtree(path)
     except shutil.Error as err:
-        print('There is an error while deleting folder.\n'
-              f'Here are error details: {err}')
+        print("There is an error while deleting folder.\n"
+              f"Here are error details: {err}")

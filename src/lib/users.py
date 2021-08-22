@@ -14,8 +14,8 @@ This file can also be imported as a module and contains the following functions:
     * is_user_blocked - returns True, if user is in blacklist of bot
 """
 
-
 import random
+
 import src.lib.database as database
 from src.lib.exceptions import UsersNotFound
 
@@ -26,11 +26,7 @@ def _get_users_list():
     Returns:
         list: Array of users ids from DB
     """
-    return database.get_data(
-        'mainDB',
-        False,
-        'SELECT users_id FROM users'
-    )
+    return database.get_data("mainDB", False, "SELECT users_id FROM users")
 
 
 def _get_admin_status(user_id):
@@ -43,11 +39,9 @@ def _get_admin_status(user_id):
         bool: True, if compare successful. False otherwise
     """
     return database.get_data(
-        'mainDB',
-        False,
-        'SELECT admins_id FROM admin_list WHERE admins_id = ?',
-        user_id
-    ) == int(user_id)
+        "mainDB", False,
+        "SELECT admins_id FROM admin_list WHERE admins_id = ?",
+        user_id) == int(user_id)
 
 
 def _get_block_status(user_id):
@@ -59,12 +53,12 @@ def _get_block_status(user_id):
     Returns:
         bool: True, if compare successful. False otherwise
     """
-    return database.get_data(
-        'mainDB',
+    return (database.get_data(
+        "mainDB",
         False,
-        'SELECT blocked_id FROM block_list WHERE blocked_id = ?',
-        user_id
-    ) == int(user_id)
+        "SELECT blocked_id FROM block_list WHERE blocked_id = ?",
+        user_id,
+    ) == int(user_id))
 
 
 async def get_random_user(msg):
@@ -102,12 +96,12 @@ async def get_shipping_users(msg):
     users = _get_users_list()
     if len(users) >= 2:
         first_member = await msg.guild.fetch_member(
-            first_member_id := random.choice(users)
-        )
+            first_member_id := random.choice(users))
         users.remove(first_member_id)
         second_member = await msg.guild.fetch_member(random.choice(users))
         return [first_member, second_member]
-    raise UsersNotFound("В базе данных недостаточно пользователей для шиппинга")
+    raise UsersNotFound(
+        "В базе данных недостаточно пользователей для шиппинга")
 
 
 def get_members_name(member):
@@ -137,11 +131,8 @@ def add_member_to_db(member_id):
     Args:
         member_id (int): ID of member to add
     """
-    return database.modify_data(
-        'mainDB',
-        'INSERT INTO users VALUES (?)',
-        member_id
-    )
+    return database.modify_data("mainDB", "INSERT INTO users VALUES (?)",
+                                member_id)
 
 
 def add_bot_to_db(bot_id):
@@ -153,11 +144,8 @@ def add_bot_to_db(bot_id):
     Args:
         bot_id (int): ID of bot to add
     """
-    return database.modify_data(
-        'mainDB',
-        'INSERT INTO bots VALUES (?)',
-        bot_id
-    )
+    return database.modify_data("mainDB", "INSERT INTO bots VALUES (?)",
+                                bot_id)
 
 
 def rem_member_from_db(member_id):
@@ -172,11 +160,9 @@ def rem_member_from_db(member_id):
     Args:
         member_id (int): ID of member to remove
     """
-    return database.modify_data(
-        'mainDB',
-        'DELETE FROM users WHERE users_id = ?',
-        member_id
-    )
+    return database.modify_data("mainDB",
+                                "DELETE FROM users WHERE users_id = ?",
+                                member_id)
 
 
 def is_user_admin(user_id):

@@ -4,9 +4,9 @@ This cog allows to get info about host machine
 where bot is running at the moment
 """
 
-
 import asyncio
 import platform
+
 from discord.ext import commands
 
 
@@ -37,7 +37,7 @@ class SystemInfo(commands.Cog):
         self.cpu = platform.processor()
         self.arch = platform.machine()
 
-    @commands.command(aliases=['система'])
+    @commands.command(aliases=["система"])
     async def send_system_info(self, ctx, mode=None):
         """Send formatted info about host system.
 
@@ -45,7 +45,8 @@ class SystemInfo(commands.Cog):
             ctx (commands.context.Context): Context object to execute functions
             mode (Union[str, None]): Mode for format of system info
         """
-        await ctx.reply(self.__format_system_info(mode), delete_after=self.delay_time)
+        await ctx.reply(self.__format_system_info(mode),
+                        delete_after=self.delay_time)
         await asyncio.sleep(self.delay_time)
         await ctx.message.delete()
 
@@ -61,21 +62,19 @@ class SystemInfo(commands.Cog):
         Returns:
             str: Formatted system info
         """
-        if mode and mode == 'фулл':
+        if mode and mode == "фулл":
             if self.cpu:
-                return 'Я работаю на ' \
-                       f'**{self.name} {self.release}** ' \
-                       f'*({self.version})*, ' \
-                       f'у которого процессор *({self.cpu})* ' \
-                       f'имеет архитектуру - **{self.arch}**'
-            return 'Я работаю на ' \
-                   f'**{self.name} {self.release}** ' \
-                   f'*({self.version})*, ' \
-                   'у которого процессор имеет архитектуру - ' \
-                   f'**{self.arch}**'
-        return 'Я работаю на ' \
-               f'**{self.name} {self.release}** ' \
-               f'*({self.version})*'
+                return ("Я работаю на "
+                        f"**{self.name} {self.release}** "
+                        f"*({self.version})*, "
+                        f"у которого процессор *({self.cpu})* "
+                        f"имеет архитектуру - **{self.arch}**")
+            return ("Я работаю на "
+                    f"**{self.name} {self.release}** "
+                    f"*({self.version})*, "
+                    "у которого процессор имеет архитектуру - "
+                    f"**{self.arch}**")
+        return "Я работаю на " f"**{self.name} {self.release}** " f"*({self.version})*"
 
 
 def setup(client):

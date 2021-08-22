@@ -15,9 +15,8 @@ This file can also be imported as a module and contains the following functions:
     * modify_data - operates with data by executing SQL queries
 """
 
-
-import sys
 import sqlite3
+import sys
 
 
 class Database:
@@ -49,10 +48,8 @@ class Database:
         Args:
             selected_db (str): Name of DB to connect to
         """
-        self.conn = sqlite3.connect(
-            f'./src/db/{selected_db}.db',
-            check_same_thread=False
-        )
+        self.conn = sqlite3.connect(f"./src/db/{selected_db}.db",
+                                    check_same_thread=False)
         self.cur = self.conn.cursor()
 
     def disconnect_db(self):
@@ -67,17 +64,14 @@ def clear_tables():
     when main script is executed
     """
     modify_data(
-        'mainDB',
-        'UPDATE variables SET poll_locked = ?, ship_in_active = ?,'
-        'rsp_game_active = ?',
+        "mainDB",
+        "UPDATE variables SET poll_locked = ?, ship_in_active = ?,"
+        "rsp_game_active = ?",
         0,
         0,
-        0
+        0,
     )
-    modify_data(
-        'mainDB',
-        'DELETE FROM bots; DELETE FROM users'
-    )
+    modify_data("mainDB", "DELETE FROM bots; DELETE FROM users")
 
 
 def reset_bot_tables():
@@ -87,28 +81,35 @@ def reset_bot_tables():
     in `bot_panel`
     """
     modify_data(
-        'mainDB',
-        'UPDATE variables SET poll_locked = ?, ship_date = ?,'
-        'ship_text_full = ?, ship_text_short = ?, ship_activated = ?,'
-        'ship_in_active = ?, is_setup_completed = ?,'
-        'current_selected_bot = ?, bot_uptime = ?, avatar_cooldown = ?,'
-        'rsp_game_active = ?',
-        0, 0, '', '', 0, 0, 0, 0, 0, 0, 0
+        "mainDB",
+        "UPDATE variables SET poll_locked = ?, ship_date = ?,"
+        "ship_text_full = ?, ship_text_short = ?, ship_activated = ?,"
+        "ship_in_active = ?, is_setup_completed = ?,"
+        "current_selected_bot = ?, bot_uptime = ?, avatar_cooldown = ?,"
+        "rsp_game_active = ?",
+        0,
+        0,
+        "",
+        "",
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
     )
     modify_data(
-        'mainDB',
-        'DELETE FROM bots; DELETE FROM users; DELETE FROM admin_list; '
-        'DELETE FROM block_list; DELETE FROM ignored_users'
+        "mainDB",
+        "DELETE FROM bots; DELETE FROM users; DELETE FROM admin_list; "
+        "DELETE FROM block_list; DELETE FROM ignored_users",
     )
+    modify_data("confDB", "DELETE FROM tokens")
     modify_data(
-        'confDB',
-        'DELETE FROM tokens'
-    )
-    modify_data(
-        'wordsDB',
-        'DELETE FROM main_words_base; DELETE FROM markov_words; '
-        'DELETE FROM roulette_lose_words; DELETE FROM roulette_win_words; '
-        'DELETE FROM roulette_zero_words;'
+        "wordsDB",
+        "DELETE FROM main_words_base; DELETE FROM markov_words; "
+        "DELETE FROM roulette_lose_words; DELETE FROM roulette_win_words; "
+        "DELETE FROM roulette_zero_words;",
     )
 
 
@@ -147,9 +148,9 @@ def get_data(db_name, is_single, command, *data):
             data_arr.append(element)
         return data_arr
     except sqlite3.Error as err:
-        print('\nThere is an error while working with DB '
-              '(Method: get_data).\n'
-              f'Here are error details: {err}')
+        print("\nThere is an error while working with DB "
+              "(Method: get_data).\n"
+              f"Here are error details: {err}")
         sys.exit()
 
 
@@ -173,9 +174,9 @@ def modify_data(db_name, command, *data):
         database.conn.commit()
         database.disconnect_db()
     except sqlite3.Error as err:
-        print('\nThere is an error while working with DB '
-              '(Method: modify_data).\n'
-              f'Here are error details: {err}')
+        print("\nThere is an error while working with DB "
+              "(Method: modify_data).\n"
+              f"Here are error details: {err}")
         sys.exit()
 
 
@@ -189,7 +190,7 @@ def _modify_without_data(db_instance, command):
         db_instance (Database): Database instance
         command (str): Command to execute
     """
-    if command.find(';') != -1:
+    if command.find(";") != -1:
         db_instance.cur.executescript(command)
         return
     db_instance.cur.execute(command)

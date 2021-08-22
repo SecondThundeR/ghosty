@@ -3,10 +3,11 @@
 This cog executes Markov chains generation and sends newly generated sentence.
 """
 
-
 import asyncio
-import src.utils.markov_utils as markov_utils
+
 from discord.ext import commands
+
+import src.utils.markov_utils as markov_utils
 
 
 class MarkovCommand(commands.Cog):
@@ -28,7 +29,7 @@ class MarkovCommand(commands.Cog):
         self.client = client
         self.delay_time = 5
 
-    @commands.command(aliases=['ген'])
+    @commands.command(aliases=["ген"])
     async def send_markov_sentence(self, ctx, number=None):
         """Get new Markov chains sentence and send it.
 
@@ -44,8 +45,10 @@ class MarkovCommand(commands.Cog):
         else:
             new_sentence = markov_utils.return_checked_sentence()
         if not new_sentence:
-            await ctx.reply('Похоже, у меня недостаточно слов в базе данных :(',
-                            delete_after=self.delay_time)
+            await ctx.reply(
+                "Похоже, у меня недостаточно слов в базе данных :(",
+                delete_after=self.delay_time,
+            )
             await asyncio.sleep(self.delay_time)
             await ctx.message.delete()
         else:

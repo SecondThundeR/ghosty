@@ -3,13 +3,14 @@
 This cog handles calculating and sending current bot's uptime
 """
 
-
-import time
 import asyncio
 import datetime
+import time
+
+from discord.ext import commands
+
 import src.lib.database as database
 import src.utils.timedelta_formatter as td_format
-from discord.ext import commands
 
 
 class Uptime(commands.Cog):
@@ -32,7 +33,7 @@ class Uptime(commands.Cog):
         self.delay_time = 5
         self.start_time = None
 
-    @commands.command(aliases=['аптайм'])
+    @commands.command(aliases=["аптайм"])
     async def send_uptime(self, ctx):
         """Calculate and send current uptime of bot.
 
@@ -44,20 +45,20 @@ class Uptime(commands.Cog):
         """
         if not self.start_time:
             self.start_time = database.get_data(
-                'mainDB',
-                True,
-                'SELECT bot_uptime FROM variables'
-            )
+                "mainDB", True, "SELECT bot_uptime FROM variables")
         curr_uptime = int(time.time()) - self.start_time
         time_string = td_format.format_timedelta(
-            datetime.timedelta(seconds=curr_uptime)
-        )
+            datetime.timedelta(seconds=curr_uptime))
         if curr_uptime < 36000:
-            await ctx.reply(f'Я не сплю уже на протяжении **0{time_string}**',
-                            delete_after=self.delay_time)
+            await ctx.reply(
+                f"Я не сплю уже на протяжении **0{time_string}**",
+                delete_after=self.delay_time,
+            )
         else:
-            await ctx.reply(f'Я не сплю уже на протяжении **{time_string}**',
-                            delete_after=self.delay_time)
+            await ctx.reply(
+                f"Я не сплю уже на протяжении **{time_string}**",
+                delete_after=self.delay_time,
+            )
         await asyncio.sleep(self.delay_time)
         await ctx.message.delete()
 

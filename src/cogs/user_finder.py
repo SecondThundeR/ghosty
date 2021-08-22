@@ -3,11 +3,12 @@
 This cog repeats the good old meme about search *any word*
 """
 
-
 import asyncio
+
+from discord.ext import commands
+
 import src.lib.users as users
 from src.lib.exceptions import UsersNotFound
-from discord.ext import commands
 
 
 class UserFinder(commands.Cog):
@@ -30,7 +31,7 @@ class UserFinder(commands.Cog):
         self.client = client
         self.delay_time = 2
 
-    @commands.command(aliases=['поиск'])
+    @commands.command(aliases=["поиск"])
     async def user_finder_hub(self, ctx, *, args):
         """Execute required finder mode depending on arguments.
 
@@ -55,17 +56,17 @@ class UserFinder(commands.Cog):
         try:
             random_user = await users.get_random_user(ctx.message)
         except UsersNotFound as warning:
-            await ctx.send(f'Произошла ошибка: {warning}!')
+            await ctx.send(f"Произошла ошибка: {warning}!")
             return
         i = 0
-        init_msg = await ctx.send('Система поиска активирована!')
+        init_msg = await ctx.send("Система поиска активирована!")
         await asyncio.sleep(self.delay_time)
         while i < 2:
-            await ctx.send('*пип*')
+            await ctx.send("*пип*")
             await asyncio.sleep(self.delay_time)
             i += 1
         await init_msg.reply(f'"{word}" найден. '
-                             f'Им оказался - {random_user.mention}')
+                             f"Им оказался - {random_user.mention}")
 
 
 def setup(client):

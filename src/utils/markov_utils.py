@@ -14,18 +14,19 @@ This file can also be imported as a module and contains the following functions:
     * return_checked_sentence - gets generated data and joins to string
 """
 
-
-import re
-import emoji
 import random
+import re
+
+import emoji
+
 import src.lib.database as database
 
-
-REGEX_RULE = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)" \
-             r"(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+" \
-             r"|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
-PREFIXES = ['@', '.', '!', '-', '/', '`']
-BAN_WORDS = ['<:', '<@&', '<@!', '<@']
+REGEX_RULE = (
+    r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)"
+    r"(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+"
+    r"|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))")
+PREFIXES = ["@", ".", "!", "-", "/", "`"]
+BAN_WORDS = ["<:", "<@&", "<@!", "<@"]
 
 
 def message_words_to_db(words):
@@ -38,11 +39,8 @@ def message_words_to_db(words):
         words (list): Array of words from message contents
     """
     for word in words:
-        database.modify_data(
-            'wordsDB',
-            'INSERT INTO markov_words VALUES (?)',
-            word
-        )
+        database.modify_data("wordsDB", "INSERT INTO markov_words VALUES (?)",
+                             word)
 
 
 def check_message_content(message_content):
@@ -70,12 +68,12 @@ def check_message_content(message_content):
             break
     if emoji.emoji_count(message_content) > 0:
         check = False
-    if '@everyone' in message_content or '@here' in message_content:
+    if "@everyone" in message_content or "@here" in message_content:
         check = False
     if re.findall(REGEX_RULE, message_content):
         check = False
     if not check:
-        markov_delay_handler('update')
+        markov_delay_handler("update")
     return check
 
 
@@ -100,30 +98,21 @@ def markov_delay_handler(mode):
         Union[list, None]: List of current delay and message counter.
         If wrong mode/'update' or 'clear' mode were provided, returns None
     """
-    current_delay = database.get_data(
-        'mainDB',
-        True,
-        'SELECT markov_delay FROM variables'
-    )
-    msg_counter = database.get_data(
-        'mainDB',
-        True,
-        'SELECT msg_counter FROM variables'
-    )
-    if mode == 'update':
+    current_delay = database.get_data("mainDB", True,
+                                      "SELECT markov_delay FROM variables")
+    msg_counter = database.get_data("mainDB", True,
+                                    "SELECT msg_counter FROM variables")
+    if mode == "update":
+        database.modify_data("mainDB", "UPDATE variables SET msg_counter = ?",
+                             msg_counter + 1)
+    elif mode == "clear":
         database.modify_data(
-            'mainDB',
-            "UPDATE variables SET msg_counter = ?",
-            msg_counter + 1
-        )
-    elif mode == 'clear':
-        database.modify_data(
-            'mainDB',
+            "mainDB",
             "UPDATE variables SET markov_delay = ?, msg_counter = ?",
             random.randint(60, 120),
-            1
+            1,
         )
-    elif mode == 'get':
+    elif mode == "get":
         return [current_delay, msg_counter]
     return None
 
@@ -141,11 +130,8 @@ def prepare_chains_data():
         If current size of words database is small, returns False
     """
     word_dict = {}
-    database_words = database.get_data(
-        'wordsDB',
-        False,
-        "SELECT * FROM markov_words"
-    )
+    database_words = database.get_data("wordsDB", False,
+                                       "SELECT * FROM markov_words")
     curr_len = len(database_words)
     if curr_len < 80:
         return False
@@ -223,7 +209,7 @@ def generate_sentence(data):
     i = 1
     fail_counter = 0
     while i < n_words:
-        if len(' '.join(chain)) > 2000:
+        if len(" ".join(chain)) > 2000:
             return chain[:len(chain) - 1]
         try:
             chain.append(random.choice(data[1][chain[-1]]))
@@ -268,5 +254,5 @@ def return_checked_sentence(number=None):
         if len(data) == 3:
             data = data[:2]
         new_sentence = generate_sentence(data)
-    joined_sentence = ' '.join(new_sentence)
+    joined_sentence = " ".join(new_sentence)
     return joined_sentence

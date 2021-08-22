@@ -4,9 +4,9 @@ This cog allows you to send messages on behalf of the bot.
 There are several flags that changes sending behavior
 """
 
+from discord.ext import commands
 
 import src.lib.users as users
-from discord.ext import commands
 
 
 class MeMessage(commands.Cog):
@@ -28,7 +28,7 @@ class MeMessage(commands.Cog):
         """
         self.client = client
 
-    @commands.command(aliases=['йа'])
+    @commands.command(aliases=["йа"])
     async def send_me_message(self, ctx, *args):
         """Send a user message on behalf of a bot.
 
@@ -39,7 +39,7 @@ class MeMessage(commands.Cog):
         if args:
             me_data = self.__parse_me_args(ctx, args)
             await ctx.message.delete()
-            await ctx.send(me_data['message'], tts=me_data['tts'])
+            await ctx.send(me_data["message"], tts=me_data["tts"])
 
     @staticmethod
     def __parse_me_args(ctx, args):
@@ -52,26 +52,20 @@ class MeMessage(commands.Cog):
         Returns:
             dict: Dictionary with message data and TTS mode
         """
-        if args[0] == 'анон':
+        if args[0] == "анон":
+            return {"message": " ".join(args[1:]), "tts": False}
+        if args[0] == "анонттс":
+            return {"message": " ".join(args[1:]), "tts": True}
+        if args[0] == "ттс":
             return {
-                'message': ' '.join(args[1:]),
-                'tts': False
-            }
-        if args[0] == 'анонттс':
-            return {
-                'message': ' '.join(args[1:]),
-                'tts': True
-            }
-        if args[0] == 'ттс':
-            return {
-                'message': f'{users.get_members_name(ctx.author)}: '
-                           f'{" ".join(args[1:])}',
-                'tts': True
+                "message": f"{users.get_members_name(ctx.author)}: "
+                f'{" ".join(args[1:])}',
+                "tts": True,
             }
         return {
-            'message': f'{ctx.author.mention} '
-                       f'{"".join(args)}',
-            'tts': False
+            "message": f"{ctx.author.mention} "
+            f'{"".join(args)}',
+            "tts": False
         }
 
 

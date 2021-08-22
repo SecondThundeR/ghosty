@@ -20,6 +20,7 @@ class RussianRoulette(commands.Cog):
 
     Methods:
         russian_roulette_handler: Handles logic of Russian Roulette
+        __parse_args: Parses arguments and returns dictionary with data
         __get_random_word: Gets random word from database for different scenarios
         __add_new_word: Adds new word to Russian Roulette DB
         __delete_exist_word: Deletes existing word from Russian Roulette DB
@@ -63,63 +64,37 @@ class RussianRoulette(commands.Cog):
             ctx (commands.context.Context): Context object to execute functions
             args (tuple): List of arguments (Bullet count number)
         """
-        if not args:
-            bullet_count = 1
-            game_points = None
-        else:
-            if args[0] == 'добавить':
-                self.__add_new_word(ctx, args)
-                return
-            if args[0] == 'удалить':
-                self.__delete_exist_word(ctx, args)
-                return
-        if args[0].isnumeric():
-            bullet_count = int(args[0])
-        else:
-            await ctx.reply('Похоже вы передали не число.'
-                            '\nПопробуйте ещё раз, '
-                            'но уже с правильными данными')
+        parsed_args = await self.__parse_args(ctx, args)
+        if parsed_args is None:
             return
-        if bullet_count == 0:
+        if parsed_args["bullet_count"] == 0:
             await ctx.reply(self.__get_random_word("zero"))
             return
-        if bullet_count == 6:
+        if parsed_args["bullet_count"] == 6:
             await ctx.reply('Поздравляю! Вы гуль!')
             return
-        if bullet_count > 6:
+        if parsed_args["bullet_count"] > 6:
             await ctx.reply('Может стоит напомнить, '
                             'что по правилам русской рулетки, '
                             'можно брать только до 6 патронов, не?')
             return
-        try:
-            if args[1].isnumeric():
-                game_points = int(args[1])
-                sub_status = economy_utils.subtract_points(ctx.author.id, game_points)
-                if not sub_status:
-                    await ctx.reply('Похоже у вас нет активного аккаунта '
-                                    'или недостаточно средств для игры со ставкой!',
-                                    delete_after=self.delete_time)
-                    await asyncio.sleep(self.delete_time)
-                    await ctx.message.delete()
-                    return
-            else:
-                game_points = None
-        except IndexError:
-            game_points = None
         bullet_list = []
-        for _ in range(bullet_count):
+        for _ in range(parsed_args["bullet_count"]):
             charged_section = random.randint(1, 6)
             while charged_section in bullet_list:
                 charged_section = random.randint(1, 6)
             bullet_list.append(charged_section)
         deadly_bullet = random.randint(1, 6)
         if deadly_bullet in bullet_list:
+            economy_utils.subtract_points(
+                ctx.author.id, parsed_args["game_points"]
+            )
             result_msg = await ctx.reply('**БАХ**')
             await asyncio.sleep(self.delay_time)
-            if game_points is not None:
+            if parsed_args["game_points"] is not None:
                 await result_msg.edit(
                     content=f'{self.__get_random_word("lose")}\n\n'
-                            f'Вы проиграли **{game_points}** очков!'
+                            f'Вы проиграли **{parsed_args["game_points"]}** очков!'
                 )
                 return
             await result_msg.edit(
@@ -128,8 +103,10 @@ class RussianRoulette(commands.Cog):
             return
         result_msg = await ctx.reply('*тишина*')
         await asyncio.sleep(self.delay_time)
-        if game_points is not None:
-            won_points = game_points * self.points_multiplier[bullet_count]
+        if parsed_args["game_points"] is not None:
+            won_points = parsed_args["game_points"] * self.points_multiplier[
+                parsed_args["bullet_count"]
+            ]
             economy_utils.add_points(ctx.author.id, won_points)
             await result_msg.edit(
                 content=f'{self.__get_random_word("win")}\n\n'
@@ -140,6 +117,66 @@ class RussianRoulette(commands.Cog):
             content=self.__get_random_word("win")
         )
         return
+
+    async def __parse_args(self, ctx, args):
+        """Parse arguments and return dictionary with data.
+
+        Args:
+            ctx (commands.context.Context): Context object to execute functions
+            args (tuple): List of arguments (Bullet count number and/or points)
+
+        Returns:
+            dict: Dictionary with parsed arguments
+            None: If arguments are not valid
+        """
+        if not args:
+            return {
+                "bullet_count": 1,
+                "game_points": None
+            }
+        if len(args) == 1:
+            if args[0] == 'добавить':
+                self.__add_new_word(ctx, args)
+                return
+            if args[0] == 'удалить':
+                self.__delete_exist_word(ctx, args)
+                return
+            if args[0].isnumeric():
+                return {
+                    "bullet_count": int(args[0]),
+                    "game_points": None
+                }
+            await ctx.reply('Похоже вы передали неправильный аргумент.'
+                            '\nПопробуйте ещё раз, '
+                            'но уже с правильными данными')
+            return
+        if len(args) == 2:
+            bullet_count = 1
+            game_points = None
+            if args[0].isnumeric():
+                bullet_count = int(args[0])
+            if args[1].isnumeric():
+                game_points = int(args[1])
+            if game_points is not None:
+                acc_balance = economy_utils.get_account_balance(ctx.author.id)
+                if acc_balance is None:
+                    await ctx.reply('Похоже у вас нет активного аккаунта '
+                                    'для игры со ставкой!',
+                                    delete_after=self.delete_time)
+                    await asyncio.sleep(self.delete_time)
+                    await ctx.message.delete()
+                    return
+                if acc_balance < game_points:
+                    await ctx.reply('Похоже у вас недостаточно средств '
+                                    'для игры со ставкой!',
+                                    delete_after=self.delete_time)
+                    await asyncio.sleep(self.delete_time)
+                    await ctx.message.delete()
+                    return
+            return {
+                "bullet_count": bullet_count,
+                "game_points": game_points
+            }
 
     def __get_random_word(self, condition):
         """Get random word from database.

@@ -102,9 +102,9 @@ async def on_member_join(member):
     Args:
         member (discord.member.Member): Data about joined user/bot
     """
-    if (not member.bot and database.get_data(
-            "mainDB", True, "SELECT * FROM ignored_users WHERE users_id = ?",
-            member.id) is not None):
+    member_status = database.get_data(
+        "mainDB", True, "SELECT * FROM ignored_users WHERE users_id = ?", member.id)
+    if not member.bot and member_status is not None:
         users.add_member_to_db(member.id)
         return
     users.add_bot_to_db(member.id)

@@ -62,34 +62,6 @@ class RSPGame(commands.Cog):
         else:
             await self.rsp_bot_game(ctx, args[0])
 
-    @staticmethod
-    def join_check(ctx):
-        """Check for correct conditions of join command.
-
-        Args:
-            ctx (commands.context.Context): Context object to execute functions
-
-        Returns:
-            bool: True if all conditions are met, False otherwise
-        """
-        test_string = ctx.content.lower()
-        test_channel = isinstance(ctx.channel, discord.channel.DMChannel)
-        return bool(test_string == "играть" and not test_channel)
-
-    @staticmethod
-    def choice_check(ctx):
-        """Check for correct conditions of answer selection.
-
-        Args:
-            ctx (commands.context.Context): Context object to execute functions
-
-        Returns:
-            bool: True, if all conditions are met, False otherwise
-        """
-        test_string = ctx.content.lower()
-        test_channel = isinstance(ctx.channel, discord.channel.DMChannel)
-        return bool(test_string in WIN_VARIANTS and test_channel)
-
     async def purge_messages(self, messages):
         """Collect and delete all messages, that can distract users in channel.
 
@@ -100,7 +72,7 @@ class RSPGame(commands.Cog):
             await message.delete()
 
     @staticmethod
-    def rsp_game(first_var, second_var, first_user_id, second_user_id):
+    async def rsp_game(ctx, first_var, second_var, first_user_id, second_user_id):
         """Get the outcome of the game and return its result.
 
         This function handles check for winner of RSP
@@ -116,18 +88,18 @@ class RSPGame(commands.Cog):
             str: Outcome of the game
             None: If there are some errors
         """
-        f_user_mention = f"<@{first_user_id}>"
-        s_user_mention = f"<@{second_user_id}>"
+        f_user = await ctx.message.guild.fetch_member(first_user_id)
+        s_user = await ctx.message.guild.fetch_member(second_user_id)
         end_text = ("**Игра между "
-                    f"{f_user_mention} и {s_user_mention} "
+                    f"{f_user.mention} и {s_user.mention} "
                     "окончена!**\n")
         outcome_text = ""
         if first_var == WIN_VARIANTS[second_var]:
             outcome_text = (f"**Результаты:** {second_var}  🤜  {first_var}\n"
-                            f"{s_user_mention} победил!")
+                            f"{s_user.mention} победил!")
         elif second_var == WIN_VARIANTS[first_var]:
             outcome_text = (f"**Результаты:** {first_var}  🤜  {second_var}\n"
-                            f"{f_user_mention} победил!")
+                            f"{f_user.mention} победил!")
         else:
             outcome_text = (f"**Результаты:** {first_var}  🙏  {second_var}\n"
                             "И у нас ничья!")
@@ -148,7 +120,7 @@ class RSPGame(commands.Cog):
         else:
             bot_choice = random.choice(list(WIN_VARIANTS))
             await ctx.send(
-                self.rsp_game(user_choice, bot_choice, ctx.author.id,
+                self.rsp_game(ctx, user_choice, bot_choice, ctx.author.id,
                               self.client.user.id))
 
     async def rsp_multi_game(self, ctx):
@@ -239,9 +211,37 @@ class RSPGame(commands.Cog):
         database.modify_data("mainDB",
                              "UPDATE variables SET rsp_game_active = ?", 0)
         await current_channel.send(
-            self.rsp_game(users_choice[0], users_choice[1], first_user.id,
+            self.rsp_game(ctx, users_choice[0], users_choice[1], first_user.id,
                           second_user.id))
         await self.purge_messages(messages_to_purge)
+
+    @staticmethod
+    def join_check(ctx):
+        """Check for correct conditions of join command.
+
+        Args:
+            ctx (commands.context.Context): Context object to execute functions
+
+        Returns:
+            bool: True if all conditions are met, False otherwise
+        """
+        test_string = ctx.content.lower()
+        test_channel = isinstance(ctx.channel, discord.channel.DMChannel)
+        return bool(test_string == "играть" and not test_channel)
+
+    @staticmethod
+    def choice_check(ctx):
+        """Check for correct conditions of answer selection.
+
+        Args:
+            ctx (commands.context.Context): Context object to execute functions
+
+        Returns:
+            bool: True, if all conditions are met, False otherwise
+        """
+        test_string = ctx.content.lower()
+        test_channel = isinstance(ctx.channel, discord.channel.DMChannel)
+        return bool(test_string in WIN_VARIANTS and test_channel)
 
 
 def setup(client):

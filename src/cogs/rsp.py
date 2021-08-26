@@ -113,7 +113,7 @@ class RSPGame(commands.Cog):
             bot_choice = random.choice(list(WIN_VARIANTS))
             await ctx.send(
                 self.__rsp_game(ctx, user_choice, bot_choice, ctx.author.id,
-                              self.client.user.id))
+                                self.client.user.id))
 
     async def __rsp_multi_game(self, ctx):
         """Game with other users of server.
@@ -198,7 +198,7 @@ class RSPGame(commands.Cog):
         self.__manage_rsp_state(lock_state=False)
         await current_channel.send(
             self.__rsp_game(ctx, users_choice[0], users_choice[1], first_user.id,
-                          second_user.id))
+                            second_user.id))
         await self.__purge_messages(messages_to_purge)
 
     @staticmethod

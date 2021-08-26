@@ -22,12 +22,13 @@ class RSPGame(commands.Cog):
 
     Methods:
         rsp_mode: Selects needed RSP game mode
-        join_check: Checks for correct conditions of join command
-        choice_check: Checks for correct conditions of answer selection
-        purge_messages: Collects and purges all unreleated messages
-        rsp_game: Handles main part of RSP game logic (Defining outcome)
-        rsp_bot_game: Handles game with bot
-        rsp_multi_game: Handles game of two users
+        __rsp_game: Handles main part of RSP game logic (Defining outcome)
+        __rsp_bot_game: Handles game with bot
+        __rsp_multi_game: Handles game of two users
+        __manage_rsp_state: Manages RSP game state
+        __purge_messages: Collects and purges all unreleated messages
+        __join_check: Checks for correct conditions of join command
+        __choice_check: Checks for correct conditions of answer selection
 
     """
 
@@ -58,21 +59,12 @@ class RSPGame(commands.Cog):
                 await ctx.reply("Сессия игры уже запущена, "
                                 "чтобы начать новую игру, закончите старую")
             else:
-                await self.rsp_multi_game(ctx)
+                await self.__rsp_multi_game(ctx)
         else:
-            await self.rsp_bot_game(ctx, args[0])
-
-    async def purge_messages(self, messages):
-        """Collect and delete all messages, that can distract users in channel.
-
-        Args:
-            message (list): List with messages to delete
-        """
-        for message in messages:
-            await message.delete()
+            await self.__rsp_bot_game(ctx, args[0])
 
     @staticmethod
-    async def rsp_game(ctx, first_var, second_var, first_user_id, second_user_id):
+    async def __rsp_game(ctx, first_var, second_var, first_user_id, second_user_id):
         """Get the outcome of the game and return its result.
 
         This function handles check for winner of RSP
@@ -105,7 +97,7 @@ class RSPGame(commands.Cog):
                             "И у нас ничья!")
         return end_text + outcome_text
 
-    async def rsp_bot_game(self, ctx, user_choice):
+    async def __rsp_bot_game(self, ctx, user_choice):
         """Game with bot.
 
         This function executes random choice of bot and comparing it with
@@ -120,10 +112,10 @@ class RSPGame(commands.Cog):
         else:
             bot_choice = random.choice(list(WIN_VARIANTS))
             await ctx.send(
-                self.rsp_game(ctx, user_choice, bot_choice, ctx.author.id,
+                self.__rsp_game(ctx, user_choice, bot_choice, ctx.author.id,
                               self.client.user.id))
 
-    async def rsp_multi_game(self, ctx):
+    async def __rsp_multi_game(self, ctx):
         """Game with other users of server.
 
         This function executes game with other users.
@@ -138,8 +130,7 @@ class RSPGame(commands.Cog):
         Args:
             ctx (commands.context.Context): Context object to execute functions
         """
-        database.modify_data("mainDB",
-                             "UPDATE variables SET rsp_game_active = ?", 1)
+        self.__manage_rsp_state(lock_state=True)
         current_channel = ctx.message.channel
         first_user = ctx.author
         users_choice = []
@@ -151,27 +142,25 @@ class RSPGame(commands.Cog):
         try:
             s_user_wait = await self.client.wait_for("message",
                                                      timeout=60,
-                                                     check=self.join_check)
+                                                     check=self.__join_check)
             second_user = s_user_wait.author
         except asyncio.TimeoutError:
-            database.modify_data("mainDB",
-                                 "UPDATE variables SET rsp_game_active = ?", 0)
+            self.__manage_rsp_state(lock_state=False)
             await init_msg.edit(
                 content="Похоже никто не решил сыграть с вами. "
                 "Пока что я отменил данную игру")
             await asyncio.sleep(self.fail_delay)
-            await self.purge_messages(messages_to_purge)
+            await self.__purge_messages(messages_to_purge)
             return
         else:
             if s_user_wait.author.id == first_user.id:
-                database.modify_data(
-                    "mainDB", "UPDATE variables SET rsp_game_active = ?", 0)
+                self.__manage_rsp_state(lock_state=False)
                 f_user_join = await ctx.reply("Вы решили поиграть сам собой, "
                                               "я отменяю данную игру")
                 messages_to_purge.append(s_user_wait)
                 messages_to_purge.append(f_user_join)
                 await asyncio.sleep(self.fail_delay)
-                await self.purge_messages(messages_to_purge)
+                await self.__purge_messages(messages_to_purge)
                 return
         await s_user_wait.delete()
         await init_msg.edit(content="Сейчас идёт игра между "
@@ -179,44 +168,62 @@ class RSPGame(commands.Cog):
         try:
             await first_user.send("Ваш вариант *(На ответ 1 минута)*:")
             first_response = await self.client.wait_for(
-                "message", timeout=30, check=self.choice_check)
+                "message", timeout=30, check=self.__choice_check)
             users_choice.append(first_response.content.lower())
         except asyncio.TimeoutError:
-            database.modify_data("mainDB",
-                                 "UPDATE variables SET rsp_game_active = ?", 0)
+            self.__manage_rsp_state(lock_state=False)
             f_move_fail = await current_channel.send(
                 f"{first_user.mention} "
                 "не успел ответить вовремя. "
                 "Игра отменена")
             messages_to_purge.append(f_move_fail)
             await asyncio.sleep(self.fail_delay)
-            await self.purge_messages(messages_to_purge)
+            await self.__purge_messages(messages_to_purge)
             return
         try:
             await second_user.send("Ваш вариант *(На ответ 1 минута)*:")
             second_response = await self.client.wait_for(
-                "message", timeout=30, check=self.choice_check)
+                "message", timeout=30, check=self.__choice_check)
             users_choice.append(second_response.content.lower())
         except asyncio.TimeoutError:
-            database.modify_data("mainDB",
-                                 "UPDATE variables SET rsp_game_active = ?", 0)
+            self.__manage_rsp_state(lock_state=False)
             s_move_fail = await current_channel.send(
                 f"{second_user.mention} "
                 "не успел ответить вовремя. "
                 "Игра отменена")
             messages_to_purge.append(s_move_fail)
             await asyncio.sleep(self.fail_delay)
-            await self.purge_messages(messages_to_purge)
+            await self.__purge_messages(messages_to_purge)
             return
-        database.modify_data("mainDB",
-                             "UPDATE variables SET rsp_game_active = ?", 0)
+        self.__manage_rsp_state(lock_state=False)
         await current_channel.send(
-            self.rsp_game(ctx, users_choice[0], users_choice[1], first_user.id,
+            self.__rsp_game(ctx, users_choice[0], users_choice[1], first_user.id,
                           second_user.id))
-        await self.purge_messages(messages_to_purge)
+        await self.__purge_messages(messages_to_purge)
 
     @staticmethod
-    def join_check(ctx):
+    def __manage_rsp_state(lock_state=False):
+        """Lock or Unlock RSP game in database.
+
+        This function locks/unlocks RSP game in database, so that only one game can be
+        executed at a time.
+        """
+        database.modify_data("mainDB", True,
+                             "UPDATE variables SET rsp_game_active = ?",
+                             1 if lock_state else 0)
+
+    @staticmethod
+    async def __purge_messages(messages):
+        """Collect and delete all messages, that can distract users in channel.
+
+        Args:
+            message (list): List with messages to delete
+        """
+        for message in messages:
+            await message.delete()
+
+    @staticmethod
+    def __join_check(ctx):
         """Check for correct conditions of join command.
 
         Args:
@@ -230,7 +237,7 @@ class RSPGame(commands.Cog):
         return bool(test_string == "играть" and not test_channel)
 
     @staticmethod
-    def choice_check(ctx):
+    def __choice_check(ctx):
         """Check for correct conditions of answer selection.
 
         Args:

@@ -29,16 +29,20 @@ class RanobeTitleGenerate(commands.Cog):
         self.txt_path = 'src/markovify_models/ranobe.txt'
 
     @commands.command(aliases=["ранобе"])
-    async def send_ranobe_title(self, ctx):
+    async def send_ranobe_title(self, ctx, amount=None):
         """Trigger generating title and send it back.
 
         Args:
             ctx (commands.context.Context): Context object to execute functions
+            amount (Union[str, None]): Amount of titles to generate
         """
-        await ctx.reply(self.__generate_title())
+        await ctx.reply(self.__generate_title(amount))
 
-    def __generate_title(self):
+    def __generate_title(self, amount):
         """Generate new title with markovify.
+
+        Args:
+            amount (str): Amount of titles to generate
 
         Returns:
             str: Generated Ranobe Title
@@ -46,10 +50,21 @@ class RanobeTitleGenerate(commands.Cog):
         with open(self.txt_path, encoding="utf8") as f:
             text = f.read()
         text_model = markovify.NewlineText(text, state_size=2)
-        s = text_model.make_sentence(tries=100)
-        while s is None:
-            s = text_model.make_sentence(tries=100)
-        return s
+        if amount is None:
+            generated_title = text_model.make_sentence(tries=100)
+            while generated_title is None:
+                generated_title = text_model.make_sentence(tries=100)
+            return generated_title
+        new_sentences = []
+        for _ in range(int(amount)):
+            generated_title = text_model.make_sentence(tries=100)
+            while generated_title is None:
+                generated_title = text_model.make_sentence(tries=100)
+            new_sentences.append(generated_title)
+            if len(" ".join(new_sentences)) > 2000:
+                new_sentences[:len(new_sentences) - 1]
+                break
+        return "\n".join(new_sentences)
 
 
 def setup(client):

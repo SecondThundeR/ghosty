@@ -4,7 +4,6 @@ This cog generates random ranobe title and sends it back.
 """
 
 import markovify
-
 from discord.ext import commands
 
 
@@ -26,7 +25,7 @@ class RanobeTitleGenerate(commands.Cog):
             client (discord.client.Client): Current client object
         """
         self.client = client
-        self.txt_path = 'src/markovify_models/ranobe.txt'
+        self.txt_path = "src/markovify_models/ranobe.txt"
 
     @commands.command(aliases=["ранобе"])
     async def send_ranobe_title(self, ctx, amount=None):
@@ -62,7 +61,7 @@ class RanobeTitleGenerate(commands.Cog):
                 generated_title = text_model.make_sentence(tries=100)
             new_sentences.append(generated_title)
             if len(" ".join(new_sentences)) > 2000:
-                new_sentences[:len(new_sentences) - 1]
+                new_sentences[: len(new_sentences) - 1]
                 break
         return "\n".join(new_sentences)
 

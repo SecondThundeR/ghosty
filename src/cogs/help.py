@@ -49,8 +49,9 @@ class HelpMessage(commands.Cog):
             "поиск": '*поиск "кого-то" активирован...*',
             "очки": "управление аккаунтом с очками",
         }
-        self.faq_link = ("https://github.com/SecondThundeR/ghosty"
-                         "/wiki/Commands-Description#")
+        self.faq_link = (
+            "https://github.com/SecondThundeR/ghosty/wiki/Commands-Description#"
+        )
         self.error_text = "Данная команда не была найдена!"
 
     @commands.Cog.listener()
@@ -99,14 +100,16 @@ class HelpMessage(commands.Cog):
                 help_msg += f"\n**{item}** - {self.help_dict[item]}"
             help_msg += (
                 "\n\nПолучить подробную информацию о командах можно здесь - "
-                f"<{self.faq_link[:-1]}>")
+                f"<{self.faq_link[:-1]}>"
+            )
             return help_msg
         try:
             cmd_help = (
                 "Короткая информация о команде:\n"
                 f"**{command}** - {self.help_dict[command]}\n\n"
                 "Получить больше информации об этой команде можно здесь - "
-                f"<{self.faq_link}{command}>")
+                f"<{self.faq_link}{command}>"
+            )
             return cmd_help
         except KeyError:
             return self.error_text

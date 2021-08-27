@@ -75,7 +75,13 @@ class RSPGame(commands.Cog):
             await ctx.reply("Похоже вы передали неверное значение!")
             return
 
-    async def __rsp_game(self, ctx, f_var, s_var, f_user_id, s_user_id, bet_points=None):
+    async def __rsp_game(self,
+                         ctx,
+                         f_var,
+                         s_var,
+                         f_user_id,
+                         s_user_id,
+                         bet_points=None):
         """Get the outcome of the game and return its result.
 
         This function handles check for winner of RSP
@@ -112,21 +118,24 @@ class RSPGame(commands.Cog):
                             f"{s_user.mention} победил!")
             if bet_points is not None and s_user_id != self.client.user.id:
                 economy_utils.add_points(s_user_id, bet_points * 2, True)
-                outcome_text += f" Также победитель получает **{bet_points * 2}** очков!"
+                outcome_text += (
+                    f" Также победитель получает **{bet_points * 2}** очков!")
         elif s_var == WIN_VARIANTS[f_var]:
             outcome_text = (f"**Результаты:** {f_var}  🤜  {s_var}\n"
                             f"{f_user.mention} победил!")
             if bet_points is not None:
                 economy_utils.add_points(f_user_id, bet_points * 2, True)
-                outcome_text += f" Также победитель получает **{bet_points * 2}** очков!"
+                outcome_text += (
+                    f" Также победитель получает **{bet_points * 2}** очков!")
         else:
-            outcome_text = (f"**Результаты:** {f_var}  🙏  {s_var}\n"
-                            "И у нас ничья!")
+            outcome_text = f"**Результаты:** {f_var}  🙏  {s_var}\n" "И у нас ничья!"
             if bet_points is not None:
                 if s_user_id != self.client.user.id:
                     outcome_text += f" Все игроки возвращают себе {bet_points} очков!"
                 else:
-                    outcome_text += f" {f_user.mention} возвращает себе {bet_points} очков!"
+                    outcome_text += (
+                        f" {f_user.mention} возвращает себе {bet_points} очков!"
+                    )
                 economy_utils.add_points(f_user_id, bet_points, True)
                 if s_user_id != self.client.user.id:
                     economy_utils.add_points(s_user_id, bet_points, True)
@@ -148,16 +157,14 @@ class RSPGame(commands.Cog):
             if player_balance is None:
                 await ctx.reply(
                     "У вас нет аккаунта с очками для ставок!",
-                    delete_after=self.fail_delay
+                    delete_after=self.fail_delay,
                 )
                 await asyncio.sleep(self.fail_delay)
                 await ctx.message.delete()
                 return
             if player_balance < int(bet_points):
-                await ctx.reply(
-                    "У вас недостаточно очков для ставки!",
-                    delete_after=self.fail_delay
-                )
+                await ctx.reply("У вас недостаточно очков для ставки!",
+                                delete_after=self.fail_delay)
                 await asyncio.sleep(self.fail_delay)
                 await ctx.message.delete()
                 return
@@ -165,9 +172,14 @@ class RSPGame(commands.Cog):
             await ctx.reply("Похоже вы выбрали что-то не то...")
         else:
             bot_choice = random.choice(list(WIN_VARIANTS))
-            await ctx.send(
-                await self.__rsp_game(ctx, user_choice, bot_choice, ctx.author.id,
-                                      self.client.user.id, bet_points))
+            await ctx.send(await self.__rsp_game(
+                ctx,
+                user_choice,
+                bot_choice,
+                ctx.author.id,
+                self.client.user.id,
+                bet_points,
+            ))
 
     async def __rsp_multi_game(self, ctx, bet_points=None):
         """Game with other users of server.
@@ -196,17 +208,15 @@ class RSPGame(commands.Cog):
                 self.__manage_rsp_state(lock_state=False)
                 await ctx.reply(
                     "У вас нет аккаунта с очками для ставок!",
-                    delete_after=self.fail_delay
+                    delete_after=self.fail_delay,
                 )
                 await asyncio.sleep(self.fail_delay)
                 await ctx.message.delete()
                 return
             if f_player_balance < int(bet_points):
                 self.__manage_rsp_state(lock_state=False)
-                await ctx.reply(
-                    "У вас недостаточно очков для ставки!",
-                    delete_after=self.fail_delay
-                )
+                await ctx.reply("У вас недостаточно очков для ставки!",
+                                delete_after=self.fail_delay)
                 await asyncio.sleep(self.fail_delay)
                 await ctx.message.delete()
                 return
@@ -239,7 +249,8 @@ class RSPGame(commands.Cog):
                 return
         await s_user_wait.delete()
         if bet_points is not None:
-            s_player_balance = economy_utils.get_account_balance(second_user.id)
+            s_player_balance = economy_utils.get_account_balance(
+                second_user.id)
             if s_player_balance is None:
                 self.__manage_rsp_state(lock_state=False)
                 await init_msg.edit(
@@ -251,8 +262,7 @@ class RSPGame(commands.Cog):
             if s_player_balance < int(bet_points):
                 self.__manage_rsp_state(lock_state=False)
                 await init_msg.edit(
-                    content="У второго игрока недостаточно очков для ставки!"
-                )
+                    content="У второго игрока недостаточно очков для ставки!")
                 await asyncio.sleep(self.fail_delay)
                 await self.__purge_messages(messages_to_purge)
                 return
@@ -289,9 +299,14 @@ class RSPGame(commands.Cog):
             await self.__purge_messages(messages_to_purge)
             return
         self.__manage_rsp_state(lock_state=False)
-        await current_channel.send(
-            await self.__rsp_game(ctx, users_choice[0], users_choice[1], first_user.id,
-                                  second_user.id, bet_points))
+        await current_channel.send(await self.__rsp_game(
+            ctx,
+            users_choice[0],
+            users_choice[1],
+            first_user.id,
+            second_user.id,
+            bet_points,
+        ))
         await self.__purge_messages(messages_to_purge)
 
     @staticmethod
@@ -301,7 +316,8 @@ class RSPGame(commands.Cog):
         This function locks/unlocks RSP game in database, so that only one game can be
         executed at a time.
         """
-        database.modify_data("mainDB", "UPDATE variables SET rsp_game_active = ?",
+        database.modify_data("mainDB",
+                             "UPDATE variables SET rsp_game_active = ?",
                              1 if lock_state else 0)
 
     @staticmethod

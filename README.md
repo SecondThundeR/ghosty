@@ -3,28 +3,24 @@
 <img width="256" height="256" src="assets/logo.gif">
 
 # Ghosty
-*Previously known as 'secondthunder-py-bot'*
-
 </div>
 
-[![CodeFactor](https://www.codefactor.io/repository/github/secondthunder/ghosty/badge)](https://www.codefactor.io/repository/github/secondthunder/ghosty)
-[![DeepSource](https://deepsource.io/gh/SecondThundeR/ghosty.svg/?label=active+issues&show_trend=true)](https://deepsource.io/gh/SecondThundeR/ghosty/?ref=repository-badge)
-
-This is repository of some random bot for Discord which was created just for fun and for some educational purposes *(Made with Discord.py library)*
+This is repository of some random bot for Discord which was created just for fun and for some educational purposes *(Made with X library)*
 
 ## How to use this bot
 
-0. Install Python *(3.8 or higher)* and/or Git
+0. Install Node.js 14.x.x or higher
 1. Create a Discord Bot on [Discord Developers](https://discord.com/developers/applications) page
 2. Go to `Bot` section to grab a token of your bot and enable all `Privileged Gateway Intents`
 3. Clone this repository *(`git clone https://github.com/SecondThundeR/ghosty.git`)*
-4. Run `python bot_panel.py` in a main directory and set up your bot
-5. Run `python main.py` to run bot
-6. After getting a log that bot was logged in, you are good to go
 
-> If you didn't install the missing dependencies when configuring the bot, run `pip install -r requirements.txt` in main directory
+> **Steps that will be changed later
 >
-> *(If you are experiencing installation problems, and your pip isn't updated to the latest version, use `--use-feature=2020-resolver` flag)*
+> Run `python bot_panel.py` in a main directory and set up your bot
+>
+> Run `python main.py` to run bot
+>
+> After getting a log that bot was logged in, you are good to go**
 
 ## Discussions
 
@@ -32,11 +28,7 @@ This project has a [GitHub Discussions](https://github.com/SecondThundeR/ghosty/
 
 ## Changelog
 
-~This project has a changelog, which you can find here~
-
-Since 2.1.1 release, all releases will include changelogs in it, so dedicated Changelog.md is no longer needed.
-
-> Note: All previous releases now have their own changelog
+To keep track changes of published versions, check out [releases](https://github.com/SecondThundeR/ghosty/releases)
 
 Also, you can track changes of new versions [here](https://github.com/SecondThundeR/ghosty/projects)
 

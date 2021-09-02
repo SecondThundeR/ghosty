@@ -1,37 +1,37 @@
 {
-  "name": "ghosty",
-  "version": "3.0.0",
-  "description": "Some random bot for Discord which was created just for fun (Made with Discord.js library)",
-  "main": "main.js",
-  "scripts": {
-    "start": "node main.js",
-    "register": "node deploy-commands.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SecondThundeR/ghosty.git"
-  },
-  "keywords": [
-    "discord.js",
-    "discord",
-    "bot",
-    "javascript",
-    "nodejs"
-  ],
-  "author": "SecondThundeR",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/SecondThundeR/ghosty/issues"
-  },
-  "homepage": "https://github.com/SecondThundeR/ghosty#readme",
-  "dependencies": {
-    "@discordjs/builders": "^0.6.0",
-    "@discordjs/rest": "^0.1.0-canary.0",
-    "discord-api-types": "^0.22.0",
-    "discord.js": "^13.1.0",
-    "dotenv": "^10.0.0"
-  },
-  "devDependencies": {
-    "eslint": "^7.32.0"
-  }
+    "name": "ghosty",
+    "version": "3.0.0",
+    "description": "Some random bot for Discord which was created just for fun (Made with Discord.js library)",
+    "main": "main.js",
+    "scripts": {
+      "bot": "node main.js",
+      "register": "node deploy-commands.js"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/SecondThundeR/ghosty.git"
+    },
+    "keywords": [
+      "discord.js",
+      "discord",
+      "bot",
+      "javascript",
+      "nodejs"
+    ],
+    "author": "SecondThundeR",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/SecondThundeR/ghosty/issues"
+    },
+    "homepage": "https://github.com/SecondThundeR/ghosty#readme",
+    "dependencies": {
+      "@discordjs/builders": "^0.6.0",
+      "@discordjs/rest": "^0.1.0-canary.0",
+      "discord-api-types": "^0.22.0",
+      "discord.js": "^13.1.0",
+      "dotenv": "^10.0.0"
+    },
+    "devDependencies": {
+      "eslint": "^7.32.0"
+    }
 }

@@ -32,6 +32,9 @@ function returnAllCommands() {
 
 function returnCertainCommand(commandName) {
     const commandInfo = commandsInfo[commandName];
+    if (commandInfo === undefined) {
+        return 'Похоже, вы ввели несуществующую команду :c';
+    }
     const commandAnswer = `Короткая информация о \`${commandName}\` - ${commandInfo}\n\n` +
                           `Получить больше информации можно здесь - <${faqLink}#${commandName}>`;
     return commandAnswer;
@@ -39,14 +42,20 @@ function returnCertainCommand(commandName) {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('help')
+        .setName('хелп')
         .setDescription('Показывает все доступные команды бота')
         .addStringOption(option => option.setName('name').setDescription('Возвращает информацию о введённой команде')),
     async execute(interaction) {
         const commandName = interaction.options.getString('name');
         if (commandName) {
-            return interaction.reply(returnCertainCommand(commandName));
+            return interaction.reply({
+                content: returnCertainCommand(commandName),
+                ephemeral: true
+            });
         };
-        return interaction.reply(returnAllCommands());
+        return interaction.reply({
+            content: returnAllCommands(),
+            ephemeral: true
+        });
     },
 };

@@ -7,7 +7,10 @@
         "start": "node index.js",
         "dev": "nodemon index.js",
         "deploy-global": "node deploy-commands.js global",
-        "deploy-guild": "node deploy-commands.js guild"
+        "deploy-guild": "node deploy-commands.js guild",
+        "init-variables": "node deploy-variables.js",
+        "override-variables": "node deploy-variables.js override",
+        "delete-variables": "node deploy-variables.js delete"
     },
     "repository": {
         "type": "git",
@@ -31,7 +34,8 @@
         "@discordjs/rest": "^0.2.0-canary.0",
         "discord-api-types": "^0.26.0",
         "discord.js": "^13.4.0",
-        "dotenv": "^10.0.0"
+        "dotenv": "^10.0.0",
+        "mongoose": "^6.1.3"
     },
     "devDependencies": {
       "eslint": "^8.5.0"

@@ -79,3 +79,4 @@ jspm_packages
 # Other
 .vscode
 package-lock.json
+yarn.lock

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const mainVariablesSchema = require('./src/schemas/mainVariables');
+const mainVariablesModel = require('./src/schemas/mainVariables');
+const { addModelData, getModelData, clearModelData } = require('./src/utils/databaseUtils');
 
 dotenv.config();
 
@@ -18,30 +19,17 @@ const emptyVariablesRecord = {
 const args = process.argv.slice(2);
 const collectionArgument = args[0] || '';
 
-async function clearMainVariables() {
-    await mainVariablesSchema.deleteMany({}, (err) => {
-        if (err) console.error(err);
-    }).clone().catch((err) => console.error(err));
-    console.log('Cleared out mainVariables!');
-}
-
-async function fetchMainVariablesData() {
-    return await mainVariablesSchema.find({}, (err) => {
-        if (err) console.error(err);
-    }).clone().catch((err) => console.error(err));
-}
-
 (async () => {
     console.log('Connecting to database...');
     await mongoose.connect(process.env.MONGO_URI)
         .then(async () => {
             if (collectionArgument === 'delete') {
-                await clearMainVariables();
+                await clearModelData(mainVariablesModel);
                 return;
             }
 
             console.log('Fetching data from mainVariables...');
-            const variablesData = await fetchMainVariablesData();
+            const variablesData = await getModelData(mainVariablesModel);
 
             if (variablesData.length != 0) {
                 if (collectionArgument !== 'override') {
@@ -49,10 +37,10 @@ async function fetchMainVariablesData() {
                     return;
                 }
                 console.log('Overriding data...');
-                await clearMainVariables();
+                await clearModelData(mainVariablesModel);
             }
             console.log('Adding empty record...');
-            await new mainVariablesSchema(emptyVariablesRecord).save();
+            await addModelData(mainVariablesModel, emptyVariablesRecord);
             console.log('Finished adding empty record.');
         })
         .catch(async (e) => {

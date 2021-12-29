@@ -1,28 +1,11 @@
-const mainVariablesSchema = require('../schemas/mainVariables');
+const mainVariablesModel = require('../schemas/mainVariables');
+const {
+    getModelData,
+    updateAvatarData,
+} = require('../utils/databaseUtils');
+
 const cooldownPeriod = 900000;
 const avatarsPath = `${__dirname.replace('\\src\\utils', '')}\\assets\\avatars`;
-
-async function getAvatarChangerData() {
-    const documentData = await mainVariablesSchema.find({}, (err) => {
-        if (err) console.error(err);
-    }).clone().catch((err) => console.error(err));
-    return {
-        'avatarNumber': documentData[0].avatarNumber,
-        'avatarCooldown': documentData[0].avatarCooldown,
-    };
-}
-
-async function updateCurrentAvatarNumber(oldAvatarNumber, newAvatarNumber) {
-    const filter = { avatarNumber: oldAvatarNumber };
-    const update = { avatarNumber: newAvatarNumber };
-    await mainVariablesSchema.findOneAndUpdate(filter, update);
-}
-
-async function updateCurrentAvatarCooldown(oldAvatarCooldown, newAvatarCooldown) {
-    const filter = { avatarCooldown: oldAvatarCooldown };
-    const update = { avatarCooldown: newAvatarCooldown };
-    await mainVariablesSchema.findOneAndUpdate(filter, update);
-}
 
 function checkAvatarCooldown(cooldownCheck) {
     if (cooldownCheck > 0) {
@@ -33,29 +16,41 @@ function checkAvatarCooldown(cooldownCheck) {
 
 async function getRandomAvatar() {
     const currentTime = Date.now();
-    const changerData = await getAvatarChangerData();
+    const changerData = await getModelData(mainVariablesModel);
+    const avatarCooldown = changerData[0].avatarCooldown;
+    const avatarNumber = changerData[0].avatarNumber;
     let newAvatarCooldown;
 
-    if (changerData['avatarCooldown'] === -1) {
+    if (avatarCooldown === -1) {
         newAvatarCooldown = currentTime + cooldownPeriod;
     }
     else {
-        const cooldownDiff = changerData['avatarCooldown'] - currentTime;
+        const cooldownDiff = avatarCooldown - currentTime;
         const cooldownCheck = checkAvatarCooldown(cooldownDiff);
         if (cooldownCheck) return cooldownDiff;
         else newAvatarCooldown = currentTime + cooldownPeriod;
     }
 
     let randomAvatarNumber = Math.floor(Math.random() * 16) + 1;
-    if (changerData['avatarNumber'] !== -1) {
-        while (randomAvatarNumber === changerData['avatarNumber']) {
+    if (avatarNumber !== -1) {
+        while (randomAvatarNumber === avatarNumber) {
             randomAvatarNumber = Math.floor(Math.random() * 16) + 1;
         }
     }
     const choosenAvatar = randomAvatarNumber;
 
-    await updateCurrentAvatarNumber(changerData['avatarNumber'], choosenAvatar);
-    await updateCurrentAvatarCooldown(changerData['avatarCooldown'], newAvatarCooldown);
+    await updateAvatarData(
+        {
+            oldData: avatarNumber,
+            newData: choosenAvatar,
+            isAvatarCooldown: false,
+        });
+    await updateAvatarData(
+        {
+            oldData: avatarCooldown,
+            newData: newAvatarCooldown,
+            isAvatarCooldown: true,
+        });
     return `${avatarsPath}\\Avatar_${choosenAvatar}.png`;
 }
 

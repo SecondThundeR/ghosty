@@ -40,8 +40,9 @@ async function getRandomAvatar() {
         newAvatarCooldown = currentTime + cooldownPeriod;
     }
     else {
-        const cooldownCheck = checkAvatarCooldown(changerData['avatarCooldown'] - currentTime);
-        if (cooldownCheck) return null;
+        const cooldownDiff = changerData['avatarCooldown'] - currentTime;
+        const cooldownCheck = checkAvatarCooldown(cooldownDiff);
+        if (cooldownCheck) return cooldownDiff;
         else newAvatarCooldown = currentTime + cooldownPeriod;
     }
 

@@ -16,7 +16,6 @@ const requireBoolean = {
 const mainVariablesSchema = new mongoose.Schema({
     avatarCooldown: requireNumber,
     avatarNumber: requireNumber,
-    botUptime: requireNumber,
     rspActiveStatus: requireBoolean,
     shipActivatedStatus: requireBoolean,
     shipActiveStatus: requireBoolean,

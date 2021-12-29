@@ -14,10 +14,5 @@ function parseRawID(rawID) {
     return rawID.slice(3, -1);
 }
 
-function getUserMention(userID) {
-    return `<@${userID}>`;
-}
-
 exports.fetchUsernameByID = fetchUsernameByID;
 exports.fetchRolenameByID = fetchRolenameByID;
-exports.getUserMention = getUserMention;

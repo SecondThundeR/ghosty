@@ -1,11 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { getChannel } = require('../utils/guildUtils');
-const { getUserMention } = require('../utils/userUtils');
 
 function sendMessageFromBot(interaction, textToSend, textMode) {
     const channel = getChannel(interaction);
-    const userID = interaction.user.id;
-    const regularMessage = `${getUserMention(userID)} сказал: `;
+    const regularMessage = `${interaction.user} сказал: `;
 
     switch (textMode) {
     case 'анонттс':

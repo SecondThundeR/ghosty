@@ -1,61 +1,12 @@
-const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { getRandomEmbedColor } = require('../utils/embedUtils');
+const { createPollEmbed, createResultsEmbed } = require('../utils/embedUtils');
 const { getChannel } = require('../utils/guildUtils');
-
-function createEmbedPoll(userName, pollText, pollTime) {
-    const pollEmbed = new MessageEmbed()
-        .setColor(getRandomEmbedColor())
-        .setTitle(`Новое голосование от ${userName}`)
-        .setDescription(pollText)
-        .addFields(
-            { name: 'Время для голосования', value: `${pollTime} секунд` },
-        );
-    return pollEmbed;
-}
-
-function createResultsEmbed(userName, pollText, pollResults) {
-    const resultsEmbed = new MessageEmbed()
-        .setColor(getRandomEmbedColor())
-        .setTitle(`Результаты голосования "${pollText}" от ${userName}`)
-        .setDescription(pollResults);
-    return resultsEmbed;
-}
-
-async function addVoteReactions(message) {
-    try {
-        await message.react('👍');
-        await message.react('👎');
-    }
-    catch (error) {
-        console.log('Произошла ошибка при добавлении реакций на голосование:', error);
-    }
-}
-
-function parseCollected(collected) {
-    const reactionsMap = {
-        '👍': 0,
-        '👎': 0,
-    };
-    collected.map(
-        reaction => reactionsMap[reaction.emoji.name] = reaction.count - 1,
-    );
-    return reactionsMap;
-}
-
-function evaluateResults(pollData) {
-    const likesCount = pollData['👍'];
-    const dislikesCount = pollData['👎'];
-
-    if (likesCount > dislikesCount) return `Сокрушительная победа! - 👍: ${likesCount} / 👎: ${dislikesCount}`;
-    if (likesCount < dislikesCount) return `Безжалостное поражение! - 👍: ${likesCount} / 👎: ${dislikesCount}`;
-    return `Возможно, победа дружбы! - 👍: ${likesCount} / 👎: ${dislikesCount}`;
-}
+const { addVoteReactions, parseCollected, evaluateResults } = require('../utils/pollUtils');
 
 async function executePollMessage(interaction, pollText, pollTime) {
     const channel = getChannel(interaction);
     const userName = interaction.member.displayName;
-    const pollMessageEmbed = createEmbedPoll(userName, pollText, pollTime);
+    const pollMessageEmbed = createPollEmbed(userName, pollText, pollTime);
 
     const message = await channel.send({ embeds: [pollMessageEmbed] });
     await addVoteReactions(message);

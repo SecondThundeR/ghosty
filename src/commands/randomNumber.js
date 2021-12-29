@@ -1,10 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-
-function getRandomNumber(lowNum, highNum) {
-    if (lowNum > highNum || (lowNum < 0 || highNum < 0)) return null;
-    const randomNum = Math.floor(Math.random() * (highNum - lowNum)) + lowNum;
-    return `Случайное число от ${lowNum} до ${highNum}: **${randomNum}**`;
-}
+const { getRandomNumber } = require('../utils/miscUtils');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -53,8 +48,9 @@ module.exports = {
                 ephemeral: true,
             });
         }
+        const message = `Случайное число от ${lowNum} до ${highNum}: **${randomNumber}**`;
         return interaction.reply({
-            content: randomNumber,
+            content: message,
         });
     },
 };

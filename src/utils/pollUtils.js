@@ -19,7 +19,8 @@ function parseCollected(collected) {
     return reactionsMap;
 }
 
-function evaluateResults(pollData) {
+function evaluateResults(collected) {
+    const pollData = parseCollected(collected);
     const likesCount = pollData['👍'];
     const dislikesCount = pollData['👎'];
 
@@ -29,5 +30,4 @@ function evaluateResults(pollData) {
 }
 
 exports.addVoteReactions = addVoteReactions;
-exports.parseCollected = parseCollected;
 exports.evaluateResults = evaluateResults;

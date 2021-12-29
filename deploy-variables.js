@@ -5,9 +5,9 @@ const mainVariablesSchema = require('./src/schemas/mainVariables');
 dotenv.config();
 
 const emptyVariablesRecord = {
-    avatarCooldown: 0,
+    avatarCooldown: -1,
     avatarNumber: -1,
-    botUptime: 0,
+    botUptime: -1,
     pollLocked: false,
     rspActiveStatus: false,
     shipActivatedStatus: false,

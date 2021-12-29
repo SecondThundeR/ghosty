@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const requireString = {
-    type: Number,
+    type: String,
     required: true,
 };
 

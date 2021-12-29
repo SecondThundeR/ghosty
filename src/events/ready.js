@@ -10,7 +10,9 @@ module.exports = {
         });
         const randomAvatar = await getRandomAvatar();
         client.user.setStatus('dnd');
-        client.user.setAvatar(randomAvatar);
+        if (randomAvatar !== null) {
+            client.user.setAvatar(randomAvatar);
+        }
         console.log(`Выполнен вход как ${client.user.tag}`);
     },
 };

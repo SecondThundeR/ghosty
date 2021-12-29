@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { createPollEmbed, createResultsEmbed } = require('../utils/embedUtils');
 const { getChannel } = require('../utils/guildUtils');
-const { addVoteReactions, parseCollected, evaluateResults } = require('../utils/pollUtils');
+const { addVoteReactions, evaluateResults } = require('../utils/pollUtils');
 
 async function executePollMessage(interaction, pollText, pollTime) {
     const channel = getChannel(interaction);
@@ -18,8 +18,7 @@ async function executePollMessage(interaction, pollText, pollTime) {
     const collector = message.createReactionCollector({ pollFilter, time: pollTime * 1000 });
 
     collector.on('end', async (collected) => {
-        const pollData = parseCollected(collected);
-        const resultText = evaluateResults(pollData);
+        const resultText = evaluateResults(collected);
         const resultsEmbed = createResultsEmbed(userName, pollText, resultText);
         await message.delete();
         await channel.send({ embeds: [resultsEmbed] });

@@ -33,7 +33,7 @@ function returnAllCommandsInfo() {
     return commandsSummary;
 }
 
-function returnCommandInfo(commandName) {
+function returnCertainCommandInfo(commandName) {
     const commandEntry = commandsInfo[commandName];
     if (commandEntry === undefined) {
         return undefinedCommandName;
@@ -55,7 +55,7 @@ module.exports = {
         const commandName = interaction.options.getString('команда');
         if (commandName !== null) {
             return interaction.reply({
-                content: returnCommandInfo(commandName),
+                content: returnCertainCommandInfo(commandName),
                 ephemeral: true,
             });
         }

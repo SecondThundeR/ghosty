@@ -20,7 +20,7 @@ for (const file of commandFiles) {
 
 cron.schedule('0 */3 * * *', async () => {
     const randomAvatar = await getRandomAvatar();
-    if (randomAvatar !== null) {
+    if (typeof randomAvatar !== 'number') {
         client.user.setAvatar(randomAvatar);
     }
 });

@@ -43,7 +43,7 @@ async function updateMemberList(client) {
     const ignoredUsersID = getIgnoredUsersID(ignoredUsersData);
 
     for (const guild of client.guilds.cache) {
-        const guildID = parseInt(guild[0]);
+        const guildID = guild[0];
         usersData['guildID'] = guildID;
         botsData['guildID'] = guildID;
         usersData['guildMembers'] = [];
@@ -52,7 +52,7 @@ async function updateMemberList(client) {
         const users = await guild[1].members.fetch({ force: true });
 
         for (const user of users) {
-            const memberID = parseInt(user[0]);
+            const memberID = user[0];
             if (ignoredUsersID.includes(memberID)) continue;
 
             if (user[1].user.bot === false) {

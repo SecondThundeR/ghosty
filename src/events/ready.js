@@ -8,8 +8,8 @@ module.exports = {
         await mongoose.connect(process.env.MONGO_URI, {
             keepAlive: true,
         });
-        const randomAvatar = await getRandomAvatar();
         client.user.setStatus('dnd');
+        const randomAvatar = await getRandomAvatar();
         if (randomAvatar !== null) {
             client.user.setAvatar(randomAvatar);
         }

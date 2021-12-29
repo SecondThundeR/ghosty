@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-const requireNumber = {
-    type: Number,
+const requireString = {
+    type: String,
     required: true,
 };
 
 const adminSchema = new mongoose.Schema({
-    adminID: requireNumber,
+    adminID: requireString,
 });
 
 module.exports = mongoose.model('botAdmins', adminSchema, 'botAdmins');

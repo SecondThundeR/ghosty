@@ -18,7 +18,7 @@ const pointsAccountsSchema = new mongoose.Schema({
     isDeleted: requireBoolean,
     pointsBalance: requireNumber,
     rouletteActiveStatus: requireBoolean,
-    userID: requireNumber,
+    userID: requireString,
 });
 
 module.exports = mongoose.model('pointsAccounts', pointsAccountsSchema, 'pointsAccounts');

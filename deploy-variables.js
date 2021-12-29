@@ -6,6 +6,7 @@ dotenv.config();
 
 const emptyVariablesRecord = {
     avatarCooldown: 0,
+    avatarNumber: -1,
     botUptime: 0,
     pollLocked: false,
     rspActiveStatus: false,

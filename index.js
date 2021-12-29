@@ -1,6 +1,8 @@
 const fs = require('fs');
+const cron = require('node-cron');
 const { Client, Collection, Intents } = require('discord.js');
 const dotenv = require('dotenv');
+const { getRandomAvatar } = require('./src/utils/avatarUtils');
 
 dotenv.config();
 
@@ -15,6 +17,13 @@ for (const file of commandFiles) {
     const command = require(`./src/commands/${file}`);
     client.commands.set(command.data.name, command);
 }
+
+cron.schedule('0 */3 * * *', async () => {
+    const randomAvatar = await getRandomAvatar();
+    if (randomAvatar !== null) {
+        client.user.setAvatar(randomAvatar);
+    }
+});
 
 for (const file of eventFiles) {
     const event = require(`./src/events/${file}`);

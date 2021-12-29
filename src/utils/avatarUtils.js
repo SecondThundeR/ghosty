@@ -25,7 +25,6 @@ async function updateCurrentAvatarCooldown(oldAvatarCooldown, newAvatarCooldown)
 }
 
 function checkAvatarCooldown(cooldownCheck) {
-    console.log(cooldownCheck);
     if (cooldownCheck > 0) {
         return true;
     }

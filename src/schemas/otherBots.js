@@ -6,7 +6,8 @@ const requireNumber = {
 };
 
 const otherBotsSchema = new mongoose.Schema({
-    botID: requireNumber,
+    guildID: requireNumber,
+    guildBots: [{ type: Number }],
 });
 
 module.exports = mongoose.model('otherBots', otherBotsSchema, 'otherBots');

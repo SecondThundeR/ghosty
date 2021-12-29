@@ -1,12 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { formatTimeValue } = require('../utils/timeUtils');
-
-function formatUptime(uptime) {
-    const hours = formatTimeValue(Math.floor(uptime / (60 * 60)));
-    const minutes = formatTimeValue(Math.floor(uptime % (60 * 60) / 60));
-    const seconds = formatTimeValue(Math.floor(uptime % 60));
-    return `Я не сплю уже на протяжении **${hours}:${minutes}:${seconds}**`;
-}
+const { getFormattedTime } = require('../utils/timeUtils');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,8 +7,7 @@ module.exports = {
         .setDescription('Показывает текущее время работы бота'),
     async execute(interaction) {
         const currUptime = process.uptime();
-        const uptimeMessage = formatUptime(currUptime);
-
+        const uptimeMessage = `Я не сплю уже на протяжении ${getFormattedTime(currUptime)}`;
         return interaction.reply({
             content: uptimeMessage,
             ephemeral: true,

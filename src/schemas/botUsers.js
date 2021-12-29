@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 
-const requireNumber = {
-    type: Number,
+const requireString = {
+    type: String,
     required: true,
 };
 
 const botUsersSchema = new mongoose.Schema({
-    guildID: requireNumber,
-    guildMembers: [{ type: Number }],
+    guildID: requireString,
+    guildMembers: [{ type: String }],
 });
 
 module.exports = mongoose.model('botUsers', botUsersSchema, 'botUsers');

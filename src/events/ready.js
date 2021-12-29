@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { getRandomAvatar } = require('../utils/avatarUtils');
+const { updateMemberList } = require('../utils/databaseUtils');
 
 module.exports = {
     name: 'ready',
@@ -13,6 +14,7 @@ module.exports = {
         if (typeof randomAvatar !== 'number') {
             client.user.setAvatar(randomAvatar);
         }
+        await updateMemberList(client);
         console.log(`Выполнен вход как ${client.user.tag}`);
     },
 };

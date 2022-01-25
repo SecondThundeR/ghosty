@@ -1,24 +1,31 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { getChannel } = require('../utils/guildUtils');
 
-function sendMessageFromBot(interaction, textToSend, textMode) {
+function sendMessageFromBot(interaction, userText, textMode) {
     const channel = getChannel(interaction);
-    const regularMessage = `${interaction.user} сказал: `;
+    const messagePrefix = `${interaction.user} сказал: `;
+    let messageBody, ttsMode;
 
     switch (textMode) {
     case 'анонттс':
-        return channel.send(textToSend, {
-            tts: true,
-        });
-    case 'анон':
-        return channel.send(textToSend);
+        ttsMode = true;
+        break;
     case 'ттс':
-        return channel.send(regularMessage + textToSend, {
-            tts: true,
-        });
+        messageBody = messagePrefix + userText;
+        ttsMode = true;
+        break;
     case 'обычный':
-        return channel.send(regularMessage + textToSend);
+        messageBody = messagePrefix + userText;
+        break;
+    default:
+        messageBody = userText;
+        ttsMode = false;
+        break;
     }
+
+    return channel.send(messageBody, {
+        tts: ttsMode,
+    });
 }
 
 module.exports = {
@@ -73,8 +80,9 @@ module.exports = {
         ),
     async execute(interaction) {
         const sendMode = interaction.options.getSubcommand();
-        const textToSend = interaction.options.getString('текст');
-        sendMessageFromBot(interaction, textToSend, sendMode);
+        const userText = interaction.options.getString('текст');
+        sendMessageFromBot(interaction, userText, sendMode);
+
         return interaction.reply({
             content: 'Текст отправлен!',
             ephemeral: true,

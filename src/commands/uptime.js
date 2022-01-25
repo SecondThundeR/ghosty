@@ -6,8 +6,8 @@ module.exports = {
         .setName('аптайм')
         .setDescription('Показывает текущее время работы бота'),
     async execute(interaction) {
-        const currUptime = process.uptime();
-        const uptimeMessage = `Я не сплю уже на протяжении ${getFormattedTime(currUptime)}`;
+        const uptimeMessage = `Я не сплю уже на протяжении ${getFormattedTime(process.uptime())}`;
+
         return interaction.reply({
             content: uptimeMessage,
             ephemeral: true,

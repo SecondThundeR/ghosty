@@ -15,6 +15,7 @@ module.exports = {
                 ephemeral: true,
             });
         }
+
         const changerTime = getFormattedTime(randomAvatar / 1000);
         return interaction.reply({
             content: `Пока что нельзя сменить аватарку. Попробуйте через ${changerTime}!`,

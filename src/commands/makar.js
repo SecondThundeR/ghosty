@@ -4,25 +4,24 @@ const { reverseString } = require('../utils/stringUtils');
 const { userDataEnum, getUserDataType } = require('../utils/makarUtils');
 
 async function executeMakarInteraction(interaction, userData) {
+    let stringToReverse;
+    const userDataType = getUserDataType(userData);
+
     if (!userData) {
         return interaction.reply({
             content: `Улыбок тебе дед ${reverseString(interaction.member.displayName)}`,
         });
     }
 
-    let stringToReverse;
-    const userDataType = getUserDataType(userData);
-
     switch (userDataType) {
-    case userDataEnum['here/everyone']:
-        return interaction.reply({
-            content: `Улыбок тебе дед ${reverseString(userData.slice(1))}`,
-        });
     case userDataEnum['emoji']:
         return interaction.reply({
             content: 'Я не могу перевернуть эмодзи(',
             ephemeral: true,
         });
+    case userDataEnum['here/everyone']:
+        stringToReverse = userData.slice(1);
+        break;
     case userDataEnum['rolename']:
         stringToReverse = fetchRolenameByID(interaction.guild, userData);
         break;

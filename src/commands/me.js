@@ -4,7 +4,8 @@ const { getChannel } = require('../utils/guildUtils');
 function sendMessageFromBot(interaction, userText, textMode) {
     const channel = getChannel(interaction);
     const messagePrefix = `${interaction.user} сказал: `;
-    let messageBody, ttsMode;
+    let messageBody = userText;
+    let ttsMode = false;
 
     switch (textMode) {
     case 'анонттс':
@@ -16,10 +17,6 @@ function sendMessageFromBot(interaction, userText, textMode) {
         break;
     case 'обычный':
         messageBody = messagePrefix + userText;
-        break;
-    default:
-        messageBody = userText;
-        ttsMode = false;
         break;
     }
 

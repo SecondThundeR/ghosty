@@ -29,11 +29,11 @@ module.exports = {
             ),
         ),
     async execute(interaction) {
-        let lowNum, highNum;
         const randomMode = interaction.options.getSubcommand();
+        let lowNum = 1;
+        let highNum;
 
         if (randomMode === 'число') {
-            lowNum = 1;
             highNum = interaction.options.getNumber('граница');
         }
         else {
@@ -48,6 +48,7 @@ module.exports = {
                 ephemeral: true,
             });
         }
+
         const message = `Случайное число от ${lowNum} до ${highNum}: **${randomNumber}**`;
         return interaction.reply({
             content: message,

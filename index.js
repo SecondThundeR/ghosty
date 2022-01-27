@@ -7,12 +7,7 @@ const { getRandomAvatar } = require('./src/utils/avatarUtils');
 dotenv.config();
 
 const client = new Client({
-    intents: [
-        Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_MESSAGES,
-        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-        Intents.FLAGS.GUILD_MEMBERS,
-    ],
+    intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS],
 });
 
 const eventFiles = fs.readdirSync('./src/events').filter(file => file.endsWith('.js'));
@@ -28,9 +23,9 @@ for (const file of commandFiles) {
 cron.schedule('0 */3 * * *', async () => {
     const randomAvatar = await getRandomAvatar();
     if (typeof randomAvatar !== 'number') {
-        client.user.setAvatar(randomAvatar);
+        await client.user.setAvatar(randomAvatar);
     }
-});
+}, { 'scheduled': true, 'timezone': 'Europe/Minsk' });
 
 for (const file of eventFiles) {
     const event = require(`./src/events/${file}`);

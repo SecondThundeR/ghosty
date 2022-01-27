@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 const mainVariablesModel = require('./src/schemas/mainVariables');
 const { addModelData, getModelData, clearModelData } = require('./src/utils/databaseUtils');
 
@@ -31,7 +31,7 @@ const collectionArgument = args[0] || '';
             console.log('Fetching data from mainVariables...');
             const variablesData = await getModelData(mainVariablesModel);
 
-            if (variablesData.length != 0) {
+            if (variablesData.length !== 0) {
                 if (collectionArgument !== 'override') {
                     console.log('DB is not empty! If you want to override data, pass "override" as a parameter');
                     return;
@@ -44,11 +44,10 @@ const collectionArgument = args[0] || '';
             console.log('Finished adding empty record.');
         })
         .catch(async (e) => {
-            console.log('There is an error occured! Printing details:');
+            console.log('There is an error occurred! Printing details:');
             console.error(e);
             console.log('Closing DB connection...');
             await mongoose.connection.close();
-            return;
         })
         .finally(async () => {
             console.log('Closing DB connection...');

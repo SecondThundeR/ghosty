@@ -44,8 +44,7 @@ module.exports = {
         .setDescription('Отправляет предложение вида "Улыбок тебе дед ракаМ" (Макар наоборот)')
         .addStringOption(option => option
             .setName('юзер')
-            .setDescription('Кого подставить вместо Макара?'),
-        ),
+            .setDescription('Кого подставить вместо Макара?')),
     async execute(interaction) {
         const userData = interaction.options.getString('юзер');
         await executeMakarInteraction(interaction, userData);

@@ -11,23 +11,18 @@ module.exports = {
             .addNumberOption(option => option
                 .setName('граница')
                 .setDescription('Устанавливает правую границу диапазона для рандомного числа')
-                .setRequired(true),
-            ),
-        )
+                .setRequired(true)))
         .addSubcommand(subcommand => subcommand
             .setName('числа')
             .setDescription('Получение рандомного числа для собственного диапазона')
             .addNumberOption(option => option
                 .setName('граница-левая')
                 .setDescription('Устанавливает левую границу диапазона')
-                .setRequired(true),
-            )
+                .setRequired(true))
             .addNumberOption(option => option
                 .setName('граница-правая')
                 .setDescription('ТУстанавливает правую границу диапазона')
-                .setRequired(true),
-            ),
-        ),
+                .setRequired(true))),
     async execute(interaction) {
         const randomMode = interaction.options.getSubcommand();
         let lowNum = 1;

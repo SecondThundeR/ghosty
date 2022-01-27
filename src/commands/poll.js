@@ -29,19 +29,13 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('полл')
         .setDescription('Создает голосования с реакциями')
-        .addStringOption((option) =>
-            option
-                .setName('текст')
-                .setDescription('Текст для голосования')
-                .setRequired(true),
-        )
-        .addNumberOption((option) =>
-            option
-                .setName('время')
-                .setDescription(
-                    'Устанавливает время до конца голосования (По умолчанию - 60 секунд)',
-                ),
-        ),
+        .addStringOption((option) => option
+            .setName('текст')
+            .setDescription('Текст для голосования')
+            .setRequired(true))
+        .addNumberOption((option) => option
+            .setName('время')
+            .setDescription('Устанавливает время до конца голосования (По умолчанию - 60 секунд)')),
     async execute(interaction) {
         const pollText = interaction.options.getString('текст');
         let pollTime = interaction.options.getNumber('время') || 60;
@@ -49,7 +43,7 @@ module.exports = {
 
         if (pollTime < 60) {
             pollTime = 60;
-            replyMessage = 'Голосование запущено! *(Время было изменено до 60 секунд)*';
+            replyMessage += ' *(Время было изменено до 60 секунд)*';
         }
 
         await interaction.reply({

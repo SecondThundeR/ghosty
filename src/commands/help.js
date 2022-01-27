@@ -7,8 +7,7 @@ module.exports = {
         .setDescription('Показывает информацию о командах бота')
         .addStringOption(option => option
             .setName('команда')
-            .setDescription('Возвращает информацию о конкретной команде'),
-        ),
+            .setDescription('Возвращает информацию о конкретной команде')),
     async execute(interaction) {
         const commandName = interaction.options.getString('команда');
 

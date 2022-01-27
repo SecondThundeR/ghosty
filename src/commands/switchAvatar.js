@@ -9,7 +9,7 @@ module.exports = {
     async execute(interaction) {
         const randomAvatar = await getRandomAvatar();
         if (typeof randomAvatar !== 'number') {
-            interaction.client.user.setAvatar(randomAvatar);
+            await interaction.client.user.setAvatar(randomAvatar);
             return interaction.reply({
                 content: 'Аватарка успешно изменена!',
                 ephemeral: true,

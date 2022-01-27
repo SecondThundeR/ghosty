@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { returnMagicBallAnswer } = require('../utils/magicBallUtils');
 
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('шар')
@@ -9,13 +8,11 @@ module.exports = {
         .addStringOption(option => option
             .setName('вопрос')
             .setDescription('Вопрос, который задаётся магическому шару')
-            .setRequired(true),
-        )
+            .setRequired(true))
         .addBooleanOption(option => option
             .setName('тихий-режим')
             .setDescription('Позволяет запустить команду в тихом режиме')
-            .setRequired(false),
-        ),
+            .setRequired(false)),
     async execute(interaction) {
         const magicBallQuestion = interaction.options.getString('вопрос');
         const magicBallFinalAnswer = returnMagicBallAnswer(magicBallQuestion);

@@ -33,7 +33,7 @@ function generateTestMessage(text, user, amount) {
             break;
         }
         if (testMessage.length > 2000) {
-            return null;
+            return undefined;
         }
     }
     return testMessage;
@@ -46,31 +46,26 @@ module.exports = {
         .addStringOption(option => option
             .setName('текст')
             .setDescription('Устанавливает текст теста')
-            .setRequired(true),
-        )
+            .setRequired(true))
         .addNumberOption(option => option
             .setName('число-тестов')
-            .setDescription('Устанавливает количество тестирований'),
-        )
+            .setDescription('Устанавливает количество тестирований'))
         .addUserOption(option => option
             .setName('пользователь')
-            .setDescription('Задает пользователя для тестирования'),
-        )
+            .setDescription('Задает пользователя для тестирования'))
         .addStringOption(option => option
             .setName('тестируемый')
-            .setDescription('Устанавливает вместо тестирумого пользователя, текст'),
-        )
+            .setDescription('Устанавливает вместо тестирумого пользователя, текст'))
         .addBooleanOption(option => option
             .setName('рандом-выбор')
-            .setDescription('Выбирает случайного пользователя для тестирования'),
-        ),
+            .setDescription('Выбирает случайного пользователя для тестирования')),
     async execute(interaction) {
-        let testUser;
         const testText = interaction.options.getString('текст');
         const testAmount = interaction.options.getNumber('число-тестов') || 1;
         const textTestUser = interaction.options.getString('тестируемый') || null;
         const testUserObject = interaction.options.getUser('пользователь') || null;
         const randomUserBoolean = interaction.options.getBoolean('рандом-выбор') || false;
+        let testUser;
 
         if (randomUserBoolean === true) {
             const randomUser = await getRandomUser(interaction.guild);
@@ -87,7 +82,7 @@ module.exports = {
         }
 
         const testMessage = generateTestMessage(testText, testUser, testAmount);
-        if (testMessage === null) {
+        if (testMessage === undefined) {
             return interaction.reply({
                 content: 'Вы превысили лимит Discord по длине сообщения!',
                 ephemeral: true,

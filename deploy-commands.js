@@ -19,9 +19,7 @@ const args = process.argv.slice(2);
 (async () => {
     try {
         if (args[0] === 'global') {
-            await rest.put(
-                Routes.applicationCommands(process.env.CLIENT_ID),
-            );
+            await rest.put(Routes.applicationCommands(process.env.CLIENT_ID));
             console.log('Successfully registered global application commands.');
         }
         else {

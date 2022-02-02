@@ -22,31 +22,26 @@ const commandsSummaryHeader = 'Доступные команды бота:\n';
 const commandInfoHelp = `\n\nПолучить подробную информацию о командах можно здесь - <${faqLink}>`;
 const undefinedCommandName = 'Похоже, вы ввели несуществующую команду :c';
 
-function getAllCommandsInfo() {
-    let commandsSummary = commandsSummaryHeader;
-    for (const [key, value] of Object.entries(commandsInfo)) {
-        commandsSummary += `\n**${key}**: ${value}`;
-    }
-    commandsSummary += commandInfoHelp;
-    return commandsSummary;
-}
-
-function getCertainCommandInfo(commandName) {
-    const commandEntry = commandsInfo[commandName];
-    if (commandEntry === undefined) {
-        return undefinedCommandName;
+class HelpUtils {
+    static getAllCommandsInfo() {
+        let commandsSummary = commandsSummaryHeader;
+        for (const [key, value] of Object.entries(commandsInfo)) {
+            commandsSummary += `\n**${key}**: ${value}`;
+        }
+        commandsSummary += commandInfoHelp;
+        return commandsSummary;
     }
 
-    const commandAnswer = `Короткая информация о \`${commandName}\` - ${commandEntry}\n\n` +
+    static getCertainCommandInfo(commandName) {
+        const commandEntry = commandsInfo[commandName];
+        if (commandEntry === undefined) {
+            return undefinedCommandName;
+        }
+
+        const commandAnswer = `Короткая информация о \`${commandName}\` - ${commandEntry}\n\n` +
         `Получить больше информации можно здесь - <${faqLink}#${commandName}>`;
-    return commandAnswer;
-}
-
-function getCommandsInfo(commandName) {
-    if (commandName === null) {
-        return getAllCommandsInfo();
+        return commandAnswer;
     }
-    return getCertainCommandInfo(commandName);
 }
 
-exports.getCommandsInfo = getCommandsInfo;
+exports.HelpUtils = HelpUtils;

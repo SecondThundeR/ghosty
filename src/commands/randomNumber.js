@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { getRandomNumber } = require('../utils/miscUtils');
+const MiscUtils = require('../utils/miscUtils');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -36,7 +36,7 @@ module.exports = {
             highNum = interaction.options.getNumber('граница-правая');
         }
 
-        const randomNumber = getRandomNumber(lowNum, highNum);
+        const randomNumber = MiscUtils.getRandomNumber(lowNum, highNum);
         if (randomNumber === null) {
             return interaction.reply({
                 content: 'Неверный диапазон чисел или значения чисел!',

@@ -21,10 +21,12 @@ const magicBallAnswers = [
     'Весьма сомнительно',
 ];
 
-function returnMagicBallAnswer(userQuestion) {
-    const magicBallAnswer = magicBallAnswers[Math.floor(Math.random() * magicBallAnswers.length)];
-    const answerMsg = `Вопрос: **${userQuestion}**\nОтвет: **${magicBallAnswer}**`;
-    return answerMsg;
+class MagicBallUtils {
+    static returnMagicBallAnswer(userQuestion) {
+        const magicBallAnswer = magicBallAnswers[Math.floor(Math.random() * magicBallAnswers.length)];
+        const answerMsg = `Вопрос: **${userQuestion}**\nОтвет: **${magicBallAnswer}**`;
+        return answerMsg;
+    }
 }
 
-exports.returnMagicBallAnswer = returnMagicBallAnswer;
+exports.MagicBallUtils = MagicBallUtils;

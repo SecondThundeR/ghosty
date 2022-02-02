@@ -1,5 +1,7 @@
-function getChannel(interaction) {
-    return interaction.client.channels.cache.get(interaction.channelId);
+class GuildUtils {
+    static getChannel(interaction) {
+        return interaction.client.channels.cache.get(interaction.channelId);
+    }
 }
 
-exports.getChannel = getChannel;
+exports.GuildUtils = GuildUtils;

@@ -1,11 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { getRandomNumber } = require('../utils/miscUtils');
-const { getRandomUser } = require('../utils/userUtils');
+const MiscUtils = require('../utils/miscUtils');
+const UserUtils = require('../utils/userUtils');
 
 function generateTestMessage(text, user, amount) {
     let testMessage = `Журнал тестирования **${user}**\n\n`;
     if (amount <= 1) {
-        const randomPercent = getRandomNumber(0, 100);
+        const randomPercent = MiscUtils.getRandomNumber(0, 100);
         switch (randomPercent) {
         case 0:
             testMessage += `Пациент сегодня не **${text}** :c`;
@@ -20,7 +20,7 @@ function generateTestMessage(text, user, amount) {
         return testMessage;
     }
     for (let i = 0; i < amount; i++) {
-        const randomPercent = getRandomNumber(0, 100);
+        const randomPercent = MiscUtils.getRandomNumber(0, 100);
         switch (randomPercent) {
         case 0:
             testMessage += `**Тест #${i + 1}.** Пациент сегодня не **${text}** :c\n`;
@@ -68,7 +68,7 @@ module.exports = {
         let testUser;
 
         if (randomUserBoolean === true) {
-            const randomUser = await getRandomUser(interaction.guild);
+            const randomUser = await UserUtils.getRandomUser(interaction.guild);
             testUser = `${randomUser}`;
         }
         else if (testUserObject !== null) {

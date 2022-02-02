@@ -1,15 +1,15 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { createPollEmbed, createResultsEmbed } = require('../utils/embedUtils');
-const { getChannel } = require('../utils/guildUtils');
-const { addVoteReactions, evaluateResults } = require('../utils/pollUtils');
+const EmbedUtils = require('../utils/embedUtils');
+const GuildUtils = require('../utils/guildUtils');
+const PollUtils = require('../utils/pollUtils');
 
 async function executePollMessage(interaction, pollText, pollTime) {
-    const channel = getChannel(interaction);
+    const channel = GuildUtils.getChannel(interaction);
     const userName = interaction.member.displayName;
-    const pollMessageEmbed = createPollEmbed(userName, pollText, pollTime);
+    const pollMessageEmbed = EmbedUtils.createPollEmbed(userName, pollText, pollTime);
 
     const message = await channel.send({ embeds: [pollMessageEmbed] });
-    await addVoteReactions(message);
+    await PollUtils.addVoteReactions(message);
 
     const pollFilter = (reaction, user) => {
         return ['👍', '👎'].includes(reaction.emoji.name) && user.id !== message.author.id;
@@ -18,8 +18,8 @@ async function executePollMessage(interaction, pollText, pollTime) {
     const collector = message.createReactionCollector({ pollFilter, time: pollTime * 1000 });
 
     collector.on('end', async (collected) => {
-        const resultText = evaluateResults(collected);
-        const resultsEmbed = createResultsEmbed(userName, pollText, resultText);
+        const resultText = PollUtils.evaluateResults(collected);
+        const resultsEmbed = EmbedUtils.createResultsEmbed(userName, pollText, resultText);
         await message.delete();
         await channel.send({ embeds: [resultsEmbed] });
     });

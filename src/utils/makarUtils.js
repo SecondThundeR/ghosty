@@ -7,21 +7,23 @@ const userDataEnum = {
 };
 Object.freeze(userDataEnum);
 
-function getUserDataType(userData) {
-    if (userData === '@here' || userData === '@everyone') {
-        return userDataEnum['here/everyone'];
+class MakarUtils {
+    static getUserDataType(userData) {
+        if (userData === '@here' || userData === '@everyone') {
+            return userDataEnum['here/everyone'];
+        }
+        if (userData.startsWith('<:')) {
+            return userDataEnum['emoji'];
+        }
+        if (userData.startsWith('<@&')) {
+            return userDataEnum['rolename'];
+        }
+        if (userData.startsWith('<@!')) {
+            return userDataEnum['username'];
+        }
+        return userDataEnum['default'];
     }
-    if (userData.startsWith('<:')) {
-        return userDataEnum['emoji'];
-    }
-    if (userData.startsWith('<@&')) {
-        return userDataEnum['rolename'];
-    }
-    if (userData.startsWith('<@!')) {
-        return userDataEnum['username'];
-    }
-    return userDataEnum['default'];
 }
 
 exports.userDataEnum = userDataEnum;
-exports.getUserDataType = getUserDataType;
+exports.MakarUtils = MakarUtils;

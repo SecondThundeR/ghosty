@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { returnMagicBallAnswer } = require('../utils/magicBallUtils');
+const MagicBallUtils = require('../utils/magicBallUtils');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,7 +15,7 @@ module.exports = {
             .setRequired(false)),
     async execute(interaction) {
         const magicBallQuestion = interaction.options.getString('вопрос');
-        const magicBallFinalAnswer = returnMagicBallAnswer(magicBallQuestion);
+        const magicBallFinalAnswer = MagicBallUtils.returnMagicBallAnswer(magicBallQuestion);
         let quietMode = interaction.options.getBoolean('тихий-режим');
 
         if (quietMode === null) {

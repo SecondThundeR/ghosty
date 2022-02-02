@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const mainVariablesModel = require('./src/schemas/mainVariables');
-const { addModelData, getModelData, clearModelData } = require('./src/utils/databaseUtils');
+const DatabaseUtils = require('./src/utils/databaseUtils');
 
 dotenv.config();
 
@@ -24,12 +24,12 @@ const collectionArgument = args[0] || '';
     await mongoose.connect(process.env.MONGO_URI)
         .then(async () => {
             if (collectionArgument === 'delete') {
-                await clearModelData(mainVariablesModel);
+                await DatabaseUtils.clearModelData(mainVariablesModel);
                 return;
             }
 
             console.log('Fetching data from mainVariables...');
-            const variablesData = await getModelData(mainVariablesModel);
+            const variablesData = await DatabaseUtils.getModelData(mainVariablesModel);
 
             if (variablesData.length !== 0) {
                 if (collectionArgument !== 'override') {
@@ -37,10 +37,10 @@ const collectionArgument = args[0] || '';
                     return;
                 }
                 console.log('Overriding data...');
-                await clearModelData(mainVariablesModel);
+                await DatabaseUtils.clearModelData(mainVariablesModel);
             }
             console.log('Adding empty record...');
-            await addModelData(mainVariablesModel, emptyVariablesRecord);
+            await DatabaseUtils.addModelData(mainVariablesModel, emptyVariablesRecord);
             console.log('Finished adding empty record.');
         })
         .catch(async (e) => {

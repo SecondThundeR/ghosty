@@ -1,8 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { getChannel } = require('../utils/guildUtils');
+const GuildUtils = require('../utils/guildUtils');
 
 function sendMessageFromBot(interaction, userText, textMode) {
-    const channel = getChannel(interaction);
+    const channel = GuildUtils.getChannel(interaction);
     const messagePrefix = `${interaction.user} сказал: `;
     let messageBody = userText;
     let ttsMode = false;

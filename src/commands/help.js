@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { getCommandsInfo } = require('../utils/helpUtils');
+const HelpUtils = require('../utils/helpUtils');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,9 +10,15 @@ module.exports = {
             .setDescription('Возвращает информацию о конкретной команде')),
     async execute(interaction) {
         const commandName = interaction.options.getString('команда');
+        let helpMsg;
+
+        if (commandName === null) {
+            helpMsg = HelpUtils.getAllCommandsInfo();
+        }
+        helpMsg = HelpUtils.getCertainCommandInfo(commandName);
 
         return interaction.reply({
-            content: getCommandsInfo(commandName),
+            content: helpMsg,
             ephemeral: true,
         });
     },

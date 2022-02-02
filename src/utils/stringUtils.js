@@ -1,5 +1,7 @@
-function reverseString(str) {
-    return str.split('').reverse().join('');
+class StringUtils {
+    static reverseString(str) {
+        return str.split('').reverse().join('');
+    }
 }
 
-exports.reverseString = reverseString;
+exports.StringUtils = StringUtils;

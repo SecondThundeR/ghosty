@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const { getRandomAvatar } = require('../utils/avatarUtils');
-const { updateMemberList } = require('../utils/databaseUtils');
+const AvatarUtils = require('../utils/avatarUtils');
+const DatabaseUtils = require('../utils/databaseUtils');
 
 module.exports = {
     name: 'ready',
@@ -10,11 +10,11 @@ module.exports = {
             keepAlive: true,
         });
         client.user.setStatus('dnd');
-        const randomAvatar = await getRandomAvatar();
+        const randomAvatar = await AvatarUtils.getRandomAvatar();
         if (typeof randomAvatar !== 'number') {
             client.user.setAvatar(randomAvatar);
         }
-        await updateMemberList(client);
+        await DatabaseUtils.updateMemberList(client);
         console.log(`Выполнен вход как ${client.user.tag}`);
     },
 };

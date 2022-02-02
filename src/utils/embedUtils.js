@@ -19,28 +19,29 @@ const logoColors = [
     '#2A3D66',
 ];
 
-function getRandomEmbedColor() {
-    return logoColors[Math.floor(Math.random() * logoColors.length)];
+class EmbedUtils {
+    static getRandomEmbedColor() {
+        return logoColors[Math.floor(Math.random() * logoColors.length)];
+    }
+
+    static createPollEmbed(userName, pollText, pollTime) {
+        const pollEmbed = new MessageEmbed()
+            .setColor(EmbedUtils.getRandomEmbedColor())
+            .setTitle(`Новое голосование от ${userName}`)
+            .setDescription(pollText)
+            .addFields(
+                { name: 'Время для голосования', value: `${pollTime} секунд` },
+            );
+        return pollEmbed;
+    }
+
+    static createResultsEmbed(userName, pollText, pollResults) {
+        const resultsEmbed = new MessageEmbed()
+            .setColor(EmbedUtils.getRandomEmbedColor())
+            .setTitle(`Результаты голосования "${pollText}" от ${userName}`)
+            .setDescription(pollResults);
+        return resultsEmbed;
+    }
 }
 
-function createPollEmbed(userName, pollText, pollTime) {
-    const pollEmbed = new MessageEmbed()
-        .setColor(getRandomEmbedColor())
-        .setTitle(`Новое голосование от ${userName}`)
-        .setDescription(pollText)
-        .addFields(
-            { name: 'Время для голосования', value: `${pollTime} секунд` },
-        );
-    return pollEmbed;
-}
-
-function createResultsEmbed(userName, pollText, pollResults) {
-    const resultsEmbed = new MessageEmbed()
-        .setColor(getRandomEmbedColor())
-        .setTitle(`Результаты голосования "${pollText}" от ${userName}`)
-        .setDescription(pollResults);
-    return resultsEmbed;
-}
-
-exports.createPollEmbed = createPollEmbed;
-exports.createResultsEmbed = createResultsEmbed;
+exports.EmbedUtils = EmbedUtils;

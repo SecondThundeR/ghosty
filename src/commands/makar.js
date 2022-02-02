@@ -1,15 +1,15 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { fetchRolenameByID, fetchUsernameByID } = require('../utils/userUtils');
-const { reverseString } = require('../utils/stringUtils');
-const { userDataEnum, getUserDataType } = require('../utils/makarUtils');
+const UserUtils = require('../utils/userUtils');
+const StringUtils = require('../utils/stringUtils');
+const { userDataEnum, MakarUtils } = require('../utils/makarUtils');
 
 async function executeMakarInteraction(interaction, userData) {
     let stringToReverse;
-    const userDataType = getUserDataType(userData);
+    const userDataType = MakarUtils.getUserDataType(userData);
 
     if (!userData) {
         return interaction.reply({
-            content: `Улыбок тебе дед ${reverseString(interaction.member.displayName)}`,
+            content: `Улыбок тебе дед ${StringUtils.reverseString(interaction.member.displayName)}`,
         });
     }
 
@@ -23,10 +23,10 @@ async function executeMakarInteraction(interaction, userData) {
         stringToReverse = userData.slice(1);
         break;
     case userDataEnum['rolename']:
-        stringToReverse = fetchRolenameByID(interaction.guild, userData);
+        stringToReverse = UserUtils.fetchRolenameByID(interaction.guild, userData);
         break;
     case userDataEnum['username']:
-        stringToReverse = fetchUsernameByID(interaction.guild, userData);
+        stringToReverse = UserUtils.fetchUsernameByID(interaction.guild, userData);
         break;
     case userDataEnum['default']:
         stringToReverse = userData;
@@ -34,7 +34,7 @@ async function executeMakarInteraction(interaction, userData) {
     }
 
     return interaction.reply({
-        content: `Улыбок тебе дед ${reverseString(stringToReverse)}`,
+        content: `Улыбок тебе дед ${StringUtils.reverseString(stringToReverse)}`,
     });
 }
 

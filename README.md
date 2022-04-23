@@ -9,6 +9,8 @@
 
 This is repository of some random bot for Discord which was created just for fun and for some educational purposes *(Made with Discord.py library)*
 
+> [Read about the status of this project and repository](https://github.com/SecondThundeR/ghosty/blob/master/assets/FUTURE.md)
+
 ## Current state of this bot
 At the moment, the Python version of this bot is not supported and, probably, will stop working after April 2022 *(More about this [**here**](https://gist.github.com/Rapptz/4a2f62751b9600a31a0d3c78100287f1))*. 3.0.0 version, being developed in [**JavaScript branch**](https://github.com/SecondThundeR/ghosty/tree/javascript-madness).
 
